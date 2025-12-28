@@ -47,7 +47,7 @@ Note: This section describes the technology used to build and run this website i
 ## 🌀 Modular Services Section
 This site’s Services section lists a complete, statically-defined set of modularized services (no filesystem scanning at runtime), currently covering:
 - **Apache Commons**: `commons-beanutils`, `commons-collections`, `commons-csv`, `commons-fileupload`, `commons-math`
-- **Apache CXF**: `apache-cxf`, `apache-cxf-rest`, `apache-cxf-rest-openapi`, `apache-cxf-rt-security`, `apache-cxf-rt-transports-http`
+- **Apache CXF (Web Services)**: `apache-cxf`, `apache-cxf-rt-security`, `apache-cxf-rt-transports-http`
 - **Apache POI**: `apache-poi`, `apache-poi-ooxml`
 - **Database Drivers**: `msal4j`, `mssql-jdbc`, `postgresql`
 - **Google**: `aop`, `guice-core`, `guice-assistedinject`, `guice-grapher`, `guice-jmx`, `guice-jndi`

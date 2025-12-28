@@ -81,10 +81,8 @@ public final class ModuleCatalog
                 "commons-fileupload",
                 "commons-math"
         });
-        addServices(services, groupId, version, "services/Apache/CXF", "Apache CXF", new String[]{
+        addServices(services, groupId, version, "services/Apache/CXF", "Apache CXF (Web Services)", new String[]{
                 "apache-cxf",
-                "apache-cxf-rest",
-                "apache-cxf-rest-openapi",
                 "apache-cxf-rt-security",
                 "apache-cxf-rt-transports-http"
         });

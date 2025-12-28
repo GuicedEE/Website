@@ -3,12 +3,15 @@ package com.guicedee.website.pages;
 import com.guicedee.website.builder.ApplicationBuilderService;
 import com.guicedee.website.catalog.ModuleEntry;
 import com.guicedee.website.catalog.ServiceDefinition;
+import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
+import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.card.WaCard;
 
+@NgComponent("guicedee-app-builder")
 @NgRoutable(path = "builder")
-public class AppBuilderPage extends WebsitePage<AppBuilderPage>
+public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgComponent<AppBuilderPage>
 {
     public AppBuilderPage()
     {

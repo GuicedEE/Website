@@ -1,9 +1,11 @@
 package com.guicedee.website.pages;
 
 import com.guicedee.website.builder.ApplicationBuilderService;
+import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.webawesome.components.WaStack;
 
+@NgComponent("guicedee-services")
 @NgRoutable(path = "services")
 public class ServicesPage extends WebsitePage<ServicesPage>
 {

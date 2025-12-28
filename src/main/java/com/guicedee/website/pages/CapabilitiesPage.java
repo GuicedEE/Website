@@ -1,10 +1,12 @@
 package com.guicedee.website.pages;
 
 import com.guicedee.website.catalog.ModuleCatalog;
+import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesomepro.components.page.WaPageContentsAside;
 
+@NgComponent("guicedee-capabilities")
 @NgRoutable(path = "capabilities")
 public class CapabilitiesPage extends WebsitePage<CapabilitiesPage>
 {
@@ -37,4 +39,3 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage>
         getAside().add(aside);
     }
 }
-
