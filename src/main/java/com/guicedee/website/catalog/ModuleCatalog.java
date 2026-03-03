@@ -70,7 +70,7 @@ public final class ModuleCatalog
     private static List<ServiceDefinition> buildStaticServices()
     {
         String version = "2.0.0-SNAPSHOT";
-        String groupId = "com.guicedee.services";
+        String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
 
