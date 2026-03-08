@@ -125,3 +125,4 @@ fabric.properties
 /docs/
 /rules/
 /src/main/resources/src/assets/webawesome
+/.vscode/settings.json
