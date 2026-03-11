@@ -15,6 +15,7 @@ import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
 import com.jwebmp.webawesomepro.components.page.WaPage;
+import org.apache.commons.text.StringEscapeUtils;
 
 public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> implements INgComponent<J>
 {
@@ -218,7 +219,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var wrapper = new DivSimple<>();
         wrapper.addClass("code-block");
         var pre = new PreFormattedText<>();
-        pre.setText(code);
+        pre.setText(StringEscapeUtils.escapeHtml4(code));
         wrapper.add(pre);
         return wrapper;
     }
@@ -233,7 +234,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         wrapper.add(label);
 
         var pre = new PreFormattedText<>();
-        pre.setText(code);
+        pre.setText(StringEscapeUtils.escapeHtml4(code));
         pre.addClass("code-block");
         wrapper.add(pre);
         return wrapper;

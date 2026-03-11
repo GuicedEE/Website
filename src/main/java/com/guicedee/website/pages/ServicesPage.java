@@ -21,15 +21,12 @@ import java.util.stream.Collectors;
 
 @NgComponent("guicedee-services")
 @NgRoutable(path = "services")
-public class ServicesPage extends WebsitePage<ServicesPage> implements INgComponent<ServicesPage>
-{
-    public ServicesPage()
-    {
+public class ServicesPage extends WebsitePage<ServicesPage> implements INgComponent<ServicesPage> {
+    public ServicesPage() {
         renderServices();
     }
 
-    private void renderServices()
-    {
+    private void renderServices() {
         getMain().setPageSize(PageSize.ExtraLarge);
 
         var layout = new WaStack();
@@ -77,14 +74,12 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
 
         // Render each family
         boolean alt = false;
-        for (var entry : grouped.entrySet())
-        {
+        for (var entry : grouped.entrySet()) {
             var familyGrid = new WaGrid<>();
             familyGrid.setMinColumnSize("16rem");
             familyGrid.setGap(PageSize.Small);
 
-            for (ServiceDefinition service : entry.getValue())
-            {
+            for (ServiceDefinition service : entry.getValue()) {
                 var card = new WaCard<>();
                 card.setAppearance(Appearance.Outlined);
                 var stack = new WaStack();
@@ -112,17 +107,17 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
 
         usageContent.add(codeBlockWithTitle("Using a service module",
                 "<!-- Just add the dependency — version comes from the BOM -->\n" +
-                "<dependency>\n" +
-                "    <groupId>com.guicedee.modules.services</groupId>\n" +
-                "    <artifactId>postgresql</artifactId>\n" +
-                "</dependency>"));
+                        "<dependency>\n" +
+                        "    <groupId>com.guicedee.modules.services</groupId>\n" +
+                        "    <artifactId>postgresql</artifactId>\n" +
+                        "</dependency>"));
 
         usageContent.add(codeBlockWithTitle("In your module-info.java",
                 "module my.app {\n" +
-                "    requires com.guicedee.guicedinjection;\n" +
-                "    // Service modules export their JPMS packages\n" +
-                "    requires io.vertx.client.sql.pg;\n" +
-                "}"));
+                        "    requires com.guicedee.guicedinjection;\n" +
+                        "    // Service modules export their JPMS packages\n" +
+                        "    requires io.vertx.client.sql.pg;\n" +
+                        "}"));
 
         var note = bodyText("Service modules handle the JPMS packaging so you don't have to. " +
                 "Each one provides proper exports, opens, and requires directives. " +
