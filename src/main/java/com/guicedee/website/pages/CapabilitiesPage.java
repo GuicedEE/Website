@@ -51,23 +51,23 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         // Sidebar
         var aside = new WaPageContentsAside<>();
-        aside.add("Overview");
-        aside.add("Architecture");
-        aside.add("Injection & Lifecycle");
-        aside.add("HTTP Server");
-        aside.add("REST (JAX-RS)");
-        aside.add("REST Client");
-        aside.add("Security");
-        aside.add("Verticles");
-        aside.add("Persistence");
-        aside.add("WebSockets");
-        aside.add("Messaging");
-        aside.add("Observability");
-        aside.add("Logging");
-        aside.add("Configuration");
-        aside.add("Fault Tolerance");
-        aside.add("JLink & Deployment");
-        aside.add("Full catalog");
+        aside.add(escapeAngular("Overview"));
+        aside.add(escapeAngular("Architecture"));
+        aside.add(escapeAngular("Injection & Lifecycle"));
+        aside.add(escapeAngular("HTTP Server"));
+        aside.add(escapeAngular("REST (JAX-RS)"));
+        aside.add(escapeAngular("REST Client"));
+        aside.add(escapeAngular("Security"));
+        aside.add(escapeAngular("Verticles"));
+        aside.add(escapeAngular("Persistence"));
+        aside.add(escapeAngular("WebSockets"));
+        aside.add(escapeAngular("Messaging"));
+        aside.add(escapeAngular("Observability"));
+        aside.add(escapeAngular("Logging"));
+        aside.add(escapeAngular("Configuration"));
+        aside.add(escapeAngular("Fault Tolerance"));
+        aside.add(escapeAngular("JLink & Deployment"));
+        aside.add(escapeAngular("Full catalog"));
         getAside().add(aside);
     }
 

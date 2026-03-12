@@ -38,12 +38,12 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         layout.add(buildIntegrationModules());
 
         var aside = new WaPageContentsAside<>();
-        aside.add("Overview");
-        aside.add("Core modules");
-        aside.add("Web & REST");
-        aside.add("Data & persistence");
-        aside.add("Observability");
-        aside.add("Integration");
+        aside.add(escapeAngular("Overview"));
+        aside.add(escapeAngular("Core modules"));
+        aside.add(escapeAngular("Web & REST"));
+        aside.add(escapeAngular("Data & persistence"));
+        aside.add(escapeAngular("Observability"));
+        aside.add(escapeAngular("Integration"));
         getAside().add(aside);
     }
 
@@ -262,7 +262,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         artifactText.setWaColorText("quiet");
         stack.add(artifactText);
 
-        var cta = buildCta("View module →", route, Variant.Brand, Appearance.Text);
+        var cta = buildCta("View module →", route, Variant.Brand, Appearance.Outlined);
         stack.add(cta);
 
         card.add(stack);
