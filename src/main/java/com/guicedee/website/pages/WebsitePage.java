@@ -219,7 +219,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var wrapper = new DivSimple<>();
         wrapper.addClass("code-block");
         var pre = new PreFormattedText<>();
-        pre.setText(StringEscapeUtils.escapeHtml4(code));
+        pre.setText(StringEscapeUtils.escapeHtml4(code).replace("{", "").replace("}", ""));
         wrapper.add(pre);
         return wrapper;
     }
@@ -234,7 +234,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         wrapper.add(label);
 
         var pre = new PreFormattedText<>();
-        pre.setText(StringEscapeUtils.escapeHtml4(code));
+        pre.setText(StringEscapeUtils.escapeHtml4(code).replace("{", "").replace("}", ""));
         pre.addClass("code-block");
         wrapper.add(pre);
         return wrapper;
