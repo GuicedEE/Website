@@ -26,7 +26,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
 
     private void configureLayout()
     {
-        getHeader().add("GuicedEE — Modular Java, Reactive by Default");
+        getHeader().add(escapeAngular("GuicedEE — Modular Java, Reactive by Default"));
         configureMenu();
         configureFooter();
     }
@@ -61,7 +61,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var copyright = new WaText<>();
         copyright.setWaCaption("s");
         copyright.setWaColorText("quiet");
-        copyright.setText("© 2025 GuicedEE Contributors · Built with JWebMP & WebAwesome · Java 25+ · Vert.x 5");
+        copyright.setText(escapeAngular("© 2025 GuicedEE Contributors · Built with JWebMP & WebAwesome · Java 25+ · Vert.x 5"));
         footerStack.add(copyright);
 
         footer.add(footerStack);
@@ -72,7 +72,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var link = new Link<>();
         link.addClass("wa-page-menu-link");
         link.addAttribute("[routerLink]", "['" + route + "']");
-        link.add(label);
+        link.setText(escapeAngular(label));
         return link;
     }
 
@@ -83,7 +83,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         link.addAttribute("target", "_blank");
         link.addAttribute("rel", "noopener noreferrer");
         link.addClass("footer-link");
-        link.add(label);
+        link.setText(escapeAngular(label));
         return link;
     }
 
@@ -97,12 +97,30 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
 
     // ── Shared component helpers used across all pages ──
 
+    protected String escapeAngular(String text)
+    {
+        if (text == null)
+        {
+            return null;
+        }
+        return StringEscapeUtils.escapeHtml4(text)
+                                .replace("@", "&#64;")
+                                .replace("{", "&#123;")
+                                .replace("}", "&#125;")
+                                .replace("[", "&#91;")
+                                .replace("]", "&#93;")
+                                .replace("(", "&#40;")
+                                .replace(")", "&#41;")
+                                .replace("*", "&#42;")
+                                .replace("_", "&#95;");
+    }
+
     protected WaText<?> headingText(String tag, String size, String text)
     {
         var heading = new WaText<>();
         heading.setTag(tag);
         heading.setWaHeading(size);
-        heading.setText(text);
+        heading.setText(escapeAngular(text));
         return heading;
     }
 
@@ -111,7 +129,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var body = new WaText<>();
         body.setTag("p");
         body.setWaBody(size == null || size.isBlank() ? "m" : size);
-        body.setText(text);
+        body.setText(escapeAngular(text));
         return body;
     }
 
@@ -121,14 +139,14 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         caption.setTag("div");
         caption.setWaCaption("s");
         caption.setWaFontWeight("semibold");
-        caption.setText(text);
+        caption.setText(escapeAngular(text));
         return caption;
     }
 
     protected WaTag<?> buildTag(String label, Variant variant)
     {
         WaTag<?> tag = new WaTag<>();
-        tag.setText(label);
+        tag.setText(escapeAngular(label));
         tag.setVariant(variant);
         tag.setPill(true);
         return tag;
@@ -136,7 +154,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
 
     protected WaButton<?> buildCta(String label, String route, Variant variant, Appearance appearance)
     {
-        WaButton<?> button = new WaButton<>(label, variant);
+        WaButton<?> button = new WaButton<>(escapeAngular(label), variant);
         if (appearance != null)
         {
             button.setAppearance(appearance);
@@ -219,7 +237,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         var wrapper = new DivSimple<>();
         wrapper.addClass("code-block");
         var pre = new PreFormattedText<>();
-        pre.setText(StringEscapeUtils.escapeHtml4(code));
+        pre.setText(escapeAngular(code));
         wrapper.add(pre);
         return wrapper;
     }
@@ -234,7 +252,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> im
         wrapper.add(label);
 
         var pre = new PreFormattedText<>();
-        pre.setText(StringEscapeUtils.escapeHtml4(code));
+        pre.setText(escapeAngular(code));
         pre.addClass("code-block");
         wrapper.add(pre);
         return wrapper;
