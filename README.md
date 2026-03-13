@@ -89,13 +89,9 @@ The generated ZIP mirrors production builds so teams can iterate quickly without
 - Architecture diagrams (C4, sequences, ERD) live under `docs/architecture/`; Mermaid sources are served via Mermaid MCP (`https://mcp.mermaidchart.com/mcp`).
 
 ## 📚 Docs & Rules
-- Pact: `PACT.md`
-- Rules: `RULES.md`
-- Guides: `GUIDES.md`
-- Implementation plan: `IMPLEMENTATION.md`
-- Glossary: `GLOSSARY.md`
-- Architecture index: `docs/architecture/README.md`
+- AI Skills: `SKILLS.md`
 - Prompt reference: `docs/PROMPT_REFERENCE.md`
+- Architecture index: `docs/architecture/README.md`
 
 ## 🤝 Contributing
 - Keep the documentation loop closed: PACT ↔ RULES ↔ GUIDES ↔ IMPLEMENTATION ↔ GLOSSARY.
