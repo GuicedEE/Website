@@ -1,0 +1,28 @@
+# 🧠 GuicedEE Repository Rules for AI Agents
+
+These rules provide specific context for AI agents (Copilot, Cursor, etc.) working on this repository to ensure consistency with the technology stack and architectural patterns.
+
+## 🛠️ Technology Stack
+- **Language**: Java 25 (with latest preview features).
+- **Build Tool**: Maven.
+- **Frameworks**: Guice, Vert.x 5, JWebMP, WebAwesome.
+- **Architecture**: Modular JPMS services with dual-registered SPIs (`module-info.java` + `META-INF/services/`).
+
+## 🧠 AI Skills
+Use the following specialized skills for domain-specific tasks. Each skill has detailed instructions in its `SKILL.md` file.
+
+- **`guicedee-inject`**: DI and lifecycle hooks bootstrap.
+- **`guicedee-vertx`**: Event-bus messaging.
+- **`guicedee-web`**: HTTP/HTTPS server and routing.
+- **`jwebmp-core`**: Component model and HTML/CSS styling in Java.
+- **`jwebmp-angular`**: Angular 20 generation.
+
+Refer to [`SKILLS.md`](./SKILLS.md) for a full registry.
+
+## 🏗️ Architectural Constraints
+- **Forward-only Changes**: Never delete existing functionality unless explicitly asked.
+- **Document Loop**: Keep `PACT.md`, `RULES.md`, `GUIDES.md`, and `GLOSSARY.md` in sync.
+- **Stage-Gated Development**: Docs must be updated before implementation.
+
+## 🎯 Prompting Guidance
+Refer to [`docs/PROMPT_REFERENCE.md`](./docs/PROMPT_REFERENCE.md) for detailed guidance on how to prompt for specific tasks like diagram generation or service configuration.

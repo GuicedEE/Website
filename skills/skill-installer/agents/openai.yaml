@@ -1,0 +1,6 @@
+interface:
+  display_name: "Skill Installer"
+  short_description: "Install skills from defaults or any GitHub repo"
+  default_prompt: "Use $skill-installer to install a new skill from a GitHub repository."
+  icon_small: "./assets/skill-installer-small.svg"
+  icon_large: "./assets/skill-installer.png"
