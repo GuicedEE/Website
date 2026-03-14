@@ -82,6 +82,15 @@
             </dependency>
 
             <dependency>
+                <groupId>com.guicedee</groupId>
+                <artifactId>standalone-bom</artifactId>
+                <version>${guicedee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <dependency>
                 <groupId>com.jwebmp</groupId>
                 <artifactId>jwebmp-bom</artifactId>
                 <version>${jwebmp.version}</version>
@@ -145,6 +154,7 @@
                 <executions>
                     <execution>
                         <id>build-angular</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>build</goal>
                         </goals>
