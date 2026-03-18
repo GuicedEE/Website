@@ -22,13 +22,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                 .addStyle("height:100%")
                 .addStyle("width:100%")
                 .add(new WaTab<>().setPanel("guicedPanel").setName("GuicedEE").setText("GuicedEE").setActiveTabColor("#FF007F"))
-                .add(new WaTabPanel<>().setName("GuicedEE").add(new RouterOutlet()))
+                .add(new WaTabPanel<>().setName("guicedPanel").add(new RouterOutlet()))
                 .add(new WaTab<>().setPanel("jwebmpPanel").setName("JWebMP").setText("JWebMP").setActiveTabColor("#FF007F"))
-                .add(new WaTabPanel<>().setName("JWebMP").add("This should be a new url redirect"))
+                .add(new WaTabPanel<>().setName("jwebmpPanel").add("This should be a new url redirect"))
                 .add(new WaTab<>().setPanel("entityPanel").setName("Entity Assist").setText("Entity Assist").setActiveTabColor("#FF007F"))
-                .add(new WaTabPanel<>().setName("Entity Assist").add("This should be a new url redirect"))
+                .add(new WaTabPanel<>().setName("entityPanel").add("This should be a new url redirect"))
                 .add(new WaTab<>().setPanel("activityPanel").setName("Activity Master").setText("Activity Master").setActiveTabColor("#FF007F"))
-                .add(new WaTabPanel<>().setName("Activity Master").add("This should be a new url redirect"))
+                .add(new WaTabPanel<>().setName("activityPanel").add("This should be a new url redirect"))
         );
     }
 }
