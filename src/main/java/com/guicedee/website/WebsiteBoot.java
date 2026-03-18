@@ -32,33 +32,3 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         );
     }
 }
-//what port? 4200
-//perfect looks like its working
-
-//okkk, this brings in a new avenue for the angular plugin, removing the use of the boot run for client only oooo
-
-
-//for now just keep this running in ng serve, your updates will filter through, i'll sort out the angular plugin
-
-//Alright
-
-
-
-
-//The test classes are the best placed to see how to use components (y)
-//im assuming because test classes are a safer enviroment? Yeah - and because thats how we confirm the component works as well
-//so we test each component in a test class? - Yes
-// It also shows us to configure the java components properly --- I think
-//is there a seperate folder that is used for testing? (all maven has src/main/java - and src/test/java )
-//so what do I need to do right now or am i still in the learning phase? You can do the ->
-
-
-//So like tab icons, colours names, sizing, and then the url links for jwebmp, entity assist, activity master
-// Tabs are -> GuicedEE  -> JWebMP -> Entity Assist -> Activity Master
-//We are only doing the GuicedEE site now
-
-//Then the left hand (nagivation-menu) per item instead of whatever it is now (don't worry about splitting content here. this is the scaffolding phase)
-//And the burger menu when the site is small (wa-page has special handling for this)
-
-//Ok so for now just edit the tabs and add a navigation meny on the left hand side - yes, although i think it is called navigation-menu in wa-page, or similar
-
