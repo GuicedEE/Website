@@ -13,9 +13,15 @@ import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.tabgroup.WaTab;
 import com.jwebmp.webawesome.components.tabgroup.WaTabGroup;
 import com.jwebmp.webawesome.components.tabgroup.WaTabPanel;
+import com.jwebmp.webawesomepro.components.page.WaPage;
 
 @NgComponent("guicedee-app")
 @NgRoutable(path = "")
+/**
+ * Top Level = Tab Groups x 4, Only first has content
+ * Tab Group Content is a WaPage with header, navigation, menu, main-header, main (as per docs)
+ * The page has all the site details
+ */
 public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot>
 {
     public WebsiteBoot()
