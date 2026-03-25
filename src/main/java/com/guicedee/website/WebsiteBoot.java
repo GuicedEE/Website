@@ -42,20 +42,34 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navigation.add("GuicedEE Navigation Links");
 
         var header = page.getHeader();
+        WaDropDown<?> navDropdown = new WaDropDown<>();
+        navDropdown.setButton(new WaButton<>().add(new WaIcon("menu")));
+        navDropdown.addItem(new WaDropdownItem<>("Home"));
+        navDropdown.addItem(new WaDropdownItem<>("Modules"));
+        navDropdown.addItem(new WaDropdownItem<>("Documentation"));
+        navDropdown.addItem(new WaDropdownItem<>("Support"));
+        navDropdown.addItem(new WaDropdownItem<>("Community"));
+        navDropdown.addItem(new WaDropdownItem<>("Github"));
+        navDropdown.addItem(new WaDropdownItem<>("Contact"));
+        navDropdown.addItem(new WaDropdownItem<>("About"));
+        navDropdown.addItem(new WaDropdownItem<>("License"));
+        navDropdown.addItem(new WaDropdownItem<>("Downloads"));
+        navDropdown.addItem(new WaDropdownItem<>("FAQ"));
+        navDropdown.addStyle("max-height: 250px; overflow-y: auto;");
+        header.add(navDropdown);
+        header.setSplit();
         header.add("GuicedEE Website");
 
         var mainHeader = page.getMainHeader();
         var main = page.getMain();
-        main.add(new RouterOutlet());
-
 
         // Tabs
         WaTabGroup<?> tabs = new WaTabGroup<>()
-                .addStyle("width:100%")
-                .addStyle("height:100%");
+                .addStyle("width:50%")
+                .addStyle("height:50%");
 
         tabs.addTab(new WaTab<>().setPanel("guicedPanel").add(new WaIcon("home")).add("GuicedEE"),
-                new WaTabPanel<>().setName("guicedPanel").addStyle("height:100%").add(page), true);
+                new WaTabPanel<>().setName("guicedPanel").addStyle("height:100%").add(new RouterOutlet()), true);
 
         tabs.addTab(new WaTab<>().setPanel("jwebPanel").add(new WaIcon("globe")).add("JWebMP"),
                 new WaTabPanel<>().setName("jwebPanel").addStyle("height:100%").add("JWebMP Content"), false);
@@ -66,7 +80,9 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         tabs.addTab(new WaTab<>().setPanel("activityMasterPanel").add(new WaIcon("tasks")).add("ActivityMaster"),
                 new WaTabPanel<>().setName("activityMasterPanel").addStyle("height:100%").add("ActivityMaster Content"), false);
 
-        add(tabs);
+        main.add(tabs);
+
+        add(page);
 
     }
 }
