@@ -4,6 +4,7 @@ import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.core.base.html.Link;
 import com.jwebmp.core.base.html.PreFormattedText;
+import com.jwebmp.core.base.interfaces.IComponentHierarchyBase;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
@@ -14,84 +15,37 @@ import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
-import com.jwebmp.webawesomepro.components.page.WaPage;
 import org.apache.commons.text.StringEscapeUtils;
 
-public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> implements INgComponent<J>
+public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J> implements INgComponent<J>
 {
     protected WebsitePage()
     {
-        configureLayout();
     }
 
-    private void configureLayout()
+    @SuppressWarnings("unchecked")
+    protected J getMain()
     {
-        getHeader().add(escapeAngular("GuicedEE — Modular Java, Reactive by Default"));
-        configureMenu();
-        configureFooter();
+        return (J) this;
     }
 
-    private void configureMenu()
+    @SuppressWarnings("unchecked")
+    protected J getAside()
     {
-        var menu = getMenu();
-        menu.add(createNavLink("Home", "/home"));
-        menu.add(createNavLink("Get Started", "/getting-started"));
-        menu.add(createNavLink("End-to-End Guide", "/guides/end-to-end"));
-        menu.add(createNavLink("Modules", "/modules"));
-        menu.add(createNavLink("Capabilities", "/capabilities"));
-        menu.add(createNavLink("Services", "/services"));
-        menu.add(createNavLink("App Builder", "/builder"));
-        menu.add(createNavLink("Releases", "/releases"));
-        menu.add(createNavLink("GitHub", "/github"));
+        return (J) this;
     }
 
-    private void configureFooter()
+    @SuppressWarnings("unchecked")
+    public J setPageSize(PageSize pageSize)
     {
-        var footer = getFooter();
-        var footerStack = new WaStack();
-        footerStack.setGap(PageSize.Medium);
-
-        var links = new WaCluster<>();
-        links.setGap(PageSize.Medium);
-        links.add(createFooterLink("GitHub", "https://github.com/GuicedEE"));
-        links.add(createFooterLink("Maven Central", "https://central.sonatype.com/GuicedEE/com.guicedee"));
-        links.add(createFooterLink("Apache 2.0 License", "https://www.apache.org/licenses/LICENSE-2.0"));
-        footerStack.add(links);
-
-        var copyright = new WaText<>();
-        copyright.setWaCaption("s");
-        copyright.setWaColorText("quiet");
-        copyright.setText(escapeAngular("© 2025 GuicedEE Contributors · Built with JWebMP & WebAwesome · Java 25+ · Vert.x 5"));
-        footerStack.add(copyright);
-
-        footer.add(footerStack);
-    }
-
-    private Link<?> createNavLink(String label, String route)
-    {
-        var link = new Link<>();
-        link.addClass("wa-page-menu-link");
-        link.addAttribute("[routerLink]", "['" + route + "']");
-        link.setText(escapeAngular(label));
-        return link;
-    }
-
-    private Link<?> createFooterLink(String label, String url)
-    {
-        var link = new Link<>();
-        link.addAttribute("href", url);
-        link.addAttribute("target", "_blank");
-        link.addAttribute("rel", "noopener noreferrer");
-        link.addClass("footer-link");
-        link.setText(escapeAngular(label));
-        return link;
+        return (J) this;
     }
 
     protected WaStack newMainSection()
     {
         var stack = new WaStack();
         stack.setGap(PageSize.Medium);
-        getMain().add(stack);
+        add(stack);
         return stack;
     }
 
