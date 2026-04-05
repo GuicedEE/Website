@@ -13,7 +13,7 @@ import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.tabgroup.WaTab;
 import com.jwebmp.webawesome.components.tabgroup.WaTabGroup;
 import com.jwebmp.webawesome.components.tabgroup.WaTabPanel;
-import com.jwebmp.webawesomepro.components.page.WaPage;
+import com.jwebmp.webawesome.components.page.WaPage;
 
 @NgComponent("guicedee-app")
 @NgRoutable(path = "")

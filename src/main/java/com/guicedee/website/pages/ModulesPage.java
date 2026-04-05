@@ -11,7 +11,7 @@ import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
-import com.jwebmp.webawesomepro.components.page.WaPageContentsAside;
+import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 @NgComponent("guicedee-modules")
 @NgRoutable(path = "modules")

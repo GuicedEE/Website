@@ -14,7 +14,7 @@ import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
-import com.jwebmp.webawesomepro.components.page.WaPage;
+import com.jwebmp.webawesome.components.page.WaPage;
 import org.apache.commons.text.StringEscapeUtils;
 
 public abstract class WebsitePage<J extends WebsitePage<J>> extends WaPage<J> implements INgComponent<J>
