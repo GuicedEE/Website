@@ -1,7 +1,7 @@
 ```mermaid
 sequenceDiagram
     participant Visitor as Website Visitor
-    participant SPA as Angular 20 + JWebMP
+    participant SPA as Angular 21 + JWebMP
     participant Catalog as Module Catalog API
     participant Media as Media/Asset Store
 

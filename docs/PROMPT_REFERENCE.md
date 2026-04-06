@@ -13,7 +13,7 @@ This repository contains a set of **AI Skills** located in the [`skills/`](./../
 - **`$guicedee-vertx`**: For reactive messaging and event-bus consumers.
 - **`$guicedee-web`**: For HTTP/HTTPS server and router configuration.
 - **`$jwebmp-core`**: For typed HTML/CSS/JS components in Java.
-- **`$jwebmp-angular`**: For Angular 20 TypeScript generation and hosting.
+- **`$jwebmp-angular`**: For Angular 21 TypeScript generation and hosting.
 
 ## 🏗️ Architecture & Rules
 

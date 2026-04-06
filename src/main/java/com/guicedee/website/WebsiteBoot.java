@@ -50,21 +50,18 @@ import java.util.List;
 @NgImportReference(value = "Router, NavigationEnd", reference = "@angular/router")
 @NgImportReference(value = "filter", reference = "rxjs/operators")
 @NgComponentReference(WaToastDataService.class)
-public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot> {
+public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<WebsiteBoot> {
     public WebsiteBoot() {
-        setTag("ng-container");
+        setTag("wa-page");
         addStyle("width:100%");
         addStyle("height:100%");
         //addClass("wa-dark");
 
-        // ── WaPage is the top-level shell ──
-        WaPage<?> page = new WaPage<>();
-        page.addStyle("width:100%");
-        page.addStyle("height:100%");
-        page.getMain().setPageSize(PageSize.ExtraSmall);
+        // ── WaPage settings ──
+        getMain().setPageSize(PageSize.ExtraSmall);
 
         // ── Banner: product navigation bar ──
-        var banner = page.getHeader();
+        var banner = getHeader();
 
         DivSimple<?> navWrapper = new DivSimple<>();
         navWrapper.addClass("wrapper-nav-products");
@@ -253,7 +250,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         banner.add(navWrapper);
 
         // ── Menu: WaTree navigation with sub-items ──
-        var menu = page.getMenu();
+        var menu = getMenu();
         WaTree<?> menuTree = new WaTree<>();
         menuTree.setIndentSize("2px");
         menuTree.setIndentGuideColor("var(--wa-color-neutral-300)");
@@ -293,7 +290,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         menu.add(menuTree);
 
         // ── Navigation Toggle (burger button, slot="navigation-toggle") ──
-        var navToggle = page.getNavigationToggle();
+        var navToggle = getNavigationToggle();
         WaButton<?> burgerBtn = new WaButton<>();
         burgerBtn.setAppearance(Appearance.Plain);
         burgerBtn.setVariant(Variant.Neutral);
@@ -302,11 +299,11 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navToggle.add(burgerBtn);
 
         // ── Navigation Toggle Icon (slot="navigation-toggle-icon") ──
-        var navToggleIcon = page.getNavigationToggleIcon();
+        var navToggleIcon = getNavigationToggleIcon();
         navToggleIcon.add(new WaIcon<>("bars"));
 
         // ── Navigation Header (branding inside the drawer, slot="navigation-header") ──
-        var navHeader = page.getNavigationHeader();
+        var navHeader = getNavigationHeader();
         Link<?> drawerLogo = new Link<>();
         drawerLogo.setTag("a");
         drawerLogo.addAttribute("routerLink", "/home");
@@ -319,7 +316,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navHeader.add(drawerLogo);
 
         // ── Burger Menu Navigation (drawer contents, slot="navigation") ──
-        var burgerMenuNavigation = page.getNavigation();
+        var burgerMenuNavigation = getNavigation();
         WaTree<?> navTree = new WaTree<>();
         navTree.setIndentSize("2px");
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
@@ -352,7 +349,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         burgerMenuNavigation.add(navTree);
 
         // ── Navigation Footer (external links inside the drawer, slot="navigation-footer") ──
-        var navFooter = page.getNavigationFooter();
+        var navFooter = getNavigationFooter();
         Link<?> navGithubLink = new Link<>();
         navGithubLink.setTag("a");
         navGithubLink.addAttribute("href", "https://github.com/GuicedEE/");
@@ -369,10 +366,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navJwebmpLink.setText("JWebMP");
         navFooter.add(navJwebmpLink);
 
-        page.getMain().add(new RouterOutlet());
-        page.getAside().add(new RouterOutlet("aside"));
-
-        add(page);
+        getMain().add(new RouterOutlet());
+        getAside().add(new RouterOutlet("aside"));
     }
 
     private static WaTreeItem<?> createRouterTreeItem(String path, String text, String icon)

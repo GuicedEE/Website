@@ -15,7 +15,7 @@ Use the following specialized skills for domain-specific tasks. Each skill has d
 - **`guicedee-vertx`**: Event-bus messaging.
 - **`guicedee-web`**: HTTP/HTTPS server and routing.
 - **`jwebmp-core`**: Component model and HTML/CSS styling in Java.
-- **`jwebmp-angular`**: Angular 20 generation.
+- **`jwebmp-angular`**: Angular 21 generation.
 
 Refer to [`SKILLS.md`](./SKILLS.md) for a full registry.
 

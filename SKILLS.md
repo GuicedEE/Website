@@ -10,7 +10,7 @@ This directory serves as the central index for all **AI Skills** available in th
 | [**guicedee-inject**](./skills/guicedee-inject/SKILL.md) | Bootstrap the GuicedEE runtime (scanning, DI, hooks). | *Use $guicedee-inject to wire up a new application.* |
 | [**guicedee-vertx**](./skills/guicedee-vertx/SKILL.md) | Vert.x 5 event-bus messaging integration. | *Use $guicedee-vertx to add event-bus consumers.* |
 | [**guicedee-web**](./skills/guicedee-web/SKILL.md) | Reactive HTTP/HTTPS server bootstrap with Vert.x. | *Use $guicedee-web to configure custom routes.* |
-| [**jwebmp-angular**](./skills/jwebmp-angular/SKILL.md) | Generate Angular 20 apps from Java annotations. | *Use $jwebmp-angular to set up a new Angular component.* |
+| [**jwebmp-angular**](./skills/jwebmp-angular/SKILL.md) | Generate Angular 21 apps from Java annotations. | *Use $jwebmp-angular to set up a new Angular component.* |
 | [**jwebmp-client**](./skills/jwebmp-client/SKILL.md) | JWebMP client contracts and AJAX pipeline. | *Use $jwebmp-client to intercept AJAX calls.* |
 | [**jwebmp-core**](./skills/jwebmp-core/SKILL.md) | Type-safe HTML/CSS/JS components in Java. | *Use $jwebmp-core to build a custom HTML element.* |
 | [**jwebmp-webawesome**](./skills/jwebmp-webawesome/SKILL.md) | Modern icon library integration for JWebMP. | *Use $jwebmp-webawesome to add a home icon.* |

@@ -5,6 +5,7 @@ import com.guicedee.website.catalog.ServiceDefinition;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
@@ -12,7 +13,6 @@ import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
-import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,10 +67,11 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
                         Collectors.toList()));
 
         // Sidebar
-        var aside = new WaPageContentsAside<>();
+        var aside = new DivSimple<>();
+        aside.addClass("wa-page-aside-content");
         aside.add("Overview");
         grouped.keySet().forEach(aside::add);
-        getAside().add(aside);
+        add(aside);
 
         // Render each family
         boolean alt = false;
