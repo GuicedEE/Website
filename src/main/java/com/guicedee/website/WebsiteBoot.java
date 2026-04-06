@@ -22,7 +22,7 @@ import com.jwebmp.webawesome.components.toast.WaToastDataService;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
-import com.jwebmp.webawesomepro.components.page.WaPage;
+import com.jwebmp.webawesome.components.page.WaPage;
 
 import java.util.ArrayList;
 import java.util.List;
