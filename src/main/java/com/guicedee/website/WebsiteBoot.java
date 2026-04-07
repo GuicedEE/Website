@@ -11,18 +11,16 @@ import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.services.RouterOutlet;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.core.base.html.Link;
-import com.jwebmp.plugins.prism.PrismTheme;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
-import com.jwebmp.webawesome.components.button.WaDropDown;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.toast.WaToastDataService;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
-import com.jwebmp.webawesomepro.components.page.WaPage;
+import com.jwebmp.webawesome.components.page.WaPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,21 +45,25 @@ import java.util.List;
 @NgImportReference(value = "localeEnZa", reference = "@angular/common/locales/en-ZA", direct = true, wrapValueInBraces = false)
 @NgImportReference(value = "signal", reference = "@angular/core")
 @NgImportReference(value = "DOCUMENT", reference = "@angular/common")
-@NgImportReference(value = "Router, NavigationEnd", reference = "@angular/router")
+@NgImportReference(value = "Router, NavigationStart, NavigationEnd", reference = "@angular/router")
 @NgImportReference(value = "filter", reference = "rxjs/operators")
 @NgComponentReference(WaToastDataService.class)
-public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<WebsiteBoot> {
+public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot> {
     public WebsiteBoot() {
-        setTag("wa-page");
+        setTag("ng-container");
         addStyle("width:100%");
         addStyle("height:100%");
-        //addClass("wa-dark");
+
+        // ── WaPage is the top-level shell ──
+        WaPage<?> page = new WaPage<>();
+        page.addStyle("width:100%");
+        page.addStyle("height:100%");
 
         // ── WaPage settings ──
-        getMain().setPageSize(PageSize.ExtraSmall);
+        page.getMain().setPageSize(PageSize.ExtraSmall);
 
         // ── Banner: product navigation bar ──
-        var banner = getHeader();
+        var banner = page.getHeader();
 
         DivSimple<?> navWrapper = new DivSimple<>();
         navWrapper.addClass("wrapper-nav-products");
@@ -93,8 +95,11 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         guicedeeLink.addClass("appearance-plain");
         guicedeeLink.addAttribute("aria-label", "GuicedEE");
         var guicedeeLogo = new DivSimple<>();
-        guicedeeLogo.setTag("span");
-        guicedeeLogo.addClass("logo-guicedee-svg");
+        guicedeeLogo.setTag("i");
+        guicedeeLogo.addClass("fak");
+        guicedeeLogo.addClass("fa-guicedee-logo");
+        guicedeeLogo.addClass("logo-icon");
+        guicedeeLogo.addClass("logo-guicedee");
         guicedeeLink.add(guicedeeLogo);
         guicedeeLink.setText("GuicedEE");
         guicedeeLink.setRenderTextBeforeChildren(false);
@@ -109,7 +114,13 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         jwebmpLink.addClass("product-jwebmp");
         jwebmpLink.addClass("appearance-plain");
         jwebmpLink.setID("product-jwebmp");
-        jwebmpLink.add(new WaIcon<>("globe").addClass("logo-icon").addClass("logo-jwebmp"));
+        var jwebmpLogo = new DivSimple<>();
+        jwebmpLogo.setTag("i");
+        jwebmpLogo.addClass("fak");
+        jwebmpLogo.addClass("fa-jwebmp-logo-green");
+        jwebmpLogo.addClass("logo-icon");
+        jwebmpLogo.addClass("logo-jwebmp");
+        jwebmpLink.add(jwebmpLogo);
         cluster.add(jwebmpLink);
         WaTooltip<?> jwebmpTip = new WaTooltip<>();
         jwebmpTip.setForId("product-jwebmp");
@@ -174,7 +185,7 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         WaButton<?> starBtn = new WaButton<>();
         starBtn.setAppearance(Appearance.Plain);
         starBtn.setVariant(Variant.Brand);
-        starBtn.setAsLink("https://github.com/GuicedEE/Services/stargazers", "_blank", null);
+        starBtn.setAsLink("https://github.com/GuicedEE/GuicedInjection", "_blank", null);
         starBtn.addClass("pseudo-product");
         starBtn.addClass("product-star");
         starBtn.setID("product-star");
@@ -217,80 +228,49 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         themeTip.setText("Toggle Theme");
         secondary.add(themeTip);
 
-        // Prism syntax theme selector (dropdown triggered by icon button)
-        var prismDropdown = new WaDropDown<>();
-        prismDropdown.addClass("pseudo-product");
-        prismDropdown.setSelectEvent("changePrismTheme($event)");
-
-        var prismBtn = new WaButton<>();
-        prismBtn.setAppearance(Appearance.Plain);
-        prismBtn.setVariant(Variant.Brand);
-        prismBtn.setID("product-code-theme");
-        prismBtn.add(new WaIcon<>("code").addAttribute("label", "Code Theme"));
-        prismDropdown.setButton(prismBtn);
-
-        for (var theme : com.jwebmp.plugins.prism.PrismTheme.values()) {
-            // Skip community themes not in the standard prismjs package
-            if (theme == PrismTheme.OneDark || theme == PrismTheme.OneLight) continue;
-            prismDropdown.addItem(
-                    theme.name().replaceAll("([a-z])([A-Z])", "$1 $2"),
-                    theme.getCssFileName()
-            );
-        }
-        secondary.add(prismDropdown);
-
-        WaTooltip<?> prismTip = new WaTooltip<>();
-        prismTip.setForId("product-code-theme");
-        prismTip.setText("Code Theme");
-        secondary.add(prismTip);
-
         primary.add(secondary);
         nav.add(primary);
         navWrapper.add(nav);
         banner.add(navWrapper);
 
         // ── Menu: WaTree navigation with sub-items ──
-        var menu = getMenu();
+        var menu = page.getMenu();
         WaTree<?> menuTree = new WaTree<>();
         menuTree.setIndentSize("2px");
         menuTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
         // Home
-        var homeItem = createRouterTreeItem("/home", "Home", "house");
-        menuTree.add(homeItem);
+        menuTree.add(createRouterTreeItem("/home", "Home", "house"));
 
         // Getting Started
-        var gsItem = createRouterTreeItem("/getting-started", "Getting Started", "rocket");
-        gsItem.add(createRouterTreeItem("/getting-started/introduction", "Introduction", null));
-        gsItem.add(createRouterTreeItem("/getting-started/installation", "Installation", null));
-        gsItem.add(createRouterTreeItem("/getting-started/configuration", "Configuration", null));
-        gsItem.add(createRouterTreeItem("/getting-started/first-project", "First Project", null));
-        menuTree.add(gsItem);
+        menuTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
+
+        // End-to-End Guide
+        menuTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
+
+        // Capabilities
+        menuTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
 
         // Modules
-        var modulesItem = createRouterTreeItem("/modules", "Modules", "cubes");
-        modulesItem.add(createRouterTreeItem("/modules/core", "Core", null));
-        modulesItem.add(createRouterTreeItem("/modules/persistence", "Persistence", null));
-        modulesItem.add(createRouterTreeItem("/modules/rest", "REST", null));
-        modulesItem.add(createRouterTreeItem("/modules/security", "Security", null));
-        modulesItem.add(createRouterTreeItem("/modules/messaging", "Messaging", null));
-        menuTree.add(modulesItem);
+        menuTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
 
-        // Documentation
-        var docsItem = createRouterTreeItem("/documentation", "Documentation", "book");
-        docsItem.add(createRouterTreeItem("/documentation/dependency-injection", "Dependency Injection", null));
-        docsItem.add(createRouterTreeItem("/documentation/configuration", "Configuration", null));
-        docsItem.add(createRouterTreeItem("/documentation/services", "Services", null));
-        docsItem.add(createRouterTreeItem("/documentation/modules", "Modules", null));
-        menuTree.add(docsItem);
+        // Services
+        menuTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
 
-        // GitHub
-        menuTree.add(createRouterTreeItem("/github", "GitHub", "code-branch"));
+        // Releases
+        menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
+
+        // App Builder
+        menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
+
+        // Media
+        menuTree.add(createRouterTreeItem("/media", "Media", "photo-film"));
+
 
         menu.add(menuTree);
 
         // ── Navigation Toggle (burger button, slot="navigation-toggle") ──
-        var navToggle = getNavigationToggle();
+        var navToggle = page.getNavigationToggle();
         WaButton<?> burgerBtn = new WaButton<>();
         burgerBtn.setAppearance(Appearance.Plain);
         burgerBtn.setVariant(Variant.Neutral);
@@ -299,57 +279,44 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         navToggle.add(burgerBtn);
 
         // ── Navigation Toggle Icon (slot="navigation-toggle-icon") ──
-        var navToggleIcon = getNavigationToggleIcon();
+        var navToggleIcon = page.getNavigationToggleIcon();
         navToggleIcon.add(new WaIcon<>("bars"));
 
         // ── Navigation Header (branding inside the drawer, slot="navigation-header") ──
-        var navHeader = getNavigationHeader();
+        var navHeader = page.getNavigationHeader();
         Link<?> drawerLogo = new Link<>();
         drawerLogo.setTag("a");
         drawerLogo.addAttribute("routerLink", "/home");
         drawerLogo.addAttribute("aria-label", "GuicedEE Home");
         drawerLogo.addClass("appearance-plain");
         var drawerLogoSpan = new DivSimple<>();
-        drawerLogoSpan.setTag("span");
-        drawerLogoSpan.addClass("logo-guicedee-svg");
+        drawerLogoSpan.setTag("i");
+        drawerLogoSpan.addClass("fak");
+        drawerLogoSpan.addClass("fa-guicedee-logo");
+        drawerLogoSpan.addClass("logo-icon");
+        drawerLogoSpan.addClass("logo-guicedee");
         drawerLogo.add(drawerLogoSpan);
         navHeader.add(drawerLogo);
 
         // ── Burger Menu Navigation (drawer contents, slot="navigation") ──
-        var burgerMenuNavigation = getNavigation();
+        var burgerMenuNavigation = page.getNavigation();
         WaTree<?> navTree = new WaTree<>();
         navTree.setIndentSize("2px");
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
         navTree.add(createRouterTreeItem("/home", "Home", "house"));
-
-        var navGs = createRouterTreeItem("/getting-started", "Getting Started", "rocket");
-        navGs.add(createRouterTreeItem("/getting-started/introduction", "Introduction", null));
-        navGs.add(createRouterTreeItem("/getting-started/installation", "Installation", null));
-        navGs.add(createRouterTreeItem("/getting-started/configuration", "Configuration", null));
-        navGs.add(createRouterTreeItem("/getting-started/first-project", "First Project", null));
-        navTree.add(navGs);
-
-        var navModules = createRouterTreeItem("/modules", "Modules", "cubes");
-        navModules.add(createRouterTreeItem("/modules/core", "Core", null));
-        navModules.add(createRouterTreeItem("/modules/persistence", "Persistence", null));
-        navModules.add(createRouterTreeItem("/modules/rest", "REST", null));
-        navModules.add(createRouterTreeItem("/modules/security", "Security", null));
-        navModules.add(createRouterTreeItem("/modules/messaging", "Messaging", null));
-        navTree.add(navModules);
-
-        var navDocs = createRouterTreeItem("/documentation", "Documentation", "book");
-        navDocs.add(createRouterTreeItem("/documentation/dependency-injection", "Dependency Injection", null));
-        navDocs.add(createRouterTreeItem("/documentation/configuration", "Configuration", null));
-        navDocs.add(createRouterTreeItem("/documentation/services", "Services", null));
-        navDocs.add(createRouterTreeItem("/documentation/modules", "Modules", null));
-        navTree.add(navDocs);
-
-        navTree.add(createRouterTreeItem("/github", "GitHub", "code-branch"));
+        navTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
+        navTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
+        navTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
+        navTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
+        navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
+        navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
+        navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
+        navTree.add(createRouterTreeItem("/media", "Media", "photo-film"));
         burgerMenuNavigation.add(navTree);
 
         // ── Navigation Footer (external links inside the drawer, slot="navigation-footer") ──
-        var navFooter = getNavigationFooter();
+        var navFooter = page.getNavigationFooter();
         Link<?> navGithubLink = new Link<>();
         navGithubLink.setTag("a");
         navGithubLink.addAttribute("href", "https://github.com/GuicedEE/");
@@ -366,8 +333,10 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         navJwebmpLink.setText("JWebMP");
         navFooter.add(navJwebmpLink);
 
-        getMain().add(new RouterOutlet());
-        getAside().add(new RouterOutlet("aside"));
+        page.getMain().add(new RouterOutlet());
+        page.getAside().add(new RouterOutlet("aside"));
+
+        add(page);
     }
 
     private static WaTreeItem<?> createRouterTreeItem(String path, String text, String icon)
@@ -415,12 +384,13 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
         f.add("darkMode = signal(true);");
-        f.add("prismTheme = 'prism-solarizedlight';");
-        f.add("private _prismThemeCache: Record<string, string> = {};");
+        f.add("useGradle = false;");
         f.add("""
                 private asideRoutes: Record<string, string> = {
-                    'home': 'home',
-                    'getting-started': 'getting-started'
+                    'getting-started': 'getting-started',
+                    'capabilities': 'capabilities',
+                    'guides/end-to-end': 'guides/end-to-end',
+                    'modules': 'modules'
                 };""");
         return f;
     }
@@ -436,34 +406,10 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
                     localStorage.setItem('guicedee-theme', isDark ? 'dark' : 'light');
                 }""");
         m.add("""
-                changePrismTheme($event: any) {
-                    const theme = $event?.detail?.item?.value || this.prismTheme;
-                    this.prismTheme = theme;
-                    localStorage.setItem('guicedee-prism-theme', theme);
-
-                    const applyThemeCss = (css: string) => {
-                        let style = this.document.getElementById('prism-theme-override') as HTMLStyleElement;
-                        if (!style) {
-                            style = this.document.createElement('style') as HTMLStyleElement;
-                            style.id = 'prism-theme-override';
-                            this.document.head.appendChild(style);
-                        }
-                        style.textContent = css;
-                    };
-
-                    if (this._prismThemeCache[theme]) {
-                        applyThemeCss(this._prismThemeCache[theme]);
-                        return;
-                    }
-
-                    const url = `https://cdn.jsdelivr.net/npm/prismjs@1/themes/${theme}.min.css`;
-                    fetch(url)
-                        .then(r => r.ok ? r.text() : Promise.reject('Failed to load theme'))
-                        .then(css => {
-                            this._prismThemeCache[theme] = css;
-                            applyThemeCss(css);
-                        })
-                        .catch(err => console.warn('Could not load Prism theme:', theme, err));
+                onBuildToolChange(value: boolean) {
+                    this.useGradle = value;
+                    localStorage.setItem('guicedee-build-tool', value ? 'gradle' : 'maven');
+                    window.dispatchEvent(new CustomEvent('guicedee-build-tool-change', { detail: value }));
                 }""");
         return m;
     }
@@ -477,27 +423,37 @@ public class WebsiteBoot extends WaPage<WebsiteBoot> implements INgComponent<Web
                 this.darkMode.set(prefersDark);
                 this.document.body.classList.toggle('wa-dark', prefersDark);""");
         init.add("""
-                const savedPrismTheme = localStorage.getItem('guicedee-prism-theme');
-                if (savedPrismTheme) {
-                    this.prismTheme = savedPrismTheme;
-                    this.changePrismTheme(null);
+                const savedBuildTool = localStorage.getItem('guicedee-build-tool');
+                if (savedBuildTool) {
+                    this.useGradle = savedBuildTool === 'gradle';
                 }""");
         init.add("""
                 this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
                     if (this._asideNavigating) return;
-                    const url = (e as NavigationEnd).urlAfterRedirects || (e as NavigationEnd).url;
-                    const primaryPath = url.split('?')[0].split('#')[0].replace(/^\\//, '').split('/')[0];
+                    const navEnd = e as NavigationEnd;
+                    const parsedUrl = this.router.parseUrl(navEnd.urlAfterRedirects);
+                    const primarySegments = parsedUrl.root.children['primary']?.segments || [];
+                    const primaryPath = primarySegments.map((s: any) => s.path).join('/');
                     const asidePath = this.asideRoutes[primaryPath];
-                    const currentAside = this.router.parseUrl(url).root.children['aside'];
+                    const currentAside = parsedUrl.root.children['aside'];
                     const currentAsidePath = currentAside?.segments?.map((s: any) => s.path).join('/') || null;
+                    
                     if (asidePath && currentAsidePath !== asidePath) {
                         this._asideNavigating = true;
-                        this.router.navigate([{outlets: {aside: [asidePath]}}], {skipLocationChange: true})
-                            .finally(() => this._asideNavigating = false);
+                        const asideSegments = asidePath.split('/');
+                        const tree = this.router.createUrlTree([{outlets: {aside: asideSegments}}], {relativeTo: null as any});
+                        tree.root.children['primary'] = parsedUrl.root.children['primary'];
+                        tree.queryParams = parsedUrl.queryParams;
+                        tree.fragment = parsedUrl.fragment;
+                        this.router.navigateByUrl(tree, {replaceUrl: true})
+                            .then(() => this._asideNavigating = false)
+                            .catch(() => this._asideNavigating = false);
                     } else if (!asidePath && currentAside) {
                         this._asideNavigating = true;
-                        this.router.navigate([{outlets: {aside: null}}], {skipLocationChange: true})
-                            .finally(() => this._asideNavigating = false);
+                        delete parsedUrl.root.children['aside'];
+                        this.router.navigateByUrl(parsedUrl, {replaceUrl: true})
+                            .then(() => this._asideNavigating = false)
+                            .catch(() => this._asideNavigating = false);
                     }
                 });""");
         return init;

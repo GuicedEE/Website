@@ -11,7 +11,6 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.details.WaDetails;
-import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
@@ -24,8 +23,6 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private void buildGettingStartedPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
-
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
@@ -39,18 +36,6 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         layout.add(buildStep5Run());
         layout.add(buildWhatsHappening());
         layout.add(buildNextSteps());
-
-        var aside = new WaPageContentsAside<>();
-        aside.add("Introduction");
-        aside.add("Prerequisites");
-        aside.add("Step 1: Create the project");
-        aside.add("Step 2: Module descriptor");
-        aside.add("Step 3: Bootstrap");
-        aside.add("Step 4: REST endpoint");
-        aside.add("Step 5: Run it");
-        aside.add("What just happened?");
-        aside.add("Next steps");
-        getAside().add(aside);
     }
 
     // ── Intro ─────────────────────────────────────────
@@ -83,7 +68,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Prerequisites ─────────────────────────────────
 
-    private WaCard<?> buildPrerequisites()
+    private WaStack buildPrerequisites()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -98,7 +83,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 1: Create the project ────────────────────
 
-    private WaCard<?> buildStep1Project()
+    private WaStack buildStep1Project()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -158,7 +143,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 2: Module descriptor ─────────────────────
 
-    private WaCard<?> buildStep2ModuleInfo()
+    private WaStack buildStep2ModuleInfo()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -190,7 +175,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 3: Bootstrap ─────────────────────────────
 
-    private WaCard<?> buildStep3Bootstrap()
+    private WaStack buildStep3Bootstrap()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -221,7 +206,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 4: REST endpoint ─────────────────────────
 
-    private WaCard<?> buildStep4Endpoint()
+    private WaStack buildStep4Endpoint()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -264,7 +249,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 5: Run it ────────────────────────────────
 
-    private WaCard<?> buildStep5Run()
+    private WaStack buildStep5Run()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -293,7 +278,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── What just happened? ───────────────────────────
 
-    private WaCard<?> buildWhatsHappening()
+    private WaStack buildWhatsHappening()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -302,16 +287,16 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         desc.setWaColorText("quiet");
         content.add(desc);
 
-        content.add(codeBlock(
+        content.add(mermaidDiagramWithTitle("GuicedEE Bootstrap Lifecycle",
                 """
-                        IGuiceContext.instance()
-                         ├─ ClassGraph scans com.example.hello
-                         ├─ Discovers HelloResource (@Path)
-                         ├─ Loads Guice modules via ServiceLoader
-                         ├─ Creates the Guice injector
-                         ├─ Starts Vert.x HTTP server on :8080
-                         ├─ Maps @Path/@GET to Vert.x Router routes
-                         └─ Ready to serve requests"""));
+                        graph TD
+                            A["IGuiceContext.instance()"] --> B["ClassGraph scans com.example.hello"]
+                            B --> C["Discovers HelloResource - @Path"]
+                            C --> D["Loads Guice modules via ServiceLoader"]
+                            D --> E["Creates the Guice injector"]
+                            E --> F["Starts Vert.x HTTP server on :8080"]
+                            F --> G["Maps @Path/@GET to Vert.x Router routes"]
+                            G --> H["Ready to serve requests"]"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -342,7 +327,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Next steps ────────────────────────────────────
 
-    private WaCard<?> buildNextSteps()
+    private WaStack buildNextSteps()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);

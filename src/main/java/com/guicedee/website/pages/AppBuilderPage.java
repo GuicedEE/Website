@@ -27,7 +27,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
     private void renderBuilder()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
 
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);

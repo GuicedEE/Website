@@ -11,7 +11,6 @@ import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
-import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 @NgComponent("guicedee-modules")
 @NgRoutable(path = "modules")
@@ -24,8 +23,6 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
     private void buildPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
-
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
@@ -36,15 +33,6 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         layout.add(buildDataModules());
         layout.add(buildObservabilityModules());
         layout.add(buildIntegrationModules());
-
-        var aside = new WaPageContentsAside<>();
-        aside.add(escapeAngular("Overview"));
-        aside.add(escapeAngular("Core modules"));
-        aside.add(escapeAngular("Web & REST"));
-        aside.add(escapeAngular("Data & persistence"));
-        aside.add(escapeAngular("Observability"));
-        aside.add(escapeAngular("Integration"));
-        getAside().add(aside);
     }
 
     private WaCard<?> buildIntro()
@@ -74,7 +62,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         return card;
     }
 
-    private WaCard<?> buildCoreModules()
+    private WaStack buildCoreModules()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -102,7 +90,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The foundation that every GuicedEE application is built on.", true, grid);
     }
 
-    private WaCard<?> buildWebModules()
+    private WaStack buildWebModules()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -142,7 +130,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The reactive web stack built on Vert.x 5.", false, grid);
     }
 
-    private WaCard<?> buildDataModules()
+    private WaStack buildDataModules()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -160,17 +148,11 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:representations",
                 "modules/representations"));
 
-        grid.add(moduleCard("Cerial",
-                "High-performance serialization with compile-time code generation. " +
-                        "Binary and JSON formats with JPMS module support.",
-                "com.guicedee:cerial",
-                "modules/cerial"));
-
         return buildSection("Data & persistence", "Database access, serialization, and data formats",
-                "Hibernate Reactive, Jackson, and high-performance serialization.", true, grid);
+                "Hibernate Reactive, Jackson, and shared JSON representations.", true, grid);
     }
 
-    private WaCard<?> buildObservabilityModules()
+    private WaStack buildObservabilityModules()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -210,7 +192,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "MicroProfile specifications with zero-config defaults.", false, grid);
     }
 
-    private WaCard<?> buildIntegrationModules()
+    private WaStack buildIntegrationModules()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -240,8 +222,14 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:webservices",
                 "modules/webservices"));
 
-        return buildSection("Integration", "Messaging, API documentation, and web services",
-                "Connect to the ecosystem with messaging, OpenAPI, and SOAP.", true, grid);
+        grid.add(moduleCard("Cerial",
+                "Modular serial port communications in Java. @Named port injection, " +
+                        "auto-reconnect, idle monitoring, and health reporting.",
+                "com.guicedee:cerial",
+                "modules/cerial"));
+
+        return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
+                "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
     }
 
     private WaCard<?> moduleCard(String title, String description, String artifact, String route)

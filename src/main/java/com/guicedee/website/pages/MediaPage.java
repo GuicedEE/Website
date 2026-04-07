@@ -22,7 +22,6 @@ public class MediaPage extends WebsitePage<MediaPage> implements INgComponent<Me
 
     private void buildMediaPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
 
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);

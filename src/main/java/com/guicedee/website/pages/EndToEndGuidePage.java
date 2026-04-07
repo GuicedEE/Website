@@ -10,7 +10,6 @@ import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
-import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
@@ -23,8 +22,6 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private void buildPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
-
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
@@ -45,25 +42,6 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         layout.add(buildJLinkDeployment());
         layout.add(buildLifecycleAndEnvVars());
         layout.add(buildModulePages());
-
-        var aside = new WaPageContentsAside<>();
-        aside.add("Introduction");
-        aside.add("Project setup");
-        aside.add("Module descriptor");
-        aside.add("Guice module & bootstrap");
-        aside.add("REST endpoints");
-        aside.add("Security");
-        aside.add("CORS");
-        aside.add("REST client");
-        aside.add("Health checks");
-        aside.add("Configuration");
-        aside.add("Persistence");
-        aside.add("Verticle isolation");
-        aside.add("Cloud logging");
-        aside.add("JLink deployment");
-        aside.add("Lifecycle & env vars");
-        aside.add("Module deep-dives");
-        getAside().add(aside);
     }
 
     // ── Intro ─────────────────────────────────────────
@@ -98,7 +76,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Project setup ─────────────────────────────────
 
-    private WaCard<?> buildProjectSetup()
+    private WaStack buildProjectSetup()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -151,7 +129,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Module descriptor ─────────────────────────────
 
-    private WaCard<?> buildModuleDescriptor()
+    private WaStack buildModuleDescriptor()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -191,7 +169,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Guice module & bootstrap ──────────────────────
 
-    private WaCard<?> buildGuiceModuleAndBootstrap()
+    private WaStack buildGuiceModuleAndBootstrap()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -224,7 +202,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── REST endpoints ────────────────────────────────
 
-    private WaCard<?> buildRestEndpoints()
+    private WaStack buildRestEndpoints()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -280,7 +258,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Security ──────────────────────────────────────
 
-    private WaCard<?> buildSecuritySection()
+    private WaStack buildSecuritySection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -323,7 +301,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── CORS ──────────────────────────────────────────
 
-    private WaCard<?> buildCorsSection()
+    private WaStack buildCorsSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -351,7 +329,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── REST client ───────────────────────────────────
 
-    private WaCard<?> buildRestClientSection()
+    private WaStack buildRestClientSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -395,7 +373,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Health checks ─────────────────────────────────
 
-    private WaCard<?> buildHealthChecks()
+    private WaStack buildHealthChecks()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -431,7 +409,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Configuration ─────────────────────────────────
 
-    private WaCard<?> buildConfiguration()
+    private WaStack buildConfiguration()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -460,7 +438,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Persistence ───────────────────────────────────
 
-    private WaCard<?> buildPersistenceSection()
+    private WaStack buildPersistenceSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -527,7 +505,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Verticle isolation ────────────────────────────
 
-    private WaCard<?> buildVerticleSection()
+    private WaStack buildVerticleSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -567,7 +545,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Cloud-aware logging ───────────────────────────
 
-    private WaCard<?> buildCloudLogging()
+    private WaStack buildCloudLogging()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -602,7 +580,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── JLink deployment ──────────────────────────────
 
-    private WaCard<?> buildJLinkDeployment()
+    private WaStack buildJLinkDeployment()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -641,21 +619,21 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Lifecycle & env vars ──────────────────────────
 
-    private WaCard<?> buildLifecycleAndEnvVars()
+    private WaStack buildLifecycleAndEnvVars()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(codeBlockWithTitle("Startup lifecycle",
+        content.add(mermaidDiagramWithTitle("Startup lifecycle",
                 """
-                        IGuiceContext.instance()
-                         ├─ IGuiceConfigurator       → Configure ClassGraph scan
-                         ├─ IGuicePreStartup          → Pre-scan hooks
-                         ├─ ClassGraph Scan            → Discover classes & SPI
-                         ├─ IGuiceModule               → Guice module binding
-                         ├─ Injector Creation          → Build Guice injector
-                         ├─ IGuicePostStartup          → Start servers, routes, consumers
-                         └─ IGuicePreDestroy           → Graceful shutdown"""));
+                        graph TD
+                            A["IGuiceContext.instance()"] --> B["IGuiceConfigurator — Configure ClassGraph scan"]
+                            B --> C["IGuicePreStartup — Pre-scan hooks"]
+                            C --> D["ClassGraph Scan — Discover classes & SPI"]
+                            D --> E["IGuiceModule — Guice module binding"]
+                            E --> F["Injector Creation — Build Guice injector"]
+                            F --> G["IGuicePostStartup — Start servers, routes, consumers"]
+                            G --> H["IGuicePreDestroy — Graceful shutdown"]"""));
 
         content.add(codeBlockWithTitle("Common environment variables",
                 """
@@ -694,7 +672,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Module pages ──────────────────────────────────
 
-    private WaCard<?> buildModulePages()
+    private WaStack buildModulePages()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);

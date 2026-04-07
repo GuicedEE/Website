@@ -2,12 +2,12 @@ package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.html.DivSimple;
-import com.jwebmp.core.base.html.Link;
-import com.jwebmp.core.base.html.PreFormattedText;
-import com.jwebmp.core.base.interfaces.IComponentHierarchyBase;
+import com.jwebmp.plugins.markdown.Markdown;
+import com.jwebmp.plugins.prism.PrismLanguage;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
+import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
@@ -21,6 +21,9 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 {
     protected WebsitePage()
     {
+        addClass("website-content");
+        addStyle("padding:0 var(--wa-spacing-x-large) var(--wa-spacing-x-large) var(--wa-spacing-x-large)");
+        addStyle("max-width:72rem");
     }
 
     @SuppressWarnings("unchecked")
@@ -41,15 +44,22 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return (J) this;
     }
 
-    protected WaStack newMainSection()
+    protected WaGrid<?> grid(int columns)
     {
-        var stack = new WaStack();
-        stack.setGap(PageSize.Medium);
-        add(stack);
-        return stack;
+        var grid = new WaGrid<>();
+        grid.setGap(PageSize.Medium);
+        if (columns == 2)
+        {
+            grid.setMinColumnSize("20rem");
+        }
+        else if (columns >= 3)
+        {
+            grid.setMinColumnSize("14rem");
+        }
+        return grid;
     }
 
-    // ── Shared component helpers used across all pages ──
+    // ── Text helpers ──────────────────────────────────
 
     protected String escapeAngular(String text)
     {
@@ -67,6 +77,18 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
                                 .replace(")", "&#41;")
                                 .replace("*", "&#42;")
                                 .replace("_", "&#95;");
+    }
+
+    /**
+     * Converts a title into a URL-friendly slug for use as an HTML id.
+     * E.g. "Injection & Lifecycle" → "injection-lifecycle"
+     */
+    protected static String slugify(String text)
+    {
+        if (text == null) return null;
+        return text.toLowerCase()
+                   .replaceAll("[^a-z0-9]+", "-")
+                   .replaceAll("^-+|-+$", "");
     }
 
     protected WaText<?> headingText(String tag, String size, String text)
@@ -87,6 +109,16 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return body;
     }
 
+    /**
+     * Body text rendered via Markdown so that backtick code spans, bold, italic, and
+     * links are preserved.
+     */
+    protected Markdown<?> richText(String markdownText, String size)
+    {
+        var md = new Markdown<>(markdownText);
+        return md;
+    }
+
     protected WaText<?> captionText(String text)
     {
         var caption = new WaText<>();
@@ -96,6 +128,8 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         caption.setText(escapeAngular(text));
         return caption;
     }
+
+    // ── Component helpers ─────────────────────────────
 
     protected WaTag<?> buildTag(String label, Variant variant)
     {
@@ -145,24 +179,61 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected WaCard<?> featureCard(String title, String body, String note)
     {
-        return contentCard(title, body, note, Appearance.Outlined, "m", "m");
-    }
-
-    protected WaCard<?> buildSection(String eyebrow,
-                                     String title,
-                                     String subtitle,
-                                     boolean alt,
-                                     com.jwebmp.core.base.interfaces.IComponentHierarchyBase<?, ?> content)
-    {
-        var section = new WaCard<>();
-        section.setAppearance(alt ? Appearance.Filled : Appearance.Outlined);
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
+        card.addClass("feature-card");
 
         var stack = new WaStack();
-        stack.setGap(PageSize.Medium);
-        stack.add(sectionHeader(eyebrow, title, subtitle));
-        stack.add(content);
-        section.add(stack);
+        stack.setGap(PageSize.Small);
+
+        var titleText = headingText("h3", "m", title);
+        titleText.addClass("feature-card-title");
+        stack.add(titleText);
+
+        var bodyCopy = bodyText(body, "m");
+        bodyCopy.setWaColorText("quiet");
+        stack.add(bodyCopy);
+        if (note != null && !note.isBlank())
+        {
+            var noteText = captionText(note);
+            noteText.addClass("feature-card-note");
+            noteText.setWaColorText("quiet");
+            stack.add(noteText);
+        }
+        card.add(stack);
+        return card;
+    }
+
+    // ── Section helpers ───────────────────────────────
+
+    protected WaStack section(String eyebrow, String title, String subtitle,
+                              com.jwebmp.core.base.interfaces.IComponentHierarchyBase<?, ?> content)
+    {
+        var section = new WaStack();
+        section.setGap(PageSize.Medium);
+        section.addClass("content-section");
+
+        // Set a slugified ID from the eyebrow (or title) so aside anchor links can scroll here
+        String idSource = eyebrow != null && !eyebrow.isBlank() ? eyebrow : title;
+        if (idSource != null && !idSource.isBlank())
+        {
+            section.setID(slugify(idSource));
+        }
+
+        var divider = new WaDivider<>();
+        divider.addClass("section-divider");
+        section.add(divider);
+        section.add(sectionHeader(eyebrow, title, subtitle));
+        if (content != null)
+        {
+            section.add(content);
+        }
         return section;
+    }
+
+    protected WaStack section(String eyebrow, String title, String subtitle)
+    {
+        return section(eyebrow, title, subtitle, null);
     }
 
     protected WaStack sectionHeader(String eyebrow, String title, String subtitle)
@@ -171,7 +242,9 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         header.setGap(PageSize.Small);
         if (eyebrow != null && !eyebrow.isBlank())
         {
-            header.add(captionText(eyebrow));
+            var eyebrowText = captionText(eyebrow);
+            eyebrowText.addClass("hero-eyebrow");
+            header.add(eyebrowText);
         }
         if (title != null && !title.isBlank())
         {
@@ -186,17 +259,63 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return header;
     }
 
-    protected DivSimple<?> codeBlock(String code)
+    // ── Legacy compat — buildSection delegates to section ──
+
+    protected WaStack buildSection(String eyebrow,
+                                     String title,
+                                     String subtitle,
+                                     boolean alt,
+                                     com.jwebmp.core.base.interfaces.IComponentHierarchyBase<?, ?> content)
+    {
+        return section(eyebrow, title, subtitle, content);
+    }
+
+    // ── Diagram helpers ──────────────────────────────
+
+    protected DivSimple<?> mermaidDiagram(String mermaidCode)
     {
         var wrapper = new DivSimple<>();
-        wrapper.addClass("code-block");
-        var pre = new PreFormattedText<>();
-        pre.setText(escapeAngular(code));
-        wrapper.add(pre);
+        wrapper.addClass("mermaid-diagram");
+        var md = new Markdown<>("```mermaid\n" + mermaidCode + "\n```");
+        md.setMermaid(true);
+        wrapper.add(md);
         return wrapper;
     }
 
+    protected DivSimple<?> mermaidDiagramWithTitle(String title, String mermaidCode)
+    {
+        var wrapper = new DivSimple<>();
+        wrapper.addClass("mermaid-diagram-wrapper");
+        var label = captionText(title);
+        label.addClass("mermaid-diagram-label");
+        wrapper.add(label);
+        wrapper.add(mermaidDiagram(mermaidCode));
+        return wrapper;
+    }
+
+    // ── Code block helpers ────────────────────────────
+
+    protected DivSimple<?> codeBlock(String code)
+    {
+        return codeBlock(code, PrismLanguage.Java);
+    }
+
+    protected DivSimple<?> codeBlock(String code, PrismLanguage language)
+    {
+        var md = new Markdown<>("```" + language.getLanguageCode() + "\n" + code + "\n```");
+        md.setLineNumbers(true);
+        md.setClipboard(true);
+        md.addClass("aside-snippet-code");
+        md.addClass("wa-body-s");
+        return md;
+    }
+
     protected DivSimple<?> codeBlockWithTitle(String title, String code)
+    {
+        return codeBlockWithTitle(title, code, PrismLanguage.Java);
+    }
+
+    protected DivSimple<?> codeBlockWithTitle(String title, String code, PrismLanguage language)
     {
         var wrapper = new DivSimple<>();
         wrapper.addClass("code-block-wrapper");
@@ -205,15 +324,53 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         label.addClass("code-block-label");
         wrapper.add(label);
 
-        var pre = new PreFormattedText<>();
-        pre.setText(escapeAngular(code));
-        pre.addClass("code-block");
-        wrapper.add(pre);
+        var md = new Markdown<>("```" + language.getLanguageCode() + "\n" + code + "\n```");
+        md.setLineNumbers(true);
+        md.setClipboard(true);
+        md.addClass("aside-snippet-code");
+        md.addClass("wa-body-s");
+        wrapper.add(md);
         return wrapper;
     }
 
     protected WaDivider<?> divider()
     {
         return new WaDivider<>();
+    }
+
+    // ── Shared CTA section ──────────────────────────────
+
+    /**
+     * Builds the standard "Ready to Build?" call-to-action section
+     * with radial gradient background, centered layout, and consistent copy.
+     */
+    protected WaStack buildCallToAction()
+    {
+        var content = new WaStack();
+        content.setGap(PageSize.Medium);
+
+        content.add(bodyText(
+                "Stop wrestling with configuration files and boilerplate. Build reactive microservices "
+                + "with the annotations and patterns you already know.",
+                "l"));
+
+        var ctas = new WaCluster<>();
+        ctas.setGap(PageSize.Small);
+        ctas.addClass("hero-ctas");
+        ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, null));
+        ctas.add(buildCta("Capabilities", "/capabilities", Variant.Neutral, Appearance.Outlined));
+
+        var githubCta = new WaButton<>(escapeAngular("View on GitHub"), Variant.Neutral);
+        githubCta.setAppearance(Appearance.Outlined);
+        githubCta.setAsLink("https://github.com/GuicedEE/", "_blank", null);
+        ctas.add(githubCta);
+        content.add(ctas);
+
+        var section = buildSection(null,
+                "Ready to Build?",
+                "From zero to production microservice — with zero XML.",
+                false, content);
+        section.addClass("cta-section");
+        return section;
     }
 }

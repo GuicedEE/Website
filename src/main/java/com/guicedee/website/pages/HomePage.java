@@ -7,23 +7,23 @@ import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
-import com.jwebmp.webawesome.components.WaSplit;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-home")
-@NgRoutable(path = "home")
+@NgRoutable(path = "home", isDefault = true)
 public class HomePage extends WebsitePage<HomePage> implements INgComponent<HomePage>
 {
     public HomePage()
     {
+        removeClass("website-content");
         buildLandingPage();
     }
 
     private void buildLandingPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
+        // page size handled by WebsitePage base class
 
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);
@@ -48,60 +48,55 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Hero ──────────────────────────────────────────
 
-    private WaCard<?> buildHero()
+    private WaStack buildHero()
     {
-        var hero = new WaCard<>();
-        hero.setAppearance(Appearance.Filled);
+        var hero = new WaStack();
+        hero.setGap(PageSize.Large);
+        hero.setID("hero");
+        hero.addClass("hero-banner");
 
-        var row = new WaSplit();
-        row.row();
-        row.setGap(PageSize.Large);
-        row.alignItems("center");
+        // Eyebrow
+        var eyebrow = captionText("MODULAR ENTERPRISE JAVA");
+        eyebrow.addClass("hero-eyebrow");
+        hero.add(eyebrow);
 
-        var copy = new WaStack();
-        copy.setGap(PageSize.Medium);
+        // Main heading
+        var heading = headingText("h1", "xl", "Modular enterprise Java, reactive by default.");
+        heading.addClass("hero-heading");
+        hero.add(heading);
+
+        // Subtitle
+        var subtitle = bodyText("Build reactive microservices with Google Guice, Vert.x 5, and MicroProfile — " +
+                "all on the Java Module System. Zero XML. Zero boilerplate. Just annotate and go.", "l");
+        subtitle.setWaColorText("quiet");
+        subtitle.addClass("hero-subtitle");
+        hero.add(subtitle);
 
         var tags = new WaCluster();
         tags.setGap(PageSize.Small);
+        tags.addClass("hero-tags");
         tags.add(buildTag("GuicedEE", Variant.Brand));
         tags.add(buildTag("Vert.x 5", Variant.Success));
         tags.add(buildTag("Java 25+", Variant.Neutral));
         tags.add(buildTag("JPMS Level 3", Variant.Neutral));
         tags.add(buildTag("Zero Config", Variant.Warning));
         tags.add(buildTag("MicroProfile", Variant.Success));
-        copy.add(tags);
-
-        copy.add(headingText("h1", "xl", "Modular enterprise Java, reactive by default."));
-
-        var subtitle = bodyText("Build reactive microservices with Google Guice, Vert.x 5, and MicroProfile — " +
-                "all on the Java Module System. Zero XML. Zero boilerplate. Just annotate and go.", "l");
-        subtitle.setWaColorText("quiet");
-        copy.add(subtitle);
+        hero.add(tags);
 
         var ctas = new WaCluster();
         ctas.setGap(PageSize.Small);
-        ctas.add(buildCta("Get started in 5 minutes", "getting-started", Variant.Brand, Appearance.Filled));
-        ctas.add(buildCta("End-to-end guide", "guides/end-to-end", Variant.Neutral, Appearance.Outlined));
-        ctas.add(buildCta("Browse modules", "modules", Variant.Neutral, Appearance.Outlined));
-        copy.add(ctas);
+        ctas.addClass("hero-ctas");
+        ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, Appearance.Filled));
+        ctas.add(buildCta("End-to-end Guide", "/guides/end-to-end", Variant.Neutral, Appearance.Outlined));
+        ctas.add(buildCta("Browse Modules", "/modules", Variant.Neutral, Appearance.Outlined));
+        hero.add(ctas);
 
-        var stats = new WaGrid<>();
-        stats.setMinColumnSize("14rem");
-        stats.setGap(PageSize.Small);
-        stats.add(heroCard("~300 ms startup", "JLink builds on JRT start REST services in under 300 ms."));
-        stats.add(heroCard("128 MB / 0.5 CPU", "Runs comfortably in minimal container targets."));
-        stats.add(heroCard("20+ modules", "REST, WebSockets, Persistence, RabbitMQ, Health, Metrics, and more."));
-        stats.add(heroCard("Zero config files", "Annotation-driven everything. Override with env vars at deploy time."));
-
-        row.add(copy);
-        row.add(stats);
-        hero.add(row);
         return hero;
     }
 
     // ── Three-line pitch ─────────────────────────────
 
-    private WaCard<?> buildThreeLinesPitch()
+    private WaStack buildThreeLinesPitch()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -128,7 +123,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Zero-configuration section ────────────────────
 
-    private WaCard<?> buildZeroConfigSection()
+    private WaStack buildZeroConfigSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -188,7 +183,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Code showcase ─────────────────────────────────
 
-    private WaCard<?> buildCodeShowcaseSection()
+    private WaStack buildCodeShowcaseSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Large);
@@ -305,7 +300,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── REST services deep dive ───────────────────────
 
-    private WaCard<?> buildRestServicesSection()
+    private WaStack buildRestServicesSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Large);
@@ -461,7 +456,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Security section ──────────────────────────────
 
-    private WaCard<?> buildSecuritySection()
+    private WaStack buildSecuritySection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Large);
@@ -615,7 +610,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Vert.x deployment & configuration ─────────────
 
-    private WaCard<?> buildVertxDeploymentSection()
+    private WaStack buildVertxDeploymentSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Large);
@@ -766,7 +761,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── MicroProfile section ──────────────────────────
 
-    private WaCard<?> buildMicroProfileSection()
+    private WaStack buildMicroProfileSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -839,7 +834,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Foundation section ────────────────────────────
 
-    private WaCard<?> buildFoundationSection()
+    private WaStack buildFoundationSection()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("15rem");
@@ -872,7 +867,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Modular build section ─────────────────────────
 
-    private WaCard<?> buildModularBuildSection()
+    private WaStack buildModularBuildSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -936,7 +931,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── JLink / Docker shipping section ───────────────
 
-    private WaCard<?> buildJLinkShippingSection()
+    private WaStack buildJLinkShippingSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -1032,7 +1027,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Cloud-aware logging section ───────────────────
 
-    private WaCard<?> buildCloudAwareLoggingSection()
+    private WaStack buildCloudAwareLoggingSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -1137,7 +1132,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Plugin section ────────────────────────────────
 
-    private WaCard<?> buildPluginSection()
+    private WaStack buildPluginSection()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -1173,7 +1168,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Developer section ─────────────────────────────
 
-    private WaCard<?> buildDeveloperSection()
+    private WaStack buildDeveloperSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -1225,38 +1220,12 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Call to action ────────────────────────────────
 
-    private WaCard<?> buildCallToActionSection()
+    private WaStack buildCallToActionSection()
     {
-        var panel = new WaStack();
-        panel.setGap(PageSize.Medium);
-
-        panel.add(headingText("h2", "l", "Ready to build something?"));
-
-        var intro = bodyText("Pick the modules you need, generate your project, and ship a fully reactive application. " +
-                "The getting started guide will have you running in 5 minutes.", "m");
-        intro.setWaColorText("quiet");
-        panel.add(intro);
-
-        var ctas = new WaCluster();
-        ctas.setGap(PageSize.Small);
-        ctas.add(buildCta("Get started", "getting-started", Variant.Brand, Appearance.Filled));
-        ctas.add(buildCta("End-to-end guide", "guides/end-to-end", Variant.Brand, Appearance.Outlined));
-        ctas.add(buildCta("Browse modules", "modules", Variant.Neutral, Appearance.Outlined));
-        ctas.add(buildCta("View on GitHub", "github", Variant.Neutral, Appearance.Outlined));
-        panel.add(ctas);
-
-        var section = new WaCard<>();
-        section.setAppearance(Appearance.Filled);
-        section.add(panel);
-        return section;
+        return buildCallToAction();
     }
 
     // ── Card helpers ──────────────────────────────────
-
-    private WaCard<?> heroCard(String title, String body)
-    {
-        return contentCard(title, body, null, Appearance.Outlined, "s", "s");
-    }
 
 
     private WaCard<?> pluginCard(String title, String body, String status)

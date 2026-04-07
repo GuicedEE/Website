@@ -12,7 +12,6 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.details.WaDetails;
-import com.jwebmp.webawesome.components.page.WaPageContentsAside;
 
 @NgComponent("guicedee-capabilities")
 @NgRoutable(path = "capabilities")
@@ -25,8 +24,6 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private void packCapabilities()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
-
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
@@ -48,27 +45,6 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildFaultToleranceCapability());
         layout.add(buildJLinkCapability());
         layout.add(buildModuleCatalogSection());
-
-        // Sidebar
-        var aside = new WaPageContentsAside<>();
-        aside.add(escapeAngular("Overview"));
-        aside.add(escapeAngular("Architecture"));
-        aside.add(escapeAngular("Injection & Lifecycle"));
-        aside.add(escapeAngular("HTTP Server"));
-        aside.add(escapeAngular("REST (JAX-RS)"));
-        aside.add(escapeAngular("REST Client"));
-        aside.add(escapeAngular("Security"));
-        aside.add(escapeAngular("Verticles"));
-        aside.add(escapeAngular("Persistence"));
-        aside.add(escapeAngular("WebSockets"));
-        aside.add(escapeAngular("Messaging"));
-        aside.add(escapeAngular("Observability"));
-        aside.add(escapeAngular("Logging"));
-        aside.add(escapeAngular("Configuration"));
-        aside.add(escapeAngular("Fault Tolerance"));
-        aside.add(escapeAngular("JLink & Deployment"));
-        aside.add(escapeAngular("Full catalog"));
-        getAside().add(aside);
     }
 
     private WaCard<?> buildIntro()
@@ -96,28 +72,55 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         return card;
     }
 
-    private WaCard<?> buildArchitectureSection()
+    private WaStack buildArchitectureSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(codeBlock(
-                "┌─────────────────────────────────────────────────────────────────────┐\n" +
-                "│                         Your Application                            │\n" +
-                "├──────────┬──────────┬──────────┬──────────┬──────────┬──────────────┤\n" +
-                "│   REST   │WebSockets│Persistence│ RabbitMQ │Telemetry │  OpenAPI     │\n" +
-                "│  (JAX-RS)│ (RFC6455)│(Hibernate)│  (AMQP)  │  (OTLP)  │ (Swagger)   │\n" +
-                "├──────────┴──────────┴──────────┴──────────┴──────────┴──────────────┤\n" +
-                "│                    Vert.x Web · HTTP/HTTPS · Router                 │\n" +
-                "├─────────────────────────────────────────────────────────────────────┤\n" +
-                "│              Guiced Vert.x · EventBus · Verticles · Codecs          │\n" +
-                "├──────────┬──────────┬──────────┬──────────┬─────────────────────────┤\n" +
-                "│  Health  │ Metrics  │  Config  │   CDI    │    Fault Tolerance      │\n" +
-                "├──────────┴──────────┴──────────┴──────────┴─────────────────────────┤\n" +
-                "│        GuicedEE Inject · Guice Injector · ClassGraph · SPI          │\n" +
-                "├─────────────────────────────────────────────────────────────────────┤\n" +
-                "│             BOM · Parent POM · Services (JPMS wrappers)             │\n" +
-                "└─────────────────────────────────────────────────────────────────────┘"));
+        content.add(mermaidDiagramWithTitle("GuicedEE Architecture",
+                """
+                        graph TD
+                            APP["Your Application"]
+                            REST["REST<br/>JAX-RS"]
+                            WS["WebSockets<br/>RFC 6455"]
+                            PERSIST["Persistence<br/>Hibernate"]
+                            RABBIT["RabbitMQ<br/>AMQP"]
+                            TELEM["Telemetry<br/>OTLP"]
+                            OPENAPI["OpenAPI<br/>Swagger"]
+                            VERTXWEB["Vert.x Web · HTTP/HTTPS · Router"]
+                            VERTXCORE["Guiced Vert.x · EventBus · Verticles · Codecs"]
+                            HEALTH["Health"]
+                            METRICS["Metrics"]
+                            CONFIG["Config"]
+                            CDI["CDI"]
+                            FT["Fault<br/>Tolerance"]
+                            INJECT["GuicedEE Inject · Guice Injector · ClassGraph · SPI"]
+                            BOM["BOM · Parent POM · Services - JPMS wrappers"]
+                        
+                            APP --> REST
+                            APP --> WS
+                            APP --> PERSIST
+                            APP --> RABBIT
+                            APP --> TELEM
+                            APP --> OPENAPI
+                            REST --> VERTXWEB
+                            WS --> VERTXWEB
+                            PERSIST --> VERTXCORE
+                            RABBIT --> VERTXCORE
+                            TELEM --> VERTXCORE
+                            OPENAPI --> VERTXWEB
+                            VERTXWEB --> VERTXCORE
+                            VERTXCORE --> HEALTH
+                            VERTXCORE --> METRICS
+                            VERTXCORE --> CONFIG
+                            VERTXCORE --> CDI
+                            VERTXCORE --> FT
+                            HEALTH --> INJECT
+                            METRICS --> INJECT
+                            CONFIG --> INJECT
+                            CDI --> INJECT
+                            FT --> INJECT
+                            INJECT --> BOM"""));
 
         var explain = bodyText("Your application sits at the top. You pick the layers you need. " +
                 "The inject layer and BOM are always present — everything else is opt-in.", "m");
@@ -128,7 +131,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "Every layer is a JPMS module. Build up your stack — never exclude down.", false, content);
     }
 
-    private WaCard<?> buildInjectionCapability()
+    private WaStack buildInjectionCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -145,26 +148,30 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("Example: Custom lifecycle hook",
-                "public class AppStartup\n" +
-                "    implements IGuicePostStartup<AppStartup> {\n\n" +
-                "    @Inject\n" +
-                "    private SomeService service;\n\n" +
-                "    @Override\n" +
-                "    public void postLoad() {\n" +
-                "        service.warmUpCaches();\n" +
-                "    }\n\n" +
-                "    @Override\n" +
-                "    public Integer sortOrder() {\n" +
-                "        return 100; // lower = earlier\n" +
-                "    }\n" +
-                "}"));
+                """
+                        public class AppStartup
+                            implements IGuicePostStartup<AppStartup> {
+                        
+                            @Inject
+                            private SomeService service;
+                        
+                            @Override
+                            public void postLoad() {
+                                service.warmUpCaches();
+                            }
+                        
+                            @Override
+                            public Integer sortOrder() {
+                                return 100; // lower = earlier
+                            }
+                        }"""));
 
         return buildSection("Injection & Lifecycle", "The foundation of everything",
                 "com.guicedee:inject — ClassGraph scanning, Guice DI, and deterministic lifecycle hooks.",
                 true, content);
     }
 
-    private WaCard<?> buildWebCapability()
+    private WaStack buildWebCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -181,57 +188,67 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("Custom route via SPI",
-                "public class MyRoutes\n" +
-                "    implements VertxRouterConfigurator<MyRoutes> {\n\n" +
-                "    @Override\n" +
-                "    public Router builder(Router router) {\n" +
-                "        router.get(\"/ping\").handler(ctx ->\n" +
-                "            ctx.response().end(\"pong\"));\n" +
-                "        return router;\n" +
-                "    }\n\n" +
-                "    @Override\n" +
-                "    public Integer sortOrder() { return 500; }\n" +
-                "}"));
+                """
+                        public class MyRoutes
+                            implements VertxRouterConfigurator<MyRoutes> {
+                        
+                            @Override
+                            public Router builder(Router router) {
+                                router.get("/ping").handler(ctx ->
+                                    ctx.response().end("pong"));
+                                return router;
+                            }
+                        
+                            @Override
+                            public Integer sortOrder() { return 500; }
+                        }"""));
 
         return buildSection("HTTP Server", "Reactive by default",
                 "com.guicedee:web — Vert.x 5 HTTP/HTTPS server with Router and BodyHandler.", false, content);
     }
 
-    private WaCard<?> buildRestCapability()
+    private WaStack buildRestCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Full-featured REST resource",
-                "@Path(\"/api/orders\")\n" +
-                "@Produces(MediaType.APPLICATION_JSON)\n" +
-                "public class OrderResource {\n\n" +
-                "    @Inject private OrderService orders;\n\n" +
-                "    @GET\n" +
-                "    public List<Order> list(\n" +
-                "            @QueryParam(\"status\") String status,\n" +
-                "            @QueryParam(\"limit\") @DefaultValue(\"50\") int limit) {\n" +
-                "        return orders.find(status, limit);\n" +
-                "    }\n\n" +
-                "    @GET @Path(\"/{id}\")\n" +
-                "    public Order get(@PathParam(\"id\") Long id) {\n" +
-                "        return orders.findById(id);\n" +
-                "    }\n\n" +
-                "    @POST @Consumes(MediaType.APPLICATION_JSON)\n" +
-                "    public Order create(Order order) {\n" +
-                "        return orders.save(order);\n" +
-                "    }\n\n" +
-                "    @PUT @Path(\"/{id}\")\n" +
-                "    @Consumes(MediaType.APPLICATION_JSON)\n" +
-                "    public Order update(@PathParam(\"id\") Long id,\n" +
-                "                        Order order) {\n" +
-                "        return orders.update(id, order);\n" +
-                "    }\n\n" +
-                "    @DELETE @Path(\"/{id}\")\n" +
-                "    public void delete(@PathParam(\"id\") Long id) {\n" +
-                "        orders.delete(id);\n" +
-                "    }\n" +
-                "}"));
+                """
+                        @Path("/api/orders")
+                        @Produces(MediaType.APPLICATION_JSON)
+                        public class OrderResource {
+                        
+                            @Inject private OrderService orders;
+                        
+                            @GET
+                            public List<Order> list(
+                                    @QueryParam("status") String status,
+                                    @QueryParam("limit") @DefaultValue("50") int limit) {
+                                return orders.find(status, limit);
+                            }
+                        
+                            @GET @Path("/{id}")
+                            public Order get(@PathParam("id") Long id) {
+                                return orders.findById(id);
+                            }
+                        
+                            @POST @Consumes(MediaType.APPLICATION_JSON)
+                            public Order create(Order order) {
+                                return orders.save(order);
+                            }
+                        
+                            @PUT @Path("/{id}")
+                            @Consumes(MediaType.APPLICATION_JSON)
+                            public Order update(@PathParam("id") Long id,
+                                                Order order) {
+                                return orders.update(id, order);
+                            }
+                        
+                            @DELETE @Path("/{id}")
+                            public void delete(@PathParam("id") Long id) {
+                                orders.delete(id);
+                            }
+                        }"""));
 
         var note = bodyText("All HTTP methods, path parameters, query parameters, header parameters, " +
                 "cookie parameters, form parameters, matrix parameters, and bean parameters are supported. " +
@@ -243,7 +260,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:rest — Jakarta REST adapter for Vert.x 5.", true, content);
     }
 
-    private WaCard<?> buildRestClientCapability()
+    private WaStack buildRestClientCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -285,26 +302,28 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("REST Client — outbound calls with annotation-driven config",
-                "@Endpoint(url = \"https://api.example.com/users/{userId}\",\n" +
-                "          method = \"GET\",\n" +
-                "          security = @EndpointSecurity(\n" +
-                "              value = SecurityType.Bearer,\n" +
-                "              token = \"${API_TOKEN}\"),\n" +
-                "          options = @EndpointOptions(\n" +
-                "              connectTimeout = 5000, readTimeout = 10000))\n" +
-                "@Named(\"get-user\")\n" +
-                "private RestClient<Void, UserResponse> userClient;\n\n" +
-                "// Call with path parameters:\n" +
-                "Uni<UserResponse> user = userClient\n" +
-                "    .pathParam(\"userId\", \"123\")\n" +
-                "    .send();"));
+                """
+                        @Endpoint(url = "https://api.example.com/users/{userId}",
+                                  method = "GET",
+                                  security = @EndpointSecurity(
+                                      value = SecurityType.Bearer,
+                                      token = "${API_TOKEN}"),
+                                  options = @EndpointOptions(
+                                      connectTimeout = 5000, readTimeout = 10000))
+                        @Named("get-user")
+                        private RestClient<Void, UserResponse> userClient;
+                        
+                        // Call with path parameters:
+                        Uni<UserResponse> user = userClient
+                            .pathParam("userId", "123")
+                            .send();"""));
 
         return buildSection("REST Client", "Typed, reactive, annotation-driven",
                 "com.guicedee:rest-client — outbound HTTP calls with @Endpoint, @EndpointSecurity, and Uni<R>.",
                 false, content);
     }
 
-    private WaCard<?> buildSecurityCapability()
+    private WaStack buildSecurityCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -356,29 +375,33 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("Jakarta security annotations on REST endpoints",
-                "@Path(\"/api/admin\")\n" +
-                "@RolesAllowed({\"admin\", \"super-admin\"})\n" +
-                "public class AdminResource {\n\n" +
-                "    @GET @Path(\"/users\")\n" +
-                "    public Uni<List<User>> listUsers() {\n" +
-                "        return userService.findAll();\n" +
-                "    }\n\n" +
-                "    @DELETE @Path(\"/users/{id}\")\n" +
-                "    @RolesAllowed(\"super-admin\")  // overrides class\n" +
-                "    public Uni<Void> deleteUser(@PathParam(\"id\") String id) {\n" +
-                "        return userService.delete(id);\n" +
-                "    }\n\n" +
-                "    @GET @Path(\"/health\")\n" +
-                "    @PermitAll  // no auth needed\n" +
-                "    public String health() { return \"OK\"; }\n" +
-                "}"));
+                """
+                        @Path("/api/admin")
+                        @RolesAllowed({"admin", "super-admin"})
+                        public class AdminResource {
+                        
+                            @GET @Path("/users")
+                            public Uni<List<User>> listUsers() {
+                                return userService.findAll();
+                            }
+                        
+                            @DELETE @Path("/users/{id}")
+                            @RolesAllowed("super-admin")  // overrides class
+                            public Uni<Void> deleteUser(@PathParam("id") String id) {
+                                return userService.delete(id);
+                            }
+                        
+                            @GET @Path("/health")
+                            @PermitAll  // no auth needed
+                            public String health() { return "OK"; }
+                        }"""));
 
         return buildSection("Security", "Standard annotations, pluggable auth",
                 "Jakarta @RolesAllowed + Vert.x auth handlers + @EndpointSecurity for outbound calls.",
                 true, content);
     }
 
-    private WaCard<?> buildVerticleCapability()
+    private WaStack buildVerticleCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -399,7 +422,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         grid.add(featureCard("Capabilities enum",
                 "Rest, RabbitMQ, Web, Telemetry, Persistence, Sockets, OpenAPI, Swagger, " +
-                        "WebServices, Cerial — each maps to its module package.",
+                        "WebServices, Cerial (serial ports) — each maps to its module package.",
                 null));
 
         grid.add(featureCard("Worker pool sizing",
@@ -420,24 +443,26 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("Isolating APIs with @Verticle",
-                "// package-info.java\n" +
-                "@Verticle(value = \"payments-pool\",\n" +
-                "          workerPoolSize = 16,\n" +
-                "          maxWorkerExecuteTime = 30,\n" +
-                "          maxWorkerExecuteTimeUnit = TimeUnit.SECONDS,\n" +
-                "          capabilities = {Capabilities.Rest,\n" +
-                "                          Capabilities.Persistence})\n" +
-                "package com.example.payments;\n\n" +
-                "// Any @Path resource in com.example.payments gets\n" +
-                "// its own worker pool and sub-router — isolated\n" +
-                "// from other API groups."));
+                """
+                        // package-info.java
+                        @Verticle(value = "payments-pool",
+                                  workerPoolSize = 16,
+                                  maxWorkerExecuteTime = 30,
+                                  maxWorkerExecuteTimeUnit = TimeUnit.SECONDS,
+                                  capabilities = {Capabilities.Rest,
+                                                  Capabilities.Persistence})
+                        package com.example.payments;
+                        
+                        // Any @Path resource in com.example.payments gets
+                        // its own worker pool and sub-router — isolated
+                        // from other API groups."""));
 
         return buildSection("Verticles & Deployment", "Isolated worker pools, SPI-driven config",
                 "@Verticle packages with per-pool threading, 3 SPI hooks, and environment-driven server config.",
                 false, content);
     }
 
-    private WaCard<?> buildPersistenceCapability()
+    private WaStack buildPersistenceCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -454,22 +479,24 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(grid);
 
         content.add(codeBlockWithTitle("Reactive query with Mutiny",
-                "@Inject\n" +
-                "private Mutiny.SessionFactory sf;\n\n" +
-                "public Uni<List<Product>> findByCategory(String cat) {\n" +
-                "    return sf.withSession(session ->\n" +
-                "        session.createQuery(\n" +
-                "            \"FROM Product WHERE category = :cat\",\n" +
-                "            Product.class)\n" +
-                "        .setParameter(\"cat\", cat)\n" +
-                "        .getResultList());\n" +
-                "}"));
+                """
+                        @Inject
+                        private Mutiny.SessionFactory sf;
+                        
+                        public Uni<List<Product>> findByCategory(String cat) {
+                            return sf.withSession(session ->
+                                session.createQuery(
+                                    "FROM Product WHERE category = :cat",
+                                    Product.class)
+                                .setParameter("cat", cat)
+                                .getResultList());
+                        }"""));
 
         return buildSection("Persistence", "Reactive JPA with zero boilerplate",
                 "com.guicedee:persistence — Hibernate Reactive on Vert.x SQL Client.", false, content);
     }
 
-    private WaCard<?> buildWebSocketCapability()
+    private WaStack buildWebSocketCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -489,23 +516,25 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:websockets — RFC 6455 with action-based routing and group management.", true, content);
     }
 
-    private WaCard<?> buildMessagingCapability()
+    private WaStack buildMessagingCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("RabbitMQ — annotation-driven messaging",
-                "@RabbitConnectionOptions(\n" +
-                "    host = \"localhost\", port = 5672,\n" +
-                "    user = \"guest\", password = \"guest\"\n" +
-                ")\n" +
-                "public class OrderEvents {\n\n" +
-                "    @RabbitExchange(\"orders\")\n" +
-                "    @RabbitQueue(\"order.created\")\n" +
-                "    public void onOrderCreated(Order order) {\n" +
-                "        // Process the order event\n" +
-                "    }\n" +
-                "}"));
+                """
+                        @RabbitConnectionOptions(
+                            host = "localhost", port = 5672,
+                            user = "guest", password = "guest"
+                        )
+                        public class OrderEvents {
+                        
+                            @RabbitExchange("orders")
+                            @RabbitQueue("order.created")
+                            public void onOrderCreated(Order order) {
+                                // Process the order event
+                            }
+                        }"""));
 
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
@@ -520,7 +549,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:rabbitmq — RabbitMQ integration with Vert.x.", false, content);
     }
 
-    private WaCard<?> buildObservabilityCapability()
+    private WaStack buildObservabilityCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -555,7 +584,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "Health, Metrics, Telemetry, and OpenAPI — all discoverable and auto-registered.", true, content);
     }
 
-    private WaCard<?> buildLoggingCapability()
+    private WaStack buildLoggingCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -627,25 +656,37 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
-    private WaCard<?> buildConfigCapability()
+    private WaStack buildConfigCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(codeBlockWithTitle("Three-tier configuration",
-                "// Tier 1: Annotation defaults (in code)\n" +
-                "@TelemetryOptions(\n" +
-                "    serviceName = \"my-service\",\n" +
-                "    otlpEndpoint = \"http://localhost:4318\"\n" +
-                ")\n\n" +
-                "// Tier 2: Environment override (no code change)\n" +
-                "// TELEMETRY_SERVICE_NAME=production-service\n" +
-                "// TELEMETRY_OTLP_ENDPOINT=http://tempo:4318\n\n" +
-                "// Tier 3: SPI hook (programmatic control)\n" +
-                "public class MyTelemetryConfig\n" +
-                "    implements GuiceTelemetryRegistration {\n" +
-                "    // Full programmatic customization\n" +
-                "}"));
+        content.add(mermaidDiagramWithTitle("Three-tier configuration model",
+                """
+                        graph LR
+                            A["1. Annotation defaults<br/>(in code)"] --> B["2. Environment variables<br/>(deploy-time override)"]
+                            B --> C["3. SPI hooks<br/>(programmatic control)"]
+                            style A fill:#4a9eff,color:#fff
+                            style B fill:#f5a623,color:#fff
+                            style C fill:#7ed321,color:#fff"""));
+
+        content.add(codeBlockWithTitle("Example: Telemetry configuration tiers",
+                """
+                        // Tier 1: Annotation defaults (in code)
+                        @TelemetryOptions(
+                            serviceName = "my-service",
+                            otlpEndpoint = "http://localhost:4318"
+                        )
+                        
+                        // Tier 2: Environment override (no code change)
+                        // TELEMETRY_SERVICE_NAME=production-service
+                        // TELEMETRY_OTLP_ENDPOINT=http://tempo:4318
+                        
+                        // Tier 3: SPI hook (programmatic control)
+                        public class MyTelemetryConfig
+                            implements GuiceTelemetryRegistration {
+                            // Full programmatic customization
+                        }"""));
 
         var note = bodyText("This three-tier pattern applies to every GuicedEE module: " +
                 "HTTP server, health, metrics, telemetry, persistence, RabbitMQ, and more. " +
@@ -658,27 +699,30 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee.microprofile:config — MicroProfile Config via SmallRye.", false, content);
     }
 
-    private WaCard<?> buildFaultToleranceCapability()
+    private WaStack buildFaultToleranceCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Resilience patterns via annotations",
-                "@Retry(maxRetries = 3, delay = 200)\n" +
-                "@CircuitBreaker(requestVolumeThreshold = 20,\n" +
-                "    failureRatio = 0.5, delay = 5000)\n" +
-                "@Timeout(value = 2000)\n" +
-                "public Uni<PaymentResult> processPayment(\n" +
-                "        PaymentRequest request) {\n" +
-                "    return paymentGateway.charge(request);\n" +
-                "}\n\n" +
-                "@Fallback(fallbackMethod = \"cachedPrice\")\n" +
-                "public Uni<Price> getPrice(String productId) {\n" +
-                "    return priceService.lookup(productId);\n" +
-                "}\n\n" +
-                "public Uni<Price> cachedPrice(String productId) {\n" +
-                "    return Uni.createFrom().item(priceCache.get(productId));\n" +
-                "}"));
+                """
+                        @Retry(maxRetries = 3, delay = 200)
+                        @CircuitBreaker(requestVolumeThreshold = 20,
+                            failureRatio = 0.5, delay = 5000)
+                        @Timeout(value = 2000)
+                        public Uni<PaymentResult> processPayment(
+                                PaymentRequest request) {
+                            return paymentGateway.charge(request);
+                        }
+                        
+                        @Fallback(fallbackMethod = "cachedPrice")
+                        public Uni<Price> getPrice(String productId) {
+                            return priceService.lookup(productId);
+                        }
+                        
+                        public Uni<Price> cachedPrice(String productId) {
+                            return Uni.createFrom().item(priceCache.get(productId));
+                        }"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("12rem");
@@ -694,7 +738,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:fault-tolerance — MicroProfile Fault Tolerance via Guice AOP.", true, content);
     }
 
-    private WaCard<?> buildJLinkCapability()
+    private WaStack buildJLinkCapability()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);
@@ -764,7 +808,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
-    private WaCard<?> buildModuleCatalogSection()
+    private WaStack buildModuleCatalogSection()
     {
         var content = new WaStack();
         content.setGap(PageSize.Medium);

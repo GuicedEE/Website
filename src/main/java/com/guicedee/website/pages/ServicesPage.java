@@ -27,7 +27,6 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
     }
 
     private void renderServices() {
-        getMain().setPageSize(PageSize.ExtraLarge);
 
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);

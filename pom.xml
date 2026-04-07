@@ -72,6 +72,14 @@
             <groupId>com.jwebmp.plugins</groupId>
             <artifactId>prism</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jwebmp.plugins</groupId>
+            <artifactId>ngx-markdown</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jwebmp.plugins</groupId>
+            <artifactId>font-awesome-pro</artifactId>
+        </dependency>
 
     </dependencies>
 

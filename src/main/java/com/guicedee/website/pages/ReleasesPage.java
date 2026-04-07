@@ -22,7 +22,6 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
 
     private void buildReleasesPage()
     {
-        getMain().setPageSize(PageSize.ExtraLarge);
 
         var layout = new WaStack();
         layout.setGap(PageSize.ExtraLarge);

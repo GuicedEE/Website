@@ -51,7 +51,11 @@ public final class ModuleCatalog
         for (String id : ids)
         {
             String name = toTitleCase(id);
-            String description = String.format("GuicedEE module %s exposed on the public site.", name);
+            String description = switch (id)
+            {
+                case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
+                default -> String.format("GuicedEE module %s exposed on the public site.", name);
+            };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
             String groupId = "com.guicedee";
             String artifactId = id;
