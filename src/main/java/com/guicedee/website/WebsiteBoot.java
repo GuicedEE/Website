@@ -136,7 +136,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         entityLink.addClass("product-entity-assist");
         entityLink.addClass("appearance-plain");
         entityLink.setID("product-entity-assist");
-        entityLink.add(new WaIcon<>("database").addClass("logo-icon").addClass("logo-entity-assist"));
+        var entityLogo = new DivSimple<>();
+        entityLogo.setTag("i");
+        entityLogo.addClass("fak");
+        entityLogo.addClass("fa-entity-assist-logo");
+        entityLogo.addClass("logo-icon");
+        entityLogo.addClass("logo-entity-assist");
+        entityLink.add(entityLogo);
         cluster.add(entityLink);
         WaTooltip<?> entityTip = new WaTooltip<>();
         entityTip.setForId("product-entity-assist");
