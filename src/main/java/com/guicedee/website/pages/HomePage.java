@@ -1,7 +1,10 @@
 package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -13,6 +16,30 @@ import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-home")
 @NgRoutable(path = "home", isDefault = true)
+@NgField("useGradle = false;")
+@NgField("private _storageListener: any;")
+@NgField("private _customListener: any;")
+@NgImportReference(value = "OnDestroy, OnInit", reference = "@angular/core")
+@NgMethod("""
+        ngOnInit() {
+            const saved = localStorage.getItem('guicedee-build-tool');
+            if (saved) { this.useGradle = saved === 'gradle'; }
+            this._storageListener = (e: StorageEvent) => {
+                if (e.key === 'guicedee-build-tool') {
+                    this.useGradle = e.newValue === 'gradle';
+                }
+            };
+            this._customListener = (e: any) => {
+                this.useGradle = e.detail;
+            };
+            window.addEventListener('storage', this._storageListener);
+            window.addEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
+@NgMethod("""
+        ngOnDestroy() {
+            window.removeEventListener('storage', this._storageListener);
+            window.removeEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
 public class HomePage extends WebsitePage<HomePage> implements INgComponent<HomePage>
 {
     public HomePage()
@@ -103,7 +130,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setGap(PageSize.Medium);
 
         grid.add(featureCard("1. Add a dependency",
-                "Import the BOM, pick the modules you need, and Maven handles the rest. No plugin zoo, no starter generators.",
+                "Import the BOM, pick the modules you need, and your build tool handles the rest. Maven, Gradle, or any Java compiler — no plugin zoo, no starter generators.",
                 "One BOM, zero surprises."));
 
         grid.add(featureCard("2. Write your code",
@@ -898,14 +925,14 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("The BOM — one import, everything aligned",
+        content.add(mavenGradleCodeBlock("The BOM — one import, everything aligned",
                 """
                         <dependencyManagement>
                             <dependencies>
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-SNAPSHOT</version>
+                                    <version>2.0.0-RC1</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -922,7 +949,16 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <groupId>com.guicedee</groupId>
                                 <artifactId>persistence</artifactId>
                             </dependency>
-                        </dependencies>"""));
+                        </dependencies>""",
+                """
+                        // Import the BOM — all versions aligned
+                        dependencies {
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC1')
+                        
+                            // Then just add what you need — no versions required
+                            implementation 'com.guicedee:rest'
+                            implementation 'com.guicedee:persistence'
+                        }"""));
 
         return buildSection("Modular by design", "Ship only what you need",
                 "A composable stack where you build up your runtime — never exclude down from a kitchen-sink starter.",

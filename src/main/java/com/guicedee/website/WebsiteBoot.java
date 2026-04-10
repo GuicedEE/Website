@@ -21,6 +21,7 @@ import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
 import com.jwebmp.webawesome.components.page.WaPage;
+import com.jwebmp.webawesome.components.waswitch.WaSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +173,31 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         secondary.addClass("nav-products-secondary");
         secondary.addClass("wa-cluster");
         secondary.addClass("wa-gap-2xs");
+
+        // Maven / Gradle toggle switch
+        DivSimple<?> buildToolToggle = new DivSimple<>();
+        buildToolToggle.addClass("wa-cluster");
+        buildToolToggle.addClass("wa-gap-2xs");
+        buildToolToggle.addClass("wa-align-items-center");
+        buildToolToggle.addStyle("font-size:var(--wa-font-size-xs);color:var(--wa-color-text-quiet)");
+
+        var mavenLabel = new DivSimple<>();
+        mavenLabel.setTag("span");
+        mavenLabel.setText("Maven");
+        buildToolToggle.add(mavenLabel);
+
+        WaSwitch<?> buildToolSwitch = new WaSwitch<>();
+        buildToolSwitch.setSize(com.jwebmp.webawesome.components.Size.Small);
+        buildToolSwitch.bind("useGradle");
+        buildToolSwitch.addAttribute("(ngModelChange)", "onBuildToolChange($event)");
+        buildToolToggle.add(buildToolSwitch);
+
+        var gradleLabel = new DivSimple<>();
+        gradleLabel.setTag("span");
+        gradleLabel.setText("Gradle");
+        buildToolToggle.add(gradleLabel);
+
+        secondary.add(buildToolToggle);
 
         WaButton<?> githubBtn = new WaButton<>();
         githubBtn.setAppearance(Appearance.Plain);

@@ -338,6 +338,66 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return new WaDivider<>();
     }
 
+    // ── Maven / Gradle dual code block helpers ────────
+
+    /**
+     * Creates a pair of code blocks — one for Maven (XML) and one for Gradle (Groovy) —
+     * toggled by the useGradle field. Both share the same title.
+     */
+    protected DivSimple<?> mavenGradleCodeBlock(String title, String mavenCode, String gradleCode)
+    {
+        var wrapper = new DivSimple<>();
+        wrapper.addClass("code-block-wrapper");
+
+        var label = captionText(title);
+        label.addClass("code-block-label");
+        wrapper.add(label);
+
+        var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
+        mavenMd.setLineNumbers(true);
+        mavenMd.setClipboard(true);
+        mavenMd.addClass("aside-snippet-code");
+        mavenMd.addClass("wa-body-s");
+        mavenMd.addAttribute("*ngIf", "!useGradle");
+        wrapper.add(mavenMd);
+
+        var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
+        gradleMd.setLineNumbers(true);
+        gradleMd.setClipboard(true);
+        gradleMd.addClass("aside-snippet-code");
+        gradleMd.addClass("wa-body-s");
+        gradleMd.addAttribute("*ngIf", "useGradle");
+        wrapper.add(gradleMd);
+
+        return wrapper;
+    }
+
+    /**
+     * Creates a pair of code blocks without a title — one for Maven (XML) and one for Gradle (Groovy).
+     */
+    protected DivSimple<?> mavenGradleCodeBlock(String mavenCode, String gradleCode)
+    {
+        var wrapper = new DivSimple<>();
+
+        var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
+        mavenMd.setLineNumbers(true);
+        mavenMd.setClipboard(true);
+        mavenMd.addClass("aside-snippet-code");
+        mavenMd.addClass("wa-body-s");
+        mavenMd.addAttribute("*ngIf", "!useGradle");
+        wrapper.add(mavenMd);
+
+        var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
+        gradleMd.setLineNumbers(true);
+        gradleMd.setClipboard(true);
+        gradleMd.addClass("aside-snippet-code");
+        gradleMd.addClass("wa-body-s");
+        gradleMd.addAttribute("*ngIf", "useGradle");
+        wrapper.add(gradleMd);
+
+        return wrapper;
+    }
+
     // ── Shared CTA section ──────────────────────────────
 
     /**

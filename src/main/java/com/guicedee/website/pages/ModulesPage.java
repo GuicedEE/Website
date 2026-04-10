@@ -74,11 +74,6 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:inject",
                 "modules/inject"));
 
-        grid.add(moduleCard("CDI Bridge",
-                "@ApplicationScoped, @RequestScoped, @Dependent, BeanManager, Events. " +
-                        "CDI annotations mapped to Guice scopes.",
-                "com.guicedee:cdi",
-                "modules/cdi"));
 
         grid.add(moduleCard("Client API",
                 "IGuiceContext interface, Environment, CallScoper, CallScopeProperties. " +
@@ -227,6 +222,13 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                         "auto-reconnect, idle monitoring, and health reporting.",
                 "com.guicedee:cerial",
                 "modules/cerial"));
+
+        grid.add(moduleCard("CDI Bridge (Compatibility)",
+                "Optional Jakarta CDI compatibility layer — @ApplicationScoped, @RequestScoped, " +
+                        "@Dependent, BeanManager, Events. Maps CDI annotations to Guice scopes " +
+                        "for projects migrating from CDI-based frameworks.",
+                "com.guicedee:cdi",
+                "modules/cdi"));
 
         return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
                 "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);

@@ -1,7 +1,10 @@
 package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -13,6 +16,30 @@ import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
+@NgField("useGradle = false;")
+@NgField("private _storageListener: any;")
+@NgField("private _customListener: any;")
+@NgImportReference(value = "OnDestroy, OnInit", reference = "@angular/core")
+@NgMethod("""
+        ngOnInit() {
+            const saved = localStorage.getItem('guicedee-build-tool');
+            if (saved) { this.useGradle = saved === 'gradle'; }
+            this._storageListener = (e: StorageEvent) => {
+                if (e.key === 'guicedee-build-tool') {
+                    this.useGradle = e.newValue === 'gradle';
+                }
+            };
+            this._customListener = (e: any) => {
+                this.useGradle = e.detail;
+            };
+            window.addEventListener('storage', this._storageListener);
+            window.addEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
+@NgMethod("""
+        ngOnDestroy() {
+            window.removeEventListener('storage', this._storageListener);
+            window.removeEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
 public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements INgComponent<EndToEndGuidePage>
 {
     public EndToEndGuidePage()
@@ -86,14 +113,14 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         desc.setWaColorText("quiet");
         content.add(desc);
 
-        content.add(codeBlockWithTitle("pom.xml — BOM + dependencies",
+        content.add(mavenGradleCodeBlock("BOM + dependencies",
                 """
                         <dependencyManagement>
                             <dependencies>
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-SNAPSHOT</version>
+                                    <version>2.0.0-RC1</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -121,7 +148,17 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 <groupId>com.guicedee</groupId>
                                 <artifactId>persistence</artifactId>
                             </dependency>
-                        </dependencies>"""));
+                        </dependencies>""",
+                """
+                        dependencies {
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC1')
+                        
+                            implementation 'com.guicedee:rest'
+                            implementation 'com.guicedee:health'
+                            implementation 'com.guicedee.microprofile:config'
+                            implementation 'com.guicedee:rest-client'
+                            implementation 'com.guicedee:persistence'
+                        }"""));
 
         return buildSection("Project setup", "BOM + only what you need",
                 "Five dependencies for a full-featured microservice. No version numbers required.", true, content);

@@ -1,8 +1,12 @@
 package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
+import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
@@ -14,6 +18,30 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
+@NgField("useGradle = false;")
+@NgField("private _storageListener: any;")
+@NgField("private _customListener: any;")
+@NgImportReference(value = "OnDestroy, OnInit", reference = "@angular/core")
+@NgMethod("""
+        ngOnInit() {
+            const saved = localStorage.getItem('guicedee-build-tool');
+            if (saved) { this.useGradle = saved === 'gradle'; }
+            this._storageListener = (e: StorageEvent) => {
+                if (e.key === 'guicedee-build-tool') {
+                    this.useGradle = e.newValue === 'gradle';
+                }
+            };
+            this._customListener = (e: any) => {
+                this.useGradle = e.detail;
+            };
+            window.addEventListener('storage', this._storageListener);
+            window.addEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
+@NgMethod("""
+        ngOnDestroy() {
+            window.removeEventListener('storage', this._storageListener);
+            window.removeEventListener('guicedee-build-tool-change', this._customListener);
+        }""")
 public class GettingStartedPage extends WebsitePage<GettingStartedPage> implements INgComponent<GettingStartedPage>
 {
     public GettingStartedPage()
@@ -70,15 +98,37 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildPrerequisites()
     {
-        var grid = new WaGrid<>();
-        grid.setMinColumnSize("14rem");
-        grid.setGap(PageSize.Small);
-        grid.add(featureCard("JDK 25+", "Download from adoptium.net or use SDKMAN.", "Required"));
-        grid.add(featureCard("Maven 4+", "Apache Maven 4 with JPMS-aware lifecycle.", "Required"));
-        grid.add(featureCard("Your IDE", "IntelliJ IDEA, VS Code, or Eclipse — all work.", "Recommended"));
+        var content = new WaStack();
+        content.setGap(PageSize.Small);
+
+        // Maven prerequisites
+        var mavenPrereqs = new DivSimple<>();
+        mavenPrereqs.addAttribute("*ngIf", "!useGradle");
+
+        var mavenGrid = new WaGrid<>();
+        mavenGrid.setMinColumnSize("14rem");
+        mavenGrid.setGap(PageSize.Small);
+        mavenGrid.add(featureCard("JDK 25+", "Download from adoptium.net or use SDKMAN.", "Required"));
+        mavenGrid.add(featureCard("Maven 3.9+ / 4+", "Any modern Maven version works. GuicedEE itself is built with Maven 4.", "Required"));
+        mavenGrid.add(featureCard("Your IDE", "IntelliJ IDEA, VS Code, or Eclipse — all work.", "Recommended"));
+        mavenPrereqs.add(mavenGrid);
+        content.add(mavenPrereqs);
+
+        // Gradle prerequisites
+        var gradlePrereqs = new DivSimple<>();
+        gradlePrereqs.addAttribute("*ngIf", "useGradle");
+
+        var gradleGrid = new WaGrid<>();
+        gradleGrid.setMinColumnSize("14rem");
+        gradleGrid.setGap(PageSize.Small);
+        gradleGrid.add(featureCard("JDK 25+", "Download from adoptium.net or use SDKMAN.", "Required"));
+        gradleGrid.add(featureCard("Gradle 8.6+", "Any modern Gradle version with JPMS support.", "Required"));
+        gradleGrid.add(featureCard("Your IDE", "IntelliJ IDEA, VS Code, or Eclipse — all work.", "Recommended"));
+        gradlePrereqs.add(gradleGrid);
+        content.add(gradlePrereqs);
 
         return buildSection("Prerequisites", "What you need",
-                "GuicedEE targets the latest Java and tooling.", false, grid);
+                "GuicedEE targets the latest Java and tooling.", false, content);
     }
 
     // ── Step 1: Create the project ────────────────────
@@ -93,7 +143,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         desc.setWaColorText("quiet");
         content.add(desc);
 
-        content.add(codeBlockWithTitle("pom.xml",
+        content.add(mavenGradleCodeBlock("Project build file",
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
                         <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -108,7 +158,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                             <properties>
                                 <maven.compiler.release>25</maven.compiler.release>
-                                <guicedee.version>2.0.0-SNAPSHOT</guicedee.version>
+                                <guicedee.version>2.0.0-RC1</guicedee.version>
                             </properties>
                         
                             <dependencyManagement>
@@ -129,7 +179,26 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                                     <artifactId>rest</artifactId>
                                 </dependency>
                             </dependencies>
-                        </project>"""));
+                        </project>""",
+                """
+                        // build.gradle.kts
+                        plugins {
+                            java
+                        }
+                        
+                        group = "com.example"
+                        version = "1.0.0-SNAPSHOT"
+                        
+                        java {
+                            toolchain {
+                                languageVersion.set(JavaLanguageVersion.of(25))
+                            }
+                        }
+                        
+                        dependencies {
+                            implementation platform("com.guicedee:guicedee-bom:2.0.0-RC1")
+                            implementation("com.guicedee:rest")
+                        }"""));
 
         var tip = new WaDetails<>();
         tip.setSummary("Why just one dependency?");
@@ -254,10 +323,13 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(codeBlockWithTitle("Build and run",
+        content.add(mavenGradleCodeBlock("Build and run",
                 """
                         mvn clean package
-                        java -jar target/hello-guicedee.jar"""));
+                        java -jar target/hello-guicedee.jar""",
+                """
+                        gradle build
+                        java -jar build/libs/hello-guicedee.jar"""));
 
         content.add(codeBlockWithTitle("Test it",
                 """

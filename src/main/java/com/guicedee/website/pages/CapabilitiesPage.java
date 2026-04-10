@@ -92,7 +92,6 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             HEALTH["Health"]
                             METRICS["Metrics"]
                             CONFIG["Config"]
-                            CDI["CDI"]
                             FT["Fault<br/>Tolerance"]
                             INJECT["GuicedEE Inject · Guice Injector · ClassGraph · SPI"]
                             BOM["BOM · Parent POM · Services - JPMS wrappers"]
@@ -113,12 +112,10 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             VERTXCORE --> HEALTH
                             VERTXCORE --> METRICS
                             VERTXCORE --> CONFIG
-                            VERTXCORE --> CDI
                             VERTXCORE --> FT
                             HEALTH --> INJECT
                             METRICS --> INJECT
                             CONFIG --> INJECT
-                            CDI --> INJECT
                             FT --> INJECT
                             INJECT --> BOM"""));
 
