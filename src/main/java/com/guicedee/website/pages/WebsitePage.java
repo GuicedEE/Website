@@ -1,6 +1,7 @@
 package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.angular.components.NgIf;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.plugins.prism.PrismLanguage;
@@ -358,16 +359,18 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         mavenMd.setClipboard(true);
         mavenMd.addClass("aside-snippet-code");
         mavenMd.addClass("wa-body-s");
-        mavenMd.addAttribute("*ngIf", "!useGradle");
-        wrapper.add(mavenMd);
+        var mavenIf = new NgIf("!useGradle");
+        mavenIf.add(mavenMd);
+        wrapper.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
         gradleMd.setLineNumbers(true);
         gradleMd.setClipboard(true);
         gradleMd.addClass("aside-snippet-code");
         gradleMd.addClass("wa-body-s");
-        gradleMd.addAttribute("*ngIf", "useGradle");
-        wrapper.add(gradleMd);
+        var gradleIf = new NgIf("useGradle");
+        gradleIf.add(gradleMd);
+        wrapper.add(gradleIf);
 
         return wrapper;
     }
@@ -384,16 +387,18 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         mavenMd.setClipboard(true);
         mavenMd.addClass("aside-snippet-code");
         mavenMd.addClass("wa-body-s");
-        mavenMd.addAttribute("*ngIf", "!useGradle");
-        wrapper.add(mavenMd);
+        var mavenIf = new NgIf("!useGradle");
+        mavenIf.add(mavenMd);
+        wrapper.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
         gradleMd.setLineNumbers(true);
         gradleMd.setClipboard(true);
         gradleMd.addClass("aside-snippet-code");
         gradleMd.addClass("wa-body-s");
-        gradleMd.addAttribute("*ngIf", "useGradle");
-        wrapper.add(gradleMd);
+        var gradleIf = new NgIf("useGradle");
+        gradleIf.add(gradleMd);
+        wrapper.add(gradleIf);
 
         return wrapper;
     }

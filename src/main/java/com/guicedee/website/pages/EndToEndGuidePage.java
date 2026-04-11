@@ -17,28 +17,33 @@ import com.jwebmp.webawesome.components.card.WaCard;
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
 @NgField("useGradle = false;")
-@NgField("private _storageListener: any;")
 @NgField("private _customListener: any;")
-@NgImportReference(value = "OnDestroy, OnInit", reference = "@angular/core")
+@NgField("private cdr = inject(ChangeDetectorRef);")
+@NgField("private zone = inject(NgZone);")
+@NgImportReference(value = "OnDestroy, OnInit, ChangeDetectorRef, inject, NgZone", reference = "@angular/core")
 @NgMethod("""
         ngOnInit() {
             const saved = localStorage.getItem('guicedee-build-tool');
             if (saved) { this.useGradle = saved === 'gradle'; }
-            this._storageListener = (e: StorageEvent) => {
-                if (e.key === 'guicedee-build-tool') {
-                    this.useGradle = e.newValue === 'gradle';
-                }
-            };
             this._customListener = (e: any) => {
-                this.useGradle = e.detail;
+                this.zone.run(() => {
+                    this.useGradle = !!e.detail;
+                });
             };
-            window.addEventListener('storage', this._storageListener);
             window.addEventListener('guicedee-build-tool-change', this._customListener);
+            window.addEventListener('storage', (e: StorageEvent) => {
+                if (e.key === 'guicedee-build-tool') {
+                    this.zone.run(() => {
+                        this.useGradle = e.newValue === 'gradle';
+                    });
+                }
+            });
         }""")
 @NgMethod("""
         ngOnDestroy() {
-            window.removeEventListener('storage', this._storageListener);
-            window.removeEventListener('guicedee-build-tool-change', this._customListener);
+            if (this._customListener) {
+                window.removeEventListener('guicedee-build-tool-change', this._customListener);
+            }
         }""")
 public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements INgComponent<EndToEndGuidePage>
 {

@@ -6,6 +6,7 @@ import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
 import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.angular.components.NgIf;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -19,28 +20,33 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
 @NgField("useGradle = false;")
-@NgField("private _storageListener: any;")
 @NgField("private _customListener: any;")
-@NgImportReference(value = "OnDestroy, OnInit", reference = "@angular/core")
+@NgField("private cdr = inject(ChangeDetectorRef);")
+@NgField("private zone = inject(NgZone);")
+@NgImportReference(value = "OnDestroy, OnInit, ChangeDetectorRef, inject, NgZone", reference = "@angular/core")
 @NgMethod("""
         ngOnInit() {
             const saved = localStorage.getItem('guicedee-build-tool');
             if (saved) { this.useGradle = saved === 'gradle'; }
-            this._storageListener = (e: StorageEvent) => {
-                if (e.key === 'guicedee-build-tool') {
-                    this.useGradle = e.newValue === 'gradle';
-                }
-            };
             this._customListener = (e: any) => {
-                this.useGradle = e.detail;
+                this.zone.run(() => {
+                    this.useGradle = !!e.detail;
+                });
             };
-            window.addEventListener('storage', this._storageListener);
             window.addEventListener('guicedee-build-tool-change', this._customListener);
+            window.addEventListener('storage', (e: StorageEvent) => {
+                if (e.key === 'guicedee-build-tool') {
+                    this.zone.run(() => {
+                        this.useGradle = e.newValue === 'gradle';
+                    });
+                }
+            });
         }""")
 @NgMethod("""
         ngOnDestroy() {
-            window.removeEventListener('storage', this._storageListener);
-            window.removeEventListener('guicedee-build-tool-change', this._customListener);
+            if (this._customListener) {
+                window.removeEventListener('guicedee-build-tool-change', this._customListener);
+            }
         }""")
 public class GettingStartedPage extends WebsitePage<GettingStartedPage> implements INgComponent<GettingStartedPage>
 {
@@ -102,8 +108,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.setGap(PageSize.Small);
 
         // Maven prerequisites
-        var mavenPrereqs = new DivSimple<>();
-        mavenPrereqs.addAttribute("*ngIf", "!useGradle");
+        var mavenPrereqs = new NgIf("!useGradle");
 
         var mavenGrid = new WaGrid<>();
         mavenGrid.setMinColumnSize("14rem");
@@ -115,8 +120,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.add(mavenPrereqs);
 
         // Gradle prerequisites
-        var gradlePrereqs = new DivSimple<>();
-        gradlePrereqs.addAttribute("*ngIf", "useGradle");
+        var gradlePrereqs = new NgIf("useGradle");
 
         var gradleGrid = new WaGrid<>();
         gradleGrid.setMinColumnSize("14rem");
