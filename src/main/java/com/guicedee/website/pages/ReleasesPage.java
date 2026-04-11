@@ -48,13 +48,13 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.0.0-RC1", "In development"));
+        currentGrid.add(featureCard("Version", "2.0.0-RC2", "In development"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.x", "Latest reactive core"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.0.0-RC1",
+        layout.add(buildSection("Current", "v2.0.0-RC2",
                 "Active development branch targeting JDK 25 and Vert.x 5.",
                 true, currentContent));
 
