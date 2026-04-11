@@ -4,7 +4,6 @@ import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.plugins.markdown.Markdown;
-import com.jwebmp.plugins.prism.PrismLanguage;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
@@ -388,12 +387,12 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected DivSimple<?> codeBlock(String code)
     {
-        return codeBlock(code, PrismLanguage.Java);
+        return codeBlock(code, "java");
     }
 
-    protected DivSimple<?> codeBlock(String code, PrismLanguage language)
+    protected DivSimple<?> codeBlock(String code, String language)
     {
-        var md = new Markdown<>("```" + language.getLanguageCode() + "\n" + code + "\n```");
+        var md = new Markdown<>("```" + language + "\n" + code + "\n```");
         md.setLineNumbers(true);
         md.setClipboard(true);
         md.addClass("aside-snippet-code");
@@ -403,10 +402,10 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected DivSimple<?> codeBlockWithTitle(String title, String code)
     {
-        return codeBlockWithTitle(title, code, PrismLanguage.Java);
+        return codeBlockWithTitle(title, code, "java");
     }
 
-    protected DivSimple<?> codeBlockWithTitle(String title, String code, PrismLanguage language)
+    protected DivSimple<?> codeBlockWithTitle(String title, String code, String language)
     {
         var wrapper = new DivSimple<>();
         wrapper.addClass("code-block-wrapper");
@@ -415,7 +414,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         label.addClass("code-block-label");
         wrapper.add(label);
 
-        var md = new Markdown<>("```" + language.getLanguageCode() + "\n" + code + "\n```");
+        var md = new Markdown<>("```" + language + "\n" + code + "\n```");
         md.setLineNumbers(true);
         md.setClipboard(true);
         md.addClass("aside-snippet-code");

@@ -140,7 +140,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var entityLogo = new DivSimple<>();
         entityLogo.setTag("i");
         entityLogo.addClass("fak");
-        entityLogo.addClass("fa-entity-assist-logo");
+        entityLogo.addClass("fa-entityassist-logo");
         entityLogo.addClass("logo-icon");
         entityLogo.addClass("logo-entity-assist");
         entityLink.add(entityLogo);
@@ -425,6 +425,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         f.add("useGradle = false;");
         f.add("""
                 private asideRoutes: Record<string, string> = {
+                    'home': 'home',
                     'getting-started': 'getting-started',
                     'capabilities': 'capabilities',
                     'guides/end-to-end': 'guides/end-to-end',

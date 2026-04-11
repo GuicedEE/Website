@@ -662,7 +662,8 @@ wa-icon.icon-shrink {
 /* #endregion */
 
 /* #region code blocks */
-.code-block {
+.code-block,
+.aside-snippet-code {
     background: transparent;
     border: none;
     border-radius: 0;
@@ -672,11 +673,22 @@ wa-icon.icon-shrink {
     line-height: 1.6;
 }
 
-.code-block pre {
+.code-block pre,
+.code-block code,
+.aside-snippet-code pre,
+.aside-snippet-code code {
     margin: 0;
     padding: 0;
     background: transparent;
     border: none;
+}
+
+/* Override PrismJS theme backgrounds inside code blocks */
+.code-block pre[class*="language-"],
+.code-block code[class*="language-"],
+.aside-snippet-code pre[class*="language-"],
+.aside-snippet-code code[class*="language-"] {
+    background: transparent;
 }
 
 .code-block-wrapper {
@@ -708,6 +720,11 @@ wa-icon.icon-shrink {
     color: var(--wa-color-neutral-100, #f1f3f5);
 }
 
+.wa-dark .code-block code {
+    background: transparent;
+    border: none;
+}
+
 .wa-dark .code-block-label {
     background: var(--wa-color-neutral-800, #343a40);
     border-color: var(--wa-color-neutral-700, #495057);
@@ -723,7 +740,8 @@ wa-icon.icon-shrink {
     overflow-x: auto;
 }
 
-.aside-snippet-code pre {
+.aside-snippet-code pre,
+.aside-snippet-code code {
     margin: 0;
     padding: 0;
     background: transparent;
@@ -957,7 +975,8 @@ wa-comparison .code-block code {
     overflow-x: auto;
 }
 
-.getting-started-aside .aside-snippet-code pre {
+.getting-started-aside .aside-snippet-code pre,
+.getting-started-aside .aside-snippet-code code {
     margin: 0;
     padding: 0;
     background: transparent;
