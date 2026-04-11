@@ -18,7 +18,7 @@ This repository powers the **public GuicedEE website** hosted at `https://guiced
 - Define the primary navigation and page structure using WebAwesome’s `WaPage`/`WaMenu` paradigms: a `Home` page that narrates the platform story, a `Capabilities` page for features breakdown, a `Services` catalog page, the App Builder page, and supporting destinations for releases, media, and onboarding resources.
 
 ## 🧩 Module Catalog (everything under `GuicedEE/`)
-- `cdi`
+- `cdi` *(migration and compatibility — not a foundation module)*
 - `cerial`
 - `client`
 - `config`

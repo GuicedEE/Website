@@ -33,6 +33,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         layout.add(buildDataModules());
         layout.add(buildObservabilityModules());
         layout.add(buildIntegrationModules());
+        layout.add(buildMigrationModules());
     }
 
     private WaCard<?> buildIntro()
@@ -223,15 +224,27 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:cerial",
                 "modules/cerial"));
 
-        grid.add(moduleCard("CDI Bridge (Compatibility)",
-                "Optional Jakarta CDI compatibility layer — @ApplicationScoped, @RequestScoped, " +
-                        "@Dependent, BeanManager, Events. Maps CDI annotations to Guice scopes " +
-                        "for projects migrating from CDI-based frameworks.",
+        return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
+                "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
+    }
+
+    private WaStack buildMigrationModules()
+    {
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("16rem");
+        grid.setGap(PageSize.Medium);
+
+        grid.add(moduleCard("CDI Bridge (Migration)",
+                "Jakarta CDI compatibility layer for projects migrating from CDI-based frameworks. " +
+                        "Maps @ApplicationScoped, @RequestScoped, @Dependent, and BeanManager to Guice equivalents. " +
+                        "Not a foundation component — new projects should use Guice annotations directly.",
                 "com.guicedee:cdi",
                 "modules/cdi"));
 
-        return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
-                "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
+        return buildSection("Migration & Compatibility", "Bridges for migrating from other DI frameworks",
+                "These modules are not part of the GuicedEE foundation. They exist to assist projects " +
+                        "migrating from Jakarta CDI, Spring, or other DI frameworks to the native Guice-first model. " +
+                        "New projects should use Guice annotations and APIs directly.", false, grid);
     }
 
     private WaCard<?> moduleCard(String title, String description, String artifact, String route)

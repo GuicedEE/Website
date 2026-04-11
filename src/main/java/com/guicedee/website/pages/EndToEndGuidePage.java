@@ -125,7 +125,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-RC2</version>
+                                    <version>2.0.0-RC3</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -156,7 +156,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         </dependencies>""",
                 """
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC2')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC3')
                         
                             implementation 'com.guicedee:rest'
                             implementation 'com.guicedee:health'
@@ -741,7 +741,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.add(featureCard("Metrics", "@Counted, @Timed, Prometheus endpoint.", "/modules/metrics"));
         grid.add(featureCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "/modules/openapi"));
         grid.add(featureCard("Fault Tolerance", "@Retry, @CircuitBreaker, @Timeout, @Bulkhead.", "/modules/fault-tolerance"));
-        grid.add(featureCard("CDI Bridge", "@ApplicationScoped, @RequestScoped, BeanManager.", "/modules/cdi"));
+        grid.add(featureCard("CDI Bridge (Migration)", "Migration aid: @ApplicationScoped, @RequestScoped, BeanManager → Guice. Not a foundation module.", "/modules/cdi"));
         grid.add(featureCard("Inject (core)", "GuiceContext, ClassGraph, lifecycle SPI, JobService.", "/modules/inject"));
         content.add(grid);
 
