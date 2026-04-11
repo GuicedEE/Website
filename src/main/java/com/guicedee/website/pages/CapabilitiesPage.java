@@ -552,28 +552,28 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
-        grid.setMinColumnSize("16rem");
+        grid.setMinColumnSize("18rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("Health — /health",
+        grid.add(featureCardWithCoordinate("Health — /health",
                 "@Liveness, @Readiness, @Startup checks. Configurable paths. 2-second timeout per check. " +
                         "Kubernetes probe-ready.",
                 "com.guicedee:health"));
 
-        grid.add(featureCard("Metrics — Prometheus",
+        grid.add(featureCardWithCoordinate("Metrics — Prometheus",
                 "@Counted, @Timed, @Gauge annotations. Dropwizard Metrics backend. " +
                         "Prometheus scrape endpoint + Graphite reporting.",
                 "com.guicedee:metrics"));
 
-        grid.add(featureCard("Telemetry — OTLP",
+        grid.add(featureCardWithCoordinate("Telemetry — OTLP",
                 "@Trace and @SpanAttribute for distributed tracing. OTLP export to Tempo, Jaeger. " +
                         "Uni-aware span completion. Log4j2 correlation.",
                 "com.guicedee:guiced-telemetry"));
 
-        grid.add(featureCard("OpenAPI — /openapi.json",
+        grid.add(featureCardWithCoordinate("OpenAPI — /openapi.json",
                 "OpenAPI 3.1 spec generated from JAX-RS annotations. " +
                         "Swagger UI at /swagger/ with zero code.",
-                "com.guicedee:openapi + com.guicedee:guiced-swagger-ui"));
+                "com.guicedee:openapi"));
 
         content.add(grid);
 
@@ -815,17 +815,37 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(desc);
 
         var grid = new WaGrid<>();
-        grid.setMinColumnSize("18rem");
-        grid.setGap(PageSize.Small);
+        grid.setMinColumnSize("24rem");
+        grid.setGap(PageSize.Medium);
 
         ModuleCatalog.getModules().forEach(module ->
         {
             var details = new WaDetails<>();
-            details.setSummary(module.getName() + " — " + module.getGroupId() + ":" + module.getArtifactId());
-            details.add("Description: " + module.getDescription());
-            details.add("Version: " + module.getVersion());
-            details.add("Boot class: " + module.getBootClass());
-            details.add("Docs: " + module.getReadmePath());
+            details.setSummary(module.getName());
+
+            var detailContent = new WaStack();
+            detailContent.setGap(PageSize.Small);
+
+            var description = bodyText(module.getDescription(), "s");
+            description.setWaColorText("quiet");
+            detailContent.add(description);
+
+            detailContent.add(coordinateBlock(module.getGroupId() + ":" + module.getArtifactId() + ":" + module.getVersion()));
+
+            if (module.getBootClass() != null && !module.getBootClass().isBlank())
+            {
+                var bootLabel = captionText("Boot: " + module.getBootClass());
+                bootLabel.setWaColorText("quiet");
+                detailContent.add(bootLabel);
+            }
+            if (module.getReadmePath() != null && !module.getReadmePath().isBlank())
+            {
+                var docsLabel = captionText("Docs: " + module.getReadmePath());
+                docsLabel.setWaColorText("quiet");
+                detailContent.add(docsLabel);
+            }
+
+            details.add(detailContent);
             grid.add(details);
         });
 

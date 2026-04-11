@@ -13,6 +13,7 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
+import com.jwebmp.webawesome.components.copybutton.WaCopyButton;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
@@ -130,6 +131,67 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return caption;
     }
 
+    // ── Coordinate block helper ─────────────────────────
+
+    /**
+     * Creates a styled coordinate display block with groupId:artifactId on the first line,
+     * an optional version on the second line, and a copy button.
+     * Handles formats: "groupId:artifactId", "groupId:artifactId:version"
+     */
+    protected DivSimple<?> coordinateBlock(String coordinate)
+    {
+        var wrapper = new DivSimple<>();
+        wrapper.addClass("coordinate-block");
+
+        var textArea = new DivSimple<>();
+        textArea.addClass("coordinate-text");
+
+        // Split coordinate into parts
+        String[] parts = coordinate.split(":");
+        String groupArtifact;
+        String version = null;
+        if (parts.length >= 3)
+        {
+            groupArtifact = parts[0] + ":" + parts[1];
+            version = parts[2];
+        }
+        else
+        {
+            groupArtifact = coordinate;
+        }
+
+        var line1 = new WaText<>();
+        line1.setTag("span");
+        line1.setWaCaption("s");
+        line1.setWaFontWeight("semibold");
+        line1.setText(escapeAngular(groupArtifact));
+        line1.addClass("coordinate-ga");
+        textArea.add(line1);
+
+        if (version != null && !version.isBlank())
+        {
+            var line2 = new WaText<>();
+            line2.setTag("span");
+            line2.setWaCaption("xs");
+            line2.setText(escapeAngular(version));
+            line2.addClass("coordinate-version");
+            textArea.add(line2);
+        }
+
+        wrapper.add(textArea);
+
+        var copyBtn = new WaCopyButton();
+        copyBtn.setValue(coordinate);
+        copyBtn.setCopyLabel("Copy");
+        copyBtn.setSuccessLabel("Copied!");
+        copyBtn.setErrorLabel("Failed");
+        copyBtn.setTooltipPlacement("top");
+        copyBtn.addClass("coordinate-copy");
+        wrapper.add(copyBtn);
+
+        return wrapper;
+    }
+
     // ── Component helpers ─────────────────────────────
 
     protected WaTag<?> buildTag(String label, Variant variant)
@@ -200,6 +262,34 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
             noteText.addClass("feature-card-note");
             noteText.setWaColorText("quiet");
             stack.add(noteText);
+        }
+        card.add(stack);
+        return card;
+    }
+
+    /**
+     * Feature card variant where the note is a Maven coordinate displayed
+     * with a two-line layout and a copy button.
+     */
+    protected WaCard<?> featureCardWithCoordinate(String title, String body, String coordinate)
+    {
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
+        card.addClass("feature-card");
+
+        var stack = new WaStack();
+        stack.setGap(PageSize.Small);
+
+        var titleText = headingText("h3", "m", title);
+        titleText.addClass("feature-card-title");
+        stack.add(titleText);
+
+        var bodyCopy = bodyText(body, "m");
+        bodyCopy.setWaColorText("quiet");
+        stack.add(bodyCopy);
+        if (coordinate != null && !coordinate.isBlank())
+        {
+            stack.add(coordinateBlock(coordinate));
         }
         card.add(stack);
         return card;

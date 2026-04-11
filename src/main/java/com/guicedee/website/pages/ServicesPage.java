@@ -88,9 +88,7 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
                 var desc = bodyText(service.getDescription(), "s");
                 desc.setWaColorText("quiet");
                 stack.add(desc);
-                var coords = captionText(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion());
-                coords.setWaColorText("quiet");
-                stack.add(coords);
+                stack.add(coordinateBlock(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion()));
                 card.add(stack);
                 familyGrid.add(card);
             }

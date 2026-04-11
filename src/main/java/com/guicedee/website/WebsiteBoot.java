@@ -159,7 +159,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         activityLink.addClass("product-activity-master");
         activityLink.addClass("appearance-plain");
         activityLink.setID("product-activity-master");
-        activityLink.add(new WaIcon<>("tasks").addClass("logo-icon").addClass("logo-activity-master"));
+        var activityLogo = new DivSimple<>();
+        activityLogo.setTag("i");
+        activityLogo.addClass("fak");
+        activityLogo.addClass("fa-activitymaster-logo");
+        activityLogo.addClass("logo-icon");
+        activityLogo.addClass("logo-activity-master");
+        activityLink.add(activityLogo);
         cluster.add(activityLink);
         WaTooltip<?> activityTip = new WaTooltip<>();
         activityTip.setForId("product-activity-master");

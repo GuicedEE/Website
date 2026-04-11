@@ -261,9 +261,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         body.setWaColorText("quiet");
         stack.add(body);
 
-        var artifactText = captionText(artifact);
-        artifactText.setWaColorText("quiet");
-        stack.add(artifactText);
+        stack.add(coordinateBlock(artifact));
 
         var cta = buildCta("View module →", route, Variant.Brand, Appearance.Outlined);
         stack.add(cta);
