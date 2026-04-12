@@ -6,10 +6,12 @@ import com.jwebmp.core.base.angular.client.annotations.boot.NgBootImportReferenc
 import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportProvider;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.services.RouterOutlet;
 import com.jwebmp.core.base.html.DivSimple;
+import com.guicedee.website.App;
 import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.button.Appearance;
@@ -42,13 +44,18 @@ import java.util.List;
 @NgBootImportReference(value = "provideHttpClient", reference = "@angular/common/http")
 @NgBootImportProvider("provideHttpClient()")
 @NgBootImportReference(value = "LOCALE_ID", reference = "@angular/core")
+@NgBootImportReference(value = "registerLocaleData", reference = "@angular/common")
 @NgBootImportReference(value = "localeEnZa", reference = "@angular/common/locales/en-ZA", direct = true)
 @NgImportReference(value = "localeEnZa", reference = "@angular/common/locales/en-ZA", direct = true, wrapValueInBraces = false)
+@NgImportReference(value = "LOCALE_ID", reference = "@angular/core")
+@NgImportReference(value = "registerLocaleData", reference = "@angular/common")
 @NgImportReference(value = "signal", reference = "@angular/core")
 @NgImportReference(value = "DOCUMENT", reference = "@angular/common")
 @NgImportReference(value = "Router, NavigationStart, NavigationEnd", reference = "@angular/router")
+@NgImportReference(value = "inject", reference = "@angular/core")
 @NgImportReference(value = "filter", reference = "rxjs/operators")
-@NgComponentReference(WaToastDataService.class)
+@NgComponentReference(value = WaToastDataService.class)
+@NgComponentReference(value = App.class)
 public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot> {
     public WebsiteBoot() {
         setTag("ng-container");
@@ -194,8 +201,9 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
         WaSwitch<?> buildToolSwitch = new WaSwitch<>();
         buildToolSwitch.setSize(com.jwebmp.webawesome.components.Size.Small);
-        buildToolSwitch.bind("useGradle");
-        buildToolSwitch.addAttribute("(ngModelChange)", "onBuildToolChange($event)");
+        buildToolSwitch.setName("useGradle");
+        buildToolSwitch.addAttribute("[checked]", "app.useGradle()");
+        buildToolSwitch.addAttribute("(wa-change)", "onBuildToolChange($event)");
         buildToolToggle.add(buildToolSwitch);
 
         var gradleLabel = new DivSimple<>();
@@ -411,18 +419,17 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> providers() {
         var p = INgComponent.super.providers();
-        p.add("provideLocaleData(localeEnZa, 'en-ZA'");
         return p;
     }
 
     @Override
     public List<String> fields() {
         var f = new ArrayList<>(INgComponent.super.fields());
+        f.add("public app: App = inject(App);");
         f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
         f.add("darkMode = signal(true);");
-        f.add("useGradle = false;");
         f.add("""
                 private asideRoutes: Record<string, string> = {
                     'home': 'home',
@@ -444,11 +451,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     this.document.body.classList.toggle('wa-dark', isDark);
                     localStorage.setItem('guicedee-theme', isDark ? 'dark' : 'light');
                 }""");
+
         m.add("""
-                onBuildToolChange(value: boolean) {
-                    this.useGradle = value;
+                onBuildToolChange(event: any) {
+                    const value = event.target.checked;
+                    this.app.useGradle.set(value);
                     localStorage.setItem('guicedee-build-tool', value ? 'gradle' : 'maven');
-                    window.dispatchEvent(new CustomEvent('guicedee-build-tool-change', { detail: value }));
                 }""");
         return m;
     }
@@ -456,6 +464,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> onInit() {
         var init = new ArrayList<>(INgComponent.super.onInit());
+        init.add("registerLocaleData(localeEnZa, 'en-ZA')");
         init.add("""
                 const savedTheme = localStorage.getItem('guicedee-theme');
                 const prefersDark = savedTheme ? savedTheme === 'dark' : true;
@@ -464,7 +473,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         init.add("""
                 const savedBuildTool = localStorage.getItem('guicedee-build-tool');
                 if (savedBuildTool) {
-                    this.useGradle = savedBuildTool === 'gradle';
+                    this.app.useGradle.set(savedBuildTool === 'gradle');
                 }""");
         init.add("""
                 this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {

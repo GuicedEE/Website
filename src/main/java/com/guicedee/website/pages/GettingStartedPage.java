@@ -1,14 +1,16 @@
 package com.guicedee.website.pages;
 
+import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
+
+import java.util.ArrayList;
+import java.util.List;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
@@ -19,37 +21,17 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
-@NgField("useGradle = false;")
-@NgField("private _customListener: any;")
-@NgField("private cdr = inject(ChangeDetectorRef);")
-@NgField("private zone = inject(NgZone);")
-@NgImportReference(value = "OnDestroy, OnInit, ChangeDetectorRef, inject, NgZone", reference = "@angular/core")
-@NgMethod("""
-        ngOnInit() {
-            const saved = localStorage.getItem('guicedee-build-tool');
-            if (saved) { this.useGradle = saved === 'gradle'; }
-            this._customListener = (e: any) => {
-                this.zone.run(() => {
-                    this.useGradle = !!e.detail;
-                });
-            };
-            window.addEventListener('guicedee-build-tool-change', this._customListener);
-            window.addEventListener('storage', (e: StorageEvent) => {
-                if (e.key === 'guicedee-build-tool') {
-                    this.zone.run(() => {
-                        this.useGradle = e.newValue === 'gradle';
-                    });
-                }
-            });
-        }""")
-@NgMethod("""
-        ngOnDestroy() {
-            if (this._customListener) {
-                window.removeEventListener('guicedee-build-tool-change', this._customListener);
-            }
-        }""")
+@NgImportReference(value = "inject", reference = "@angular/core")
 public class GettingStartedPage extends WebsitePage<GettingStartedPage> implements INgComponent<GettingStartedPage>
 {
+    @Override
+    public List<String> fields()
+    {
+        List<String> f = new ArrayList<>();
+        f.add("public app: App = inject(App);");
+        return f;
+    }
+
     public GettingStartedPage()
     {
         buildGettingStartedPage();
@@ -108,7 +90,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.setGap(PageSize.Small);
 
         // Maven prerequisites
-        var mavenPrereqs = new NgIf("!useGradle");
+        var mavenPrereqs = new NgIf("!app.useGradle()");
 
         var mavenGrid = new WaGrid<>();
         mavenGrid.setMinColumnSize("14rem");
@@ -120,7 +102,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.add(mavenPrereqs);
 
         // Gradle prerequisites
-        var gradlePrereqs = new NgIf("useGradle");
+        var gradlePrereqs = new NgIf("app.useGradle()");
 
         var gradleGrid = new WaGrid<>();
         gradleGrid.setMinColumnSize("14rem");
@@ -206,7 +188,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         var tip = new WaDetails<>();
         tip.setSummary("Why just one dependency?");
-        tip.add("The rest module transitively brings in inject (Guice + ClassGraph) and web (Vert.x HTTP server). " +
+        tip.add("The rest module transitively brings in inject (" + brandCode("Guice") + " + " + brandCode("ClassGraph") + ") and web (" + brandCode("Vert.x") + " HTTP server). " +
                 "The BOM aligns all versions. You only declare what you directly use.");
         content.add(tip);
 
@@ -221,24 +203,21 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyText("GuicedEE uses the Java Platform Module System. Create a module-info.java " +
-                "that opens your package for injection.", "m");
+        var desc = bodyTextHtml("GuicedEE uses the Java Platform Module System. Create a " + brandCode("module-info.java") +
+                " that opens your package for injection.", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
 
         content.add(codeBlockWithTitle("src/main/java/module-info.java",
                 """
                         module hello.guicedee {
-                            requires com.guicedee.rest;
-                        
-                            opens com.example.hello to
-                                com.google.guice,
-                                com.guicedee.guicedinjection,
-                                io.github.classgraph;
+                            requires transitive com.guicedee.rest;
+                            // If using AOP or injecting private fields
+                            opens com.example.hello to com.google.guice;
                         }"""));
 
-        var explain = bodyText("That's the entire module descriptor. 'requires com.guicedee.rest' pulls in everything. " +
-                "'opens' lets Guice and ClassGraph inspect your package for injection and route discovery.", "s");
+        var explain = bodyTextHtml("That's the entire module descriptor. " + brandCode("requires transitive com.guicedee.rest") + " pulls in everything. " +
+                brandCode("opens") + " lets " + brandCode("Guice") + " and " + brandCode("ClassGraph") + " inspect your package for injection and route discovery.", "s");
         explain.setWaColorText("quiet");
         content.add(explain);
 
@@ -267,8 +246,8 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                             }
                         }"""));
 
-        var explain = bodyText("Two lines of code. Register your package for scanning, then call instance(). " +
-                "GuicedEE discovers your classes, creates the Guice injector, starts the Vert.x HTTP server, " +
+        var explain = bodyTextHtml("Two lines of code. Register your package for scanning, then call " + brandCode("instance()") + ". " +
+                "GuicedEE discovers your classes, creates the " + brandCode("Guice") + " injector, starts the " + brandCode("Vert.x") + " HTTP server, " +
                 "and registers your REST routes — all automatically.", "m");
         explain.setWaColorText("quiet");
         content.add(explain);
@@ -311,8 +290,8 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                             }
                         }"""));
 
-        var explain = bodyText("Standard Jakarta REST annotations. ClassGraph finds this class at startup, " +
-                "the REST module maps it to Vert.x routes, and it's live. No registration code.", "m");
+        var explain = bodyTextHtml("Standard Jakarta REST annotations. " + brandCode("ClassGraph") + " finds this class at startup, " +
+                "the REST module maps it to " + brandCode("Vert.x") + " routes, and it's live. No registration code.", "m");
         explain.setWaColorText("quiet");
         content.add(explain);
 
@@ -343,9 +322,9 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         curl http://localhost:8080/hello/World
                         # => Hello, World!"""));
 
-        var congrats = bodyText("That's it. A reactive REST service running on Vert.x 5, " +
-                "with Guice DI, JPMS modules, and zero configuration files. " +
-                "The entire project is 4 files: pom.xml, module-info.java, Boot.java, HelloResource.java.", "m");
+        var congrats = bodyTextHtml("That's it. A reactive REST service running on " + brandCode("Vert.x 5") + ", " +
+                "with " + brandCode("Guice") + " DI, JPMS modules, and zero configuration files. " +
+                "The entire project is 4 files: " + brandCode("pom.xml") + ", " + brandCode("module-info.java") + ", " + brandCode("Boot.java") + ", " + brandCode("HelloResource.java") + ".", "m");
         content.add(congrats);
 
         return buildSection("Step 5", "Run it",
@@ -359,7 +338,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyText("When you called IGuiceContext.instance(), GuicedEE executed this lifecycle:", "m");
+        var desc = bodyTextHtml("When you called " + brandCode("IGuiceContext.instance()") + ", GuicedEE executed this lifecycle:", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
 
@@ -378,26 +357,26 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
 
-        grid.add(featureCard("No Application class",
-                "No framework-specific base class to extend. Just a main() method.",
+        grid.add(featureCardHtml("No Application class",
+                "No framework-specific base class to extend. Just a " + brandCode("main()") + " method.",
                 null));
 
-        grid.add(featureCard("No registration code",
-                "Routes are discovered from @Path annotations. No manual route wiring.",
+        grid.add(featureCardHtml("No registration code",
+                "Routes are discovered from " + brandCode("@Path") + " annotations. No manual route wiring.",
                 null));
 
-        grid.add(featureCard("No XML / YAML",
-                "No web.xml, no application.yml, no beans.xml. Configuration is code + env vars.",
+        grid.add(featureCardHtml("No XML / YAML",
+                "No " + brandCode("web.xml") + ", no " + brandCode("application.yml") + ", no " + brandCode("beans.xml") + ". Configuration is code + env vars.",
                 null));
 
-        grid.add(featureCard("JPMS Level 3",
-                "Real module-info.java with explicit requires/opens. JLink-ready from day one.",
+        grid.add(featureCardHtml("JPMS Level 3",
+                "Real " + brandCode("module-info.java") + " with explicit " + brandCode("requires") + "/" + brandCode("opens") + ". JLink-ready from day one.",
                 null));
 
         content.add(grid);
 
         return buildSection("What just happened?", "Zero-magic bootstrapping",
-                "Everything is discovered through ClassGraph scanning and SPI — no reflection hacks.",
+                "Everything is discovered through " + brandCode("ClassGraph") + " scanning and SPI — no reflection hacks.",
                 false, content);
     }
 
@@ -421,34 +400,34 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         "REST clients, CORS, cloud logging, and JLink deployment.",
                 "/guides/end-to-end"));
 
-        grid.add(featureCard("REST services",
+        grid.add(featureCardHtml("REST services",
                 "Full JAX-RS adapter — CORS, security, reactive returns, " +
-                        "exception mapping, and RestInterceptor SPI.",
+                        "exception mapping, and " + brandCode("RestInterceptor") + " SPI.",
                 "/modules/rest"));
 
-        grid.add(featureCard("REST client",
-                "@Endpoint annotation, typed RestClient<S,R>, path parameters, " +
+        grid.add(featureCardHtml("REST client",
+                brandCode("@Endpoint") + " annotation, typed " + brandCode("RestClient&lt;S,R&gt;") + ", path parameters, " +
                         "Bearer/Basic/ApiKey auth, env-var secrets.",
                 "/modules/rest-client"));
 
-        grid.add(featureCard("Persistence",
-                "Hibernate Reactive 7 with Mutiny. Multi-database, " +
-                        "env-var driven, fully managed by Guice.",
+        grid.add(featureCardHtml("Persistence",
+                brandCode("Hibernate Reactive 7") + " with " + brandCode("Mutiny") + ". Multi-database, " +
+                        "env-var driven, fully managed by " + brandCode("Guice") + ".",
                 "/modules/persistence"));
 
-        grid.add(featureCard("Security",
-                "@RolesAllowed, @PermitAll, pluggable Vert.x auth handlers, " +
+        grid.add(featureCardHtml("Security",
+                brandCode("@RolesAllowed") + ", " + brandCode("@PermitAll") + ", pluggable " + brandCode("Vert.x") + " auth handlers, " +
                         "HTTPS/TLS, call-scoped isolation.",
                 "/modules/security"));
 
-        grid.add(featureCard("Cloud & deployment",
-                "CLOUD=true for JSON logging, JLink custom runtimes, " +
+        grid.add(featureCardHtml("Cloud & deployment",
+                brandCode("CLOUD=true") + " for JSON logging, JLink custom runtimes, " +
                         "distroless Docker, ~300 ms cold start.",
                 "/guides/deployment"));
 
-        grid.add(featureCard("Verticles & SPI",
-                "@Verticle isolation, 3 server SPI hooks, " +
-                        "per-pool threading, VertxRouterConfigurator.",
+        grid.add(featureCardHtml("Verticles & SPI",
+                brandCode("@Verticle") + " isolation, 3 server SPI hooks, " +
+                        "per-pool threading, " + brandCode("VertxRouterConfigurator") + ".",
                 "/modules/vertx"));
 
         grid.add(featureCard("All modules",

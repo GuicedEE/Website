@@ -9,7 +9,6 @@ open module website {
     requires com.jwebmp.core;
     requires com.jwebmp.core.angular;
     requires com.jwebmp.core.base.angular.client;
-    requires com.jwebmp.plugins.prism;
     requires com.jwebmp.plugins.markdown;
     requires com.jwebmp.webawesome;
     requires com.jwebmp.webawesomepro;

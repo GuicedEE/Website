@@ -1,7 +1,9 @@
 package com.guicedee.website.pages;
 
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
+import com.guicedee.website.App;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.webawesome.components.PageSize;
@@ -13,11 +15,13 @@ import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.copybutton.WaCopyButton;
+import com.jwebmp.webawesome.components.details.WaDetails;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
 import org.apache.commons.text.StringEscapeUtils;
 
+@NgComponentReference(App.class)
 public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J> implements INgComponent<J>
 {
     protected WebsitePage()
@@ -108,6 +112,22 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         body.setWaBody(size == null || size.isBlank() ? "m" : size);
         body.setText(escapeAngular(text));
         return body;
+    }
+
+    protected WaText<?> bodyTextHtml(String html, String size)
+    {
+        var body = new WaText<>();
+        body.setTag("p");
+        body.setWaBody(size == null || size.isBlank() ? "m" : size);
+        body.setText(html.replace("{", "&#123;").replace("}", "&#125;"));
+        return body;
+    }
+
+    protected static String brandCode(String text)
+    {
+        return "<code class=\"wa-body-s\" style=\"color:var(--wa-color-brand);\">" +
+               text.replace("{", "&#123;").replace("}", "&#125;") + 
+               "</code>";
     }
 
     /**
@@ -253,11 +273,43 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         stack.add(titleText);
 
         var bodyCopy = bodyText(body, "m");
+        bodyCopy.addClass("feature-card-body");
         bodyCopy.setWaColorText("quiet");
         stack.add(bodyCopy);
         if (note != null && !note.isBlank())
         {
             var noteText = captionText(note);
+            noteText.addClass("feature-card-body");
+            noteText.addClass("feature-card-note");
+            noteText.setWaColorText("quiet");
+            stack.add(noteText);
+        }
+        card.add(stack);
+        return card;
+    }
+
+    protected WaCard<?> featureCardHtml(String title, String bodyHtml, String note)
+    {
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
+        card.addClass("feature-card");
+
+        var stack = new WaStack();
+        stack.setGap(PageSize.Small);
+
+        var titleText = headingText("h3", "m", title);
+        titleText.addClass("feature-card-title");
+        stack.add(titleText);
+
+        var bodyCopy = bodyTextHtml(bodyHtml, "m");
+        bodyCopy.addClass("feature-card-body");
+        bodyCopy.setWaColorText("quiet");
+        stack.add(bodyCopy);
+        if (note != null && !note.isBlank())
+        {
+            var noteText = bodyTextHtml(note, "s");
+            noteText.setTag("div");
+            noteText.addClass("feature-card-body");
             noteText.addClass("feature-card-note");
             noteText.setWaColorText("quiet");
             stack.add(noteText);
@@ -284,11 +336,14 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         stack.add(titleText);
 
         var bodyCopy = bodyText(body, "m");
+        bodyCopy.addClass("feature-card-body");
         bodyCopy.setWaColorText("quiet");
         stack.add(bodyCopy);
         if (coordinate != null && !coordinate.isBlank())
         {
-            stack.add(coordinateBlock(coordinate));
+            var coord = coordinateBlock(coordinate);
+            coord.addClass("feature-card-body");
+            stack.add(coord);
         }
         card.add(stack);
         return card;
@@ -393,9 +448,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
     protected DivSimple<?> codeBlock(String code, String language)
     {
         var md = new Markdown<>("```" + language + "\n" + code + "\n```");
-        md.setLineNumbers(true);
-        md.setClipboard(true);
-        md.addClass("aside-snippet-code");
+        md.addClass("code-block");
         md.addClass("wa-body-s");
         return md;
     }
@@ -407,20 +460,15 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected DivSimple<?> codeBlockWithTitle(String title, String code, String language)
     {
-        var wrapper = new DivSimple<>();
-        wrapper.addClass("code-block-wrapper");
-
-        var label = captionText(title);
-        label.addClass("code-block-label");
-        wrapper.add(label);
+        var details = new WaDetails<>();
+        details.setSummary(title);
+        details.addClass("code-details");
 
         var md = new Markdown<>("```" + language + "\n" + code + "\n```");
-        md.setLineNumbers(true);
-        md.setClipboard(true);
-        md.addClass("aside-snippet-code");
+        md.addClass("code-block");
         md.addClass("wa-body-s");
-        wrapper.add(md);
-        return wrapper;
+        details.add(md);
+        return details;
     }
 
     protected WaDivider<?> divider()
@@ -436,32 +484,25 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
      */
     protected DivSimple<?> mavenGradleCodeBlock(String title, String mavenCode, String gradleCode)
     {
-        var wrapper = new DivSimple<>();
-        wrapper.addClass("code-block-wrapper");
-
-        var label = captionText(title);
-        label.addClass("code-block-label");
-        wrapper.add(label);
+        var details = new WaDetails<>();
+        details.setSummary(title);
+        details.addClass("code-details");
 
         var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
-        mavenMd.setLineNumbers(true);
-        mavenMd.setClipboard(true);
-        mavenMd.addClass("aside-snippet-code");
+        mavenMd.addClass("code-block");
         mavenMd.addClass("wa-body-s");
-        var mavenIf = new NgIf("!useGradle");
+        var mavenIf = new NgIf("!app.useGradle()");
         mavenIf.add(mavenMd);
-        wrapper.add(mavenIf);
+        details.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
-        gradleMd.setLineNumbers(true);
-        gradleMd.setClipboard(true);
-        gradleMd.addClass("aside-snippet-code");
+        gradleMd.addClass("code-block");
         gradleMd.addClass("wa-body-s");
-        var gradleIf = new NgIf("useGradle");
+        var gradleIf = new NgIf("app.useGradle()");
         gradleIf.add(gradleMd);
-        wrapper.add(gradleIf);
+        details.add(gradleIf);
 
-        return wrapper;
+        return details;
     }
 
     /**
@@ -472,20 +513,16 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         var wrapper = new DivSimple<>();
 
         var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
-        mavenMd.setLineNumbers(true);
-        mavenMd.setClipboard(true);
-        mavenMd.addClass("aside-snippet-code");
+        mavenMd.addClass("code-block");
         mavenMd.addClass("wa-body-s");
-        var mavenIf = new NgIf("!useGradle");
+        var mavenIf = new NgIf("!app.useGradle()");
         mavenIf.add(mavenMd);
         wrapper.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
-        gradleMd.setLineNumbers(true);
-        gradleMd.setClipboard(true);
-        gradleMd.addClass("aside-snippet-code");
+        gradleMd.addClass("code-block");
         gradleMd.addClass("wa-body-s");
-        var gradleIf = new NgIf("useGradle");
+        var gradleIf = new NgIf("app.useGradle()");
         gradleIf.add(gradleMd);
         wrapper.add(gradleIf);
 

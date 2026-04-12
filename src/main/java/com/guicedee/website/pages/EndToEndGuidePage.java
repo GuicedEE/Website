@@ -1,12 +1,14 @@
 package com.guicedee.website.pages;
 
+import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
+
+import java.util.ArrayList;
+import java.util.List;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
@@ -16,37 +18,17 @@ import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
-@NgField("useGradle = false;")
-@NgField("private _customListener: any;")
-@NgField("private cdr = inject(ChangeDetectorRef);")
-@NgField("private zone = inject(NgZone);")
-@NgImportReference(value = "OnDestroy, OnInit, ChangeDetectorRef, inject, NgZone", reference = "@angular/core")
-@NgMethod("""
-        ngOnInit() {
-            const saved = localStorage.getItem('guicedee-build-tool');
-            if (saved) { this.useGradle = saved === 'gradle'; }
-            this._customListener = (e: any) => {
-                this.zone.run(() => {
-                    this.useGradle = !!e.detail;
-                });
-            };
-            window.addEventListener('guicedee-build-tool-change', this._customListener);
-            window.addEventListener('storage', (e: StorageEvent) => {
-                if (e.key === 'guicedee-build-tool') {
-                    this.zone.run(() => {
-                        this.useGradle = e.newValue === 'gradle';
-                    });
-                }
-            });
-        }""")
-@NgMethod("""
-        ngOnDestroy() {
-            if (this._customListener) {
-                window.removeEventListener('guicedee-build-tool-change', this._customListener);
-            }
-        }""")
+@NgImportReference(value = "inject", reference = "@angular/core")
 public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements INgComponent<EndToEndGuidePage>
 {
+    @Override
+    public List<String> fields()
+    {
+        List<String> f = new ArrayList<>();
+        f.add("public app: App = inject(App);");
+        return f;
+    }
+
     public EndToEndGuidePage()
     {
         buildPage();
@@ -83,11 +65,11 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(headingText("h1", "xl", "End-to-End Microservice Guide"));
+        content.add(headingText("h1", "xl", "End-to-End Guide"));
 
-        var intro = bodyText("Build a production-ready reactive microservice from scratch. " +
+        var intro = bodyTextHtml("Build production-ready reactive microservices and " + brandCode("moduliths") + " from scratch. " +
                 "This guide covers REST endpoints with security, CORS, outbound REST clients, " +
-                "database persistence with Hibernate Reactive, MicroProfile Config, health checks, " +
+                "database persistence with " + brandCode("Hibernate Reactive") + ", " + brandCode("MicroProfile Config") + ", health checks, " +
                 "cloud-aware JSON logging, verticle isolation, and JLink deployment into distroless Docker containers.", "l");
         intro.setWaColorText("quiet");
         content.add(intro);
@@ -166,7 +148,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         }"""));
 
         return buildSection("Project setup", "BOM + only what you need",
-                "Five dependencies for a full-featured microservice. No version numbers required.", true, content);
+                "Five dependencies for full-featured microservices and moduliths. No version numbers required.", true, content);
     }
 
     // ── Module descriptor ─────────────────────────────
@@ -199,8 +181,8 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 with com.example.myservice.AppModule;
                         }"""));
 
-        var note = bodyText("Explicit 'requires' for every module you use. 'opens' for Guice injection. " +
-                "'provides' to register your Guice module via ServiceLoader. This is JPMS Level 3 — JLink resolves " +
+        var note = bodyTextHtml("Explicit " + brandCode("requires") + " for every module you use. " + brandCode("opens") + " for " + brandCode("Guice") + " injection. " +
+                brandCode("provides") + " to register your Guice module via " + brandCode("ServiceLoader") + ". This is JPMS Level 3 — JLink resolves " +
                 "the entire graph.", "s");
         note.setWaColorText("quiet");
         content.add(note);
@@ -287,9 +269,9 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var features = new WaGrid<>();
         features.setMinColumnSize("12rem");
         features.setGap(PageSize.Small);
-        features.add(featureCard("Reactive returns", "Uni<T>, Future<T>, or plain values. Non-blocking on the event loop.", null));
-        features.add(featureCard("Guice-injected", "@Inject works in every resource. Full DI lifecycle.", null));
-        features.add(featureCard("Auto-discovered", "ClassGraph finds @Path classes. No registration.", null));
+        features.add(featureCardHtml("Reactive returns", brandCode("Uni&lt;T&gt;") + ", " + brandCode("Future&lt;T&gt;") + ", or plain values. Non-blocking on the event loop.", null));
+        features.add(featureCardHtml("Guice-injected", brandCode("@Inject") + " works in every resource. Full DI lifecycle.", null));
+        features.add(featureCardHtml("Auto-discovered", brandCode("ClassGraph") + " finds " + brandCode("@Path") + " classes. No registration.", null));
         features.add(featureCard("Jackson serialization", "Request/response bodies (de)serialized automatically.", null));
         content.add(features);
 
@@ -305,7 +287,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyText("Apply standard Jakarta security annotations. Then plug in your Vert.x authentication " +
+        var desc = bodyTextHtml("Apply standard Jakarta security annotations. Then plug in your " + brandCode("Vert.x") + " authentication " +
                 "handler — JWT, OAuth2, Basic, or custom. No security.xml, no realm config files.", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
@@ -330,10 +312,10 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
-        grid.add(featureCard("@RolesAllowed", "Class or method level. Checked against the authenticated Vert.x User.", null));
+        grid.add(featureCardHtml("@RolesAllowed", "Class or method level. Checked against the authenticated " + brandCode("Vert.x User") + ".", null));
         grid.add(featureCard("@PermitAll / @DenyAll", "Method-level overrides class-level. Standard Jakarta annotations.", null));
-        grid.add(featureCard("HTTPS / TLS", "HTTPS_ENABLED=true, auto-detected JKS or PKCS#12 keystores.", null));
-        grid.add(featureCard("Call-scoped isolation", "Each request gets its own Guice CallScope with user context.", null));
+        grid.add(featureCardHtml("HTTPS / TLS", brandCode("HTTPS_ENABLED=true") + ", auto-detected JKS or PKCS#12 keystores.", null));
+        grid.add(featureCardHtml("Call-scoped isolation", "Each request gets its own " + brandCode("Guice CallScope") + " with user context.", null));
         content.add(grid);
 
         return buildSection("Security", "@RolesAllowed + pluggable Vert.x auth",
@@ -469,7 +451,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                             String currency;
                         }"""));
 
-        var note = bodyText("Priority: 1) Environment variables  2) System properties  " +
+        var note = bodyTextHtml("Priority: 1) Environment variables  2) System properties  " +
                 "3) microprofile-config.properties. Override at deploy time: ORDER_MAX_ITEMS=500", "s");
         note.setWaColorText("quiet");
         content.add(note);
@@ -485,7 +467,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyText("Hibernate Reactive 7 with Mutiny. Non-blocking database access on the Vert.x event loop. " +
+        var desc = bodyTextHtml(brandCode("Hibernate Reactive 7") + " with " + brandCode("Mutiny") + ". Non-blocking database access on the " + brandCode("Vert.x") + " event loop. " +
                 "Multi-database support with env-var driven connection details.", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
@@ -534,10 +516,10 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
         features.setGap(PageSize.Small);
-        features.add(featureCard("Hibernate Reactive 7", "Fully async with Mutiny Uni/Multi.", null));
-        features.add(featureCard("Env-var driven", "DB_URL, DB_USER, DB_PASSWORD — no persistence.xml required.", null));
-        features.add(featureCard("Multi-database", "Multiple DatabaseModule subclasses with @Named qualifiers.", null));
-        features.add(featureCard("Vert.x pool", "Pre-initialized connection pools on the event loop.", null));
+        features.add(featureCardHtml("Hibernate Reactive 7", "Fully async with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + ".", null));
+        features.add(featureCardHtml("DatabaseModule required", "GuicedEE creates the persistence unit from supplied properties, merged with " + brandCode("persistence.xml") + " if provided.", null));
+        features.add(featureCardHtml("Multi-database", "Multiple " + brandCode("DatabaseModule") + " subclasses with " + brandCode("@Named") + " qualifiers.", null));
+        features.add(featureCardHtml("Vert.x pool", "Pre-initialized connection pools on the event loop.", null));
         content.add(features);
 
         return buildSection("Persistence", "Hibernate Reactive 7 with Mutiny",
@@ -576,9 +558,9 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var hooks = new WaGrid<>();
         hooks.setMinColumnSize("14rem");
         hooks.setGap(PageSize.Small);
-        hooks.add(featureCard("VertxHttpServerOptionsConfigurator", "Before server creation — ports, TLS, buffers.", null));
-        hooks.add(featureCard("VertxHttpServerConfigurator", "After creation — connection handlers, WebSocket upgrade.", null));
-        hooks.add(featureCard("VertxRouterConfigurator", "Add routes and middleware. sortOrder() for execution order.", null));
+        hooks.add(featureCardHtml("VertxHttpServerOptionsConfigurator", "Before server creation — ports, TLS, buffers.", null));
+        hooks.add(featureCardHtml("VertxHttpServerConfigurator", "After creation — connection handlers, WebSocket upgrade.", null));
+        hooks.add(featureCardHtml("VertxRouterConfigurator", "Add routes and middleware. " + brandCode("sortOrder()") + " for execution order.", null));
         content.add(hooks);
 
         return buildSection("Verticle isolation", "@Verticle packages with dedicated worker pools",
@@ -610,9 +592,9 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
-        grid.add(featureCard("No log4j2.xml", "Programmatic config in the static initializer.", null));
+        grid.add(featureCardHtml("No log4j2.xml", "Programmatic config in the static initializer.", null));
         grid.add(featureCard("Stdout/Stderr split", "INFO→stdout, ERROR→stderr. No sidecar.", null));
-        grid.add(featureCard("@InjectLogger", "Named loggers via injection. No static fields.", null));
+        grid.add(featureCardHtml("@InjectLogger", "Named loggers via injection. No static fields.", null));
         grid.add(featureCard("Runtime switching", "Switch to JSON at runtime. No restart.", null));
         content.add(grid);
 
@@ -703,9 +685,9 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var tiers = new WaGrid<>();
         tiers.setMinColumnSize("14rem");
         tiers.setGap(PageSize.Small);
-        tiers.add(featureCard("1. Annotations", "Sensible defaults in code — @HealthOptions, @TelemetryOptions.", null));
+        tiers.add(featureCardHtml("1. Annotations", "Sensible defaults in code — " + brandCode("@HealthOptions") + ", " + brandCode("@TelemetryOptions") + ".", null));
         tiers.add(featureCard("2. Environment vars", "Override any annotation value at deploy time.", null));
-        tiers.add(featureCard("3. SPI hooks", "Programmatic control — VertxConfigurator, RestClientConfigurator.", null));
+        tiers.add(featureCardHtml("3. SPI hooks", "Programmatic control — " + brandCode("VertxConfigurator") + ", " + brandCode("RestClientConfigurator") + ".", null));
         content.add(tiers);
 
         return buildSection("Lifecycle & environment", "Three-tier configuration — annotations → env vars → SPI",
@@ -728,21 +710,21 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Small);
 
-        grid.add(featureCard("REST services", "@Path, @GET, CORS, security, ExceptionMapper, RestInterceptor.", "/modules/rest"));
-        grid.add(featureCard("REST client", "@Endpoint, RestClient<S,R>, auth strategies, path params.", "/modules/rest-client"));
-        grid.add(featureCard("Persistence", "Hibernate Reactive 7, Mutiny, DatabaseModule, multi-db.", "/modules/persistence"));
-        grid.add(featureCard("Health", "@Liveness, @Readiness, @Startup, env-var paths.", "/modules/health"));
-        grid.add(featureCard("Config", "@ConfigProperty, source priority, env-var overrides.", "/modules/config"));
-        grid.add(featureCard("Vert.x core", "EventBus, Verticles, Codecs, deployment.", "/modules/vertx"));
-        grid.add(featureCard("Web server", "HTTP/HTTPS, Router, BodyHandler, 3 SPI hooks.", "/modules/web"));
+        grid.add(featureCardHtml("REST services", brandCode("@Path") + ", " + brandCode("@GET") + ", CORS, security, " + brandCode("ExceptionMapper") + ", " + brandCode("RestInterceptor") + ".", "/modules/rest"));
+        grid.add(featureCardHtml("REST client", brandCode("@Endpoint") + ", " + brandCode("RestClient&lt;S,R&gt;") + ", auth strategies, path params.", "/modules/rest-client"));
+        grid.add(featureCardHtml("Persistence", brandCode("Hibernate Reactive 7") + ", " + brandCode("Mutiny") + ", " + brandCode("DatabaseModule") + ", multi-db.", "/modules/persistence"));
+        grid.add(featureCardHtml("Health", brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", " + brandCode("@Startup") + ", env-var paths.", "/modules/health"));
+        grid.add(featureCardHtml("Config", brandCode("@ConfigProperty") + ", source priority, env-var overrides.", "/modules/config"));
+        grid.add(featureCardHtml("Vert.x core", brandCode("EventBus") + ", Verticles, Codecs, deployment.", "/modules/vertx"));
+        grid.add(featureCardHtml("Web server", "HTTP/HTTPS, " + brandCode("Router") + ", " + brandCode("BodyHandler") + ", 3 SPI hooks.", "/modules/web"));
         grid.add(featureCard("WebSockets", "RFC 6455, action routing, group broadcast.", "/modules/websockets"));
         grid.add(featureCard("RabbitMQ", "Annotation-driven queues, exchanges, consumers.", "/modules/rabbitmq"));
-        grid.add(featureCard("Telemetry", "@Trace, OTLP export, Log4j2 correlation.", "/modules/telemetry"));
-        grid.add(featureCard("Metrics", "@Counted, @Timed, Prometheus endpoint.", "/modules/metrics"));
+        grid.add(featureCardHtml("Telemetry", brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "/modules/telemetry"));
+        grid.add(featureCardHtml("Metrics", brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "/modules/metrics"));
         grid.add(featureCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "/modules/openapi"));
-        grid.add(featureCard("Fault Tolerance", "@Retry, @CircuitBreaker, @Timeout, @Bulkhead.", "/modules/fault-tolerance"));
-        grid.add(featureCard("CDI Bridge (Migration)", "Migration aid: @ApplicationScoped, @RequestScoped, BeanManager → Guice. Not a foundation module.", "/modules/cdi"));
-        grid.add(featureCard("Inject (core)", "GuiceContext, ClassGraph, lifecycle SPI, JobService.", "/modules/inject"));
+        grid.add(featureCardHtml("Fault Tolerance", brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + ".", "/modules/fault-tolerance"));
+        grid.add(featureCardHtml("CDI Bridge (Migration)", "Migration aid: " + brandCode("@ApplicationScoped") + ", " + brandCode("@RequestScoped") + ", " + brandCode("BeanManager") + " → " + brandCode("Guice") + ". Not a foundation module.", "/modules/cdi"));
+        grid.add(featureCardHtml("Inject (core)", brandCode("GuiceContext") + ", " + brandCode("ClassGraph") + ", lifecycle SPI, " + brandCode("JobService") + ".", "/modules/inject"));
         content.add(grid);
 
         var ctas = new WaCluster<>();

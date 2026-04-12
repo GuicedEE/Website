@@ -19,11 +19,8 @@ public final class Boot
     {
         System.setProperty("HTTP_ENABLED", "true");
         System.setProperty("HTTP_PORT", "8765");
-        System.setProperty("jwebmp.process.angular.ts", "true");
+        System.setProperty("jwebmp.process.angular.ts", "false");
         LogUtils.addHighlightedConsoleLogger();
-		
-        
-				
         IGuiceContext.instance().inject();
         ApplicationBuilderService.getInstance().initialize();
         log.info("GuicedEE Website ready.");

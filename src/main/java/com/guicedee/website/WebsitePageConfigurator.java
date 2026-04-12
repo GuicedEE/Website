@@ -13,7 +13,11 @@ public class WebsitePageConfigurator implements IPageConfigurator<WebsitePageCon
     @Override
     public IPage<?> configure(IPage<?> page)
     {
-        page.addCssReference(new CSSReference("GuicedEELanding", 1.0, "/guicedee-landing.css"));
+        page.addCssReference(new CSSReference("GuicedEEBase", 1.0, "/base.css"));
+        page.addCssReference(new CSSReference("GuicedEELayout", 1.0, "/layout.css"));
+        page.addCssReference(new CSSReference("GuicedEEComponents", 1.0, "/components.css"));
+        page.addCssReference(new CSSReference("GuicedEEFeatures", 1.0, "/features.css"));
+        page.addCssReference(new CSSReference("GuicedEECode", 1.0, "/code.css"));
         WebAwesomePageConfigurator.setWaKitCode("6ea54e8336d3409b");
         FontAwesome5ProPageConfigurator.setKitCode("3f59d88b7f");
         Page<?> p = (Page<?>) page;

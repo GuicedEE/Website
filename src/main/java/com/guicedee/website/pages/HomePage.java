@@ -1,10 +1,9 @@
 package com.guicedee.website.pages;
 
+import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgMethod;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -14,43 +13,26 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NgComponent("guicedee-home")
 @NgRoutable(path = "home", isDefault = true)
-@NgField("useGradle = false;")
-@NgField("private _customListener: any;")
-@NgField("private cdr = inject(ChangeDetectorRef);")
-@NgField("private zone = inject(NgZone);")
-@NgImportReference(value = "OnDestroy, OnInit, ChangeDetectorRef, inject, NgZone", reference = "@angular/core")
-@NgMethod("""
-        ngOnInit() {
-            const saved = localStorage.getItem('guicedee-build-tool');
-            if (saved) { this.useGradle = saved === 'gradle'; }
-            this._customListener = (e: any) => {
-                this.zone.run(() => {
-                    this.useGradle = !!e.detail;
-                });
-            };
-            window.addEventListener('guicedee-build-tool-change', this._customListener);
-            window.addEventListener('storage', (e: StorageEvent) => {
-                if (e.key === 'guicedee-build-tool') {
-                    this.zone.run(() => {
-                        this.useGradle = e.newValue === 'gradle';
-                    });
-                }
-            });
-        }""")
-@NgMethod("""
-        ngOnDestroy() {
-            if (this._customListener) {
-                window.removeEventListener('guicedee-build-tool-change', this._customListener);
-            }
-        }""")
+@NgImportReference(value = "inject", reference = "@angular/core")
 public class HomePage extends WebsitePage<HomePage> implements INgComponent<HomePage>
 {
     public HomePage()
     {
         removeClass("website-content");
         buildLandingPage();
+    }
+
+    @Override
+    public List<String> fields()
+    {
+        List<String> f = new ArrayList<>();
+        f.add("public app: App = inject(App);");
+        return f;
     }
 
     private void buildLandingPage()
@@ -98,7 +80,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         hero.add(heading);
 
         // Subtitle
-        var subtitle = bodyText("Build reactive microservices with Google Guice, Vert.x 5, and MicroProfile — " +
+        var subtitle = bodyTextHtml("Build reactive microservices and " + brandCode("moduliths") + " with " + brandCode("Google Guice") + ", " + brandCode("Vert.x 5") + ", and " + brandCode("MicroProfile") + " — " +
                 "all on the Java Module System. Zero XML. Zero boilerplate. Just annotate and go.", "l");
         subtitle.setWaColorText("quiet");
         subtitle.addClass("hero-subtitle");
@@ -138,17 +120,17 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Import the BOM, pick the modules you need, and your build tool handles the rest. Maven, Gradle, or any Java compiler — no plugin zoo, no starter generators.",
                 "One BOM, zero surprises."));
 
-        grid.add(featureCard("2. Write your code",
-                "Use standard annotations — @Path, @Inject, @Liveness, @ConfigProperty. " +
-                        "GuicedEE discovers everything via ClassGraph and wires it through Guice.",
+        grid.add(featureCardHtml("2. Write your code",
+                "Use standard annotations — " + brandCode("@Path") + ", " + brandCode("@Inject") + ", " + brandCode("@Liveness") + ", " + brandCode("@ConfigProperty") + ". " +
+                        "GuicedEE discovers everything via " + brandCode("ClassGraph") + " and wires it through " + brandCode("Guice") + ".",
                 "Standards you already know."));
 
-        grid.add(featureCard("3. Run it",
-                "Call IGuiceContext.instance().inject() and your HTTP server, REST routes, WebSocket handlers, " +
+        grid.add(featureCardHtml("3. Run it",
+                "Call one line and your HTTP server, REST routes, WebSocket handlers, " +
                         "and persistence units all light up automatically.",
                 "One line to launch."));
 
-        return buildSection("How it works", "Three steps to a reactive microservice",
+        return buildSection("How it works", "Three steps to reactive microservices and moduliths",
                 "No code generators, no runtime reflection hacks, no XML plumbing.",
                 true, grid);
     }
@@ -170,24 +152,25 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("No persistence.xml?",
-                "Configure your database with @EntityManager annotations and environment variables. " +
-                        "Or use a minimal persistence.xml with ${ENV_VAR} placeholders — your choice.",
-                "Both paths are first-class citizens."));
+        grid.add(featureCardHtml("No persistence.xml?",
+                "Configure your database with a " + brandCode("DatabaseModule") + ". " +
+                        "GuicedEE creates the persistence unit from supplied properties, merged with " + brandCode("persistence.xml") + " if provided.",
+                "Properties + persistence.xml = merged configuration."));
 
-        grid.add(featureCard("No web.xml ever",
-                "The Vert.x HTTP server starts automatically when you add the 'web' module. " +
+        grid.add(featureCardHtml("No web.xml ever",
+                "The " + brandCode("Vert.x") + " HTTP server starts automatically when you add the 'web' module. " +
                         "Port, TLS, body limits — all controlled via environment variables or SPI hooks.",
                 "HTTP_PORT=8080, done."));
 
-        grid.add(featureCard("No beans.xml",
-                "Guice doesn't need one. GuicedEE discovers your modules, bindings, and lifecycle hooks via JPMS ServiceLoader and ClassGraph.",
+        grid.add(featureCardHtml("No beans.xml",
+                brandCode("Guice") + " doesn't need one. GuicedEE discovers your modules, bindings, and lifecycle hooks via JPMS " + brandCode("ServiceLoader") + " and " + brandCode("ClassGraph") + ". " +
+                        "Since " + brandCode("Guice") + " supports JIT (Just-In-Time) binding, you can often skip explicit registration altogether.",
                 "SPI is the configuration."));
 
-        grid.add(featureCard("No application.yml",
-                "Use @ConfigProperty from MicroProfile Config if you want external properties. " +
-                        "Otherwise, annotate and override with env vars at deploy time.",
-                "Annotations > YAML."));
+        grid.add(featureCardHtml("No application.yml",
+                "Keep it simple and cozy—no more jumping between " + brandCode("application.yml") + " and " + brandCode("cloud-config.yml") + ". " +
+                        "Use " + brandCode("@ConfigProperty") + " from MicroProfile Config for external properties, and override anything with env vars at deploy time.",
+                "Unified configuration, zero duplication."));
 
         content.add(grid);
 
@@ -245,7 +228,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 return products.save(product);
                             }
                         }"""));
-        var restNote = bodyText("Routes are discovered by ClassGraph at startup and registered on the Vert.x Router. " +
+        var restNote = bodyTextHtml("Routes are discovered by " + brandCode("ClassGraph") + " at startup and registered on the " + brandCode("Vert.x Router") + ". " +
                 "No registration code needed — just annotate and ship. Common JAX-RS syntax for simplicity", "s");
         restNote.setWaColorText("quiet");
         restStack.add(restNote);
@@ -337,10 +320,10 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Large);
 
-        var intro = bodyText("GuicedEE's REST module adapts standard Jakarta REST (JAX-RS) annotations to the Vert.x 5 Router. " +
-                "Routes are discovered at startup by ClassGraph, resource instances come from the Guice injector, " +
-                "and methods can return plain values, Uni<T>, or Future<T>. CORS, security, and exception mapping all work " +
-                "via annotations and SPI — no web.xml, no Application subclass, no registration code.", "m");
+        var intro = bodyTextHtml("GuicedEE's REST module adapts standard Jakarta REST (JAX-RS) annotations to the " + brandCode("Vert.x 5 Router") + ". " +
+                "Routes are discovered at startup by " + brandCode("ClassGraph") + ", resource instances come from the " + brandCode("Guice") + " injector, " +
+                "and methods can return plain values, " + brandCode("Uni&lt;T&gt;") + ", or " + brandCode("Future&lt;T&gt;") + ". CORS, security, and exception mapping all work " +
+                "via annotations and SPI — no " + brandCode("web.xml") + ", no " + brandCode("Application") + " subclass, no registration code.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
 
@@ -349,43 +332,43 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         features.setMinColumnSize("14rem");
         features.setGap(PageSize.Small);
 
-        features.add(featureCard("Zero-config routes",
-                "@Path, @GET, @POST, @PUT, @DELETE, @PATCH — OperationRegistry scans ClassGraph results " +
-                        "and maps them to Vert.x routes at startup. No registration code.",
+        features.add(featureCardHtml("Zero-config routes",
+                brandCode("@Path") + ", " + brandCode("@GET") + ", " + brandCode("@POST") + ", " + brandCode("@PUT") + ", " + brandCode("@DELETE") + ", " + brandCode("@PATCH") + " — " + brandCode("OperationRegistry") + " scans " + brandCode("ClassGraph") + " results " +
+                        "and maps them to " + brandCode("Vert.x") + " routes at startup. No registration code.",
                 null));
 
-        features.add(featureCard("Full parameter binding",
-                "@PathParam, @QueryParam, @HeaderParam, @CookieParam, @FormParam, @MatrixParam, @BeanParam — " +
+        features.add(featureCardHtml("Full parameter binding",
+                brandCode("@PathParam") + ", " + brandCode("@QueryParam") + ", " + brandCode("@HeaderParam") + ", " + brandCode("@CookieParam") + ", " + brandCode("@FormParam") + ", " + brandCode("@MatrixParam") + ", " + brandCode("@BeanParam") + " — " +
                         "all Jakarta REST parameter annotations are supported.",
                 null));
 
-        features.add(featureCard("Reactive returns",
-                "Return Uni<T>, Future<T>, or plain values. Reactive types run on the event loop; " +
+        features.add(featureCardHtml("Reactive returns",
+                "Return " + brandCode("Uni&lt;T&gt;") + ", " + brandCode("Future&lt;T&gt;") + ", or plain values. Reactive types run on the event loop; " +
                         "blocking methods are dispatched to a worker pool automatically.",
                 null));
 
-        features.add(featureCard("@Cors annotation",
+        features.add(featureCardHtml("@Cors annotation",
                 "Apply CORS at class or method level. Configures allowed origins, methods, headers, " +
-                        "credentials, and max age. Override any value with REST_CORS_* env vars.",
+                        "credentials, and max age. Override any value with " + brandCode("REST_CORS_*") + " env vars.",
                 null));
 
-        features.add(featureCard("RestInterceptor SPI",
+        features.add(featureCardHtml("RestInterceptor SPI",
                 "Hook into request start/end for logging, metrics, or cross-cutting concerns. " +
-                        "Implement onStart() and onEnd() — both return Future<Boolean>.",
+                        "Implement " + brandCode("onStart()") + " and " + brandCode("onEnd()") + " — both return " + brandCode("Future&lt;Boolean&gt;") + ".",
                 null));
 
-        features.add(featureCard("ExceptionMapper",
-                "Standard jakarta.ws.rs.ext.ExceptionMapper SPI with cause-chain traversal. " +
+        features.add(featureCardHtml("ExceptionMapper",
+                "Standard " + brandCode("ExceptionMapper") + " SPI with cause-chain traversal. " +
                         "Map exceptions to HTTP status codes and error response bodies.",
                 null));
 
-        features.add(featureCard("@Verticle worker pools",
-                "Resources in @Verticle-annotated packages automatically use their named worker pool. " +
+        features.add(featureCardHtml("@Verticle worker pools",
+                "Resources in " + brandCode("@Verticle") + "-annotated packages automatically use their named worker pool. " +
                         "Isolate API groups with different threading and pool sizes.",
                 null));
 
-        features.add(featureCard("JAX-RS Response",
-                "Return jakarta.ws.rs.core.Response for full control over status codes, " +
+        features.add(featureCardHtml("JAX-RS Response",
+                "Return " + brandCode("Response") + " for full control over status codes, " +
                         "headers, and entity bodies. Works alongside reactive returns.",
                 null));
 
@@ -436,9 +419,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var clientIntro = new WaStack();
         clientIntro.setGap(PageSize.Small);
         clientIntro.add(headingText("h3", "m", "REST Client — annotation-driven outbound calls"));
-        var clientDesc = bodyText("Need to call external APIs? Declare an @Endpoint on a RestClient<Send, Receive> field, " +
-                "add @Named, and inject. URL, method, authentication, timeouts, and connection options are all annotation-driven. " +
-                "Every call returns Uni<Receive> for fully reactive composition.", "s");
+        var clientDesc = bodyTextHtml("Need to call external APIs? Declare an " + brandCode("@Endpoint") + " on a " + brandCode("RestClient&lt;Send, Receive&gt;") + " field, " +
+                "add " + brandCode("@Named") + ", and inject. URL, method, authentication, timeouts, and connection options are all annotation-driven. " +
+                "Every call returns " + brandCode("Uni&lt;Receive&gt;") + " for fully reactive composition.", "s");
         clientDesc.setWaColorText("quiet");
         clientIntro.add(clientDesc);
         content.add(clientIntro);
@@ -493,8 +476,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Large);
 
-        var intro = bodyText("Security in GuicedEE uses standard Jakarta security annotations with pluggable Vert.x " +
-                "authentication and authorization handlers. No security.xml, no realm configuration files — " +
+        var intro = bodyTextHtml("Security in GuicedEE uses standard Jakarta security annotations with pluggable " + brandCode("Vert.x") + " " +
+                "authentication and authorization handlers. No " + brandCode("security.xml") + ", no realm configuration files — " +
                 "annotate your resources and plug in your auth provider via SPI.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
@@ -504,9 +487,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         features.setMinColumnSize("14rem");
         features.setGap(PageSize.Small);
 
-        features.add(featureCard("@RolesAllowed",
+        features.add(featureCardHtml("@RolesAllowed",
                 "Standard Jakarta annotation. Apply at class or method level. " +
-                        "GuicedEE's SecurityHandler checks roles against the authenticated Vert.x User.",
+                        "GuicedEE's " + brandCode("SecurityHandler") + " checks roles against the authenticated " + brandCode("Vert.x User") + ".",
                 null));
 
         features.add(featureCard("@PermitAll / @DenyAll",
@@ -514,33 +497,33 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Method-level annotations override class-level ones.",
                 null));
 
-        features.add(featureCard("Pluggable AuthenticationHandler",
-                "Call SecurityHandler.setDefaultAuthenticationHandler() with any Vert.x AuthenticationHandler — " +
+        features.add(featureCardHtml("Pluggable AuthenticationHandler",
+                "Call " + brandCode("SecurityHandler.setDefaultAuthenticationHandler()") + " with any " + brandCode("Vert.x AuthenticationHandler") + " — " +
                         "JWT, OAuth2, Basic, or your own custom handler.",
                 null));
 
-        features.add(featureCard("Pluggable AuthorizationProvider",
-                "Plug in role/permission resolution via SecurityHandler.setDefaultAuthorizationProvider(). " +
-                        "Works with Vert.x's built-in providers or your own.",
+        features.add(featureCardHtml("Pluggable AuthorizationProvider",
+                "Plug in role/permission resolution via " + brandCode("SecurityHandler.setDefaultAuthorizationProvider()") + ". " +
+                        "Works with " + brandCode("Vert.x") + "'s built-in providers or your own.",
                 null));
 
-        features.add(featureCard("REST Client @EndpointSecurity",
+        features.add(featureCardHtml("REST Client @EndpointSecurity",
                 "Bearer, JWT, Basic, and ApiKey authentication on outbound REST calls. " +
-                        "Credentials support ${ENV_VAR} placeholders — secrets never touch source code.",
+                        "Credentials support " + brandCode("${ENV_VAR}") + " placeholders — secrets never touch source code.",
                 null));
 
-        features.add(featureCard("HTTPS / TLS",
+        features.add(featureCardHtml("HTTPS / TLS",
                 "JKS and PKCS#12 keystores auto-detected by file extension. " +
-                        "Set HTTPS_ENABLED=true, HTTPS_KEYSTORE, and HTTPS_KEYSTORE_PASSWORD.",
+                        "Set " + brandCode("HTTPS_ENABLED=true") + ", " + brandCode("HTTPS_KEYSTORE") + ", and " + brandCode("HTTPS_KEYSTORE_PASSWORD") + ".",
                 null));
 
-        features.add(featureCard("Call-scoped isolation",
-                "Each HTTP request runs in a Guice CallScope with its own CallScopeProperties. " +
+        features.add(featureCardHtml("Call-scoped isolation",
+                "Each HTTP request runs in a " + brandCode("Guice CallScope") + " with its own " + brandCode("CallScopeProperties") + ". " +
                         "User context, request data, and scoped services are isolated per request.",
                 null));
 
-        features.add(featureCard("CORS security",
-                "@Cors annotation with env var overrides for origins, methods, headers, credentials, and max age. " +
+        features.add(featureCardHtml("CORS security",
+                brandCode("@Cors") + " annotation with env var overrides for origins, methods, headers, credentials, and max age. " +
                         "Applied per-class, per-method, or globally via environment variables.",
                 null));
 
@@ -647,7 +630,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Large);
 
-        var intro = bodyText("The Vert.x 5 HTTP server, router, and verticle infrastructure are fully managed by GuicedEE. " +
+        var intro = bodyTextHtml("The " + brandCode("Vert.x 5") + " HTTP server, router, and verticle infrastructure are fully managed by GuicedEE. " +
                 "Three SPI extension points let you customize every layer. Per-verticle isolation means you can run " +
                 "different API groups on separate worker pools with their own threading models.", "m");
         intro.setWaColorText("quiet");
@@ -658,34 +641,34 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         features.setMinColumnSize("14rem");
         features.setGap(PageSize.Small);
 
-        features.add(featureCard("Auto-start HTTP/HTTPS",
-                "VertxWebServerPostStartup runs as IGuicePostStartup. Creates HTTP and HTTPS servers " +
+        features.add(featureCardHtml("Auto-start HTTP/HTTPS",
+                brandCode("VertxWebServerPostStartup") + " runs as " + brandCode("IGuicePostStartup") + ". Creates HTTP and HTTPS servers " +
                         "from environment config. Compression level 9, TCP keepalive, and configurable limits.",
                 null));
 
-        features.add(featureCard("VertxHttpServerOptionsConfigurator",
-                "SPI to customize HttpServerOptions before servers are created. " +
-                        "Set idle timeouts, buffer sizes, ALPN, or any Vert.x option.",
+        features.add(featureCardHtml("VertxHttpServerOptionsConfigurator",
+                "SPI to customize " + brandCode("HttpServerOptions") + " before servers are created. " +
+                        "Set idle timeouts, buffer sizes, ALPN, or any " + brandCode("Vert.x") + " option.",
                 null));
 
-        features.add(featureCard("VertxHttpServerConfigurator",
-                "SPI to configure HttpServer instances after creation. " +
+        features.add(featureCardHtml("VertxHttpServerConfigurator",
+                "SPI to configure " + brandCode("HttpServer") + " instances after creation. " +
                         "Add connection handlers, WebSocket upgrade logic, or metrics hooks.",
                 null));
 
-        features.add(featureCard("VertxRouterConfigurator",
-                "SPI to add routes and middleware to the Router. Sorted by sortOrder() — " +
+        features.add(featureCardHtml("VertxRouterConfigurator",
+                "SPI to add routes and middleware to the " + brandCode("Router") + ". Sorted by " + brandCode("sortOrder()") + " — " +
                         "infrastructure runs first, application routes later.",
                 null));
 
-        features.add(featureCard("@Verticle annotation",
+        features.add(featureCardHtml("@Verticle annotation",
                 "Annotate a package to create an isolated verticle with its own worker pool, " +
                         "threading model, instance count, and HA settings.",
                 null));
 
-        features.add(featureCard("Per-verticle sub-routers",
-                "VertxRouterConfigurator implementations in @Verticle packages get their own Router, " +
-                        "mounted as a sub-router on the main Router.",
+        features.add(featureCardHtml("Per-verticle sub-routers",
+                brandCode("VertxRouterConfigurator") + " implementations in " + brandCode("@Verticle") + " packages get their own " + brandCode("Router") + ", " +
+                        "mounted as a sub-router on the main " + brandCode("Router") + ".",
                 null));
 
         features.add(featureCard("Capabilities enum",
@@ -693,8 +676,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Sockets, OpenAPI, Swagger, and more. Each maps to its module package.",
                 null));
 
-        features.add(featureCard("Startup flow control",
-                "IGuicePostStartup hooks use sortOrder() for deterministic startup. " +
+        features.add(featureCardHtml("Startup flow control",
+                brandCode("IGuicePostStartup") + " hooks use " + brandCode("sortOrder()") + " for deterministic startup. " +
                         "Web server starts early (MIN_VALUE + 500), your routes register after.",
                 null));
 
@@ -798,7 +781,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var intro = bodyText("GuicedEE implements key Eclipse MicroProfile specifications through Guice integration. " +
+        var intro = bodyTextHtml("Eclipse MicroProfile provides an additive support mechanism, implemented through " + brandCode("Guice") + " integration. " +
                 "If you know the MicroProfile annotations, you already know GuicedEE.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
@@ -807,34 +790,34 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("MicroProfile Config",
-                "Inject configuration with @ConfigProperty. Sources: environment variables (highest priority), " +
-                        "system properties, and META-INF/microprofile-config.properties. Profile support included.",
+        grid.add(featureCardHtml("MicroProfile Config",
+                "Inject configuration with " + brandCode("@ConfigProperty") + ". Sources: environment variables (highest priority), " +
+                        "system properties, and " + brandCode("META-INF/microprofile-config.properties") + ". Profile support included.",
                 "SmallRye Config under the hood."));
 
-        grid.add(featureCard("MicroProfile Health",
-                "Standard @Liveness, @Readiness, and @Startup health checks. " +
-                        "Discovered by ClassGraph and exposed as /health JSON endpoints on the Vert.x Router.",
+        grid.add(featureCardHtml("MicroProfile Health",
+                "Standard " + brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", and " + brandCode("@Startup") + " health checks. " +
+                        "Discovered by " + brandCode("ClassGraph") + " and exposed as " + brandCode("/health") + " JSON endpoints on the " + brandCode("Vert.x Router") + ".",
                 "Kubernetes-ready out of the box."));
 
-        grid.add(featureCard("MicroProfile Metrics",
-                "@Counted, @Timed, @Gauge — backed by Dropwizard Metrics with a Prometheus scrape endpoint. " +
+        grid.add(featureCardHtml("MicroProfile Metrics",
+                brandCode("@Counted") + ", " + brandCode("@Timed") + ", " + brandCode("@Gauge") + " — backed by Dropwizard Metrics with a Prometheus scrape endpoint. " +
                         "Add the module and your metrics are live.",
                 "Prometheus + Graphite reporting."));
 
-        grid.add(featureCard("MicroProfile Fault Tolerance",
-                "@Retry, @CircuitBreaker, @Timeout, @Bulkhead, @Fallback — " +
-                        "resilience patterns wired through Guice AOP interception.",
+        grid.add(featureCardHtml("MicroProfile Fault Tolerance",
+                brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + ", " + brandCode("@Fallback") + " — " +
+                        "resilience patterns wired through " + brandCode("Guice") + " AOP interception.",
                 "Production resilience, zero effort."));
 
-        grid.add(featureCard("MicroProfile OpenAPI",
+        grid.add(featureCardHtml("MicroProfile OpenAPI",
                 "OpenAPI 3.1 spec generation from your JAX-RS annotations. " +
-                        "Served at /openapi.json and /openapi.yaml with zero configuration.",
+                        "Served at " + brandCode("/openapi.json") + " and " + brandCode("/openapi.yaml") + " with zero configuration.",
                 "Swagger UI auto-mounts at /swagger/."));
 
-        grid.add(featureCard("OpenTelemetry",
-                "@Trace and @SpanAttribute for distributed tracing. OTLP export to Tempo, Jaeger, or any collector. " +
-                        "Uni-aware — spans complete when the reactive chain resolves.",
+        grid.add(featureCardHtml("OpenTelemetry",
+                brandCode("@Trace") + " and " + brandCode("@SpanAttribute") + " for distributed tracing. OTLP export to Tempo, Jaeger, or any collector. " +
+                        brandCode("Uni") + "-aware — spans complete when the reactive chain resolves.",
                 "Correlated logs via Log4j2 appender."));
 
         content.add(grid);
@@ -872,22 +855,22 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("Guice-first DI",
-                "All lifecycle, routing, persistence, messaging, and telemetry are wired through a single Guice injector. " +
-                        "@Inject works everywhere — in REST resources, health checks, WebSocket receivers, even in event bus consumers.",
+        grid.add(featureCardHtml("Guice-first DI",
+                "All lifecycle, routing, persistence, messaging, and telemetry are wired through a single " + brandCode("Guice") + " injector. " +
+                        brandCode("@Inject") + " works everywhere — in REST resources, health checks, WebSocket receivers, even in event bus consumers.",
                 "One injector to rule them all."));
 
-        grid.add(featureCard("Vert.x 5 reactive core",
-                "Non-blocking HTTP, WebSockets, event bus, SQL clients, and RabbitMQ — all on the Vert.x event loop " +
-                        "with Mutiny Uni/Multi support throughout the stack.",
+        grid.add(featureCardHtml("Vert.x 5 reactive core",
+                "Non-blocking HTTP, WebSockets, event bus, SQL clients, and RabbitMQ — all on the " + brandCode("Vert.x") + " event loop " +
+                        "with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + " support throughout the stack.",
                 "Built for modern runtime constraints."));
 
-        grid.add(featureCard("JPMS Level 3",
-                "Every module ships a proper module-info.java with explicit exports, requires, provides, and uses. " +
+        grid.add(featureCardHtml("JPMS Level 3",
+                "Every module ships a proper " + brandCode("module-info.java") + " with explicit " + brandCode("exports") + ", " + brandCode("requires") + ", " + brandCode("provides") + ", and " + brandCode("uses") + ". " +
                         "Build JLink and JPackage distributables confidently.",
                 "Real modules, not automatic modules."));
 
-        grid.add(featureCard("SPI + ClassGraph",
+        grid.add(featureCardHtml("SPI + ClassGraph",
                 "Modules, lifecycle hooks, REST resources, health checks, consumers — everything is discovered automatically at startup. " +
                         "No manual registration, no classpath scanning hacks.",
                 "Convention over configuration, done right."));
@@ -908,8 +891,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("Build it up, never exclude down",
-                "Start with inject and add only what you need: rest, persistence, websockets, rabbitmq. " +
+        grid.add(featureCardHtml("Build it up, never exclude down",
+                "Start with " + brandCode("inject") + " and add only what you need: " + brandCode("rest") + ", " + brandCode("persistence") + ", " + brandCode("websockets") + ", " + brandCode("rabbitmq") + ". " +
                         "Each module is self-contained with its own JPMS descriptor.",
                 "Your runtime is only as big as you choose."));
 
@@ -918,13 +901,13 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Deploy as a native installer or minimal Docker image.",
                 "From 500 MB JRE to 40 MB custom runtime."));
 
-        grid.add(featureCard("One BOM, all versions aligned",
-                "Import guicedee-bom and jwebmp-bom in your dependencyManagement. " +
+        grid.add(featureCardHtml("One BOM, all versions aligned",
+                "Import " + brandCode("guicedee-bom") + " and " + brandCode("jwebmp-bom") + " in your " + brandCode("dependencyManagement") + ". " +
                         "All 20+ modules are version-aligned and tested together.",
                 "No dependency conflicts, ever."));
 
-        grid.add(featureCard("Grouped library wrappers",
-                "Third-party libraries (Hibernate, Jackson, Vert.x) are repackaged with proper module-info.java descriptors. " +
+        grid.add(featureCardHtml("Grouped library wrappers",
+                "Third-party libraries (Hibernate, Jackson, Vert.x) are repackaged with proper " + brandCode("module-info.java") + " descriptors. " +
                         "They plug into the module system cleanly.",
                 "Over 50 JPMS-wrapped service modules."));
 
@@ -977,8 +960,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var intro = bodyText("Because every GuicedEE module is JPMS Level 3 with explicit module-info.java descriptors, " +
-                "you can use JLink to create a custom Java runtime that contains only the modules your application actually uses. " +
+        var intro = bodyTextHtml("Because every GuicedEE module is JPMS Level 3 with explicit " + brandCode("module-info.java") + " descriptors, " +
+                "you can use " + brandCode("jlink") + " to create a custom Java runtime that contains only the modules your application actually uses. " +
                 "The result is a self-contained image — no external JDK required at deploy time — that ships in a minimal Docker container.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
@@ -987,13 +970,13 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("Custom JRE via JLink",
-                "Run 'jlink --module-path ... --add-modules my.app --output jrt' to build a trimmed Java runtime. " +
+        grid.add(featureCardHtml("Custom JRE via JLink",
+                "Run " + brandCode("jlink --module-path ... --add-modules my.app --output jrt") + " to build a trimmed Java runtime. " +
                         "Only the modules your app requires are included — everything else is stripped.",
                 "From ~500 MB JDK to ~40 MB custom image."));
 
-        grid.add(featureCard("JPackage installers",
-                "Use 'jpackage' to wrap your JLink image into a native installer — " +
+        grid.add(featureCardHtml("JPackage installers",
+                "Use " + brandCode("jpackage") + " to wrap your JLink image into a native installer — " +
                         "MSI on Windows, DEB/RPM on Linux, DMG on macOS. Zero JDK installation required by end users.",
                 "Real desktop/server installers."));
 
@@ -1003,9 +986,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Cloud Run, Kubernetes, and ECS ship these instantly.",
                 "~40-60 MB Docker images."));
 
-        grid.add(featureCard("~300 ms startup on JRT",
+        grid.add(featureCardHtml("~300 ms startup on JRT",
                 "JLink custom runtimes skip classpath scanning for the JDK modules themselves. " +
-                        "Combined with Vert.x's non-blocking boot and ClassGraph's fast scanning, " +
+                        "Combined with " + brandCode("Vert.x") + "'s non-blocking boot and " + brandCode("ClassGraph") + "'s fast scanning, " +
                         "REST services are ready in under 300 ms.",
                 "Cold-start friendly for serverless."));
 
@@ -1014,9 +997,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Terraform / Cloud Run / Kubernetes deploys reference the JLink image — never a fat JAR on a generic JDK.",
                 "No JARs in production."));
 
-        grid.add(featureCard("50+ JPMS service wrappers",
+        grid.add(featureCardHtml("50+ JPMS service wrappers",
                 "Third-party libraries (Hibernate, Jackson, Vert.x, Netty, Log4j2) ship as proper JPMS modules " +
-                        "with 'exports', 'requires', and 'provides'. JLink resolves the entire dependency graph cleanly.",
+                        "with " + brandCode("exports") + ", " + brandCode("requires") + ", and " + brandCode("provides") + ". JLink resolves the entire dependency graph cleanly.",
                 "No automatic-module hacks."));
 
         content.add(grid);
@@ -1055,9 +1038,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         # Or check what your app actually uses at runtime
                         java --show-module-resolution -m my.service"""));
 
-        var deployNote = bodyText("Every GuicedEE module declares its SPI 'provides' and 'uses' directives in module-info.java, " +
+        var deployNote = bodyTextHtml("Every GuicedEE module declares its SPI " + brandCode("provides") + " and " + brandCode("uses") + " directives in " + brandCode("module-info.java") + ", " +
                 "so JLink can resolve the full service graph automatically. No reflection hacks, no runtime classpath surprises. " +
-                "What you see in 'module-info.java' is exactly what ships.", "s");
+                "What you see in " + brandCode("module-info.java") + " is exactly what ships.", "s");
         deployNote.setWaColorText("quiet");
         content.add(deployNote);
 
@@ -1073,7 +1056,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        var intro = bodyText("GuicedEE ships production-ready logging out of the box. Locally, you get colorized, " +
+        var intro = bodyTextHtml("GuicedEE ships production-ready logging out of the box. Locally, you get colorized, " +
                 "human-readable console output with highlighting. In the cloud, set one environment variable and every " +
                 "log line switches to compact JSON — ready for ingestion by CloudWatch, Stackdriver, Loki, Datadog, or any log aggregator.", "m");
         intro.setWaColorText("quiet");
@@ -1083,9 +1066,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("CLOUD=true → JSON logs",
-                "Set the CLOUD environment variable to 'true' and all console appenders switch to compact JSON layout automatically. " +
-                        "No log4j2.xml required, no code changes — it's built into the GuiceContext static initializer.",
+        grid.add(featureCardHtml("CLOUD=true → JSON logs",
+                "Set the " + brandCode("CLOUD") + " environment variable to 'true' and all console appenders switch to compact JSON layout automatically. " +
+                        "No " + brandCode("log4j2.xml") + " required, no code changes — it's built into the " + brandCode("GuiceContext") + " static initializer.",
                 "One env var for production logging."));
 
         grid.add(featureCard("Highlighted local output",
@@ -1093,30 +1076,30 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "fixed-width logger names, and thread identifiers. Debug and trace are easy to spot.",
                 "Developer-friendly by default."));
 
-        grid.add(featureCard("Rolling file appenders",
-                "LogUtils.addFileRollingLogger() creates daily/size-based rolling appenders. " +
+        grid.add(featureCardHtml("Rolling file appenders",
+                brandCode("LogUtils.addFileRollingLogger()") + " creates daily/size-based rolling appenders. " +
                         "100 MB per file, 30 files retained, automatic rollover. " +
                         "In cloud mode, file loggers are skipped — only console JSON is emitted.",
                 "Zero-config file rotation."));
 
-        grid.add(featureCard("@InjectLogger",
-                "Inject named Log4j2 loggers into any Guice-managed class with @InjectLogger(\"name\"). " +
-                        "No static Logger fields, no LoggerFactory calls. The Log4JTypeListener wires them automatically.",
+        grid.add(featureCardHtml("@InjectLogger",
+                "Inject named Log4j2 loggers into any Guice-managed class with " + brandCode("@InjectLogger(\"name\")") + ". " +
+                        "No static Logger fields, no LoggerFactory calls. The " + brandCode("Log4JTypeListener") + " wires them automatically.",
                 "Clean, testable logging."));
 
-        grid.add(featureCard("Log4JConfigurator SPI",
-                "Need custom appenders or filters? Implement Log4JConfigurator and register via ServiceLoader. " +
+        grid.add(featureCardHtml("Log4JConfigurator SPI",
+                "Need custom appenders or filters? Implement " + brandCode("Log4JConfigurator") + " and register via " + brandCode("ServiceLoader") + ". " +
                         "Your configurator runs during static initialization — before any application code logs.",
                 "Full programmatic control."));
 
-        grid.add(featureCard("Dynamic layout switching",
-                "Call GuiceContext.setConsoleLayout(ConsoleLayoutOption.JSON) at any time to switch all console appenders " +
+        grid.add(featureCardHtml("Dynamic layout switching",
+                "Call " + brandCode("GuiceContext.setConsoleLayout(ConsoleLayoutOption.JSON)") + " at any time to switch all console appenders " +
                         "between CURRENT, FIXED, HIGHLIGHT, and JSON layouts. No restart required.",
                 "Runtime control."));
 
-        grid.add(featureCard("Log level via environment",
-                "Set LOG_LEVEL, GUICEDEE_LOG_LEVEL, or guicedee.log.level to control the root logger level. " +
-                        "Or use DEBUG=true / TRACE=true for quick toggle. All resolved at startup, overridable at deploy time.",
+        grid.add(featureCardHtml("Log level via environment",
+                "Set " + brandCode("LOG_LEVEL") + ", " + brandCode("GUICEDEE_LOG_LEVEL") + ", or " + brandCode("guicedee.log.level") + " to control the root logger level. " +
+                        "Or use " + brandCode("DEBUG=true") + " / " + brandCode("TRACE=true") + " for quick toggle. All resolved at startup, overridable at deploy time.",
                 "No log4j2.xml needed."));
 
         grid.add(featureCard("OpenTelemetry log correlation",
@@ -1159,8 +1142,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         GuiceContext.setConsoleLayout(ConsoleLayoutOption.JSON);
                         GuiceContext.setDefaultLogLevel(Level.DEBUG);"""));
 
-        var note = bodyText("The logging system is configured in the GuiceContext static initializer — before any Guice module loads. " +
-                "When CLOUD=true, stdout receives DEBUG/INFO as JSON, stderr receives WARN/ERROR/FATAL as JSON, " +
+        var note = bodyTextHtml("The logging system is configured in the " + brandCode("GuiceContext") + " static initializer — before any " + brandCode("Guice") + " module loads. " +
+                "When " + brandCode("CLOUD=true") + ", stdout receives DEBUG/INFO as JSON, stderr receives WARN/ERROR/FATAL as JSON, " +
                 "and the rolling file appender is skipped entirely. This means your container only needs to capture stdout/stderr — " +
                 "no log volume mounts, no sidecar log shippers.", "s");
         note.setWaColorText("quiet");
