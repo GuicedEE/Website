@@ -745,7 +745,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         grid.setGap(PageSize.Small);
 
         grid.add(featureCard("JLink custom runtimes",
-                "Every module is JPMS Level 3. Run 'jlink --add-modules my.app' to build a trimmed " +
+                "Every module is JPMS Level 3. Use the moditect-maven-plugin to build a trimmed " +
                         "JRE with only the modules you need. ~40-60 MB vs ~500 MB full JDK.",
                 null));
 
@@ -776,23 +776,102 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("JLink → Distroless Docker → Deploy",
+        content.add(mavenGradleCodeBlock("Moditect JLink → Distroless Docker → Deploy",
                 """
-                        # Build custom runtime
-                        jlink --module-path target/modules \\
-                          --add-modules my.service \\
-                          --output target/jrt \\
-                          --strip-debug --compress zip-9
+                        <!-- pom.xml — moditect-maven-plugin creates the JLink image -->
+                        <plugin>
+                            <groupId>org.moditect</groupId>
+                            <artifactId>moditect-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>add-module-infos</id>
+                                    <phase>none</phase>
+                                    <configuration combine.self="override">
+                                        <skip>true</skip>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>create-runtime-image</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>create-runtime-image</goal>
+                                    </goals>
+                                    <configuration>
+                                        <modulePath>
+                                            <path>${project.build.directory}/libs</path>
+                                            <path>${project.build.directory}/${project.build.finalName}.jar</path>
+                                        </modulePath>
+                                        <modules>
+                                            <module>my.service</module>
+                                        </modules>
+                                        <jarInclusionPolicy>NONE</jarInclusionPolicy>
+                                        <launcher>
+                                            <name>myservice</name>
+                                            <module>my.service/com.example.Main</module>
+                                        </launcher>
+                                        <noHeaderFiles>true</noHeaderFiles>
+                                        <noManPages>true</noManPages>
+                                        <stripDebug>true</stripDebug>
+                                        <outputDirectory>
+                                            ${project.build.directory}/jlink-image
+                                        </outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
                         
                         # Dockerfile
                         FROM gcr.io/distroless/base-nossl-debian12
-                        COPY target/jrt /app/jrt
+                        COPY target/jlink-image /app/jrt
                         ENV CLOUD=true
-                        ENTRYPOINT ["/app/jrt/bin/java", "-m", "my.service"]
+                        ENTRYPOINT ["/app/jrt/bin/myservice"]
                         
                         # Build, push, deploy
+                        mvn clean package
                         docker build -t my-service:latest .
-                        docker push registry.example.com/my-service:latest"""));
+                        docker push registry.example.com/my-service:latest""",
+                """
+                        // build.gradle — moditect Gradle plugin creates the JLink image
+                        plugins {
+                            id 'org.moditect.gradleplugin' version '1.3.0.Final'
+                        }
+                        
+                        moditect {
+                            createRuntimeImage {
+                                modulePath = [
+                                    file("${buildDir}/libs"),
+                                    tasks.jar.archiveFile
+                                ]
+                                modules = ['my.service']
+                                jarInclusionPolicy = 'NONE'
+                                launcher {
+                                    name = 'myservice'
+                                    module = 'my.service/com.example.Main'
+                                }
+                                noHeaderFiles = true
+                                noManPages = true
+                                stripDebug = true
+                                outputDirectory = file("${buildDir}/jlink-image")
+                            }
+                        }
+                        
+                        // Dockerfile
+                        // FROM gcr.io/distroless/base-nossl-debian12
+                        // COPY build/jlink-image /app/jrt
+                        // ENV CLOUD=true
+                        // ENTRYPOINT ["/app/jrt/bin/myservice"]
+                        
+                        // Build, push, deploy
+                        // gradle build
+                        // docker build -t my-service:latest .
+                        // docker push registry.example.com/my-service:latest"""
+        ));
+
+        var jlinkNote = bodyTextHtml("<strong>Tip:</strong> You can also run " + brandCode("jlink") + " directly: " +
+                brandCode("jlink --module-path target/libs --add-modules my.service --output target/jlink-image --strip-debug --no-header-files --no-man-pages") +
+                ". The moditect plugin simply wraps this into your build lifecycle.", "s");
+        jlinkNote.setWaColorText("quiet");
+        content.add(jlinkNote);
 
         var note = bodyText("Every module declares 'provides' and 'uses' in module-info.java, " +
                 "so JLink resolves the full SPI graph. No reflection hacks, no runtime classpath surprises. " +

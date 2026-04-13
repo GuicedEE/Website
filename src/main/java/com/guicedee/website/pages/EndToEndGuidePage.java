@@ -609,23 +609,102 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var content = new WaStack();
         content.setGap(PageSize.Medium);
 
-        content.add(codeBlockWithTitle("JLink → Distroless Docker",
+        content.add(mavenGradleCodeBlock("Moditect JLink → Distroless Docker",
                 """
-                        # Build custom runtime (~40 MB)
-                        jlink --module-path target/modules \\
-                          --add-modules my.service \\
-                          --output target/jrt \\
-                          --strip-debug --compress zip-9
+                        <!-- pom.xml — moditect-maven-plugin creates the JLink image -->
+                        <plugin>
+                            <groupId>org.moditect</groupId>
+                            <artifactId>moditect-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>add-module-infos</id>
+                                    <phase>none</phase>
+                                    <configuration combine.self="override">
+                                        <skip>true</skip>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>create-runtime-image</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>create-runtime-image</goal>
+                                    </goals>
+                                    <configuration>
+                                        <modulePath>
+                                            <path>${project.build.directory}/libs</path>
+                                            <path>${project.build.directory}/${project.build.finalName}.jar</path>
+                                        </modulePath>
+                                        <modules>
+                                            <module>my.service</module>
+                                        </modules>
+                                        <jarInclusionPolicy>NONE</jarInclusionPolicy>
+                                        <launcher>
+                                            <name>myservice</name>
+                                            <module>my.service/com.example.Main</module>
+                                        </launcher>
+                                        <noHeaderFiles>true</noHeaderFiles>
+                                        <noManPages>true</noManPages>
+                                        <stripDebug>true</stripDebug>
+                                        <outputDirectory>
+                                            ${project.build.directory}/jlink-image
+                                        </outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
                         
                         # Dockerfile
                         FROM gcr.io/distroless/base-nossl-debian12
-                        COPY target/jrt /app/jrt
+                        COPY target/jlink-image /app/jrt
                         ENV CLOUD=true
-                        ENTRYPOINT ["/app/jrt/bin/java", "-m", "my.service"]
+                        ENTRYPOINT ["/app/jrt/bin/myservice"]
                         
                         # Build and deploy
+                        mvn clean package
                         docker build -t my-service:latest .
-                        docker push registry.example.com/my-service:latest"""));
+                        docker push registry.example.com/my-service:latest""",
+                """
+                        // build.gradle — moditect Gradle plugin creates the JLink image
+                        plugins {
+                            id 'org.moditect.gradleplugin' version '1.3.0.Final'
+                        }
+                        
+                        moditect {
+                            createRuntimeImage {
+                                modulePath = [
+                                    file("${buildDir}/libs"),
+                                    tasks.jar.archiveFile
+                                ]
+                                modules = ['my.service']
+                                jarInclusionPolicy = 'NONE'
+                                launcher {
+                                    name = 'myservice'
+                                    module = 'my.service/com.example.Main'
+                                }
+                                noHeaderFiles = true
+                                noManPages = true
+                                stripDebug = true
+                                outputDirectory = file("${buildDir}/jlink-image")
+                            }
+                        }
+                        
+                        // Dockerfile
+                        // FROM gcr.io/distroless/base-nossl-debian12
+                        // COPY build/jlink-image /app/jrt
+                        // ENV CLOUD=true
+                        // ENTRYPOINT ["/app/jrt/bin/myservice"]
+                        
+                        // Build and deploy
+                        // gradle build
+                        // docker build -t my-service:latest .
+                        // docker push registry.example.com/my-service:latest"""
+        ));
+
+        var jlinkNote = bodyTextHtml("<strong>Tip:</strong> You can also invoke " + brandCode("jlink") + " directly from the command line: " +
+                brandCode("jlink --module-path target/libs --add-modules my.service --output target/jlink-image --strip-debug --no-header-files --no-man-pages") +
+                ". The moditect plugin simply wraps this into your build lifecycle.", "s");
+        jlinkNote.setWaColorText("quiet");
+        content.add(jlinkNote);
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -633,7 +712,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.add(featureCard("~40-60 MB images", "Distroless + JLink. No JDK, no shell.", null));
         grid.add(featureCard("~300 ms cold start", "JRT skips JDK module scanning.", null));
         grid.add(featureCard("JPackage installers", "MSI, DEB, RPM, DMG. No JDK for end users.", null));
-        grid.add(featureCard("Module graph verified", "--suggest-providers validates the SPI graph.", null));
+        grid.add(featureCard("Module graph verified", "Moditect validates the SPI graph at build time.", null));
         content.add(grid);
 
         return buildSection("JLink deployment", "Custom runtimes in minimal Docker containers",

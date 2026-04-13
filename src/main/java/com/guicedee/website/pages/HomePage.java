@@ -961,7 +961,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         content.setGap(PageSize.Medium);
 
         var intro = bodyTextHtml("Because every GuicedEE module is JPMS Level 3 with explicit " + brandCode("module-info.java") + " descriptors, " +
-                "you can use " + brandCode("jlink") + " to create a custom Java runtime that contains only the modules your application actually uses. " +
+                "you can use the " + brandCode("moditect-maven-plugin") + " to create a custom Java runtime that contains only the modules your application actually uses. " +
                 "The result is a self-contained image — no external JDK required at deploy time — that ships in a minimal Docker container.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
@@ -970,8 +970,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCardHtml("Custom JRE via JLink",
-                "Run " + brandCode("jlink --module-path ... --add-modules my.app --output jrt") + " to build a trimmed Java runtime. " +
+        grid.add(featureCardHtml("Custom JRE via Moditect",
+                "Use the " + brandCode("moditect-maven-plugin") + " with " + brandCode("create-runtime-image") + " to build a trimmed Java runtime. " +
                         "Only the modules your app requires are included — everything else is stripped.",
                 "From ~500 MB JDK to ~40 MB custom image."));
 
@@ -986,15 +986,15 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "Cloud Run, Kubernetes, and ECS ship these instantly.",
                 "~40-60 MB Docker images."));
 
-        grid.add(featureCardHtml("~300 ms startup on JRT",
-                "JLink custom runtimes skip classpath scanning for the JDK modules themselves. " +
+        grid.add(featureCardHtml("~150 ms startup on JRT",
+                "JLink custom runtimes utilize the module path, and the JRT filesystem. " +
                         "Combined with " + brandCode("Vert.x") + "'s non-blocking boot and " + brandCode("ClassGraph") + "'s fast scanning, " +
-                        "REST services are ready in under 300 ms.",
+                        "REST services are ready in roughly ~150* ms.",
                 "Cold-start friendly for serverless."));
 
         grid.add(featureCard("CI/CD pipeline integration",
                 "Your CI builds the JLink image and pushes it to a container registry. " +
-                        "Terraform / Cloud Run / Kubernetes deploys reference the JLink image — never a fat JAR on a generic JDK.",
+                        "Terraform / Cloud Run / Kubernetes deploys reference the JLink image — never a fat JAR on a generic JDK (But you can if you want to...).",
                 "No JARs in production."));
 
         grid.add(featureCardHtml("50+ JPMS service wrappers",
@@ -1004,39 +1004,116 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("JLink → Docker in three commands",
+        content.add(mavenGradleCodeBlock("Moditect JLink → Docker with mvn/gradle package",
                 """
+                        <!-- pom.xml — moditect-maven-plugin creates the JLink image -->
+                        <plugin>
+                            <groupId>org.moditect</groupId>
+                            <artifactId>moditect-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>add-module-infos</id>
+                                    <phase>none</phase>
+                                    <configuration combine.self="override">
+                                        <skip>true</skip>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>create-runtime-image</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>create-runtime-image</goal>
+                                    </goals>
+                                    <configuration>
+                                        <modulePath>
+                                            <path>${project.build.directory}/libs</path>
+                                            <path>${project.build.directory}/${project.build.finalName}.jar</path>
+                                        </modulePath>
+                                        <modules>
+                                            <module>my.service</module>
+                                        </modules>
+                                        <jarInclusionPolicy>NONE</jarInclusionPolicy>
+                                        <launcher>
+                                            <name>myservice</name>
+                                            <module>my.service/com.example.Main</module>
+                                        </launcher>
+                                        <noHeaderFiles>true</noHeaderFiles>
+                                        <noManPages>true</noManPages>
+                                        <stripDebug>true</stripDebug>
+                                        <outputDirectory>
+                                            ${project.build.directory}/jlink-image
+                                        </outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        
                         # 1. Build the JLink custom runtime
-                        jlink \\
-                          --module-path target/modules \\
-                          --add-modules my.service \\
-                          --output target/jrt \\
-                          --strip-debug \\
-                          --no-header-files \\
-                          --no-man-pages \\
-                          --compress zip-9
+                        mvn clean package
                         
                         # 2. Package into a minimal Docker image
                         # Dockerfile:
                         #   FROM gcr.io/distroless/base-nossl-debian12
-                        #   COPY target/jrt /app/jrt
-                        #   ENTRYPOINT ["/app/jrt/bin/java", "-m", "my.service"]
+                        #   COPY target/jlink-image /app/jrt
+                        #   ENTRYPOINT ["/app/jrt/bin/myservice"]
                         docker build -t my-service:latest .
                         
                         # 3. Push and deploy
-                        docker push registry.example.com/my-service:latest
-                        # Deploy to Cloud Run, Kubernetes, ECS, etc."""));
+                        docker push registry.example.com/my-service:latest""",
+                """
+                        // build.gradle — moditect Gradle plugin creates the JLink image
+                        plugins {
+                            id 'org.moditect.gradleplugin' version '1.3.0.Final'
+                        }
+                        
+                        moditect {
+                            createRuntimeImage {
+                                modulePath = [
+                                    file("${buildDir}/libs"),
+                                    tasks.jar.archiveFile
+                                ]
+                                modules = ['my.service']
+                                jarInclusionPolicy = 'NONE'
+                                launcher {
+                                    name = 'myservice'
+                                    module = 'my.service/com.example.Main'
+                                }
+                                noHeaderFiles = true
+                                noManPages = true
+                                stripDebug = true
+                                outputDirectory = file("${buildDir}/jlink-image")
+                            }
+                        }
+                        
+                        // 1. Build the JLink custom runtime
+                        // gradle build
+                        
+                        // 2. Package into a minimal Docker image
+                        // Dockerfile:
+                        //   FROM gcr.io/distroless/base-nossl-debian12
+                        //   COPY build/jlink-image /app/jrt
+                        //   ENTRYPOINT ["/app/jrt/bin/myservice"]
+                        // docker build -t my-service:latest .
+                        
+                        // 3. Push and deploy
+                        // docker push registry.example.com/my-service:latest"""));
 
         content.add(codeBlockWithTitle("Verify your module graph before shipping",
                 """
-                        # List resolved modules to verify nothing unexpected leaked in
-                        jlink \\
-                          --module-path target/modules \\
-                          --add-modules my.service \\
-                          --suggest-providers
+                        # Check what your app actually uses at runtime
+                        java --show-module-resolution -m my.service
                         
-                        # Or check what your app actually uses at runtime
-                        java --show-module-resolution -m my.service"""));
+                        # Or validate providers with jlink directly
+                        jlink \\
+                          --module-path target/libs \\
+                          --add-modules my.service \\
+                          --suggest-providers"""));
+
+        var jlinkNote = bodyTextHtml("<strong>Tip:</strong> You can also invoke " + brandCode("jlink") + " directly from the command line to build the runtime image: " +
+                brandCode("jlink --module-path target/libs --add-modules my.service --output target/jlink-image --strip-debug --no-header-files --no-man-pages") +
+                ". The moditect plugin wraps this into your Maven build lifecycle so it runs automatically during " + brandCode("mvn package") + ".", "s");
+        jlinkNote.setWaColorText("quiet");
+        content.add(jlinkNote);
 
         var deployNote = bodyTextHtml("Every GuicedEE module declares its SPI " + brandCode("provides") + " and " + brandCode("uses") + " directives in " + brandCode("module-info.java") + ", " +
                 "so JLink can resolve the full service graph automatically. No reflection hacks, no runtime classpath surprises. " +
