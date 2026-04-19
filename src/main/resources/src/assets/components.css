@@ -126,9 +126,10 @@ wa-page[view='mobile'] .product-jwebmp.product-active > .logo-jwebmp-svg {
     font-size: 1rem;     /* reset so the mask-image span keeps its dimensions */
 }
 
-/* Mobile: hide Star and Docs buttons to save header space */
+/* Mobile: hide Star and Docs buttons and version badges to save header space */
 wa-page[view='mobile'] .product-star,
-wa-page[view='mobile'] .product-docs {
+wa-page[view='mobile'] .product-docs,
+wa-page[view='mobile'] .version-badge {
     display: none;
 }
 

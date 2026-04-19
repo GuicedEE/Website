@@ -20,6 +20,11 @@ import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.toast.WaToastDataService;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
+import com.jwebmp.webawesome.components.badge.WaBadge;
+import com.jwebmp.webawesome.components.popover.WaPopover;
+import com.jwebmp.webawesome.components.popover.WaPopoverPlacements;
+import com.jwebmp.core.base.angular.components.NgIf;
+import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
 import com.jwebmp.webawesome.components.page.WaPage;
@@ -178,6 +183,107 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         activityTip.setForId("product-activity-master");
         activityTip.setText("Activity Master");
         cluster.add(activityTip);
+
+        // ── Version badge (Central release) ──
+        WaBadge<?> versionBadge = new WaBadge<>();
+        versionBadge.addClass("version-badge");
+        versionBadge.setVariant(Variant.Brand);
+        versionBadge.setPill(true);
+        versionBadge.setFontSize("var(--wa-font-size-2xs)");
+        versionBadge.addStyle("color: var(--wa-color-brand-on-normal)");
+        versionBadge.addStyle("background-color: var(--wa-color-brand-normal)");
+        versionBadge.addStyle("cursor: pointer");
+        versionBadge.setText("2.0.0-RC7");
+        versionBadge.setID("version-badge");
+        cluster.add(versionBadge);
+
+        // ── Snapshot badge popover with Maven/Gradle repository instructions ──
+        WaPopover<?> snapshotPopover = new WaPopover<>();
+        snapshotPopover.setForElement(versionBadge);
+        snapshotPopover.setPlacement(WaPopoverPlacements.Bottom);
+        snapshotPopover.setMaxWidth("32rem");
+        snapshotPopover.addStyle("--border-color:var(--wa-color-brand-normal)");
+        snapshotPopover.addStyle("--border-width:var(--wa-border-width-s)");
+        snapshotPopover.addStyle("--border-radius:var(--wa-border-radius-l)");
+        snapshotPopover.addStyle("--arrow-color:var(--wa-color-brand-normal)");
+
+        DivSimple<?> popoverContent = new DivSimple<>();
+        popoverContent.addStyle("padding: var(--wa-spacing-medium)");
+
+        var popoverTitle = new DivSimple<>();
+        popoverTitle.setTag("strong");
+        popoverTitle.setText("Snapshot Repository Setup");
+        popoverTitle.addStyle("display:block;margin-bottom:var(--wa-spacing-small);font-size:var(--wa-font-size-m)");
+        popoverContent.add(popoverTitle);
+
+        var popoverDesc = new DivSimple<>();
+        popoverDesc.setTag("p");
+        popoverDesc.addStyle("margin:0 0 var(--wa-spacing-small) 0;font-size:var(--wa-font-size-s);color:var(--wa-color-neutral-700)");
+        popoverDesc.addAttribute("[innerText]", "app.useGradle() ? 'Add to your build.gradle:' : 'Add to your pom.xml:'");
+        popoverContent.add(popoverDesc);
+
+        var mavenMd = new Markdown<>("""
+                ```xml
+                <repository>
+                    <id>guicedee-github</id>
+                    <url>https://maven.pkg.github.com/GuicedEE</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                ```""");
+        mavenMd.setClipboard(true);
+        mavenMd.addClass("aside-snippet-code");
+        mavenMd.addClass("wa-body-xs");
+        var mavenIf = new NgIf("!app.useGradle()");
+        mavenIf.add(mavenMd);
+        popoverContent.add(mavenIf);
+
+        var gradleMd = new Markdown<>("""
+                ```groovy
+                repositories {
+                    maven {
+                        url = uri("https://maven.pkg.github.com/GuicedEE")
+                        credentials {
+                            username = project.findProperty("gpr.user")
+                                ?: System.getenv("GITHUB_USER")
+                            password = project.findProperty("gpr.token")
+                                ?: System.getenv("GITHUB_TOKEN")
+                        }
+                    }
+                }
+                ```""");
+        gradleMd.setClipboard(true);
+        gradleMd.addClass("aside-snippet-code");
+        gradleMd.addClass("wa-body-xs");
+        var gradleIf = new NgIf("app.useGradle()");
+        gradleIf.add(gradleMd);
+        popoverContent.add(gradleIf);
+
+        var authNote = new DivSimple<>();
+        authNote.setTag("p");
+        authNote.addStyle("margin:var(--wa-spacing-small) 0 0 0;font-size:var(--wa-font-size-2xs);color:var(--wa-color-neutral-600)");
+        authNote.setText("&#x1F511; GitHub Packages requires authentication — use a personal access token with <code>read:packages</code> scope.");
+        popoverContent.add(authNote);
+
+        snapshotPopover.add(popoverContent);
+        cluster.add(snapshotPopover);
+
+        // ── Snapshot version badge ──
+        WaBadge<?> snapshotBadge = new WaBadge<>();
+        snapshotBadge.addClass("version-badge");
+        snapshotBadge.setVariant(Variant.Neutral);
+        snapshotBadge.setPill(true);
+        snapshotBadge.setFontSize("var(--wa-font-size-2xs)");
+        snapshotBadge.addStyle("cursor: pointer");
+        snapshotBadge.setText("2.0.0-SNAPSHOT");
+        snapshotBadge.setID("snapshot-badge");
+        cluster.add(snapshotBadge);
+
+        WaTooltip<?> snapshotTip = new WaTooltip<>();
+        snapshotTip.setForId("snapshot-badge");
+        snapshotTip.setText("Latest snapshot build");
+        cluster.add(snapshotTip);
 
         primary.add(cluster);
 
