@@ -6,7 +6,7 @@
 
     <groupId>com.guicedee</groupId>
     <artifactId>website</artifactId>
-    <version>2.0.0-RC5</version>
+    <version>2.0.0-RC6</version>
     <packaging>jar</packaging>
 
     <name>GuicedEE Website</name>
@@ -17,8 +17,8 @@
 
         <ignore.moditect>true</ignore.moditect>
         <flatten.pom>false</flatten.pom>
-        <jwebmp.version>2.0.0-RC5</jwebmp.version>
-        <guicedee.version>2.0.0-RC5</guicedee.version>
+        <jwebmp.version>2.0.0-RC6</jwebmp.version>
+        <guicedee.version>2.0.0-RC6</guicedee.version>
 
         <maven.compiler.release>25</maven.compiler.release>
         <lombok.version>1.18.40</lombok.version>
@@ -155,7 +155,7 @@
             <plugin>
                 <groupId>com.jwebmp.plugins</groupId>
                 <artifactId>angular-maven-plugin</artifactId>
-                <version>2.0.0-RC5</version>
+                <version>2.0.0-RC6</version>
                 <configuration>
                     <installDependencies>false</installDependencies>
                     <buildAngular>false</buildAngular>
