@@ -35,6 +35,7 @@ public final class ModuleCatalog
                 "client",
                 "config",
                 "inject",
+                "kafka",
                 "openapi",
                 "persistence",
                 "rabbitmq",
@@ -54,6 +55,7 @@ public final class ModuleCatalog
             String description = switch (id)
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
+                case "kafka" -> "Annotation-driven Kafka consumer and producer integration for GuicedEE. @KafkaConnectionOptions, @KafkaTopicDefinition, KafkaTopicConsumer/Publisher with Vert.x Kafka client.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -153,6 +155,7 @@ public final class ModuleCatalog
         });
         addServices(services, groupId, version, "services/Vert.x", "Vert.x", new String[]{
                 "vertx-mutiny",
+                "vertx-kafka",
                 "vertx-pg-client",
                 "vertx-rabbitmq"
         });
