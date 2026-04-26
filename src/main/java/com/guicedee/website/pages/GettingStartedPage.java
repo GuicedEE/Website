@@ -16,6 +16,7 @@ import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
+import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.details.WaDetails;
 
@@ -44,6 +45,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         getMain().add(layout);
 
         layout.add(buildIntro());
+        layout.add(buildQuickestStart());
         layout.add(buildPrerequisites());
         layout.add(buildStep1Project());
         layout.add(buildStep2ModuleInfo());
@@ -64,8 +66,8 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.add(headingText("h1", "xl", "Hello World with GuicedEE"));
 
         var intro = bodyText("Get a reactive REST endpoint running in under 5 minutes. " +
-                "This guide creates the simplest possible GuicedEE application — one endpoint, " +
-                "zero XML, zero configuration files. Just Java.", "l");
+                "The quickest way is to use the IntelliJ plugin — or follow the manual steps below. " +
+                "Either way: one endpoint, zero XML, zero configuration files. Just Java.", "l");
         intro.setWaColorText("quiet");
         content.add(intro);
 
@@ -75,6 +77,65 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         tags.add(buildTag("Zero XML", Variant.Warning));
         tags.add(buildTag("Hello World", Variant.Success));
         content.add(tags);
+
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Filled);
+        card.add(content);
+        return card;
+    }
+
+    // ── Quickest Start: IntelliJ Plugin ─────────────────
+
+    private WaCard<?> buildQuickestStart()
+    {
+        var content = new WaStack();
+        content.setGap(PageSize.Medium);
+
+        content.add(headingText("h2", "l", "Quickest Start — IntelliJ Plugin"));
+
+        var desc = bodyTextHtml("The fastest way to get a GuicedEE project running is to install the " +
+                brandCode("Guiced") + " IntelliJ IDEA plugin. It creates a fully configured project — " +
+                brandCode("pom.xml") + ", " + brandCode("module-info.java") + ", bootstrap class, and REST endpoint — " +
+                "in a single wizard. No manual setup required.", "m");
+        desc.setWaColorText("quiet");
+        content.add(desc);
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("14rem");
+        grid.setGap(PageSize.Small);
+
+        grid.add(featureCardHtml("1. Install the plugin",
+                "Open <strong>Settings → Plugins → Marketplace</strong> and search for " + brandCode("Guiced") +
+                        ", or install directly from the <a href=\"https://plugins.jetbrains.com/plugin/com.guicedee.intellij.GEEIntelliJPlugin\" " +
+                        "target=\"_blank\" style=\"color:var(--wa-color-brand)\">JetBrains Marketplace</a>.",
+                null));
+
+        grid.add(featureCard("2. New Project → GuicedEE",
+                "Use File → New Project and select the GuicedEE template. " +
+                        "Pick your modules (REST, Persistence, WebSockets, etc.) and the wizard generates everything.",
+                null));
+
+        grid.add(featureCard("3. Run",
+                "Click the green play button next to your Boot class. " +
+                        "Your REST endpoints are live at localhost:8080.",
+                null));
+
+        content.add(grid);
+
+        var tags = new WaCluster<>();
+        tags.setGap(PageSize.Small);
+        tags.add(buildTag("30 seconds", Variant.Brand));
+        tags.add(buildTag("Zero manual setup", Variant.Success));
+        tags.add(buildTag("IntelliJ 2024.2+", Variant.Neutral));
+        content.add(tags);
+
+        var ctas = new WaCluster<>();
+        ctas.setGap(PageSize.Small);
+        var pluginBtn = new WaButton<>(escapeAngular("Install from Marketplace"), Variant.Brand);
+        pluginBtn.setAppearance(Appearance.Filled);
+        pluginBtn.setAsLink("https://plugins.jetbrains.com/plugin/com.guicedee.intellij.GEEIntelliJPlugin", "_blank", null);
+        ctas.add(pluginBtn);
+        content.add(ctas);
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
@@ -144,7 +205,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                             <properties>
                                 <maven.compiler.release>25</maven.compiler.release>
-                                <guicedee.version>2.0.0-RC9</guicedee.version>
+                                <guicedee.version>2.0.0-RC10</guicedee.version>
                             </properties>
                         
                             <dependencyManagement>
@@ -182,7 +243,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         }
                         
                         dependencies {
-                            implementation platform("com.guicedee:guicedee-bom:2.0.0-RC9")
+                            implementation platform("com.guicedee:guicedee-bom:2.0.0-RC10")
                             implementation("com.guicedee:rest")
                         }"""));
 

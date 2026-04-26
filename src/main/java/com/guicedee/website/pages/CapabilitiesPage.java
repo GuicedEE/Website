@@ -329,47 +329,115 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
 
-        grid.add(featureCard("@RolesAllowed",
-                "Standard Jakarta annotation at class or method level. " +
+        grid.add(featureCard("@AuthOptions",
+                "Core annotation for ChainAuth (ANY/ALL), KeyStore, PEM keys, PRNG, and leeway. " +
+                        "The foundation that all auth providers chain into.",
+                null));
+
+        grid.add(featureCard("@OAuth2Options",
+                "OAuth2 and OpenID Connect with well-known providers (Google, Keycloak, Azure AD, GitHub, etc.). " +
+                        "Authorization Code, Password, Client Credentials, and JWT flows.",
+                null));
+
+        grid.add(featureCard("@JwtAuthOptions",
+                "JWT authentication with KeyStore, PEM, or JWK keys. HS256/RS256/ES256. " +
+                        "Token generation, validation, issuer/audience checks, and JWTAuthorization or MicroProfileAuthorization.",
+                null));
+
+        grid.add(featureCard("@AbacOptions",
+                "Attribute-Based Access Control with JSON policies. Match user attributes (eq, ne, has) " +
+                        "and grant permissions. Custom Function<User, Boolean> matchers via IAbacPolicyProvider SPI.",
+                null));
+
+        grid.add(featureCard("@OtpAuthOptions",
+                "One-Time Passwords — TOTP (Google Authenticator) and HOTP (counter-based). " +
+                        "IOtpAuthenticatorService SPI for storage callbacks. QR code URI generation.",
+                null));
+
+        grid.add(featureCard("@PropertyFileAuthOptions",
+                "Apache Shiro-format properties file with users, passwords, roles, and permissions. " +
+                        "Both authentication and authorization from a single file.",
+                null));
+
+        grid.add(featureCard("@LdapAuthOptions",
+                "LDAP authentication with configurable query template (uid={0},ou=users,dc=...), " +
+                        "authentication mechanism, and referral behavior.",
+                null));
+
+        grid.add(featureCard("@HtpasswdAuthOptions",
+                "Apache htpasswd file authentication. Plain text and hashed passwords. " +
+                        "File loaded once at startup — authentication only, no authorization.",
+                null));
+
+        grid.add(featureCard("@HtdigestAuthOptions",
+                "Apache htdigest file for HTTP Digest authentication. " +
+                        "File loaded once at startup — authentication only.",
+                null));
+
+        grid.add(featureCard("IGuicedAuthenticationProvider SPI",
+                "Register custom authentication providers via ServiceLoader. " +
+                        "JWT, OAuth2, Basic, UsernamePassword — implement and register in module-info.java.",
+                null));
+
+        grid.add(featureCard("IGuicedAuthorizationProvider SPI",
+                "Register authorization providers via ServiceLoader. " +
+                        "Role-based, permission-based, wildcard, and logical combinations (And/Or/Not).",
+                null));
+
+        grid.add(featureCard("@RolesAllowed / @PermitAll / @DenyAll",
+                "Standard Jakarta annotations at class or method level. " +
                         "SecurityHandler checks roles against the authenticated Vert.x User.",
                 null));
 
-        grid.add(featureCard("@PermitAll / @DenyAll",
-                "Allow or deny all access. Method-level overrides class-level. " +
-                        "Works with the Vert.x authentication pipeline.",
-                null));
-
-        grid.add(featureCard("Pluggable AuthenticationHandler",
-                "Set SecurityHandler.setDefaultAuthenticationHandler() with any Vert.x handler — " +
-                        "JWT, OAuth2, Basic, or custom. No config files.",
-                null));
-
-        grid.add(featureCard("Pluggable AuthorizationProvider",
-                "SecurityHandler.setDefaultAuthorizationProvider() for role/permission resolution. " +
-                        "Works with Vert.x built-in providers.",
-                null));
-
-        grid.add(featureCard("HTTPS / TLS",
-                "JKS and PKCS#12 keystores auto-detected by extension. " +
-                        "HTTPS_ENABLED, HTTPS_PORT, HTTPS_KEYSTORE env vars.",
-                null));
-
-        grid.add(featureCard("@EndpointSecurity",
-                "Bearer, JWT, Basic, ApiKey on outbound REST client calls. " +
-                        "Secrets via ${ENV_VAR} — never in source code.",
-                null));
-
-        grid.add(featureCard("Call-scoped isolation",
-                "Each request runs in a Guice CallScope. " +
-                        "User context, request data, and services are isolated per request.",
-                null));
-
-        grid.add(featureCard("@Cors",
-                "Annotation-driven CORS at class/method level. " +
-                        "Override with REST_CORS_* env vars at deploy time.",
-                null));
-
         content.add(grid);
+
+        content.add(codeBlockWithTitle("JWT authentication on package-info.java",
+                """
+                        @JwtAuthOptions(
+                            keystorePath = "keystore.jceks",
+                            keystoreType = "jceks",
+                            keystorePassword = "${JWT_KEYSTORE_PASSWORD}",
+                            algorithm = "RS256",
+                            issuer = "my-corp.com",
+                            audience = {"my-service"},
+                            permissionsClaimKey = "realm_access/roles",
+                            authorizationType = JwtAuthorizationType.JWT
+                        )
+                        package com.example.auth;"""));
+
+        content.add(codeBlockWithTitle("OAuth2 with OIDC Discovery",
+                """
+                        @OAuth2Options(
+                            flow = OAuth2Options.FlowType.AUTH_CODE,
+                            clientId = "${OAUTH2_CLIENT_ID}",
+                            clientSecret = "${OAUTH2_CLIENT_SECRET}",
+                            discoveryUrl = "${OAUTH2_DISCOVERY_URL}",
+                            callbackPath = "/callback"
+                        )
+                        package com.example.auth;"""));
+
+        content.add(codeBlockWithTitle("ABAC policy-based authorization",
+                """
+                        @AbacOptions(
+                            policyFiles = {"policies/admin.json", "policies/readonly.json"}
+                        )
+                        package com.example.auth;
+                        
+                        // admin.json:
+                        // {"name":"Admin DELETE","attributes":{"/principal/role":{"eq":"admin"}},
+                        //  "authorizations":[{"type":"wildcard","permission":"admin:*"}]}"""));
+
+        content.add(codeBlockWithTitle("TOTP (Google Authenticator) setup",
+                """
+                        @OtpAuthOptions(type = OtpType.TOTP, passwordLength = 6, period = 30)
+                        package com.example.auth;
+                        
+                        // Implement IOtpAuthenticatorService for storage:
+                        // provides IOtpAuthenticatorService with MyOtpService;
+                        
+                        @Inject private TotpAuth totpAuth;
+                        OtpKey key = OtpKeyGenerator.create().generate();
+                        String qrUri = totpAuth.generateUri(key, "MyApp", "user@eg.com");"""));
 
         content.add(codeBlockWithTitle("Jakarta security annotations on REST endpoints",
                 """
@@ -393,8 +461,9 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             public String health() { return "OK"; }
                         }"""));
 
-        return buildSection("Security", "Standard annotations, pluggable auth",
-                "Jakarta @RolesAllowed + Vert.x auth handlers + @EndpointSecurity for outbound calls.",
+        return buildSection("Security & Authentication", "8 auth providers — all annotation-driven",
+                "OAuth2, JWT, ABAC, OTP, Property File, LDAP, htpasswd, htdigest — " +
+                        "opt-in via annotations, override via env vars, inject via Guice.",
                 true, content);
     }
 
@@ -776,7 +845,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(grid);
 
-        content.add(mavenGradleCodeBlock("Moditect JLink → Distroless Docker → Deploy",
+        content.add(mavenGradleCodeBlock("Moditect JLink plugin configuration",
                 """
                         <!-- pom.xml — moditect-maven-plugin creates the JLink image -->
                         <plugin>
@@ -818,18 +887,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                                     </configuration>
                                 </execution>
                             </executions>
-                        </plugin>
-                        
-                        # Dockerfile
-                        FROM gcr.io/distroless/base-nossl-debian12
-                        COPY target/jlink-image /app/jrt
-                        ENV CLOUD=true
-                        ENTRYPOINT ["/app/jrt/bin/myservice"]
-                        
-                        # Build, push, deploy
-                        mvn clean package
-                        docker build -t my-service:latest .
-                        docker push registry.example.com/my-service:latest""",
+                        </plugin>""",
                 """
                         // build.gradle — moditect Gradle plugin creates the JLink image
                         plugins {
@@ -853,19 +911,27 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                                 stripDebug = true
                                 outputDirectory = file("${buildDir}/jlink-image")
                             }
-                        }
-                        
-                        // Dockerfile
-                        // FROM gcr.io/distroless/base-nossl-debian12
-                        // COPY build/jlink-image /app/jrt
-                        // ENV CLOUD=true
-                        // ENTRYPOINT ["/app/jrt/bin/myservice"]
-                        
-                        // Build, push, deploy
-                        // gradle build
-                        // docker build -t my-service:latest .
-                        // docker push registry.example.com/my-service:latest"""
+                        }"""
         ));
+
+        content.add(codeBlockWithTitle("Dockerfile — distroless container",
+                """
+                        FROM gcr.io/distroless/base-nossl-debian12
+                        COPY target/jlink-image /app/jrt
+                        ENV CLOUD=true
+                        ENTRYPOINT ["/app/jrt/bin/myservice"]"""));
+
+        content.add(codeBlockWithTitle("Build, push, deploy",
+                """
+                        # Maven
+                        mvn clean package
+                        
+                        # — or Gradle —
+                        gradle build
+                        
+                        # Then containerize and ship
+                        docker build -t my-service:latest .
+                        docker push registry.example.com/my-service:latest"""));
 
         var jlinkNote = bodyTextHtml("<strong>Tip:</strong> You can also run " + brandCode("jlink") + " directly: " +
                 brandCode("jlink --module-path target/libs --add-modules my.service --output target/jlink-image --strip-debug --no-header-files --no-man-pages") +

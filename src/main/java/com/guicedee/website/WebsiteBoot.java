@@ -193,7 +193,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("color: var(--wa-color-brand-on-normal)");
         versionBadge.addStyle("background-color: var(--wa-color-brand-normal)");
         versionBadge.addStyle("cursor: pointer");
-        versionBadge.setText("2.0.0-RC9");
+        versionBadge.setText("2.0.0-RC10");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -361,6 +361,21 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         docsTip.setForId("product-docs");
         docsTip.setText("AI Skills Repository");
         secondary.add(docsTip);
+
+        WaButton<?> patreonBtn = new WaButton<>();
+        patreonBtn.setAppearance(Appearance.Plain);
+        patreonBtn.setVariant(Variant.Brand);
+        patreonBtn.setAsLink("https://www.patreon.com/GedMarc", "_blank", null);
+        patreonBtn.addClass("pseudo-product");
+        patreonBtn.addClass("product-patreon");
+        patreonBtn.setID("product-patreon");
+        patreonBtn.add(new WaIcon<>("patreon").addAttribute("family", "brands")
+                                              .addAttribute("label", "Patreon"));
+        secondary.add(patreonBtn);
+        WaTooltip<?> patreonTip = new WaTooltip<>();
+        patreonTip.setForId("product-patreon");
+        patreonTip.setText("Support me on Patreon");
+        secondary.add(patreonTip);
 
         // Theme toggle (dark ↔ light)
         WaButton<?> themeBtn = new WaButton<>();

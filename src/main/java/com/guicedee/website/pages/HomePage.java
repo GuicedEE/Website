@@ -1,16 +1,17 @@
 package com.guicedee.website.pages;
 
-import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
+import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 
 import java.util.ArrayList;
@@ -33,6 +34,20 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         List<String> f = new ArrayList<>();
         f.add("public app: App = inject(App);");
         return f;
+    }
+
+    @Override
+    public List<String> afterViewInit()
+    {
+        var a = new ArrayList<>(super.afterViewInit());
+        a.add("""
+                const script = document.createElement('script');
+                script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
+                script.onload = () => {
+                    (window as any).MarketplaceWidget?.setupMarketplaceWidget('card', 31112, '#jetbrains-plugin-widget');
+                };
+                document.body.appendChild(script);""");
+        return a;
     }
 
     private void buildLandingPage()
@@ -101,6 +116,12 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         ctas.setGap(PageSize.Small);
         ctas.addClass("hero-ctas");
         ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, Appearance.Filled));
+
+        var pluginBtn = new WaButton<>(escapeAngular("IntelliJ Plugin"), Variant.Success);
+        pluginBtn.setAppearance(Appearance.Filled);
+        pluginBtn.setAsLink("https://plugins.jetbrains.com/plugin/31112-guiced", "_blank", null);
+        ctas.add(pluginBtn);
+
         ctas.add(buildCta("End-to-end Guide", "/guides/end-to-end", Variant.Neutral, Appearance.Outlined));
         ctas.add(buildCta("Browse Modules", "/modules", Variant.Neutral, Appearance.Outlined));
         hero.add(ctas);
@@ -920,7 +941,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-RC9</version>
+                                    <version>2.0.0-RC10</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -941,7 +962,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC9')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC10')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -1262,9 +1283,19 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
             grid.add(pluginCard(plugin[0], plugin[1], plugin[2]));
         }
 
+        var content = new WaStack();
+        content.setGap(PageSize.Large);
+        content.add(grid);
+
+        // JetBrains Marketplace plugin widget
+        var widgetWrapper = new DivSimple<>();
+        widgetWrapper.setID("jetbrains-plugin-widget");
+        widgetWrapper.addStyle("display:flex;justify-content:center");
+        content.add(widgetWrapper);
+
         return buildSection("Module catalog", "Drop-in capabilities — add a dependency, get a feature",
                 "Each integration ships as a micro-module with its own module-info.java. Zero side effects.",
-                true, grid);
+                true, content);
     }
 
     // ── Developer section ─────────────────────────────
