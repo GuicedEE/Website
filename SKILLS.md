@@ -12,6 +12,7 @@ This directory serves as the central index for all **AI Skills** available in th
 | [**guicedee-web**](./skills/guicedee-web/SKILL.md) | Reactive HTTP/HTTPS server bootstrap with Vert.x. | *Use $guicedee-web to configure custom routes.* |
 | [**guicedee-hazelcast**](./skills/guicedee-hazelcast/SKILL.md) | Hazelcast clustering, Vert.x cluster manager, JCache. | *Use $guicedee-hazelcast to add distributed caching.* |
 | [**guicedee-kafka**](./skills/guicedee-kafka/SKILL.md) | Annotation-driven Kafka messaging integration. | *Use $guicedee-kafka to add topic consumers.* |
+| [**guicedee-ibmmq**](./skills/guicedee-ibmmq/SKILL.md) | Annotation-driven IBM MQ messaging integration. | *Use $guicedee-ibmmq to add MQ queue consumers.* |
 | [**guicedee-mail-client**](./skills/guicedee-mail-client/SKILL.md) | Annotation-driven SMTP mail client. | *Use $guicedee-mail-client to send emails.* |
 | [**jwebmp-angular**](./skills/jwebmp-angular/SKILL.md) | Generate Angular 21 apps from Java annotations. | *Use $jwebmp-angular to set up a new Angular component.* |
 | [**jwebmp-client**](./skills/jwebmp-client/SKILL.md) | JWebMP client contracts and AJAX pipeline. | *Use $jwebmp-client to intercept AJAX calls.* |

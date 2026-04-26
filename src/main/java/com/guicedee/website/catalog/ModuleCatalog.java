@@ -35,6 +35,7 @@ public final class ModuleCatalog
                 "client",
                 "config",
                 "inject",
+                "jwt",
                 "kafka",
                 "openapi",
                 "persistence",
@@ -55,11 +56,16 @@ public final class ModuleCatalog
             String description = switch (id)
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
+                case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";
                 case "kafka" -> "Annotation-driven Kafka consumer and producer integration for GuicedEE. @KafkaConnectionOptions, @KafkaTopicDefinition, KafkaTopicConsumer/Publisher with Vert.x Kafka client.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
-            String groupId = "com.guicedee";
+            String groupId = switch (id)
+            {
+                case "jwt", "config" -> "com.guicedee.microprofile";
+                default -> "com.guicedee";
+            };
             String artifactId = id;
             String version = "2.0.0-RC10";
             String readmePath = "GuicedEE/" + id + "/README.md";
@@ -141,6 +147,7 @@ public final class ModuleCatalog
                 "json",
                 "kafka-client",
                 "mapstruct",
+                "microprofile-jwt-auth-api",
                 "openpdf",
                 "rabbitmq-client",
                 "scram",
@@ -151,6 +158,7 @@ public final class ModuleCatalog
         });
         addServices(services, groupId, version, "services/MicroProfile", "MicroProfile", new String[]{
                 "config-core",
+                "jwt-auth-api",
                 "metrics-core"
         });
         addServices(services, groupId, version, "services/Vert.x", "Vert.x", new String[]{
