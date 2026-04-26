@@ -193,7 +193,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("color: var(--wa-color-brand-on-normal)");
         versionBadge.addStyle("background-color: var(--wa-color-brand-normal)");
         versionBadge.addStyle("cursor: pointer");
-        versionBadge.setText("2.0.0-RC10");
+        versionBadge.setText("2.0.0-RC11");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 

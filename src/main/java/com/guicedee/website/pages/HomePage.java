@@ -941,7 +941,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-RC10</version>
+                                    <version>2.0.0-RC11</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -962,7 +962,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC10')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC11')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
