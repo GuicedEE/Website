@@ -107,7 +107,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0-RC11</version>
+                                    <version>2.0.1-SNAPSHOT</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -138,7 +138,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         </dependencies>""",
                 """
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.0-RC11')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.1-SNAPSHOT')
                         
                             implementation 'com.guicedee:rest'
                             implementation 'com.guicedee:health'

@@ -1,7 +1,9 @@
 package com.guicedee.website.pages;
 
+import com.guicedee.website.App;
 import com.guicedee.website.catalog.ModuleCatalog;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
@@ -15,6 +17,7 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 
 @NgComponent("guicedee-capabilities")
 @NgRoutable(path = "capabilities")
+@NgComponentReference(App.class)
 public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements INgComponent<CapabilitiesPage>
 {
     public CapabilitiesPage()

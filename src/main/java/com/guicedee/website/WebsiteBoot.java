@@ -193,7 +193,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("color: var(--wa-color-brand-on-normal)");
         versionBadge.addStyle("background-color: var(--wa-color-brand-normal)");
         versionBadge.addStyle("cursor: pointer");
-        versionBadge.setText("2.0.0-RC11");
+        versionBadge.setText("2.0.1-SNAPSHOT");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -276,7 +276,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         snapshotBadge.setPill(true);
         snapshotBadge.setFontSize("var(--wa-font-size-2xs)");
         snapshotBadge.addStyle("cursor: pointer");
-        snapshotBadge.setText("2.0.0-SNAPSHOT");
+        snapshotBadge.setText("2.0.1-SNAPSHOT-SNAPSHOT");
         snapshotBadge.setID("snapshot-badge");
         cluster.add(snapshotBadge);
 
