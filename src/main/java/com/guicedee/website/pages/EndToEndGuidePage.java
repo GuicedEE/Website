@@ -18,16 +18,8 @@ import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
-@NgImportReference(value = "inject", reference = "@angular/core")
 public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements INgComponent<EndToEndGuidePage>
 {
-    @Override
-    public List<String> fields()
-    {
-        List<String> f = new ArrayList<>();
-        f.add("public app: App = inject(App);");
-        return f;
-    }
 
     public EndToEndGuidePage()
     {

@@ -19,21 +19,12 @@ import java.util.List;
 
 @NgComponent("guicedee-home")
 @NgRoutable(path = "home", isDefault = true)
-@NgImportReference(value = "inject", reference = "@angular/core")
 public class HomePage extends WebsitePage<HomePage> implements INgComponent<HomePage>
 {
     public HomePage()
     {
         removeClass("website-content");
         buildLandingPage();
-    }
-
-    @Override
-    public List<String> fields()
-    {
-        List<String> f = new ArrayList<>();
-        f.add("public app: App = inject(App);");
-        return f;
     }
 
     @Override

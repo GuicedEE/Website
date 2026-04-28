@@ -2,6 +2,7 @@ package com.guicedee.website.pages;
 
 import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
@@ -23,16 +24,9 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
 @NgImportReference(value = "inject", reference = "@angular/core")
+@NgComponentReference(App.class)
 public class GettingStartedPage extends WebsitePage<GettingStartedPage> implements INgComponent<GettingStartedPage>
 {
-    @Override
-    public List<String> fields()
-    {
-        List<String> f = new ArrayList<>();
-        f.add("public app: App = inject(App);");
-        return f;
-    }
-
     public GettingStartedPage()
     {
         buildGettingStartedPage();

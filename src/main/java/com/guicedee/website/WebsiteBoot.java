@@ -546,7 +546,6 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> fields() {
         var f = new ArrayList<>(INgComponent.super.fields());
-        f.add("public app: App = inject(App);");
         f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
