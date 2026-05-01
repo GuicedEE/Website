@@ -9,7 +9,7 @@ public class WebsiteApplication extends NGApplication<WebsiteApplication>
 {
     public WebsiteApplication()
     {
-        getOptions().setTitle("GuicedEE — Modular Java, Reactive by Default");
+        getOptions().setTitle("GuicedEE — E2E Modular Java, Reactive by Nature");
         WebAwesomePageConfigurator.setWaKitCode("6ea54e8336d3409b");
     }
 

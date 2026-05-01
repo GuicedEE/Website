@@ -113,17 +113,7 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
             familyGrid.setGap(PageSize.Small);
 
             for (ServiceDefinition service : entry.getValue()) {
-                var card = new WaCard<>();
-                card.setAppearance(Appearance.Outlined);
-                var stack = new WaStack<>();
-                stack.setGap(PageSize.Small);
-                stack.add(headingText("h4", "s", service.getArtifactId()));
-                var desc = bodyText(service.getDescription(), "s");
-                desc.setWaColorText("quiet");
-                stack.add(desc);
-                stack.add(coordinateBlock(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion()));
-                card.add(stack);
-                familyGrid.add(card);
+                familyGrid.add(serviceCard(service));
             }
 
             var familySection = buildSection(entry.getValue().size() + " modules", entry.getKey(),
@@ -138,4 +128,37 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
             alt = !alt;
         }
     }
+    private WaCard<?> serviceCard(ServiceDefinition service)
+    {
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
+
+        var header = new DivSimple<>();
+        var headerCluster = new WaCluster<>();
+        headerCluster.setGap(PageSize.Small);
+        headerCluster.setSplit();
+        headerCluster.add(headingText("h4", "s", service.getArtifactId()));
+        var actionCluster = new WaCluster<>();
+        actionCluster.setGap(PageSize.Small);
+        actionCluster.add(serviceHeaderIcon(service.getModulePath()));
+        headerCluster.add(actionCluster);
+        header.add(headerCluster);
+        card.withHeader(header);
+
+        var stack = new WaStack<>();
+        stack.setGap(PageSize.Small);
+
+        var desc = bodyText(service.getDescription(), "s");
+        desc.setWaColorText("quiet");
+        stack.add(desc);
+
+        card.add(stack);
+
+        var footer = new DivSimple<>();
+        footer.add(coordinateBlock(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion()));
+        card.withFooter(footer);
+
+        return card;
+    }
+
 }

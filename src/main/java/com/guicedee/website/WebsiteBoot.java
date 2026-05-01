@@ -342,7 +342,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         starBtn.addClass("pseudo-product");
         starBtn.addClass("product-star");
         starBtn.setID("product-star");
-        starBtn.add(new WaIcon<>("star").addAttribute("label", "Star this Repository"));
+        starBtn.add(new WaIcon<>("star").addAttribute("family", "sharp-duotone").addAttribute("label", "Star this Repository"));
         secondary.add(starBtn);
         WaTooltip<?> starTip = new WaTooltip<>();
         starTip.setForId("product-star");
@@ -356,7 +356,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         docsBtn.addClass("pseudo-product");
         docsBtn.addClass("product-docs");
         docsBtn.setID("product-docs");
-        docsBtn.add(new WaIcon<>("brain-circuit").addAttribute("label", "AI Skills Repository"));
+        docsBtn.add(new WaIcon<>("brain-circuit").addAttribute("family", "sharp-duotone").addAttribute("label", "AI Skills Repository"));
         secondary.add(docsBtn);
         WaTooltip<?> docsTip = new WaTooltip<>();
         docsTip.setForId("product-docs");
@@ -388,6 +388,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         themeBtn.setID("product-theme");
         var themeIcon = new WaIcon<>();
         themeIcon.addAttribute("[name]", "darkMode() ? 'sun-bright' : 'moon'");
+        themeIcon.addAttribute("family", "sharp-duotone");
         themeIcon.addAttribute("label", "Toggle Theme");
         themeBtn.add(themeIcon);
         secondary.add(themeBtn);
@@ -410,6 +411,9 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Home
         menuTree.add(createRouterTreeItem("/home", "Home", "house"));
 
+        // App Builder
+        menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
+
         // Getting Started
         menuTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
 
@@ -428,13 +432,70 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Releases
         menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
 
-        // App Builder
-        menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
 
         // Support (external)
         menuTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
 
         menu.add(menuTree);
+
+        // ── Built-on attribution links below menu tree ──
+        var builtOn = new WaDiv<>();
+        builtOn.setPadding(WaSpaceToken.SpaceM);
+        builtOn.addStyle("border-top", "1px solid var(--wa-color-neutral-200)");
+        builtOn.addStyle("margin-top", "auto");
+        var builtOnLabel = new DivSimple<>();
+        builtOnLabel.setTag("span");
+        builtOnLabel.setText("Built on");
+        builtOnLabel.addClass("wa-body-2xs");
+        builtOnLabel.addStyle("color", "var(--wa-color-text-quiet)");
+        builtOnLabel.addStyle("display", "block");
+        builtOnLabel.addStyle("margin-bottom", WaSpaceToken.SpaceXS.var());
+        builtOn.add(builtOnLabel);
+        var builtOnLinks = new DivSimple<>();
+        builtOnLinks.addClass("wa-stack");
+        builtOnLinks.addClass("wa-gap-2xs");
+        builtOnLinks.addClass("built-on-links");
+
+        Link<?> angularAwesomeLink = new Link<>();
+        angularAwesomeLink.setTag("a");
+        angularAwesomeLink.addAttribute("href", "https://www.npmjs.com/package/angular-awesome");
+        angularAwesomeLink.addAttribute("target", "_blank");
+        angularAwesomeLink.add(new WaIcon<>("npm").addAttribute("family", "brands"));
+        angularAwesomeLink.setText("Angular Awesome");
+        angularAwesomeLink.setRenderTextBeforeChildren(false);
+        angularAwesomeLink.addClass("wa-body-xs");
+        angularAwesomeLink.addStyle("color", "var(--wa-color-brand-normal)");
+        builtOnLinks.add(angularAwesomeLink);
+
+        Link<?> webAwesomeLink = new Link<>();
+        webAwesomeLink.setTag("a");
+        webAwesomeLink.addAttribute("href", "https://www.webawesome.com");
+        webAwesomeLink.addAttribute("target", "_blank");
+        webAwesomeLink.add(new WaIcon<>("web-awesome").addAttribute("family", "sharp-duotone"));
+        webAwesomeLink.setText("Web Awesome");
+        webAwesomeLink.setRenderTextBeforeChildren(false);
+        webAwesomeLink.addClass("wa-body-xs");
+        webAwesomeLink.addStyle("color", "var(--wa-color-brand-normal)");
+        builtOnLinks.add(webAwesomeLink);
+
+        Link<?> jwebmpMenuLink = new Link<>();
+        jwebmpMenuLink.setTag("a");
+        jwebmpMenuLink.addAttribute("href", "https://jwebmp.com");
+        jwebmpMenuLink.addAttribute("target", "_blank");
+        var jwebmpBuiltIcon = new DivSimple<>();
+        jwebmpBuiltIcon.setTag("i");
+        jwebmpBuiltIcon.addClass("fak");
+        jwebmpBuiltIcon.addClass("fa-jwebmp-logo-green");
+        jwebmpBuiltIcon.addClass("built-on-logo");
+        jwebmpMenuLink.add(jwebmpBuiltIcon);
+        jwebmpMenuLink.setText("JWebMP");
+        jwebmpMenuLink.setRenderTextBeforeChildren(false);
+        jwebmpMenuLink.addClass("wa-body-xs");
+        jwebmpMenuLink.addStyle("color", "var(--wa-color-brand-normal)");
+        builtOnLinks.add(jwebmpMenuLink);
+
+        builtOn.add(builtOnLinks);
+        menu.add(builtOn);
 
         // ── Navigation Toggle (burger button, slot="navigation-toggle") ──
         var navToggle = page.getNavigationToggle();
@@ -442,12 +503,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         burgerBtn.setAppearance(Appearance.Plain);
         burgerBtn.setVariant(Variant.Neutral);
         burgerBtn.addAttribute("aria-label", "Toggle navigation menu");
-        burgerBtn.add(new WaIcon<>("bars"));
+        burgerBtn.add(new WaIcon<>("bars").addAttribute("family", "sharp-duotone"));
         navToggle.add(burgerBtn);
 
         // ── Navigation Toggle Icon (slot="navigation-toggle-icon") ──
         var navToggleIcon = page.getNavigationToggleIcon();
-        navToggleIcon.add(new WaIcon<>("bars"));
+        navToggleIcon.add(new WaIcon<>("bars").addAttribute("family", "sharp-duotone"));
 
         // ── Navigation Header (branding inside the drawer, slot="navigation-header") ──
         var navHeader = page.getNavigationHeader();
@@ -463,6 +524,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         drawerLogoSpan.addClass("logo-icon");
         drawerLogoSpan.addClass("logo-guicedee");
         drawerLogo.add(drawerLogoSpan);
+        drawerLogo.setText("GuicedEE");
+        drawerLogo.setRenderTextBeforeChildren(false);
         navHeader.add(drawerLogo);
 
         // ── Burger Menu Navigation (drawer contents, slot="navigation") ──
@@ -472,33 +535,75 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
         navTree.add(createRouterTreeItem("/home", "Home", "house"));
+        navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
         navTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
         navTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
         navTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
         navTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
         navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
         navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
-        navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
         navTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
         burgerMenuNavigation.add(navTree);
 
-        // ── Navigation Footer (external links inside the drawer, slot="navigation-footer") ──
-        var navFooter = page.getNavigationFooter();
-        Link<?> navGithubLink = new Link<>();
-        navGithubLink.setTag("a");
-        navGithubLink.addAttribute("href", "https://github.com/GuicedEE/");
-        navGithubLink.addAttribute("target", "_blank");
-        navGithubLink.add(new WaIcon<>("github").addAttribute("family", "brands"));
-        navGithubLink.setText("GitHub");
-        navFooter.add(navGithubLink);
+        // ── Built-on attribution links below drawer tree ──
+        var drawerBuiltOn = new WaDiv<>();
+        drawerBuiltOn.setPadding(WaSpaceToken.SpaceM);
+        drawerBuiltOn.addStyle("border-top", "1px solid var(--wa-color-neutral-200)");
+        drawerBuiltOn.addStyle("margin-top", "auto");
+        var drawerBuiltOnLabel = new DivSimple<>();
+        drawerBuiltOnLabel.setTag("span");
+        drawerBuiltOnLabel.setText("Built on");
+        drawerBuiltOnLabel.addClass("wa-body-2xs");
+        drawerBuiltOnLabel.addStyle("color", "var(--wa-color-text-quiet)");
+        drawerBuiltOnLabel.addStyle("display", "block");
+        drawerBuiltOnLabel.addStyle("margin-bottom", WaSpaceToken.SpaceXS.var());
+        drawerBuiltOn.add(drawerBuiltOnLabel);
+        var drawerBuiltOnLinks = new DivSimple<>();
+        drawerBuiltOnLinks.addClass("wa-stack");
+        drawerBuiltOnLinks.addClass("wa-gap-2xs");
+        drawerBuiltOnLinks.addClass("built-on-links");
 
-        Link<?> navJwebmpLink = new Link<>();
-        navJwebmpLink.setTag("a");
-        navJwebmpLink.addAttribute("href", "https://jwebmp.com");
-        navJwebmpLink.addAttribute("target", "_blank");
-        navJwebmpLink.add(new WaIcon<>("globe"));
-        navJwebmpLink.setText("JWebMP");
-        navFooter.add(navJwebmpLink);
+        Link<?> drawerAngularLink = new Link<>();
+        drawerAngularLink.setTag("a");
+        drawerAngularLink.addAttribute("href", "https://www.npmjs.com/package/angular-awesome");
+        drawerAngularLink.addAttribute("target", "_blank");
+        drawerAngularLink.add(new WaIcon<>("npm").addAttribute("family", "brands"));
+        drawerAngularLink.setText("Angular Awesome");
+        drawerAngularLink.setRenderTextBeforeChildren(false);
+        drawerAngularLink.addClass("wa-body-xs");
+        drawerAngularLink.addStyle("color", "var(--wa-color-brand-normal)");
+        drawerBuiltOnLinks.add(drawerAngularLink);
+
+        Link<?> drawerWebAwesomeLink = new Link<>();
+        drawerWebAwesomeLink.setTag("a");
+        drawerWebAwesomeLink.addAttribute("href", "https://www.webawesome.com");
+        drawerWebAwesomeLink.addAttribute("target", "_blank");
+        drawerWebAwesomeLink.add(new WaIcon<>("web-awesome").addAttribute("family", "sharp-duotone"));
+        drawerWebAwesomeLink.setText("Web Awesome");
+        drawerWebAwesomeLink.setRenderTextBeforeChildren(false);
+        drawerWebAwesomeLink.addClass("wa-body-xs");
+        drawerWebAwesomeLink.addStyle("color", "var(--wa-color-brand-normal)");
+        drawerBuiltOnLinks.add(drawerWebAwesomeLink);
+
+        Link<?> drawerJwebmpLink = new Link<>();
+        drawerJwebmpLink.setTag("a");
+        drawerJwebmpLink.addAttribute("href", "https://jwebmp.com");
+        drawerJwebmpLink.addAttribute("target", "_blank");
+        var drawerJwebmpBuiltIcon = new DivSimple<>();
+        drawerJwebmpBuiltIcon.setTag("i");
+        drawerJwebmpBuiltIcon.addClass("fak");
+        drawerJwebmpBuiltIcon.addClass("fa-jwebmp-logo-green");
+        drawerJwebmpBuiltIcon.addClass("built-on-logo");
+        drawerJwebmpLink.add(drawerJwebmpBuiltIcon);
+        drawerJwebmpLink.setText("JWebMP");
+        drawerJwebmpLink.setRenderTextBeforeChildren(false);
+        drawerJwebmpLink.addClass("wa-body-xs");
+        drawerJwebmpLink.addStyle("color", "var(--wa-color-brand-normal)");
+        drawerBuiltOnLinks.add(drawerJwebmpLink);
+
+        drawerBuiltOn.add(drawerBuiltOnLinks);
+        burgerMenuNavigation.add(drawerBuiltOn);
+
 
         page.getMain().add(new RouterOutlet<>());
         page.getAside().add(new RouterOutlet("aside"));
@@ -521,6 +626,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         if (icon != null)
         {
             WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color", "var(--wa-color-brand-on-normal)");
+            waIcon.setFamily("sharp-duotone");
             link.add(waIcon);
         }
         link.setText("&nbsp;"+ text);
@@ -538,6 +644,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         if (icon != null)
         {
             WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color", "var(--wa-color-brand-on-normal)");
+            waIcon.setFamily("sharp-duotone");
             link.add(waIcon);
         }
         link.setText("&nbsp;" + text);

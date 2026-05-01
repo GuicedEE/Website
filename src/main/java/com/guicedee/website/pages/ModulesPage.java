@@ -17,7 +17,9 @@ import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.dialog.WaDialog;
 import com.jwebmp.plugins.markdown.Markdown;
-
+import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.webawesome.components.tooltip.TooltipPlacement;
+import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,46 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
         var dialogHeader = new DivSimple<>();
         dialogHeader.addAttribute("slot", "label");
-        dialogHeader.setText("{{readmeModuleTitle}}");
+        var headerCluster = new WaCluster<>();
+        headerCluster.setSplit();
+        headerCluster.setGap(PageSize.Small);
+        var titleSpan = new DivSimple<>();
+        titleSpan.setText("{{readmeModuleTitle}}");
+        headerCluster.add(titleSpan);
+
+        var actions = new WaCluster<>();
+        actions.setGap(PageSize.ExtraSmall);
+
+        // GitHub repo link
+        var repoLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
+        var repoIcon = new WaIcon<>("github");
+        repoIcon.setLibrary("fab");
+        repoIcon.addStyle("cursor", "pointer");
+        repoIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        repoLink.add(repoIcon);
+        repoLink.add(new WaTooltip<>(repoIcon).setText("View Repository").setPlacement(TooltipPlacement.Top));
+        actions.add(repoLink);
+
+        // Star repo link
+        var starLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
+        var starIcon = new WaIcon<>("star");
+        starIcon.addStyle("cursor", "pointer");
+        starIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        starLink.add(starIcon);
+        starLink.add(new WaTooltip<>(starIcon).setText("Star Repository").setPlacement(TooltipPlacement.Top));
+        actions.add(starLink);
+
+        // Issues link
+        var issuesLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl + '/issues'}}", "_blank");
+        var issuesIcon = new WaIcon<>("bug");
+        issuesIcon.addStyle("cursor", "pointer");
+        issuesIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        issuesLink.add(issuesIcon);
+        issuesLink.add(new WaTooltip<>(issuesIcon).setText("Log an Issue").setPlacement(TooltipPlacement.Top));
+        actions.add(issuesLink);
+
+        headerCluster.add(actions);
+        dialogHeader.add(headerCluster);
         dialog.add(dialogHeader);
 
         // Use the Markdown component with [src] binding — ngx-markdown fetches
@@ -68,6 +109,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         md.setMermaid(true);
         md.setClipboard(true);
         md.addAttribute("[src]", "readmeSrc");
+        md.addClass("wa-body-s");
         dialog.add(md);
 
         add(dialog);
@@ -108,16 +150,12 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
         grid.add(moduleCard("Inject (Core Engine)",
                 "GuiceContext, ClassGraph scanning, lifecycle SPI (IGuicePreStartup, IGuiceModule, " +
-                        "IGuicePostStartup, IGuicePreDestroy), JobService, Environment utilities, CallScope.",
+                        "IGuicePostStartup, IGuicePreDestroy), JobService, Environment utilities, CallScope. " +
+                        "Client API: com.guicedee:client — IGuiceContext, Environment, CallScoper, CallScopeProperties. " +
+                        "Module: com.guicedee.client (lightweight API that all modules depend on).",
                 "com.guicedee:inject",
-                "inject"));
+                "inject", "Inject/Basic"));
 
-
-        grid.add(moduleCard("Client API",
-                "IGuiceContext interface, Environment, CallScoper, CallScopeProperties. " +
-                        "The lightweight API that all modules depend on.",
-                "com.guicedee:client",
-                "client"));
 
         return buildSection("Core modules", "Injection, lifecycle, and scanning",
                 "The foundation that every GuicedEE application is built on.", true, grid);
@@ -133,31 +171,31 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "@Verticle annotation, VerticleBuilder, EventBus codecs, deployment options. " +
                         "Threading models, HA, worker pool configuration.",
                 "com.guicedee:vertx",
-                "vertx"));
+                "vertx", "Vertx/Basic"));
 
         grid.add(moduleCard("Web Server",
                 "HTTP/HTTPS auto-start, Router, BodyHandler, 3 SPI hooks " +
                         "(VertxHttpServerOptionsConfigurator, VertxHttpServerConfigurator, VertxRouterConfigurator).",
                 "com.guicedee:web",
-                "web"));
+                "web", "Web/Basic"));
 
         grid.add(moduleCard("REST Services",
                 "Jakarta REST (JAX-RS) adapter. @Path, @GET, @POST, all parameter annotations, " +
                         "reactive returns, @Cors, @RolesAllowed, ExceptionMapper, RestInterceptor SPI.",
                 "com.guicedee:rest",
-                "rest"));
+                "rest", "Rest/Basic"));
 
         grid.add(moduleCard("REST Client",
                 "@Endpoint annotation, typed RestClient<S,R>, path parameters, " +
                         "Bearer/JWT/Basic/ApiKey auth, env-var secrets, RestClientConfigurator SPI.",
                 "com.guicedee:rest-client",
-                "rest-client"));
+                "rest-client", "RestClient/Basic"));
 
         grid.add(moduleCard("WebSockets",
                 "RFC 6455 with call-scoped connections, action-based message routing, " +
                         "group join/leave/broadcast, per-message compression (RFC 7692).",
                 "com.guicedee:websockets",
-                "websockets"));
+                "websockets", "WebSockets/Basic"));
 
         return buildSection("Web & REST", "HTTP servers, REST services, and real-time communication",
                 "The reactive web stack built on Vert.x 5.", false, grid);
@@ -173,7 +211,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "Hibernate Reactive 7 with Mutiny. DatabaseModule, ConnectionBaseInfo, " +
                         "env-var driven config, multi-database support, reactive sessions.",
                 "com.guicedee:persistence",
-                "persistence"));
+                "persistence", "Persistence/Basic"));
 
         grid.add(moduleCard("Representations",
                 "IJsonRepresentation, DefaultObjectMapper, Jackson configuration. " +
@@ -195,31 +233,31 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "MicroProfile Health — @Liveness, @Readiness, @Startup. Auto-discovered checks, " +
                         "configurable paths, 2-second timeout, Kubernetes-ready.",
                 "com.guicedee:health",
-                "health"));
+                "health", "Health/Basic"));
 
         grid.add(moduleCard("Metrics",
                 "MicroProfile Metrics — @Counted, @Timed, @Gauge. " +
                         "Prometheus and Graphite reporting. Automatic endpoint registration.",
                 "com.guicedee:metrics",
-                "metrics"));
+                "metrics", "Metrics/Basic"));
 
         grid.add(moduleCard("Telemetry",
                 "@Trace, @SpanAttribute, @TelemetryOptions. OpenTelemetry with OTLP export " +
                         "to Tempo/Jaeger. Log4j2 appender for trace-correlated logs.",
                 "com.guicedee:guiced-telemetry",
-                "telemetry"));
+                "telemetry", "Telemetry/Basic"));
 
         grid.add(moduleCard("Fault Tolerance",
                 "MicroProfile Fault Tolerance — @Retry, @CircuitBreaker, @Timeout, " +
                         "@Bulkhead, @Fallback. Guice AOP interception.",
                 "com.guicedee:fault-tolerance",
-                "fault-tolerance"));
+                "fault-tolerance", "FaultTolerance/Basic"));
 
         grid.add(moduleCard("Config",
                 "MicroProfile Config with SmallRye — @ConfigProperty, " +
                         "env vars → system props → properties files. Type conversion.",
                 "com.guicedee.microprofile:config",
-                "config"));
+                "config", "Config/Basic"));
 
         return buildSection("Observability", "Health, metrics, tracing, and configuration",
                 "MicroProfile specifications with zero-config defaults.", false, grid);
@@ -235,45 +273,57 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "Annotation-driven message queues and exchanges. Auto-recovery, " +
                         "Vert.x RabbitMQ client, @RabbitConnectionOptions.",
                 "com.guicedee:rabbitmq",
-                "rabbitmq"));
+                "rabbitmq", "RabbitMQ/Basic"));
 
         grid.add(moduleCard("Kafka",
                 "Annotation-driven Apache Kafka integration. @KafkaConnectionOptions, " +
                         "@KafkaTopicDefinition, consumers, publishers, admin client, " +
                         "worker threads, and call-scoped message handling via Vert.x Kafka Client.",
                 "com.guicedee:kafka",
-                "kafka"));
+                "kafka", "Kafka/Basic"));
 
         grid.add(moduleCard("IBM MQ",
                 "Annotation-driven IBM MQ integration via JMS client. " +
                         "@IBMMQConnectionOptions, @IBMMQQueueDefinition, consumers, " +
                         "publishers, and environment variable overrides.",
                 "com.guicedee:ibmmq",
-                "ibmmq"));
+                "ibmmq", "IBMMQ/Basic"));
 
         grid.add(moduleCard("OpenAPI",
                 "Auto-generated OpenAPI 3.x specification from @Path annotations. " +
                         "Served at /openapi. Runtime schema generation.",
                 "com.guicedee:openapi",
-                "openapi"));
+                "openapi", "OpenAPI/Basic"));
 
         grid.add(moduleCard("Swagger UI",
                 "Interactive API browser at /swagger/. Auto-configured from " +
                         "the OpenAPI specification.",
                 "com.guicedee:guiced-swagger-ui",
-                "swagger-ui"));
+                "swagger-ui", "OpenAPI/Basic"));
 
         grid.add(moduleCard("Web Services",
                 "Apache CXF SOAP integration. WSDL-first or code-first " +
                         "web services with Guice injection.",
                 "com.guicedee:webservices",
-                "webservices"));
+                "webservices", "WebServices/Basic"));
 
         grid.add(moduleCard("Cerial",
                 "Modular serial port communications in Java. @Named port injection, " +
                         "auto-reconnect, idle monitoring, and health reporting.",
                 "com.guicedee:cerial",
-                "cerial"));
+                "cerial", "Cerial/Basic"));
+
+        grid.add(moduleCard("Mail Client",
+                "Annotation-driven SMTP mail client with @MailConnectionOptions, " +
+                        "MailService, and session pooling.",
+                "com.guicedee:mail-client",
+                "mail-client", "MailClient/Basic"));
+
+        grid.add(moduleCard("Hazelcast",
+                "Clustered Vert.x support with Hazelcast. Shared maps, queues, " +
+                        "and distributed events.",
+                "com.guicedee:hazelcast",
+                "hazelcast", "Hazelcast/Basic"));
 
         return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
                 "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
@@ -290,7 +340,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                         "Maps @ApplicationScoped, @RequestScoped, @Dependent, and BeanManager to Guice equivalents. " +
                         "Not a foundation component — new projects should use Guice annotations directly.",
                 "com.guicedee:cdi",
-                "cdi"));
+                "cdi", "CDI/Basic"));
 
         return buildSection("Migration & Compatibility", "Bridges for migrating from other DI frameworks",
                 "These modules are not part of the GuicedEE foundation. They exist to assist projects " +
@@ -300,28 +350,53 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
     private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId)
     {
+        return moduleCard(title, description, artifact, moduleId, null);
+    }
+
+    private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId, String examplePath)
+    {
         var card = new WaCard<>();
         card.setAppearance(Appearance.Outlined);
 
+        var header = new DivSimple<>();
+        var headerCluster = new WaCluster<>();
+        headerCluster.setGap(PageSize.Small);
+        headerCluster.setSplit();
+        headerCluster.add(headingText("h3", "m", title));
+        if (examplePath != null)
+        {
+            headerCluster.add(exampleHeaderIcon(examplePath));
+        }
+        header.add(headerCluster);
+        card.withHeader(header);
+
         var stack = new WaStack<>();
         stack.setGap(PageSize.Small);
-
-        stack.add(headingText("h3", "m", title));
 
         var body = bodyText(description, "m");
         body.setWaColorText("quiet");
         stack.add(body);
 
-        stack.add(coordinateBlock(artifact));
+        card.add(stack);
+
+        var footer = new WaStack<>();
+        footer.setGap(PageSize.Small);
+
+        footer.add(coordinateBlock(artifact));
+
+        var buttons = new com.jwebmp.webawesome.components.WaCluster<>();
+        buttons.setGap(PageSize.ExtraSmall);
 
         var cta = new WaButton<>();
         cta.setText(escapeAngular("View module →"));
         cta.setVariant(Variant.Brand);
         cta.setAppearance(Appearance.Outlined);
         cta.addAttribute("(click)", "openReadme('" + moduleId + "', '" + escapeAngular(title) + "')");
-        stack.add(cta);
+        buttons.add(cta);
 
-        card.add(stack);
+        footer.add(buttons);
+        card.withFooter(footer);
+
         return card;
     }
 
@@ -332,13 +407,14 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         f.add("readmeDialogOpen = false;");
         f.add("readmeModuleTitle = '';");
         f.add("readmeSrc = '';");
+        f.add("currentRepoUrl = '';");
         f.add("""
                 readmeUrls: Record<string, string> = {
                     'inject': 'https://raw.githubusercontent.com/GuicedEE/GuicedInjection/refs/heads/master/README.md',
                     'client': 'https://raw.githubusercontent.com/GuicedEE/Client/refs/heads/master/README.md',
                     'vertx': 'https://raw.githubusercontent.com/GuicedEE/Guiced-Vert.x/refs/heads/master/README.md',
                     'web': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxWeb/refs/heads/master/README.md',
-                    'rest': 'https://raw.githubusercontent.com/GuicedEE/GuicedRestServices/refs/heads/master/README.md',
+                    'rest': 'https://raw.githubusercontent.com/GuicedEE/RestServices/refs/heads/master/README.md',
                     'rest-client': 'https://raw.githubusercontent.com/GuicedEE/Rest-Client/refs/heads/master/README.md',
                     'websockets': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxSockets/refs/heads/master/README.md',
                     'persistence': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxPersistence/refs/heads/master/README.md',
@@ -353,9 +429,11 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                     'ibmmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedIBMMQ/refs/heads/master/README.md',
                     'openapi': 'https://raw.githubusercontent.com/GuicedEE/OpenAPI/refs/heads/master/README.md',
                     'swagger-ui': 'https://raw.githubusercontent.com/GuicedEE/SwaggerUI/refs/heads/master/README.md',
-                    'webservices': 'https://raw.githubusercontent.com/GuicedEE/GuicedWebServices/refs/heads/master/README.md',
-                    'cerial': 'https://raw.githubusercontent.com/GuicedEE/Cerial/refs/heads/master/README.md',
-                    'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md'
+                    'webservices': 'https://raw.githubusercontent.com/GedMarc/Guiced-WebServices/refs/heads/master/README.md',
+                    'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
+                    'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
+                    'mail-client': 'https://raw.githubusercontent.com/GuicedEE/MailClient/refs/heads/master/README.md',
+                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md'
                 };
                 """);
         return f;
@@ -369,9 +447,13 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 openReadme(moduleId: string, title: string) {
                     this.readmeModuleTitle = title;
                     this.readmeSrc = this.readmeUrls[moduleId] || '';
+                    const raw = this.readmeUrls[moduleId] || '';
+                    const match = raw.match(/raw\\.githubusercontent\\.com\\/([^\\/]+\\/[^\\/]+)/);
+                    this.currentRepoUrl = match ? 'https://github.com/' + match[1] : '';
                     this.readmeDialogOpen = true;
                 }
                 """);
         return m;
     }
 }
+

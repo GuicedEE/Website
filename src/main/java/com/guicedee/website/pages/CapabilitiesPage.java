@@ -14,8 +14,19 @@ import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
+import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.details.WaDetails;
+import com.jwebmp.webawesome.components.dialog.WaDialog;
+import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.webawesome.components.tooltip.TooltipPlacement;
+import com.jwebmp.webawesome.components.tooltip.WaTooltip;
+import com.jwebmp.core.base.html.DivSimple;
+import com.jwebmp.plugins.markdown.Markdown;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @NgComponent("guicedee-capabilities")
 @NgRoutable(path = "capabilities")
@@ -84,51 +95,52 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(mermaidDiagramWithTitle("GuicedEE Architecture",
                 """
-                        graph TD
-                            APP["Your Application"]
-                            REST["REST<br/>JAX-RS"]
-                            WS["WebSockets<br/>RFC 6455"]
-                            PERSIST["Persistence<br/>Hibernate"]
-                            RABBIT["RabbitMQ<br/>AMQP"]
-                            KAFKA["Kafka<br/>Streaming"]
-                            IBMMQ["IBM MQ<br/>JMS"]
-                            TELEM["Telemetry<br/>OTLP"]
-                            OPENAPI["OpenAPI<br/>Swagger"]
-                            VERTXWEB["Vert.x Web · HTTP/HTTPS · Router"]
-                            VERTXCORE["Guiced Vert.x · EventBus · Verticles · Codecs"]
-                            HEALTH["Health"]
-                            METRICS["Metrics"]
-                            CONFIG["Config"]
-                            FT["Fault<br/>Tolerance"]
-                            INJECT["GuicedEE Inject · Guice Injector · ClassGraph · SPI"]
-                            BOM["BOM · Parent POM · Services - JPMS wrappers"]
-                        
-                            APP --> REST
-                            APP --> WS
-                            APP --> PERSIST
-                            APP --> RABBIT
-                            APP --> KAFKA
-                            APP --> IBMMQ
-                            APP --> TELEM
-                            APP --> OPENAPI
+                        graph LR
+                            subgraph App["Your Application"]
+                                APP["Your Business Logic"]
+                            end
+                            subgraph Protocol["Protocol Layers"]
+                                REST["REST (JAX-RS)"]
+                                WS["WebSockets"]
+                                OPENAPI["OpenAPI"]
+                            end
+                            subgraph Messaging
+                                RABBIT["RabbitMQ"]
+                                KAFKA["Kafka"]
+                                IBMMQ["IBM MQ"]
+                            end
+                            subgraph Storage
+                                PERSIST["Persistence"]
+                            end
+                            subgraph Foundation
+                                VERTXWEB["Vert.x Web"]
+                                VERTXCORE["Vert.x Core"]
+                                INJECT["GuicedEE Inject"]
+                                BOM["BOM & JPMS"]
+                            end
+                            
+                            APP --> Protocol
+                            APP --> Messaging
+                            APP --> Storage
+                            
                             REST --> VERTXWEB
                             WS --> VERTXWEB
-                            PERSIST --> VERTXCORE
+                            OPENAPI --> VERTXWEB
+                            
                             RABBIT --> VERTXCORE
                             KAFKA --> VERTXCORE
                             IBMMQ --> INJECT
-                            TELEM --> VERTXCORE
-                            OPENAPI --> VERTXWEB
+                            
+                            PERSIST --> VERTXCORE
+                            
                             VERTXWEB --> VERTXCORE
-                            VERTXCORE --> HEALTH
-                            VERTXCORE --> METRICS
-                            VERTXCORE --> CONFIG
-                            VERTXCORE --> FT
-                            HEALTH --> INJECT
-                            METRICS --> INJECT
-                            CONFIG --> INJECT
-                            FT --> INJECT
-                            INJECT --> BOM"""));
+                            VERTXCORE --> INJECT
+                            INJECT --> BOM
+                            
+                            style Foundation fill:#f9f,stroke:#333
+                            style Messaging fill:#bbf,stroke:#333
+                            style Protocol fill:#dfd,stroke:#333
+                            style Storage fill:#ffd,stroke:#333"""));
 
         var explain = bodyText("Your application sits at the top. You pick the layers you need. " +
                 "The inject layer and BOM are always present — everything else is opt-in.", "m");
@@ -211,7 +223,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             public Integer sortOrder() { return 500; }
                         }"""));
 
-        return buildSection("HTTP Server", "Reactive by default",
+        return buildSection("HTTP Server", "Reactive by nature",
                 "com.guicedee:web — Vert.x 5 HTTP/HTTPS server with Router and BodyHandler.", false, content);
     }
 
@@ -773,7 +785,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         grid.add(featureCard("CLOUD=true → JSON",
                 "Set CLOUD=true and all console appenders switch to compact JSON layout. " +
-                        "No log4j2.xml, no code changes — configured in the GuiceContext static initializer.",
+                        "No log4j2.xml required — but if you already have one, it still works. " +
+                        "This is a programmatic alternative configured in the GuiceContext static initializer.",
                 null));
 
         grid.add(featureCard("Highlighted local dev",
@@ -830,7 +843,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                          "message":"Order placed"}"""));
 
         return buildSection("Logging", "Production-ready from day one",
-                "CLOUD=true switches to JSON. Locally you get ANSI highlighting. No log4j2.xml needed.",
+                "CLOUD=true switches to JSON. Locally you get ANSI highlighting. Standard log4j2.xml and Log4j2 APIs still work — this is simply a more programmatic approach.",
                 false, content);
     }
 
@@ -1062,6 +1075,28 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
+    private static final Map<String, String> EXAMPLE_PATHS = Map.ofEntries(
+            Map.entry("inject", "Inject/Basic"),
+            Map.entry("client", "Client/Basic"),
+            Map.entry("vertx", "Vertx/Basic"),
+            Map.entry("web", "Web/Basic"),
+            Map.entry("rest", "Rest/Basic"),
+            Map.entry("rest-client", "RestClient/Basic"),
+            Map.entry("websockets", "WebSockets/Basic"),
+            Map.entry("persistence", "Persistence/Basic"),
+            Map.entry("rabbitmq", "RabbitMQ/Basic"),
+            Map.entry("kafka", "Kafka/Basic"),
+            Map.entry("ibmmq", "IBMMQ/Basic"),
+            Map.entry("openapi", "OpenAPI/Basic"),
+            Map.entry("swagger-ui", "OpenAPI/Basic"),
+            Map.entry("webservices", "WebServices/Basic"),
+            Map.entry("cerial", "Cerial/Basic"),
+            Map.entry("cdi", "CDI/Basic"),
+            Map.entry("config", "Config/Basic"),
+            Map.entry("telemetry", "Telemetry/Basic"),
+            Map.entry("jwt", "JWT/Basic")
+    );
+
     private WaStack buildModuleCatalogSection()
     {
         var content = new WaStack<>();
@@ -1089,18 +1124,25 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
             detailContent.add(coordinateBlock(module.getGroupId() + ":" + module.getArtifactId() + ":" + module.getVersion()));
 
-            if (module.getBootClass() != null && !module.getBootClass().isBlank())
+            // Action links row
+            var actions = new WaCluster<>();
+            actions.setGap(PageSize.ExtraSmall);
+
+            // View Documentation button — opens readme dialog
+            var docsBtn = new WaButton<>(escapeAngular("View Docs"), Variant.Brand);
+            docsBtn.setAppearance(Appearance.Outlined);
+            docsBtn.setSize(com.jwebmp.webawesome.components.Size.Small);
+            docsBtn.addAttribute("(click)", "openReadme('" + module.getId() + "', '" + escapeAngular(module.getName()) + "')");
+            actions.add(docsBtn);
+
+            // Example link with tooltip
+            var examplePath = EXAMPLE_PATHS.get(module.getId());
+            if (examplePath != null)
             {
-                var bootLabel = captionText("Boot: " + module.getBootClass());
-                bootLabel.setWaColorText("quiet");
-                detailContent.add(bootLabel);
+                actions.add(exampleHeaderIcon(examplePath));
             }
-            if (module.getReadmePath() != null && !module.getReadmePath().isBlank())
-            {
-                var docsLabel = captionText("Docs: " + module.getReadmePath());
-                docsLabel.setWaColorText("quiet");
-                detailContent.add(docsLabel);
-            }
+
+            detailContent.add(actions);
 
             details.add(detailContent);
             grid.add(details);
@@ -1108,8 +1150,113 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(grid);
 
+        // Module README dialog
+        buildReadmeDialog();
+
         return buildSection("Full module catalog", "All " + ModuleCatalog.getModules().size() + " modules at a glance",
-                "Expandable entries with coordinates, boot classes, and documentation links.",
+                "Expandable entries with coordinates, documentation, and example links.",
                 false, content);
+    }
+
+    private void buildReadmeDialog()
+    {
+        var dialog = new WaDialog<>("module-readme-dialog");
+        dialog.setLabel("Module Documentation");
+        dialog.setLightDismiss(true);
+        dialog.setScrolling(true);
+        dialog.addAttribute("[open]", "readmeDialogOpen");
+        dialog.addAttribute("(wa-after-hide)", "readmeDialogOpen = false");
+        dialog.addStyle("--width", "min(90vw, 72rem)");
+
+        var dialogHeader = new DivSimple<>();
+        dialogHeader.addAttribute("slot", "label");
+        var headerCluster = new WaCluster<>();
+        headerCluster.setSplit();
+        headerCluster.setGap(PageSize.Small);
+        var titleSpan = new DivSimple<>();
+        titleSpan.setText("{{readmeModuleTitle}}");
+        headerCluster.add(titleSpan);
+
+        var headerActions = new WaCluster<>();
+        headerActions.setGap(PageSize.ExtraSmall);
+
+        var repoLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
+        var repoIcon = new WaIcon<>("github");
+        repoIcon.setLibrary("fab");
+        repoIcon.addStyle("cursor", "pointer");
+        repoIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        repoLink.add(repoIcon);
+        repoLink.add(new WaTooltip<>(repoIcon).setText("View Repository").setPlacement(TooltipPlacement.Top));
+        headerActions.add(repoLink);
+
+        headerCluster.add(headerActions);
+        dialogHeader.add(headerCluster);
+        dialog.add(dialogHeader);
+
+        var md = new Markdown<>();
+        md.setLineNumbers(true);
+        md.setEmoji(true);
+        md.setMermaid(true);
+        md.setClipboard(true);
+        md.addAttribute("[src]", "readmeSrc");
+        md.addClass("wa-body-s");
+        dialog.add(md);
+
+        add(dialog);
+    }
+
+    @Override
+    public List<String> fields()
+    {
+        var f = new ArrayList<>(super.fields());
+        f.add("readmeDialogOpen = false;");
+        f.add("readmeModuleTitle = '';");
+        f.add("readmeSrc = '';");
+        f.add("currentRepoUrl = '';");
+        f.add("""
+                readmeUrls: Record<string, string> = {
+                    'inject': 'https://raw.githubusercontent.com/GuicedEE/GuicedInjection/refs/heads/master/README.md',
+                    'client': 'https://raw.githubusercontent.com/GuicedEE/Client/refs/heads/master/README.md',
+                    'vertx': 'https://raw.githubusercontent.com/GuicedEE/Guiced-Vert.x/refs/heads/master/README.md',
+                    'web': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxWeb/refs/heads/master/README.md',
+                    'rest': 'https://raw.githubusercontent.com/GuicedEE/RestServices/refs/heads/master/README.md',
+                    'rest-client': 'https://raw.githubusercontent.com/GuicedEE/Rest-Client/refs/heads/master/README.md',
+                    'websockets': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxSockets/refs/heads/master/README.md',
+                    'persistence': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxPersistence/refs/heads/master/README.md',
+                    'representations': 'https://raw.githubusercontent.com/GuicedEE/Representations/refs/heads/master/README.md',
+                    'health': 'https://raw.githubusercontent.com/GuicedEE/Health/refs/heads/master/README.md',
+                    'metrics': 'https://raw.githubusercontent.com/GuicedEE/Metrics/refs/heads/master/README.md',
+                    'telemetry': 'https://raw.githubusercontent.com/GuicedEE/GuicedTelemetry/refs/heads/master/README.md',
+                    'fault-tolerance': 'https://raw.githubusercontent.com/GuicedEE/FaultTolerance/refs/heads/master/README.md',
+                    'config': 'https://raw.githubusercontent.com/GuicedEE/microprofile-config/refs/heads/master/README.md',
+                    'rabbitmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedRabbit/refs/heads/master/README.md',
+                    'kafka': 'https://raw.githubusercontent.com/GuicedEE/GuicedKafka/refs/heads/master/README.md',
+                    'ibmmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedIBMMQ/refs/heads/master/README.md',
+                    'openapi': 'https://raw.githubusercontent.com/GuicedEE/OpenAPI/refs/heads/master/README.md',
+                    'swagger-ui': 'https://raw.githubusercontent.com/GuicedEE/SwaggerUI/refs/heads/master/README.md',
+                    'webservices': 'https://raw.githubusercontent.com/GedMarc/Guiced-WebServices/refs/heads/master/README.md',
+                    'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
+                    'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
+                    'jwt': 'https://raw.githubusercontent.com/GuicedEE/JWT/refs/heads/master/README.md'
+                };
+                """);
+        return f;
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var m = new ArrayList<>(super.methods());
+        m.add("""
+                openReadme(moduleId: string, title: string) {
+                    this.readmeModuleTitle = title;
+                    this.readmeSrc = this.readmeUrls[moduleId] || '';
+                    const raw = this.readmeUrls[moduleId] || '';
+                    const match = raw.match(/raw\\.githubusercontent\\.com\\/([^\\/]+\\/[^\\/]+)/);
+                    this.currentRepoUrl = match ? 'https://github.com/' + match[1] : '';
+                    this.readmeDialogOpen = true;
+                }
+                """);
+        return m;
     }
 }

@@ -134,7 +134,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var ctas = new WaCluster<>();
         ctas.setGap(PageSize.Small);
         ctas.add(buildCta("View on GitHub", "github", Variant.Neutral, Appearance.Outlined));
-        ctas.add(buildCta("Get started", "getting-started", Variant.Brand, Appearance.Filled));
+        ctas.add(buildCta("Get started", "getting-started", Variant.Brand, Appearance.Outlined));
         roadmapContent.add(ctas);
 
         layout.add(buildSection("Roadmap", "What's coming next",

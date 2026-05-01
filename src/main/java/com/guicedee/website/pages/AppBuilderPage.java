@@ -200,7 +200,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     public static void main(String[] args) {
                         IGuiceContext.registerModuleForScanning
                             .add("${this.packageName}");
-                        IGuiceContext.instance();
+                        IGuiceContext.instance().inject();
                     }
                 }` + '\\n```';
                 }
@@ -296,7 +296,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     public static void main(String[] args) {
                         IGuiceContext.registerModuleForScanning
                             .add("${this.packageName}");
-                        IGuiceContext.instance();
+                        IGuiceContext.instance().inject();
                     }
                 }`;
                 }
@@ -355,7 +355,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
         layout.add(buildMetadataSection());
         layout.add(buildModuleSelectionSection());
-        layout.add(buildGenerateSection());
     }
 
     // ── Metadata ─────────────────────────────────────
@@ -536,8 +535,8 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         previewColumn.add(bootDetails);
 
         // Download button
-        var buildBtn = new WaButton<>("Build & Download ZIP", Variant.Brand);
-        buildBtn.setAppearance(Appearance.Filled);
+        var buildBtn = new WaButton<>("Download ZIP", Variant.Brand);
+        buildBtn.setAppearance(Appearance.Outlined);
         buildBtn.addAttribute("(click)", "downloadZip()");
         previewColumn.add(buildBtn);
 
@@ -549,30 +548,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 false, content);
     }
 
-    // ── Generate ──────────────────────────────────────
-
-    private WaStack buildGenerateSection()
-    {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        var whatYouGet = new WaGrid<>();
-        whatYouGet.setMinColumnSize("14rem");
-        whatYouGet.setGap(PageSize.Small);
-        whatYouGet.add(featureCardHtml("Build file",
-                brandCode("pom.xml") + " or " + brandCode("build.gradle.kts") + " with BOM import and selected dependencies.", null));
-        whatYouGet.add(featureCardHtml("module-info.java",
-                "JPMS descriptor with " + brandCode("requires") + ", " + brandCode("provides") + ", " + brandCode("opens") + ".", null));
-        whatYouGet.add(featureCardHtml("Boot.java",
-                "One-line bootstrap calling " + brandCode("IGuiceContext.instance()") + ".", null));
-        whatYouGet.add(featureCard("Wiring snippets",
-                "Service-specific configuration code for each selected module.", null));
-        content.add(whatYouGet);
-
-        return buildSection("Download", "Generate your project",
-                "Download a production-ready ZIP and start coding immediately.",
-                true, content);
-    }
 
     // ── Tree helpers ──────────────────────────────────
 

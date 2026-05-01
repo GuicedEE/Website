@@ -7,6 +7,7 @@ import com.guicedee.website.App;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.webawesome.components.PageSize;
+import com.jwebmp.webawesome.components.Size;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
@@ -17,6 +18,8 @@ import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.copybutton.WaCopyButton;
 import com.jwebmp.webawesome.components.details.WaDetails;
 import com.jwebmp.webawesome.components.divider.WaDivider;
+import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
 import com.jwebmp.webawesome.components.SpaceTokenCapable;
@@ -481,6 +484,73 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         return new WaDivider<>();
     }
 
+    // ── Example link helpers ─────────────────────────
+
+    private static final String EXAMPLES_BASE = "https://github.com/GuicedEE/Examples/tree/master/";
+    private static final String SERVICES_BASE = "https://github.com/GuicedEE/Services/tree/master/";
+
+    /**
+     * Creates a small "View Example →" button linking to a GitHub example.
+     *
+     * @param examplePath path within the examples repo, e.g. "Rest/Basic"
+     */
+    protected WaButton<?> exampleButton(String examplePath)
+    {
+        var btn = new WaButton<>(escapeAngular("View Example →"), Variant.Neutral);
+        btn.setAppearance(Appearance.Plain);
+        btn.setSize(Size.Small);
+        btn.setAsLink(EXAMPLES_BASE + examplePath, "_blank", null);
+        return btn;
+    }
+
+    /**
+     * Creates a link to the examples repository root.
+     */
+    /**
+     * Creates a card header action icon linking to a GitHub example.
+     */
+    protected DivSimple<?> exampleHeaderIcon(String examplePath)
+    {
+        return githubHeaderIcon(EXAMPLES_BASE + examplePath, "View Example");
+    }
+
+    /**
+     * Creates a card header action icon linking to a GitHub service.
+     */
+    protected DivSimple<?> serviceHeaderIcon(String servicePath)
+    {
+        return githubHeaderIcon(SERVICES_BASE + servicePath, "View Source");
+    }
+
+    private DivSimple<?> githubHeaderIcon(String url, String tooltipText)
+    {
+        var wrapper = new DivSimple<>();
+
+        var icon = new WaIcon<>("up-right-from-square");
+        icon.addClass("header-action-icon");
+        icon.addStyle("cursor", "pointer");
+        icon.addStyle("font-size", "var(--wa-font-size-m)");
+        icon.addAttribute("waColorText", "brand");
+
+        var tooltip = new WaTooltip<>(icon);
+        tooltip.setText(tooltipText);
+
+        var link = new com.jwebmp.core.base.html.Link<>(url, "_blank");
+        link.add(icon);
+        link.add(tooltip);
+
+        wrapper.add(link);
+        return wrapper;
+    }
+
+    protected WaButton<?> browseExamplesButton()
+    {
+        var btn = new WaButton<>(escapeAngular("Browse All Examples"), Variant.Neutral);
+        btn.setAppearance(Appearance.Outlined);
+        btn.setAsLink(EXAMPLES_BASE, "_blank", null);
+        return btn;
+    }
+
     // ── Maven / Gradle dual code block helpers ────────
 
     /**
@@ -553,7 +623,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         var ctas = new WaCluster<>();
         ctas.setGap(PageSize.Small);
         ctas.addClass("hero-ctas");
-        ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, null));
+        ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, Appearance.Outlined));
         ctas.add(buildCta("Capabilities", "/capabilities", Variant.Neutral, Appearance.Outlined));
 
         var githubCta = new WaButton<>(escapeAngular("View on GitHub"), Variant.Neutral);

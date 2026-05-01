@@ -5,6 +5,7 @@ import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 
 import java.util.ArrayList;
@@ -14,7 +15,13 @@ import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
+import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
+import com.jwebmp.webawesome.components.dialog.WaDialog;
+import com.jwebmp.plugins.markdown.Markdown;
+import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.webawesome.components.tooltip.TooltipPlacement;
+import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 
 @NgComponent("guicedee-end-to-end")
 @NgRoutable(path = "guides/end-to-end")
@@ -48,6 +55,70 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         layout.add(buildJLinkDeployment());
         layout.add(buildLifecycleAndEnvVars());
         layout.add(buildModulePages());
+
+        // Module README dialog
+        var dialog = new WaDialog<>("module-readme-dialog");
+        dialog.setLabel("Module Documentation");
+        dialog.setLightDismiss(true);
+        dialog.setScrolling(true);
+        dialog.addAttribute("[open]", "readmeDialogOpen");
+        dialog.addAttribute("(wa-after-hide)", "readmeDialogOpen = false");
+        dialog.addStyle("--width", "min(90vw, 72rem)");
+
+        var dialogHeader = new DivSimple<>();
+        dialogHeader.addAttribute("slot", "label");
+        var headerCluster = new WaCluster<>();
+        headerCluster.setSplit();
+        headerCluster.setGap(PageSize.Small);
+        var titleSpan = new DivSimple<>();
+        titleSpan.setText("{{readmeModuleTitle}}");
+        headerCluster.add(titleSpan);
+
+        var actions = new WaCluster<>();
+        actions.setGap(PageSize.ExtraSmall);
+
+        // GitHub repo link
+        var repoLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
+        var repoIcon = new WaIcon<>("github");
+        repoIcon.setLibrary("fab");
+        repoIcon.addStyle("cursor", "pointer");
+        repoIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        repoLink.add(repoIcon);
+        repoLink.add(new WaTooltip<>(repoIcon).setText("View Repository").setPlacement(TooltipPlacement.Top));
+        actions.add(repoLink);
+
+        // Star repo link
+        var starLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
+        var starIcon = new WaIcon<>("star");
+        starIcon.addStyle("cursor", "pointer");
+        starIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        starLink.add(starIcon);
+        starLink.add(new WaTooltip<>(starIcon).setText("Star Repository").setPlacement(TooltipPlacement.Top));
+        actions.add(starLink);
+
+        // Issues link
+        var issuesLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl + '/issues'}}", "_blank");
+        var issuesIcon = new WaIcon<>("bug");
+        issuesIcon.addStyle("cursor", "pointer");
+        issuesIcon.addStyle("font-size", "var(--wa-font-size-l)");
+        issuesLink.add(issuesIcon);
+        issuesLink.add(new WaTooltip<>(issuesIcon).setText("Log an Issue").setPlacement(TooltipPlacement.Top));
+        actions.add(issuesLink);
+
+        headerCluster.add(actions);
+        dialogHeader.add(headerCluster);
+        dialog.add(dialogHeader);
+
+        var md = new Markdown<>();
+        md.setLineNumbers(true);
+        md.setEmoji(true);
+        md.setMermaid(true);
+        md.setClipboard(true);
+        md.addAttribute("[src]", "readmeSrc");
+        md.addClass("wa-body-s");
+        dialog.add(md);
+
+        add(dialog);
     }
 
     // ── Intro ─────────────────────────────────────────
@@ -571,14 +642,14 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
-        grid.add(featureCardHtml("No log4j2.xml", "Programmatic config in the static initializer.", null));
+        grid.add(featureCardHtml("No log4j2.xml required", "Programmatic config in the static initializer. Existing log4j2.xml files are still honoured if present.", null));
         grid.add(featureCard("Stdout/Stderr split", "INFO→stdout, ERROR→stderr. No sidecar.", null));
         grid.add(featureCardHtml("@InjectLogger", "Named loggers via injection. No static fields.", null));
         grid.add(featureCard("Runtime switching", "Switch to JSON at runtime. No restart.", null));
         content.add(grid);
 
         return buildSection("Cloud-aware logging", "CLOUD=true — that's it",
-                "Colorized locally, JSON in the cloud. No XML config files.", false, content);
+                "Colorized locally, JSON in the cloud. Standard log4j2.xml and Log4j2 APIs still work — this is a programmatic alternative, not a replacement.", false, content);
     }
 
     // ── JLink deployment ──────────────────────────────
@@ -708,14 +779,24 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
         content.add(mermaidDiagramWithTitle("Startup lifecycle",
                 """
-                        graph TD
-                            A["IGuiceContext.instance()"] --> B["IGuiceConfigurator — Configure ClassGraph scan"]
-                            B --> C["IGuicePreStartup — Pre-scan hooks"]
-                            C --> D["ClassGraph Scan — Discover classes & SPI"]
-                            D --> E["IGuiceModule — Guice module binding"]
-                            E --> F["Injector Creation — Build Guice injector"]
-                            F --> G["IGuicePostStartup — Start servers, routes, consumers"]
-                            G --> H["IGuicePreDestroy — Graceful shutdown"]"""));
+                        graph LR
+                            subgraph init ["Initialization"]
+                                A["IGuiceContext.instance()"] --> B["IGuiceConfigurator"]
+                                B --> C["IGuicePreStartup"]
+                            end
+                            subgraph discovery ["Discovery & Binding"]
+                                C --> D["ClassGraph Scan"]
+                                D --> E["IGuiceModule"]
+                            end
+                            subgraph runtime ["Runtime"]
+                                E --> F["Injector Creation"]
+                                F --> G["IGuicePostStartup"]
+                                G --> H["IGuicePreDestroy"]
+                            end
+                            
+                            style init fill:#f9f,stroke:#333,stroke-width:2px
+                            style discovery fill:#bbf,stroke:#333,stroke-width:2px
+                            style runtime fill:#dfd,stroke:#333,stroke-width:2px"""));
 
         content.add(codeBlockWithTitle("Common environment variables",
                 """
@@ -768,35 +849,130 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Small);
 
-        grid.add(featureCardHtml("REST services", brandCode("@Path") + ", " + brandCode("@GET") + ", CORS, security, " + brandCode("ExceptionMapper") + ", " + brandCode("RestInterceptor") + ".", "/modules/rest"));
-        grid.add(featureCardHtml("REST client", brandCode("@Endpoint") + ", " + brandCode("RestClient&lt;S,R&gt;") + ", auth strategies, path params.", "/modules/rest-client"));
-        grid.add(featureCardHtml("Persistence", brandCode("Hibernate Reactive 7") + ", " + brandCode("Mutiny") + ", " + brandCode("DatabaseModule") + ", multi-db.", "/modules/persistence"));
-        grid.add(featureCardHtml("Health", brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", " + brandCode("@Startup") + ", env-var paths.", "/modules/health"));
-        grid.add(featureCardHtml("Config", brandCode("@ConfigProperty") + ", source priority, env-var overrides.", "/modules/config"));
-        grid.add(featureCardHtml("Vert.x core", brandCode("EventBus") + ", Verticles, Codecs, deployment.", "/modules/vertx"));
-        grid.add(featureCardHtml("Web server", "HTTP/HTTPS, " + brandCode("Router") + ", " + brandCode("BodyHandler") + ", 3 SPI hooks.", "/modules/web"));
-        grid.add(featureCard("WebSockets", "RFC 6455, action routing, group broadcast.", "/modules/websockets"));
-        grid.add(featureCard("RabbitMQ", "Annotation-driven queues, exchanges, consumers.", "/modules/rabbitmq"));
-        grid.add(featureCard("Kafka", "Annotation-driven topics, consumers, publishers with Vert.x Kafka Client.", "/modules/kafka"));
-        grid.add(featureCard("IBM MQ", "Annotation-driven queues, consumers, publishers with IBM MQ JMS.", "/modules/ibmmq"));
-        grid.add(featureCardHtml("Telemetry", brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "/modules/telemetry"));
-        grid.add(featureCardHtml("Metrics", brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "/modules/metrics"));
-        grid.add(featureCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "/modules/openapi"));
-        grid.add(featureCardHtml("Fault Tolerance", brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + ".", "/modules/fault-tolerance"));
-        grid.add(featureCardHtml("CDI Bridge (Migration)", "Migration aid: " + brandCode("@ApplicationScoped") + ", " + brandCode("@RequestScoped") + ", " + brandCode("BeanManager") + " → " + brandCode("Guice") + ". Not a foundation module.", "/modules/cdi"));
-        grid.add(featureCardHtml("Inject (core)", brandCode("GuiceContext") + ", " + brandCode("ClassGraph") + ", lifecycle SPI, " + brandCode("JobService") + ".", "/modules/inject"));
+        grid.add(guideModuleCard("REST services", brandCode("@Path") + ", " + brandCode("@GET") + ", CORS, security, " + brandCode("ExceptionMapper") + ", " + brandCode("RestInterceptor") + ".", "rest", "Rest/Basic"));
+        grid.add(guideModuleCard("REST client", brandCode("@Endpoint") + ", " + brandCode("RestClient&lt;S,R&gt;") + ", auth strategies, path params.", "rest-client", "RestClient/Basic"));
+        grid.add(guideModuleCard("Persistence", brandCode("Hibernate Reactive 7") + ", " + brandCode("Mutiny") + ", " + brandCode("DatabaseModule") + ", multi-db.", "persistence", "Persistence/Basic"));
+        grid.add(guideModuleCard("Health", brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", " + brandCode("@Startup") + ", env-var paths.", "health", "Health/Basic"));
+        grid.add(guideModuleCard("Config", brandCode("@ConfigProperty") + ", source priority, env-var overrides.", "config", "Config/Basic"));
+        grid.add(guideModuleCard("Vert.x core", brandCode("EventBus") + ", Verticles, Codecs, deployment.", "vertx", "Vertx/Basic"));
+        grid.add(guideModuleCard("Web server", "HTTP/HTTPS, " + brandCode("Router") + ", " + brandCode("BodyHandler") + ", 3 SPI hooks.", "web", "Web/Basic"));
+        grid.add(guideModuleCard("WebSockets", "RFC 6455, action routing, group broadcast.", "websockets", "WebSockets/Basic"));
+        grid.add(guideModuleCard("RabbitMQ", "Annotation-driven queues, exchanges, consumers.", "rabbitmq", "RabbitMQ/Basic"));
+        grid.add(guideModuleCard("Kafka", "Annotation-driven topics, consumers, publishers with Vert.x Kafka Client.", "kafka", "Kafka/Basic"));
+        grid.add(guideModuleCard("IBM MQ", "Annotation-driven queues, consumers, publishers with IBM MQ JMS.", "ibmmq", "IBMMQ/Basic"));
+        grid.add(guideModuleCard("Telemetry", brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "telemetry", "Telemetry/Basic"));
+        grid.add(guideModuleCard("Metrics", brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "metrics", "Metrics/Basic"));
+        grid.add(guideModuleCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "openapi", "OpenAPI/Basic"));
+        grid.add(guideModuleCard("Fault Tolerance", brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + ".", "fault-tolerance", "FaultTolerance/Basic"));
+        grid.add(guideModuleCard("CDI Bridge (Migration)", "Migration aid: " + brandCode("@ApplicationScoped") + ", " + brandCode("@RequestScoped") + ", " + brandCode("BeanManager") + " → " + brandCode("Guice") + ". Not a foundation module.", "cdi", "CDI/Basic"));
+        grid.add(guideModuleCard("Inject (core)", brandCode("GuiceContext") + ", " + brandCode("ClassGraph") + ", lifecycle SPI, " + brandCode("JobService") + ".", "inject", "Inject/Basic"));
         content.add(grid);
 
         var ctas = new WaCluster<>();
         ctas.setGap(PageSize.Small);
-        ctas.add(buildCta("Explore capabilities", "capabilities", Variant.Brand, Appearance.Filled));
+        ctas.add(buildCta("Explore capabilities", "capabilities", Variant.Brand, Appearance.Outlined));
         ctas.add(buildCta("Open the app builder", "builder", Variant.Neutral, Appearance.Outlined));
-        ctas.add(buildCta("View on GitHub", "github", Variant.Neutral, Appearance.Outlined));
+        ctas.add(browseExamplesButton());
         content.add(ctas);
 
         return buildSection("Module deep-dives", "Every module has its own page",
                 "Full API docs, configuration reference, SPI hooks, and examples for each module.",
                 true, content);
+    }
+    private WaCard<?> guideModuleCard(String title, String bodyHtml, String moduleId, String examplePath)
+    {
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
+
+        var header = new DivSimple<>();
+        var headerCluster = new WaCluster<>();
+        headerCluster.setGap(PageSize.Small);
+        headerCluster.setSplit();
+        headerCluster.add(headingText("h3", "m", title));
+        if (examplePath != null)
+        {
+            headerCluster.add(exampleHeaderIcon(examplePath));
+        }
+        header.add(headerCluster);
+        card.withHeader(header);
+
+        var stack = new WaStack<>();
+        stack.setGap(PageSize.Small);
+
+        var bodyCopy = bodyTextHtml(bodyHtml, "m");
+        bodyCopy.setWaColorText("quiet");
+        stack.add(bodyCopy);
+
+        card.add(stack);
+
+        var footer = new WaStack<>();
+        footer.setGap(PageSize.Small);
+
+        var cta = new WaButton<>();
+        cta.setText(escapeAngular("View documentation →"));
+        cta.setVariant(Variant.Brand);
+        cta.setAppearance(Appearance.Outlined);
+        cta.addAttribute("(click)", "openReadme('" + moduleId + "', '" + escapeAngular(title) + "')");
+        footer.add(cta);
+        card.withFooter(footer);
+
+        return card;
+    }
+
+    @Override
+    public List<String> fields()
+    {
+        var f = new ArrayList<>(super.fields());
+        f.add("readmeDialogOpen = false;");
+        f.add("readmeModuleTitle = '';");
+        f.add("readmeSrc = '';");
+        f.add("currentRepoUrl = '';");
+        f.add("""
+                readmeUrls: Record<string, string> = {
+                    'inject': 'https://raw.githubusercontent.com/GuicedEE/GuicedInjection/refs/heads/master/README.md',
+                    'client': 'https://raw.githubusercontent.com/GuicedEE/Client/refs/heads/master/README.md',
+                    'vertx': 'https://raw.githubusercontent.com/GuicedEE/Guiced-Vert.x/refs/heads/master/README.md',
+                    'web': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxWeb/refs/heads/master/README.md',
+                    'rest': 'https://raw.githubusercontent.com/GuicedEE/RestServices/refs/heads/master/README.md',
+                    'rest-client': 'https://raw.githubusercontent.com/GuicedEE/Rest-Client/refs/heads/master/README.md',
+                    'websockets': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxSockets/refs/heads/master/README.md',
+                    'persistence': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxPersistence/refs/heads/master/README.md',
+                    'representations': 'https://raw.githubusercontent.com/GuicedEE/Representations/refs/heads/master/README.md',
+                    'health': 'https://raw.githubusercontent.com/GuicedEE/Health/refs/heads/master/README.md',
+                    'metrics': 'https://raw.githubusercontent.com/GuicedEE/Metrics/refs/heads/master/README.md',
+                    'telemetry': 'https://raw.githubusercontent.com/GuicedEE/GuicedTelemetry/refs/heads/master/README.md',
+                    'fault-tolerance': 'https://raw.githubusercontent.com/GuicedEE/FaultTolerance/refs/heads/master/README.md',
+                    'config': 'https://raw.githubusercontent.com/GuicedEE/microprofile-config/refs/heads/master/README.md',
+                    'rabbitmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedRabbit/refs/heads/master/README.md',
+                    'kafka': 'https://raw.githubusercontent.com/GuicedEE/GuicedKafka/refs/heads/master/README.md',
+                    'ibmmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedIBMMQ/refs/heads/master/README.md',
+                    'openapi': 'https://raw.githubusercontent.com/GuicedEE/OpenAPI/refs/heads/master/README.md',
+                    'swagger-ui': 'https://raw.githubusercontent.com/GuicedEE/SwaggerUI/refs/heads/master/README.md',
+                    'webservices': 'https://raw.githubusercontent.com/GedMarc/Guiced-WebServices/refs/heads/master/README.md',
+                    'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
+                    'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
+                    'mail-client': 'https://raw.githubusercontent.com/GuicedEE/MailClient/refs/heads/master/README.md',
+                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md'
+                };
+                """);
+        return f;
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var m = new ArrayList<>(super.methods());
+        m.add("""
+                openReadme(moduleId: string, title: string) {
+                    this.readmeModuleTitle = title;
+                    this.readmeSrc = this.readmeUrls[moduleId] || '';
+                    const raw = this.readmeUrls[moduleId] || '';
+                    const match = raw.match(/raw\\.githubusercontent\\.com\\/([^\\/]+\\/[^\\/]+)/);
+                    this.currentRepoUrl = match ? 'https://github.com/' + match[1] : '';
+                    this.readmeDialogOpen = true;
+                }
+                """);
+        return m;
     }
 }
 

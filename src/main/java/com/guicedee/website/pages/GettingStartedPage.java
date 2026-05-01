@@ -94,12 +94,11 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Quickest Start: IntelliJ Plugin ─────────────────
 
-    private WaCard<?> buildQuickestStart()
+    private WaStack buildQuickestStart()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
-        content.add(headingText("h2", "l", "Quickest Start — IntelliJ Plugin"));
 
         var desc = bodyTextHtml("The fastest way to get a GuicedEE project running is to install the " +
                 brandCode("Guiced") + " IntelliJ IDEA plugin. It creates a fully configured project — " +
@@ -140,14 +139,11 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         tags.setGap(PageSize.Small);
         tags.add(buildTag("30 seconds", Variant.Brand));
         tags.add(buildTag("Zero manual setup", Variant.Success));
-        tags.add(buildTag("IntelliJ 2024.2+", Variant.Neutral));
+        tags.add(buildTag("IntelliJ 2025+", Variant.Neutral));
         content.add(tags);
 
-
-        var card = new WaCard<>();
-        card.setAppearance(Appearance.Filled);
-        card.add(content);
-        return card;
+        return buildSection("Quickest Start", "IntelliJ Plugin",
+                "30 seconds to a running project — zero manual setup.", true, content);
     }
 
     // ── Prerequisites ─────────────────────────────────
@@ -412,15 +408,25 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         content.add(mermaidDiagramWithTitle("GuicedEE Bootstrap Lifecycle",
                 """
-                        graph TD
-                            A["🚀 IGuiceContext.instance()"] --> B["🔍 ClassGraph scans com.example.hello"]
-                            B --> C["📦 Discovers HelloResource @Path"]
-                            B --> D["⚙️ Loads Guice modules via ServiceLoader"]
-                            C --> E["💉 Creates the Guice injector"]
-                            D --> E
-                            E --> F["🌐 Starts Vert.x HTTP server on :8080"]
-                            F --> G["🔗 Maps @Path/@GET to Vert.x routes"]
-                            G --> H["✅ Ready to serve requests"]"""));
+                        graph LR
+                            subgraph Discovery
+                                A["🚀 Start"] --> B["🔍 Scan"]
+                                B --> C["📦 Found @Path"]
+                                B --> D["⚙️ Load SPI"]
+                            end
+                            subgraph Wiring
+                                C --> E["💉 Injector"]
+                                D --> E
+                            end
+                            subgraph Serving
+                                E --> F["🌐 Vert.x"]
+                                F --> G["🔗 Routes"]
+                                G --> H["✅ Ready"]
+                            end
+                            
+                            style Discovery fill:#f9f,stroke:#333
+                            style Wiring fill:#bbf,stroke:#333
+                            style Serving fill:#dfd,stroke:#333"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -508,9 +514,10 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         var ctas = new WaCluster<>();
         ctas.setGap(PageSize.Small);
-        ctas.add(buildCta("End-to-end guide", "guides/end-to-end", Variant.Brand, Appearance.Filled));
+        ctas.add(buildCta("End-to-end guide", "guides/end-to-end", Variant.Brand, Appearance.Outlined));
         ctas.add(buildCta("Explore capabilities", "capabilities", Variant.Neutral, Appearance.Outlined));
         ctas.add(buildCta("Open the app builder", "builder", Variant.Neutral, Appearance.Outlined));
+        ctas.add(browseExamplesButton());
         content.add(ctas);
 
         return buildSection("What's next?", "Go deeper",

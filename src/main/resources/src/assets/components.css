@@ -175,6 +175,7 @@ wa-page::part(drawer__header-actions) {
 
 wa-page > [slot='navigation-header'] {
     background-color: transparent;
+    padding-block-end: var(--wa-space-xs);
 }
 
 /* colophon */
@@ -310,7 +311,102 @@ wa-tag[variant="warning"] {
 }
 /* #endregion */
 
+/* Header action icons (GitHub links) hover state */
+.header-action-icon:hover {
+    color: var(--wa-color-brand-normal) !important;
+}
+
 pre {
     border-radius: inherit !important;
 
 }
+
+/* Ensure cards in grids have equal height and footers align to bottom */
+wa-grid wa-card {
+    height: 100%;
+}
+
+wa-card::part(base) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+wa-card::part(body) {
+    flex: 1 1 auto;
+}
+
+wa-card::part(footer) {
+    flex: 0 0 auto;
+}
+
+/* Built-on attribution links */
+.built-on-links a {
+    text-decoration: none;
+    padding: var(--wa-space-3xs) var(--wa-space-xs);
+    border-radius: var(--wa-border-radius-m);
+    transition:
+        background-color var(--wa-transition-fast) var(--wa-transition-easing),
+        color var(--wa-transition-fast) var(--wa-transition-easing),
+        transform var(--wa-transition-fast) var(--wa-transition-easing),
+        box-shadow var(--wa-transition-fast) var(--wa-transition-easing);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--wa-space-2xs);
+}
+
+.built-on-links a wa-icon,
+.built-on-links a .built-on-logo {
+    font-size: var(--wa-font-size-m);
+    opacity: 0.7;
+    transition: opacity var(--wa-transition-fast) var(--wa-transition-easing);
+}
+
+.built-on-links a:hover wa-icon,
+.built-on-links a:hover .built-on-logo {
+    opacity: 1;
+}
+
+.built-on-links a:hover {
+    background-color: color-mix(in srgb, var(--wa-color-brand-normal) 12%, transparent);
+    color: var(--wa-color-brand-dark) !important;
+    transform: translateX(var(--wa-space-3xs));
+    box-shadow: inset 2px 0 0 var(--wa-color-brand-normal);
+}
+
+.built-on-links a:active {
+    background-color: color-mix(in srgb, var(--wa-color-brand-normal) 20%, transparent);
+    transform: translateX(var(--wa-space-3xs)) scale(0.98);
+}
+
+.wa-dark .built-on-links a:hover {
+    background-color: color-mix(in srgb, var(--wa-color-brand-normal) 18%, transparent);
+    color: var(--wa-color-brand-light) !important;
+}
+
+/* Drawer navigation: tighten spacing between header and tree, fix alignment */
+wa-page > [slot='navigation'] {
+    padding: 0;
+}
+
+wa-page > [slot='navigation'] wa-tree {
+    padding-inline: 0;
+}
+
+wa-page::part(drawer__body) {
+    padding-block-start: 0;
+}
+
+/* Push tree items left in menu sidebar and drawer navigation */
+wa-page > [slot='menu'] wa-tree,
+wa-page > [slot='navigation'] wa-tree {
+    --indent-size: 0;
+    padding-inline-start: 0;
+    margin-inline-start: -40px;
+}
+
+wa-page > [slot='menu'] wa-tree-item::part(item),
+wa-page > [slot='navigation'] wa-tree-item::part(item) {
+    padding-inline-start: var(--wa-space-2xs);
+}
+

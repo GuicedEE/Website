@@ -43,6 +43,8 @@ public class HomeAsidePage extends DivSimple<HomeAsidePage> implements INgCompon
 
         list.add(asideLink("hero", "Overview"));
         list.add(asideLink("how-it-works", "How it works"));
+        list.add(asideLink("foundations", "Foundations"));
+        list.add(asideLink("modular-by-design", "Modular build"));
         list.add(asideLink("module-catalog", "Module catalog"));
         list.add(asideLink("zero-file-based-config-philosophy", "Zero config"));
         list.add(asideLink("see-the-code", "Code examples"));
@@ -50,8 +52,6 @@ public class HomeAsidePage extends DivSimple<HomeAsidePage> implements INgCompon
         list.add(asideLink("security", "Security"));
         list.add(asideLink("vert-x-deployment", "Vert.x deployment"));
         list.add(asideLink("microprofile-native", "MicroProfile"));
-        list.add(asideLink("foundations", "Foundations"));
-        list.add(asideLink("modular-by-design", "Modular build"));
         list.add(asideLink("ship-as-jlink-artifacts", "JLink & Docker"));
         list.add(asideLink("cloud-aware-logging", "Logging"));
         list.add(asideLink("for-developers", "For developers"));

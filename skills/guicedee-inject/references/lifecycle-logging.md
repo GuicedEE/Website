@@ -169,38 +169,66 @@ Register under `com.guicedee.client.services.lifecycle.Log4JConfigurator`.
 
 ## `JobService` API
 
-Virtual-thread-backed executor pools. Singleton at `JobService.INSTANCE`. Auto-shuts-down via `IGuicePreDestroy`.
+Vert.x-backed job pools. Singleton at `JobService.INSTANCE`. Auto-shuts-down via `IGuicePreDestroy`.
+
+All tasks execute on the Vert.x worker pool via `executeBlocking()`. Periodic tasks use `Vertx.setPeriodic()`.
+Cron tasks use chained `Vertx.setTimer()` with a built-in `CronExpression` parser.
 
 ### One-off job pools
 
 ```java
 JobService jobs = JobService.INSTANCE;
 jobs.registerJob("import", 100);              // register pool with max queue 100
-jobs.addJob("import", () -> processFile(f));   // submit work
-jobs.waitForJob("import");                     // block until complete
-jobs.removeJob("import");                      // shutdown and remove
+jobs.addJob("import", () -> processFile(f));   // submit work (returns Future<Void>)
+Future<String> result = jobs.addTask("import", () -> compute()); // callable variant
+jobs.removeJob("import");                      // cancel timers and remove
+```
+
+### Delayed one-off
+
+```java
+jobs.addDelayedJob("cleanup", () -> purge(), 5, TimeUnit.MINUTES);
 ```
 
 ### Scheduled polling
 
 ```java
 jobs.registerPollingJob("heartbeat", () -> ping(), 0, 30, TimeUnit.SECONDS);
+jobs.addPollingJob("metrics", () -> collect(), 1, 60, TimeUnit.SECONDS);
 jobs.removePollingJob("heartbeat");
+```
+
+### Cron scheduling
+
+Standard 5-field UNIX cron expressions. Supports values, ranges, steps, lists, wildcards, named days (MON-SUN), named months (JAN-DEC).
+
+```java
+jobs.addCronJob("nightly-report", "0 2 * * *", () -> generateReport());
+jobs.addCronJob("weekday-sync", "0 9 * * MON-FRI", () -> syncData());
+jobs.addCronJob("quarterly", "0 0 1 1,4,7,10 *", () -> quarterlyJob());
+```
+
+Day matching follows standard UNIX cron OR semantics: when both day-of-month and day-of-week are restricted, the job fires if *either* matches.
+
+### Pool introspection
+
+```java
+jobs.getJobPools();                     // Set<String> of all pool names
+jobs.getPollingPools();                 // Set<String> of polling pool names
+jobs.getCronPools();                    // Set<String> of cron pool names
+jobs.isRegistered("import");            // boolean
+jobs.getActiveTaskCount("import");      // int - currently running tasks
+jobs.getMaxQueueCount("import");        // int - configured max
+jobs.getCronExpression("nightly-report"); // Optional<CronExpression>
 ```
 
 ### Configuration
 
 | Static setter | Default | Purpose |
 |---|---|---|
-| `JobService.setDefaultWaitTime(long)` | `120` | Default wait time for job completion |
-| `JobService.setDefaultWaitUnit(TimeUnit)` | `SECONDS` | Default wait time unit |
-
-### Querying pools
-
-```java
-jobs.getJobPools();      // Set<String> of registered job pool names
-jobs.getPollingPools();  // Set<String> of registered polling pool names
-```
+| `JobService.setDefaultWaitTime(long)` | `120` | Default wait time (backward compat) |
+| `JobService.setDefaultWaitUnit(TimeUnit)` | `SECONDS` | Default wait time unit (backward compat) |
+| `jobs.setMaxQueueCount(name, count)` | `20` | Max concurrent tasks per pool |
 
 ## Core Bindings (auto-registered by `ContextBinderGuice`)
 

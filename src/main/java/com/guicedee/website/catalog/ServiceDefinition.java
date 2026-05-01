@@ -11,13 +11,15 @@ public final class ServiceDefinition
     private final String version;
     private final String description;
     private final String module;
+    private final String modulePath;
 
     public ServiceDefinition(String id,
                              String groupId,
                              String artifactId,
                              String version,
                              String description,
-                             String module)
+                             String module,
+                             String modulePath)
     {
         this.id = id;
         this.groupId = groupId;
@@ -25,5 +27,6 @@ public final class ServiceDefinition
         this.version = version;
         this.description = description;
         this.module = module;
+        this.modulePath = modulePath;
     }
 }

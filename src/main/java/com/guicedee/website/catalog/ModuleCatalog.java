@@ -53,7 +53,7 @@ public final class ModuleCatalog
 
         for (String id : ids)
         {
-            String name = toTitleCase(id);
+            String name = displayName(id);
             String description = switch (id)
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
@@ -191,9 +191,37 @@ public final class ModuleCatalog
                     artifactId,
                     version,
                     family + " integration service: " + artifactId,
-                    modulePath
+                    modulePath,
+                    modulePath + "/" + artifactId
             ));
         }
+    }
+
+    private static String displayName(String id)
+    {
+        return switch (id)
+        {
+            case "cdi" -> "CDI Bridge";
+            case "cerial" -> "Cerial (Serial Ports)";
+            case "client" -> "Client API";
+            case "config" -> "MicroProfile Config";
+            case "ibmmq" -> "IBM MQ";
+            case "inject" -> "Inject (Core Engine)";
+            case "jwt" -> "JWT Authentication";
+            case "kafka" -> "Apache Kafka";
+            case "openapi" -> "OpenAPI";
+            case "persistence" -> "Persistence";
+            case "rabbitmq" -> "RabbitMQ";
+            case "representations" -> "Representations";
+            case "rest" -> "REST Services";
+            case "swagger-ui" -> "Swagger UI";
+            case "telemetry" -> "Telemetry";
+            case "vertx" -> "Vert.x Core";
+            case "web" -> "Web Server";
+            case "webservices" -> "Web Services (SOAP)";
+            case "websockets" -> "WebSockets";
+            default -> toTitleCase(id);
+        };
     }
 
     private static String toTitleCase(String value)

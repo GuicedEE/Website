@@ -82,13 +82,24 @@ Programmatic: `GuiceContext.setDefaultLogLevel(Level.INFO)`.
 
 ## JobService
 
-Virtual-thread-backed executor pools with graceful shutdown:
+Vert.x-backed job pools with graceful shutdown and cron scheduling:
 
 ```java
 JobService jobs = JobService.INSTANCE;
+
+// One-off tasks (execute on Vert.x worker pool)
 jobs.registerJob("import", 100);
 jobs.addJob("import", () -> processFile(file));
+
+// Periodic polling (Vert.x setPeriodic + executeBlocking)
 jobs.registerPollingJob("heartbeat", () -> ping(), 0, 30, TimeUnit.SECONDS);
+
+// Cron scheduling (5-field UNIX cron, chained Vert.x timers)
+jobs.addCronJob("nightly-report", "0 2 * * *", () -> generateReport());
+jobs.addCronJob("weekday-sync", "0 9 * * MON-FRI", () -> syncData());
+
+// Delayed one-off
+jobs.addDelayedJob("deferred", () -> cleanup(), 5, TimeUnit.MINUTES);
 ```
 
 Pools auto-shutdown via `IGuicePreDestroy`.

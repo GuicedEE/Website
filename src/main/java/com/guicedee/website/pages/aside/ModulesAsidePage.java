@@ -5,11 +5,17 @@ import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.core.base.html.Link;
+import com.jwebmp.webawesome.components.input.InputSize;
+import com.jwebmp.webawesome.components.input.WaInput;
+import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.text.WaText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Aside component for the Modules page.
- * Renders "On this page" anchor links in the named "aside" router-outlet.
+ * Renders a search filter and "On this page" anchor links in the named "aside" router-outlet.
  */
 @NgComponent("guicedee-modules-aside")
 @NgRoutable(path = "modules", outlet = "aside")
@@ -24,6 +30,21 @@ public class ModulesAsidePage extends DivSimple<ModulesAsidePage> implements INg
         addStyle("padding:0 var(--wa-spacing-large) var(--wa-spacing-large) var(--wa-spacing-large)");
         addStyle("min-width:14rem");
 
+        // Search input
+        var search = new WaInput<>();
+        search.setPlaceholder("Filter modules\u2026");
+        search.setSize(InputSize.Small);
+        search.setClearable(true);
+        search.addAttribute("(wa-input)", "onFilterChange($event)");
+        search.addAttribute("(wa-clear)", "onFilterChange($event)");
+
+        var searchIcon = new WaIcon<>("magnifying-glass");
+        searchIcon.addAttribute("slot", "start");
+        search.add(searchIcon);
+        search.addStyle("margin-bottom", "var(--wa-spacing-medium)");
+        add(search);
+
+        // Section heading
         var heading = new WaText<>();
         heading.setTag("div");
         heading.setWaCaption("s");
@@ -51,6 +72,27 @@ public class ModulesAsidePage extends DivSimple<ModulesAsidePage> implements INg
         add(list);
     }
 
+    @Override
+    public List<String> methods()
+    {
+        var m = new ArrayList<String>();
+        m.add("""
+                onFilterChange(event: any) {
+                    const query = (event?.target?.value || '').toLowerCase().trim();
+                    const cards = document.querySelectorAll('wa-card[appearance="outlined"]');
+                    cards.forEach((card: any) => {
+                        const text = card.textContent?.toLowerCase() || '';
+                        if (!query || text.includes(query)) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+                """);
+        return m;
+    }
+
     private DivSimple<?> asideLink(String anchorId, String label)
     {
         var li = new DivSimple<>();
@@ -67,4 +109,3 @@ public class ModulesAsidePage extends DivSimple<ModulesAsidePage> implements INg
         return li;
     }
 }
-
