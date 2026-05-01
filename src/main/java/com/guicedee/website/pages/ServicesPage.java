@@ -28,12 +28,12 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
 
     private void renderServices() {
 
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
         // Intro
-        var introContent = new WaStack();
+        var introContent = new WaStack<>();
         introContent.setGap(PageSize.Medium);
         introContent.add(headingText("h1", "xl", "JPMS Service Modules"));
         var intro = bodyText("GuicedEE repackages over 50 third-party libraries as proper JPMS modules " +
@@ -59,48 +59,23 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
                 .getAvailableServices()
                 .stream()
                 .collect(Collectors.groupingBy(
-                        s -> s.getDescription().contains(":") ?
-                                s.getDescription().substring(0, s.getDescription().indexOf(":")).trim() :
-                                "Miscellaneous",
+                        s -> {
+                            String desc = s.getDescription();
+                            if (desc.contains(":")) {
+                                String family = desc.substring(0, desc.indexOf(":")).trim();
+                                if (family.endsWith(" integration service")) {
+                                    family = family.substring(0, family.length() - " integration service".length()).trim();
+                                }
+                                return family;
+                            }
+                            return "Miscellaneous";
+                        },
                         LinkedHashMap::new,
                         Collectors.toList()));
 
-        // Sidebar
-        var aside = new DivSimple<>();
-        aside.addClass("wa-page-aside-content");
-        aside.add("Overview");
-        grouped.keySet().forEach(aside::add);
-        add(aside);
 
-        // Render each family
-        boolean alt = false;
-        for (var entry : grouped.entrySet()) {
-            var familyGrid = new WaGrid<>();
-            familyGrid.setMinColumnSize("16rem");
-            familyGrid.setGap(PageSize.Small);
-
-            for (ServiceDefinition service : entry.getValue()) {
-                var card = new WaCard<>();
-                card.setAppearance(Appearance.Outlined);
-                var stack = new WaStack();
-                stack.setGap(PageSize.Small);
-                stack.add(headingText("h4", "s", service.getArtifactId()));
-                var desc = bodyText(service.getDescription(), "s");
-                desc.setWaColorText("quiet");
-                stack.add(desc);
-                stack.add(coordinateBlock(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion()));
-                card.add(stack);
-                familyGrid.add(card);
-            }
-
-            layout.add(buildSection(entry.getValue().size() + " modules", entry.getKey(),
-                    "JPMS-wrapped service modules for " + entry.getKey().toLowerCase() + " integration.",
-                    alt, familyGrid));
-            alt = !alt;
-        }
-
-        // Usage section
-        var usageContent = new WaStack();
+        // Usage section (at top)
+        var usageContent = new WaStack<>();
         usageContent.setGap(PageSize.Medium);
 
         usageContent.add(codeBlockWithTitle("Using a service module",
@@ -126,5 +101,41 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
         layout.add(buildSection("How to use", "Just add the dependency",
                 "Service modules are version-aligned with the BOM. No extra configuration needed.",
                 false, usageContent));
+
+        // Render each family (excluding Misc)
+        boolean alt = false;
+        for (var entry : grouped.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("Misc") || entry.getKey().equalsIgnoreCase("Miscellaneous")) {
+                continue;
+            }
+            var familyGrid = new WaGrid<>();
+            familyGrid.setMinColumnSize("16rem");
+            familyGrid.setGap(PageSize.Small);
+
+            for (ServiceDefinition service : entry.getValue()) {
+                var card = new WaCard<>();
+                card.setAppearance(Appearance.Outlined);
+                var stack = new WaStack<>();
+                stack.setGap(PageSize.Small);
+                stack.add(headingText("h4", "s", service.getArtifactId()));
+                var desc = bodyText(service.getDescription(), "s");
+                desc.setWaColorText("quiet");
+                stack.add(desc);
+                stack.add(coordinateBlock(service.getGroupId() + ":" + service.getArtifactId() + ":" + service.getVersion()));
+                card.add(stack);
+                familyGrid.add(card);
+            }
+
+            var familySection = buildSection(entry.getValue().size() + " modules", entry.getKey(),
+                    "JPMS-wrapped service modules for " + entry.getKey().toLowerCase() + " integration.",
+                    alt, familyGrid);
+            // Override ID to use family name slug for aside navigation
+            String slug = entry.getKey().toLowerCase()
+                               .replaceAll("[^a-z0-9]+", "-")
+                               .replaceAll("^-+|-+$", "");
+            familySection.setID(slug);
+            layout.add(familySection);
+            alt = !alt;
+        }
     }
 }

@@ -18,20 +18,20 @@
 
         --brand-jwebmp-green: #10b981;
         --brand-entity-assist-blue: #418fde;
-        --brand-activity-master-green: #00a776;
+        --brand-activity-master-purple: #7c3aed;
         --brand-guicedee-pink: var(--wa-color-brand);
 
         /* Product nav/drawer fill-quiet (light); .wa-dark overrides for dark */
         --nav-products-fill-quiet-jwebmp: color-mix(in oklab, var(--brand-jwebmp-green), white 55%);
         --nav-products-fill-quiet-entity-assist: color-mix(in oklab, var(--brand-entity-assist-blue), white 55%);
-        --nav-products-fill-quiet-activity-master: color-mix(in oklab, var(--brand-activity-master-green), white 55%);
+        --nav-products-fill-quiet-activity-master: color-mix(in oklab, var(--brand-activity-master-purple), white 55%);
         --nav-products-fill-quiet-guicedee: color-mix(in oklab, var(--brand-guicedee-pink), white 55%);
     }
 
     .wa-dark {
         --nav-products-fill-quiet-jwebmp: color-mix(in oklab, var(--brand-jwebmp-green), black 65%);
         --nav-products-fill-quiet-entity-assist: color-mix(in oklab, var(--brand-entity-assist-blue), black 65%);
-        --nav-products-fill-quiet-activity-master: color-mix(in oklab, var(--brand-activity-master-green), black 65%);
+        --nav-products-fill-quiet-activity-master: color-mix(in oklab, var(--brand-activity-master-purple), black 65%);
         --nav-products-fill-quiet-guicedee: color-mix(in oklab, var(--brand-guicedee-pink), black 65%);
     }
 

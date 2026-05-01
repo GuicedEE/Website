@@ -51,7 +51,7 @@ This site’s Services section lists a complete, statically-defined set of modul
 - **Apache POI**: `apache-poi`, `apache-poi-ooxml`
 - **Database Drivers**: `msal4j`, `mssql-jdbc`, `postgresql`
 - **Google**: `aop`, `guice-core`, `guice-assistedinject`, `guice-grapher`, `guice-jmx`, `guice-jndi`
-- **Hibernate**: `hibernate-c3p0`, `hibernate-core`, `hibernate-reactive`, `hibernate-validator`
+- **Hibernate**: `hibernate-core`, `hibernate-reactive`, `hibernate-validator`
 - **JCache**: `cache-annotations-ri-common`, `cache-annotations-ri-guice`, `cache-api`, `ehcache`, `hazelcast`, `hazelcast-hibernate`
 - **JNI**: `jna-platform`, `nrjavaserial`
 - **Jakarta**: `jakarta-security-jacc`

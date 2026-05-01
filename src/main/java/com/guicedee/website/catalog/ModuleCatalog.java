@@ -34,6 +34,7 @@ public final class ModuleCatalog
                 "cerial",
                 "client",
                 "config",
+                "ibmmq",
                 "inject",
                 "jwt",
                 "kafka",
@@ -57,6 +58,7 @@ public final class ModuleCatalog
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
                 case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";
+                case "ibmmq" -> "Annotation-driven IBM MQ integration for GuicedEE. @IBMMQConnectionOptions, @IBMMQQueueDefinition, IBMMQConsumer/Publisher with IBM MQ JMS client.";
                 case "kafka" -> "Annotation-driven Kafka consumer and producer integration for GuicedEE. @KafkaConnectionOptions, @KafkaTopicDefinition, KafkaTopicConsumer/Publisher with Vert.x Kafka client.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
@@ -67,7 +69,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "2.0.1-SNAPSHOT";
+            String version = "2.0.0";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -81,7 +83,7 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.0.1-SNAPSHOT";
+        String version = "2.0.0";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
@@ -116,7 +118,6 @@ public final class ModuleCatalog
                 "guice-jndi"
         });
         addServices(services, groupId, version, "services/Hibernate", "Hibernate", new String[]{
-                "hibernate-c3p0",
                 "hibernate-core",
                 "hibernate-jcache",
                 "hibernate-reactive",

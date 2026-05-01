@@ -1,23 +1,34 @@
 package com.guicedee.website.pages;
 
-import com.guicedee.website.builder.ApplicationBuilderService;
-import com.guicedee.website.catalog.ModuleEntry;
-import com.guicedee.website.catalog.ServiceDefinition;
+import com.guicedee.website.App;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
+import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
+import com.jwebmp.core.base.angular.client.annotations.typescript.TsDependency;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.angular.components.NgIf;
+import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
-import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
-import com.jwebmp.webawesome.components.card.WaCard;
-import com.jwebmp.webawesome.components.checkbox.WaCheckbox;
+import com.jwebmp.webawesome.components.details.WaDetails;
+import com.jwebmp.webawesome.components.input.WaInput;
+import com.jwebmp.webawesome.components.tree.WaTree;
+import com.jwebmp.webawesome.components.tree.WaTreeItem;
+import com.jwebmp.webawesome.components.tree.TreeSelectionMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NgComponent("guicedee-app-builder")
 @NgRoutable(path = "builder")
+@NgComponentReference(App.class)
+@TsDependency(value = "jszip", version = "^3.10.1")
+@NgImportReference(value = "JSZip", reference = "jszip", wrapValueInBraces = false)
 public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgComponent<AppBuilderPage>
 {
     public AppBuilderPage()
@@ -25,186 +36,561 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         renderBuilder();
     }
 
+    @Override
+    public List<String> fields()
+    {
+        var f = new ArrayList<>(super.fields());
+        f.add("groupId = 'com.example';");
+        f.add("artifactId = 'my-service';");
+        f.add("version = '1.0.0-SNAPSHOT';");
+        f.add("packageName = 'com.example.myservice';");
+        f.add("selectedModules: string[] = [];");
+        f.add("""
+                moduleMap: Record<string, {groupId: string, artifactId: string, moduleName: string}> = {
+                    'REST Services': {groupId: 'com.guicedee', artifactId: 'rest', moduleName: 'com.guicedee.rest'},
+                    'REST Client': {groupId: 'com.guicedee', artifactId: 'rest-client', moduleName: 'com.guicedee.rest.client'},
+                    'WebSockets': {groupId: 'com.guicedee', artifactId: 'websockets', moduleName: 'com.guicedee.websockets'},
+                    'OpenAPI + Swagger UI': {groupId: 'com.guicedee', artifactId: 'openapi', moduleName: 'com.guicedee.openapi'},
+                    'Web Services (SOAP)': {groupId: 'com.guicedee', artifactId: 'webservices', moduleName: 'com.guicedee.webservices'},
+                    'Persistence (Hibernate Reactive)': {groupId: 'com.guicedee', artifactId: 'persistence', moduleName: 'com.guicedee.persistence'},
+                    'PostgreSQL': {groupId: 'com.guicedee.services', artifactId: 'postgresql', moduleName: 'com.guicedee.services.postgresql'},
+                    'MySQL': {groupId: 'com.guicedee.services', artifactId: 'mysql-connector', moduleName: 'com.guicedee.services.mysql'},
+                    'Oracle': {groupId: 'com.guicedee.services', artifactId: 'ojdbc', moduleName: 'com.guicedee.services.ojdbc'},
+                    'DB2': {groupId: 'com.guicedee.services', artifactId: 'db2-jcc', moduleName: 'com.guicedee.services.db2'},
+                    'SQL Server': {groupId: 'com.guicedee.services', artifactId: 'mssql-jdbc', moduleName: 'com.guicedee.services.mssql'},
+                    'JDBC (generic)': {groupId: 'com.guicedee.services', artifactId: 'jdbc', moduleName: 'com.guicedee.services.jdbc'},
+                    'RabbitMQ': {groupId: 'com.guicedee', artifactId: 'rabbitmq', moduleName: 'com.guicedee.rabbitmq'},
+                    'Kafka': {groupId: 'com.guicedee', artifactId: 'kafka', moduleName: 'com.guicedee.kafka'},
+                    'IBM MQ': {groupId: 'com.guicedee', artifactId: 'ibmmq', moduleName: 'com.guicedee.ibmmq'},
+                    'Hazelcast': {groupId: 'com.guicedee.services', artifactId: 'hazelcast', moduleName: 'com.guicedee.services.hazelcast'},
+                    'EhCache': {groupId: 'com.guicedee.services', artifactId: 'ehcache', moduleName: 'com.guicedee.services.ehcache'},
+                    'OAuth2 / OIDC': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'JWT': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'ABAC': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'OTP / TOTP / HOTP': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'Property File': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'LDAP': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'htpasswd': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'htdigest': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
+                    'Health': {groupId: 'com.guicedee', artifactId: 'health', moduleName: 'com.guicedee.health'},
+                    'Config': {groupId: 'com.guicedee.microprofile', artifactId: 'config', moduleName: 'com.guicedee.microprofile.config'},
+                    'Metrics': {groupId: 'com.guicedee', artifactId: 'metrics', moduleName: 'com.guicedee.metrics'},
+                    'Telemetry': {groupId: 'com.guicedee', artifactId: 'telemetry', moduleName: 'com.guicedee.telemetry'},
+                    'Fault Tolerance': {groupId: 'com.guicedee', artifactId: 'fault-tolerance', moduleName: 'com.guicedee.faulttolerance'},
+                    'Mail Client': {groupId: 'com.guicedee', artifactId: 'mail', moduleName: 'com.guicedee.mail'},
+                    'Cerial': {groupId: 'com.guicedee', artifactId: 'cerial', moduleName: 'com.guicedee.cerial'},
+                    'TestContainers': {groupId: 'com.guicedee.services', artifactId: 'testcontainers', moduleName: 'com.guicedee.services.testcontainers'}
+                };
+                """);
+        return f;
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var m = new ArrayList<>(super.methods());
+        m.add("""
+                onTreeSelectionChange(event: any) {
+                    const items = event?.detail?.selection || [];
+                    this.selectedModules = items
+                        .map((el: any) => el.textContent?.trim())
+                        .filter((t: string) => t && this.moduleMap[t]);
+                }
+                """);
+        m.add("""
+                getSelectedDeps(): {groupId: string, artifactId: string, moduleName: string}[] {
+                    const seen = new Set<string>();
+                    const deps: {groupId: string, artifactId: string, moduleName: string}[] = [];
+                    for (const name of this.selectedModules) {
+                        const dep = this.moduleMap[name];
+                        if (dep && !seen.has(dep.artifactId)) {
+                            seen.add(dep.artifactId);
+                            deps.push(dep);
+                        }
+                    }
+                    return deps;
+                }
+                """);
+        m.add("""
+                getPomPreview(): string {
+                    const deps = this.getSelectedDeps();
+                    const depXml = deps.length === 0
+                        ? '        <!-- Select modules from the tree -->'
+                        : deps.map(d => `        <dependency>\\n            <groupId>${d.groupId}</groupId>\\n            <artifactId>${d.artifactId}</artifactId>\\n        </dependency>`).join('\\n');
+                    return '```xml\\n' + `<?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0">
+                    <modelVersion>4.0.0</modelVersion>
+
+                    <groupId>${this.groupId}</groupId>
+                    <artifactId>${this.artifactId}</artifactId>
+                    <version>${this.version}</version>
+
+                    <properties>
+                        <maven.compiler.release>25</maven.compiler.release>
+                        <guicedee.version>2.0.0</guicedee.version>
+                    </properties>
+
+                    <dependencyManagement>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.guicedee</groupId>
+                                <artifactId>guicedee-bom</artifactId>
+                                <version>\\${guicedee.version}</version>
+                                <type>pom</type>
+                                <scope>import</scope>
+                            </dependency>
+                        </dependencies>
+                    </dependencyManagement>
+
+                    <dependencies>
+                ${depXml}
+                    </dependencies>
+                </project>` + '\\n```';
+                }
+                """);
+        m.add("""
+                getGradlePreview(): string {
+                    const deps = this.getSelectedDeps();
+                    const depLines = deps.length === 0
+                        ? '    // Select modules from the tree'
+                        : deps.map(d => `    implementation("${d.groupId}:${d.artifactId}")`).join('\\n');
+                    return '```groovy\\n' + `plugins {
+                    java
+                }
+
+                group = "${this.groupId}"
+                version = "${this.version}"
+
+                java {
+                    toolchain {
+                        languageVersion.set(JavaLanguageVersion.of(25))
+                    }
+                }
+
+                dependencies {
+                    implementation platform("com.guicedee:guicedee-bom:2.0.0")
+                ${depLines}
+                }` + '\\n```';
+                }
+                """);
+        m.add("""
+                getModuleInfoPreview(): string {
+                    const deps = this.getSelectedDeps();
+                    const modName = this.artifactId.replace(/-/g, '.');
+                    const requires = deps.length === 0
+                        ? '    // requires for each selected module'
+                        : deps.map(d => `    requires transitive ${d.moduleName};`).join('\\n');
+                    return '```java\\n' + `module ${modName} {
+                ${requires}
+
+                    opens ${this.packageName} to com.google.guice;
+
+                    provides com.guicedee.client.services.lifecycle.IGuiceModule
+                        with ${this.packageName}.AppModule;
+                }` + '\\n```';
+                }
+                """);
+        m.add("""
+                getBootPreview(): string {
+                    return '```java\\n' + `package ${this.packageName};
+
+                import com.guicedee.client.IGuiceContext;
+
+                public class Boot {
+                    public static void main(String[] args) {
+                        IGuiceContext.registerModuleForScanning
+                            .add("${this.packageName}");
+                        IGuiceContext.instance();
+                    }
+                }` + '\\n```';
+                }
+                """);
+        m.add("""
+                getRawPom(): string {
+                    const deps = this.getSelectedDeps();
+                    const depXml = deps.length === 0
+                        ? '        <!-- Select modules from the tree -->'
+                        : deps.map(d => `        <dependency>\\n            <groupId>${d.groupId}</groupId>\\n            <artifactId>${d.artifactId}</artifactId>\\n        </dependency>`).join('\\n');
+                    return `<?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+
+                    <groupId>${this.groupId}</groupId>
+                    <artifactId>${this.artifactId}</artifactId>
+                    <version>${this.version}</version>
+
+                    <properties>
+                        <maven.compiler.release>25</maven.compiler.release>
+                        <guicedee.version>2.0.0</guicedee.version>
+                    </properties>
+
+                    <dependencyManagement>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.guicedee</groupId>
+                                <artifactId>guicedee-bom</artifactId>
+                                <version>\\${guicedee.version}</version>
+                                <type>pom</type>
+                                <scope>import</scope>
+                            </dependency>
+                        </dependencies>
+                    </dependencyManagement>
+
+                    <dependencies>
+                ${depXml}
+                    </dependencies>
+                </project>`;
+                }
+                """);
+        m.add("""
+                getRawGradle(): string {
+                    const deps = this.getSelectedDeps();
+                    const depLines = deps.length === 0
+                        ? '    // Select modules from the tree'
+                        : deps.map(d => `    implementation("${d.groupId}:${d.artifactId}")`).join('\\n');
+                    return `plugins {
+                    java
+                }
+
+                group = "${this.groupId}"
+                version = "${this.version}"
+
+                java {
+                    toolchain {
+                        languageVersion.set(JavaLanguageVersion.of(25))
+                    }
+                }
+
+                dependencies {
+                    implementation platform("com.guicedee:guicedee-bom:2.0.0")
+                ${depLines}
+                }`;
+                }
+                """);
+        m.add("""
+                getRawModuleInfo(): string {
+                    const deps = this.getSelectedDeps();
+                    const modName = this.artifactId.replace(/-/g, '.');
+                    const requires = deps.length === 0
+                        ? '    // requires for each selected module'
+                        : deps.map(d => `    requires transitive ${d.moduleName};`).join('\\n');
+                    return `module ${modName} {
+                ${requires}
+
+                    opens ${this.packageName} to com.google.guice;
+
+                    provides com.guicedee.client.services.lifecycle.IGuiceModule
+                        with ${this.packageName}.AppModule;
+                }`;
+                }
+                """);
+        m.add("""
+                getRawBoot(): string {
+                    return `package ${this.packageName};
+
+                import com.guicedee.client.IGuiceContext;
+
+                public class Boot {
+                    public static void main(String[] args) {
+                        IGuiceContext.registerModuleForScanning
+                            .add("${this.packageName}");
+                        IGuiceContext.instance();
+                    }
+                }`;
+                }
+                """);
+        m.add("""
+                getRawAppModule(): string {
+                    return `package ${this.packageName};
+
+                import com.google.inject.AbstractModule;
+                import com.guicedee.client.services.lifecycle.IGuiceModule;
+
+                public class AppModule extends AbstractModule implements IGuiceModule<AppModule> {
+                    @Override
+                    protected void configure() {
+                        // Bind your services here
+                    }
+                }`;
+                }
+                """);
+        m.add("""
+                async downloadZip() {
+                    const zip = new JSZip();
+                    const base = this.artifactId;
+                    const pkgPath = this.packageName.replace(/\\./g, '/');
+
+                    const useGradle = this.app.useGradle();
+
+                    if (useGradle) {
+                        zip.file(base + '/build.gradle.kts', this.getRawGradle());
+                        zip.file(base + '/settings.gradle.kts', `rootProject.name = "${this.artifactId}"\\n`);
+                    } else {
+                        zip.file(base + '/pom.xml', this.getRawPom());
+                    }
+
+                    zip.file(base + '/src/main/java/module-info.java', this.getRawModuleInfo());
+                    zip.file(base + '/src/main/java/' + pkgPath + '/Boot.java', this.getRawBoot());
+                    zip.file(base + '/src/main/java/' + pkgPath + '/AppModule.java', this.getRawAppModule());
+
+                    const blob = await zip.generateAsync({type: 'blob'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = base + '.zip';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+                """);
+        return m;
+    }
+
     private void renderBuilder()
     {
-
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
-        // Hero / intro
-        var introContent = new WaStack();
-        introContent.setGap(PageSize.Medium);
-        introContent.add(headingText("h1", "xl", "Application Builder"));
-        var desc = bodyText("Select the GuicedEE modules and services you need, pick a project template, " +
-                "and download a ready-to-run ZIP with Maven POM, module-info.java, Boot class, and wiring snippets.", "l");
-        desc.setWaColorText("quiet");
-        introContent.add(desc);
+        layout.add(buildMetadataSection());
+        layout.add(buildModuleSelectionSection());
+        layout.add(buildGenerateSection());
+    }
 
-        var tags = new WaCluster<>();
-        tags.setGap(PageSize.Small);
-        tags.add(buildTag("Interactive", Variant.Brand));
-        tags.add(buildTag("Download ZIP", Variant.Success));
-        tags.add(buildTag("Production ready", Variant.Neutral));
-        introContent.add(tags);
+    // ── Metadata ─────────────────────────────────────
 
-        var introCard = new WaCard<>();
-        introCard.setAppearance(Appearance.Filled);
-        introCard.add(introContent);
-        layout.add(introCard);
+    private WaStack buildMetadataSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
 
-        // Templates
-        var templateContent = new WaStack();
-        templateContent.setGap(PageSize.Medium);
+        var metadataGrid = new WaGrid<>();
+        metadataGrid.setMinColumnSize("14rem");
+        metadataGrid.setGap(PageSize.Medium);
 
-        var templateGrid = new WaGrid<>();
-        templateGrid.setMinColumnSize("16rem");
-        templateGrid.setGap(PageSize.Medium);
+        var groupIdInput = new WaInput<>();
+        groupIdInput.setLabel("Group ID");
+        groupIdInput.setPlaceholder("com.example");
+        groupIdInput.bind("groupId");
+        metadataGrid.add(groupIdInput);
 
-        for (String template : ApplicationBuilderService.getInstance().getAvailableTemplates())
-        {
-            var card = new WaCard<>();
-            card.setAppearance(Appearance.Outlined);
-            var stack = new WaStack();
-            stack.setGap(PageSize.Small);
-            stack.add(headingText("h3", "m", template));
+        var artifactIdInput = new WaInput<>();
+        artifactIdInput.setLabel("Artifact ID");
+        artifactIdInput.setPlaceholder("my-service");
+        artifactIdInput.bind("artifactId");
+        metadataGrid.add(artifactIdInput);
 
-            String templateDesc = switch (template)
-            {
-                case "WebAwesome SPA" ->
-                        "A single-page application with JWebMP and WebAwesome components. " +
-                        "Includes Angular TypeScript client, WaPage layout, and hot-reload development flow.";
-                case "JWebMP Module" ->
-                        "A server-rendered JWebMP module with Vert.x backend. " +
-                        "WebAwesome components, JPMS-ready, and minimal frontend tooling.";
-                case "Mixed Client/App" ->
-                        "Combines a JWebMP frontend with full GuicedEE backend services. " +
-                        "REST, persistence, health, and optional WebSocket support included.";
-                default -> "Project template for GuicedEE applications.";
-            };
-            var body = bodyText(templateDesc, "s");
-            body.setWaColorText("quiet");
-            stack.add(body);
+        var versionInput = new WaInput<>();
+        versionInput.setLabel("Version");
+        versionInput.setPlaceholder("1.0.0-SNAPSHOT");
+        versionInput.bind("version");
+        metadataGrid.add(versionInput);
 
-            var selectBtn = new WaButton<>("Select " + template, Variant.Neutral);
-            selectBtn.setAppearance(Appearance.Outlined);
-            stack.add(selectBtn);
+        var packageInput = new WaInput<>();
+        packageInput.setLabel("Package");
+        packageInput.setPlaceholder("com.example.myservice");
+        packageInput.bind("packageName");
+        metadataGrid.add(packageInput);
 
-            card.add(stack);
-            templateGrid.add(card);
-        }
+        content.add(metadataGrid);
 
-        templateContent.add(templateGrid);
-        layout.add(buildSection("Step 1", "Choose a project template",
-                "Each template generates a complete, buildable Maven project with module-info.java and Boot class.",
-                true, templateContent));
+        return buildSection("Configure", "Project metadata",
+                "Maven/Gradle coordinates and base package for your generated project.",
+                true, content);
+    }
 
-        // Modules selection
-        var modulesContent = new WaStack();
-        modulesContent.setGap(PageSize.Medium);
+    // ── Module selection + Preview ────────────────────
 
-        var moduleInfo = bodyText("Check the modules you want included in your project. " +
-                "The inject and client modules are always included. " +
-                "The web module is included when any HTTP-based module is selected.", "m");
-        moduleInfo.setWaColorText("quiet");
-        modulesContent.add(moduleInfo);
+    private WaStack buildModuleSelectionSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
 
-        var moduleGrid = new WaGrid<>();
-        moduleGrid.setMinColumnSize("18rem");
-        moduleGrid.setGap(PageSize.Small);
+        var columns = new WaGrid<>();
+        columns.setMinColumnSize("22rem");
+        columns.setGap(PageSize.Large);
 
-        for (ModuleEntry module : ApplicationBuilderService.getInstance().getAvailableModules())
-        {
-            var card = new WaCard<>();
-            card.setAppearance(Appearance.Outlined);
-            var stack = new WaStack();
-            stack.setGap(PageSize.Small);
+        // ── Left column: Module tree ──
+        var treeColumn = new WaStack<>();
+        treeColumn.setGap(PageSize.Small);
+        treeColumn.add(headingText("h3", "m", "Modules"));
 
-            var checkbox = new WaCheckbox<>();
-            checkbox.setText(module.getName());
-            stack.add(checkbox);
+        var tree = new WaTree<>();
+        tree.setSelection(TreeSelectionMode.Multiple);
 
-            var modDesc = bodyText(module.getDescription(), "s");
-            modDesc.setWaColorText("quiet");
-            stack.add(modDesc);
+        var webReactive = parentItem("Web Reactive", true);
+        webReactive.add(leafItem("REST Services"));
+        webReactive.add(leafItem("REST Client"));
+        webReactive.add(leafItem("WebSockets"));
+        webReactive.add(leafItem("OpenAPI + Swagger UI"));
+        webReactive.add(leafItem("Web Services (SOAP)"));
+        tree.add(webReactive);
 
-            var coords = captionText(module.getGroupId() + ":" + module.getArtifactId());
-            coords.setWaColorText("quiet");
-            stack.add(coords);
+        var database = parentItem("Database", false);
+        database.add(leafItem("Persistence (Hibernate Reactive)"));
+        database.add(leafItem("PostgreSQL"));
+        database.add(leafItem("MySQL"));
+        database.add(leafItem("Oracle"));
+        database.add(leafItem("DB2"));
+        database.add(leafItem("SQL Server"));
+        database.add(leafItem("JDBC (generic)"));
+        tree.add(database);
 
-            card.add(stack);
-            moduleGrid.add(card);
-        }
+        var messaging = parentItem("Messaging", false);
+        messaging.add(leafItem("RabbitMQ"));
+        messaging.add(leafItem("Kafka"));
+        messaging.add(leafItem("IBM MQ"));
+        tree.add(messaging);
 
-        modulesContent.add(moduleGrid);
-        layout.add(buildSection("Step 2", "Select GuicedEE modules",
-                "Each module adds its JPMS descriptor, Maven dependency, and wiring snippet to the generated project.",
-                false, modulesContent));
+        var caching = parentItem("Caching", false);
+        caching.add(leafItem("Hazelcast"));
+        caching.add(leafItem("EhCache"));
+        tree.add(caching);
 
-        // Services selection
-        var servicesContent = new WaStack();
-        servicesContent.setGap(PageSize.Medium);
+        var auth = parentItem("Authentication", false);
+        auth.add(leafItem("OAuth2 / OIDC"));
+        auth.add(leafItem("JWT"));
+        auth.add(leafItem("ABAC"));
+        auth.add(leafItem("OTP / TOTP / HOTP"));
+        auth.add(leafItem("Property File"));
+        auth.add(leafItem("LDAP"));
+        auth.add(leafItem("htpasswd"));
+        auth.add(leafItem("htdigest"));
+        tree.add(auth);
 
-        var svcInfo = bodyText("Optionally include JPMS-wrapped service modules for third-party library integration. " +
-                "These are pre-packaged with proper module-info.java descriptors.", "m");
-        svcInfo.setWaColorText("quiet");
-        servicesContent.add(svcInfo);
+        var microProfile = parentItem("MicroProfile", false);
+        microProfile.add(leafItem("Health"));
+        microProfile.add(leafItem("Config"));
+        microProfile.add(leafItem("Metrics"));
+        microProfile.add(leafItem("Telemetry"));
+        microProfile.add(leafItem("Fault Tolerance"));
+        tree.add(microProfile);
 
-        var svcGrid = new WaGrid<>();
-        svcGrid.setMinColumnSize("16rem");
-        svcGrid.setGap(PageSize.Small);
+        var mail = parentItem("Mail", false);
+        mail.add(leafItem("Mail Client"));
+        tree.add(mail);
 
-        for (ServiceDefinition service : ApplicationBuilderService.getInstance().getAvailableServices())
-        {
-            var card = new WaCard<>();
-            card.setAppearance(Appearance.Outlined);
-            var stack = new WaStack();
-            stack.setGap(PageSize.Small);
+        var serial = parentItem("Serial", false);
+        serial.add(leafItem("Cerial"));
+        tree.add(serial);
 
-            var checkbox = new WaCheckbox<>();
-            checkbox.setText(service.getArtifactId());
-            stack.add(checkbox);
+        var tests = parentItem("Tests", false);
+        tests.add(leafItem("TestContainers"));
+        tree.add(tests);
 
-            var svcDesc = bodyText(service.getDescription(), "s");
-            svcDesc.setWaColorText("quiet");
-            stack.add(svcDesc);
+        tree.addAttribute("(wa-selection-change)", "onTreeSelectionChange($event)");
 
-            card.add(stack);
-            svcGrid.add(card);
-        }
+        treeColumn.add(tree);
+        columns.add(treeColumn);
 
-        servicesContent.add(svcGrid);
-        layout.add(buildSection("Step 3", "Add service modules (optional)",
-                "JPMS-wrapped third-party libraries ready for JLink and JPackage.",
-                true, servicesContent));
+        // ── Right column: Preview ──
+        var previewColumn = new WaStack<>();
+        previewColumn.setGap(PageSize.Medium);
+        previewColumn.add(headingText("h3", "m", "Preview"));
 
-        // Build button section
-        var buildContent = new WaStack();
-        buildContent.setGap(PageSize.Medium);
+        var previewNote = bodyText("Key files that will be generated in your project ZIP.", "s");
+        previewNote.setWaColorText("quiet");
+        previewColumn.add(previewNote);
 
-        var buildDesc = bodyText("Click Build App to generate a ZIP archive containing your configured project. " +
-                "The ZIP includes a Maven POM with all selected dependencies, a module-info.java with proper " +
-                "requires/provides directives, a Boot class, and service-specific wiring snippets.", "l");
-        buildContent.add(buildDesc);
+        var buildFileDetails = new WaDetails<>();
+        buildFileDetails.setSummary("Build file");
+        buildFileDetails.addClass("code-details");
 
-        var buildCtas = new WaCluster<>();
-        buildCtas.setGap(PageSize.Small);
-        var buildBtn = new WaButton<>("Build App & Download ZIP", Variant.Brand);
+        var pomMd = Markdown.fromData("getPomPreview()");
+        pomMd.addClass("code-block");
+        pomMd.addClass("wa-body-s");
+        var pomIf = new NgIf("!app.useGradle()");
+        pomIf.add(pomMd);
+        buildFileDetails.add(pomIf);
+
+        var gradleMd = Markdown.fromData("getGradlePreview()");
+        gradleMd.addClass("code-block");
+        gradleMd.addClass("wa-body-s");
+        var gradleIf = new NgIf("app.useGradle()");
+        gradleIf.add(gradleMd);
+        buildFileDetails.add(gradleIf);
+
+        previewColumn.add(buildFileDetails);
+
+        var moduleInfoDetails = new WaDetails<>();
+        moduleInfoDetails.setSummary("module-info.java");
+        moduleInfoDetails.addClass("code-details");
+
+        var moduleInfoMd = Markdown.fromData("getModuleInfoPreview()");
+        moduleInfoMd.addClass("code-block");
+        moduleInfoMd.addClass("wa-body-s");
+        moduleInfoDetails.add(moduleInfoMd);
+
+        previewColumn.add(moduleInfoDetails);
+
+        var bootDetails = new WaDetails<>();
+        bootDetails.setSummary("Boot.java");
+        bootDetails.addClass("code-details");
+
+        var bootMd = Markdown.fromData("getBootPreview()");
+        bootMd.addClass("code-block");
+        bootMd.addClass("wa-body-s");
+        bootDetails.add(bootMd);
+
+        previewColumn.add(bootDetails);
+
+        // Download button
+        var buildBtn = new WaButton<>("Build & Download ZIP", Variant.Brand);
         buildBtn.setAppearance(Appearance.Filled);
-        buildCtas.add(buildBtn);
-        buildContent.add(buildCtas);
+        buildBtn.addAttribute("(click)", "downloadZip()");
+        previewColumn.add(buildBtn);
+
+        columns.add(previewColumn);
+        content.add(columns);
+
+        return buildSection("Select", "Modules & preview",
+                "Choose modules on the left — preview the generated files on the right.",
+                false, content);
+    }
+
+    // ── Generate ──────────────────────────────────────
+
+    private WaStack buildGenerateSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
 
         var whatYouGet = new WaGrid<>();
         whatYouGet.setMinColumnSize("14rem");
         whatYouGet.setGap(PageSize.Small);
-        whatYouGet.add(featureCard("Maven POM", "Parent/child structure wired for Java 25 with BOM imports.", null));
-        whatYouGet.add(featureCard("module-info.java", "Proper JPMS descriptor with requires, provides, opens.", null));
-        whatYouGet.add(featureCard("Boot.java", "One-line bootstrap calling IGuiceContext.instance().", null));
-        whatYouGet.add(featureCard("Wiring snippets", "Service-specific code showing how to configure each module.", null));
-        buildContent.add(whatYouGet);
+        whatYouGet.add(featureCardHtml("Build file",
+                brandCode("pom.xml") + " or " + brandCode("build.gradle.kts") + " with BOM import and selected dependencies.", null));
+        whatYouGet.add(featureCardHtml("module-info.java",
+                "JPMS descriptor with " + brandCode("requires") + ", " + brandCode("provides") + ", " + brandCode("opens") + ".", null));
+        whatYouGet.add(featureCardHtml("Boot.java",
+                "One-line bootstrap calling " + brandCode("IGuiceContext.instance()") + ".", null));
+        whatYouGet.add(featureCard("Wiring snippets",
+                "Service-specific configuration code for each selected module.", null));
+        content.add(whatYouGet);
 
-        layout.add(buildSection("Step 4", "Generate your project",
+        return buildSection("Download", "Generate your project",
                 "Download a production-ready ZIP and start coding immediately.",
-                false, buildContent));
+                true, content);
+    }
+
+    // ── Tree helpers ──────────────────────────────────
+
+    private WaTreeItem<?> parentItem(String label, boolean expanded)
+    {
+        var item = new WaTreeItem<>();
+        item.setText(label);
+        if (expanded)
+        {
+            item.setExpanded(true);
+        }
+        return item;
+    }
+
+    private WaTreeItem<?> leafItem(String label)
+    {
+        var item = new WaTreeItem<>();
+        item.setText(label);
+        return item;
     }
 }

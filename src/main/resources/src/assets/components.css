@@ -250,3 +250,67 @@ wa-tree-item:has(> a)::part(label) {
 wa-tree-item:has(> a)::part(item) {
     cursor: pointer;
 }
+
+/* #region hero tags — distinct brand-harmonious palette
+   Brand = brand color (pink/magenta)
+   Success = teal/cyan
+   Neutral = slate/grey with brand tint
+   Warning = amber/gold
+*/
+wa-tag[variant="brand"] {
+    --wa-color-brand-fill-quiet: color-mix(in srgb, var(--wa-color-brand) 12%, transparent);
+    --wa-color-brand-on-fill-quiet: var(--wa-color-brand);
+    --wa-color-brand-border-quiet: color-mix(in srgb, var(--wa-color-brand) 25%, transparent);
+    --wa-color-brand-border: color-mix(in srgb, var(--wa-color-brand) 40%, transparent);
+    --wa-color-brand-normal: var(--wa-color-brand);
+}
+
+wa-tag[variant="success"] {
+    --wa-color-success-fill-quiet: color-mix(in srgb, oklch(0.75 0.15 180) 12%, transparent);
+    --wa-color-success-on-fill-quiet: oklch(0.55 0.12 180);
+    --wa-color-success-border-quiet: color-mix(in srgb, oklch(0.65 0.13 180) 30%, transparent);
+    --wa-color-success-border: color-mix(in srgb, oklch(0.65 0.13 180) 45%, transparent);
+    --wa-color-success-normal: oklch(0.55 0.12 180);
+    --wa-color-success-fill-normal: oklch(0.55 0.12 180);
+    --wa-color-success-on-fill-normal: #fff;
+}
+
+wa-tag[variant="neutral"] {
+    --wa-color-neutral-fill-quiet: color-mix(in srgb, var(--wa-color-text) 7%, transparent);
+    --wa-color-neutral-on-fill-quiet: color-mix(in srgb, var(--wa-color-text) 65%, transparent);
+    --wa-color-neutral-border-quiet: color-mix(in srgb, var(--wa-color-text) 12%, transparent);
+    --wa-color-neutral-border: color-mix(in srgb, var(--wa-color-text) 20%, transparent);
+    --wa-color-neutral-normal: color-mix(in srgb, var(--wa-color-text) 50%, transparent);
+}
+
+wa-tag[variant="warning"] {
+    --wa-color-warning-fill-quiet: color-mix(in srgb, oklch(0.80 0.15 85) 12%, transparent);
+    --wa-color-warning-on-fill-quiet: oklch(0.55 0.13 70);
+    --wa-color-warning-border-quiet: color-mix(in srgb, oklch(0.70 0.14 80) 30%, transparent);
+    --wa-color-warning-border: color-mix(in srgb, oklch(0.70 0.14 80) 45%, transparent);
+    --wa-color-warning-normal: oklch(0.55 0.13 70);
+    --wa-color-warning-fill-normal: oklch(0.55 0.13 70);
+    --wa-color-warning-on-fill-normal: #fff;
+}
+
+.wa-dark wa-tag[variant="success"] {
+    --wa-color-success-on-fill-quiet: oklch(0.80 0.12 180);
+    --wa-color-success-border-quiet: color-mix(in srgb, oklch(0.70 0.12 180) 35%, transparent);
+    --wa-color-success-border: color-mix(in srgb, oklch(0.70 0.12 180) 50%, transparent);
+}
+
+.wa-dark wa-tag[variant="neutral"] {
+    --wa-color-neutral-on-fill-quiet: color-mix(in srgb, var(--wa-color-text) 75%, transparent);
+}
+
+.wa-dark wa-tag[variant="warning"] {
+    --wa-color-warning-on-fill-quiet: oklch(0.82 0.13 85);
+    --wa-color-warning-border-quiet: color-mix(in srgb, oklch(0.75 0.13 85) 35%, transparent);
+    --wa-color-warning-border: color-mix(in srgb, oklch(0.75 0.13 85) 50%, transparent);
+}
+/* #endregion */
+
+pre {
+    border-radius: inherit !important;
+
+}

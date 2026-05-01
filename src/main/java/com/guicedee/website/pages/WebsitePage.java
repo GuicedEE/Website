@@ -19,16 +19,20 @@ import com.jwebmp.webawesome.components.details.WaDetails;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
+import com.jwebmp.webawesome.components.SpaceTokenCapable;
+import com.jwebmp.webawesome.components.BorderTokenCapable;
+import com.jwebmp.webawesome.components.TypographyTokenCapable;
+import com.jwebmp.webawesome.tokens.WaSpaceToken;
 import org.apache.commons.text.StringEscapeUtils;
 
 @NgComponentReference(App.class)
-public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J> implements INgComponent<J>
+public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J> implements INgComponent<J>, SpaceTokenCapable<J>, BorderTokenCapable<J>, TypographyTokenCapable<J>
 {
     protected WebsitePage()
     {
         addClass("website-content");
-        addStyle("padding:0 var(--wa-spacing-x-large) var(--wa-spacing-x-large) var(--wa-spacing-x-large)");
-        addStyle("max-width:72rem");
+        addStyle("padding", "0 var(--wa-spacing-x-large) var(--wa-spacing-x-large) var(--wa-spacing-x-large)");
+        addStyle("max-width", "72rem");
     }
 
     @SuppressWarnings("unchecked")
@@ -125,8 +129,8 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected static String brandCode(String text)
     {
-        return "<code class=\"wa-body-s\" style=\"color:var(--wa-color-brand);\">" +
-               text.replace("{", "&#123;").replace("}", "&#125;") + 
+        return "<code class=\"wa-body-s\" style=\"color:color-mix(in srgb, var(--wa-color-brand) 70%, var(--wa-color-text));\">" +
+               text.replace("{", "&#123;").replace("}", "&#125;") +
                "</code>";
     }
 
@@ -229,7 +233,8 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         {
             button.setAppearance(appearance);
         }
-        button.addAttribute("[routerLink]", "['" + route + "']");
+        var absoluteRoute = route.startsWith("/") ? route : "/" + route;
+        button.addAttribute("[routerLink]", "['" + absoluteRoute + "']");
         return button;
     }
 
@@ -243,7 +248,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         var card = new WaCard<>();
         card.setAppearance(appearance);
 
-        var stack = new WaStack();
+        var stack = new WaStack<>();
         stack.setGap(PageSize.Small);
         stack.add(headingText("h3", headingSize, title));
         var bodyCopy = bodyText(body, bodySize);
@@ -265,7 +270,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         card.setAppearance(Appearance.Outlined);
         card.addClass("feature-card");
 
-        var stack = new WaStack();
+        var stack = new WaStack<>();
         stack.setGap(PageSize.Small);
 
         var titleText = headingText("h3", "m", title);
@@ -294,7 +299,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         card.setAppearance(Appearance.Outlined);
         card.addClass("feature-card");
 
-        var stack = new WaStack();
+        var stack = new WaStack<>();
         stack.setGap(PageSize.Small);
 
         var titleText = headingText("h3", "m", title);
@@ -328,7 +333,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         card.setAppearance(Appearance.Outlined);
         card.addClass("feature-card");
 
-        var stack = new WaStack();
+        var stack = new WaStack<>();
         stack.setGap(PageSize.Small);
 
         var titleText = headingText("h3", "m", title);
@@ -354,7 +359,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
     protected WaStack section(String eyebrow, String title, String subtitle,
                               com.jwebmp.core.base.interfaces.IComponentHierarchyBase<?, ?> content)
     {
-        var section = new WaStack();
+        var section = new WaStack<>();
         section.setGap(PageSize.Medium);
         section.addClass("content-section");
 
@@ -383,7 +388,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
 
     protected WaStack sectionHeader(String eyebrow, String title, String subtitle)
     {
-        var header = new WaStack();
+        var header = new WaStack<>();
         header.setGap(PageSize.Small);
         if (eyebrow != null && !eyebrow.isBlank())
         {
@@ -537,7 +542,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
      */
     protected WaStack buildCallToAction()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(bodyText(

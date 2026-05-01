@@ -29,6 +29,10 @@ import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
 import com.jwebmp.webawesome.components.page.WaPage;
 import com.jwebmp.webawesome.components.waswitch.WaSwitch;
+import com.jwebmp.webawesome.components.WaDiv;
+import com.jwebmp.webawesome.tokens.WaBorderToken;
+import com.jwebmp.webawesome.tokens.WaSpaceToken;
+import com.jwebmp.webawesome.tokens.WaTypographyToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +169,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Activity Master
         Link<?> activityLink = new Link<>();
         activityLink.setTag("a");
-        activityLink.addAttribute("href", "https://github.com/Activity-Master/");
+        activityLink.addAttribute("href", "https://activity-master.com/");
         activityLink.addAttribute("target", "_blank");
         activityLink.addClass("product");
         activityLink.addClass("product-activity-master");
@@ -189,11 +193,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addClass("version-badge");
         versionBadge.setVariant(Variant.Brand);
         versionBadge.setPill(true);
-        versionBadge.setFontSize("var(--wa-font-size-2xs)");
-        versionBadge.addStyle("color: var(--wa-color-brand-on-normal)");
-        versionBadge.addStyle("background-color: var(--wa-color-brand-normal)");
-        versionBadge.addStyle("cursor: pointer");
-        versionBadge.setText("2.0.1-SNAPSHOT");
+        versionBadge.setFontSize(WaTypographyToken.FontSize2XS);
+        versionBadge.setOnColour(Variant.Brand);
+        versionBadge.setFillColour(Variant.Brand);
+        versionBadge.addStyle("border", "2px solid var(--wa-color-brand-light)");
+        versionBadge.addStyle("box-shadow", "0 0 6px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent)");
+        versionBadge.addStyle("cursor", "pointer");
+        versionBadge.setText("2.0.0");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -202,23 +208,31 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         snapshotPopover.setForElement(versionBadge);
         snapshotPopover.setPlacement(WaPopoverPlacements.Bottom);
         snapshotPopover.setMaxWidth("32rem");
-        snapshotPopover.addStyle("--border-color:var(--wa-color-brand-normal)");
-        snapshotPopover.addStyle("--border-width:var(--wa-border-width-s)");
-        snapshotPopover.addStyle("--border-radius:var(--wa-border-radius-l)");
-        snapshotPopover.addStyle("--arrow-color:var(--wa-color-brand-normal)");
+        snapshotPopover.setPopoverBorderColor(Variant.Brand);
+        snapshotPopover.setPopoverBorderWidth(WaBorderToken.WidthS);
+        snapshotPopover.setPopoverBorderRadius(WaBorderToken.RadiusL);
+        snapshotPopover.setArrowColor(Variant.Brand);
 
-        DivSimple<?> popoverContent = new DivSimple<>();
-        popoverContent.addStyle("padding: var(--wa-spacing-medium)");
+        var popoverContent = new WaDiv<>();
+        popoverContent.setPadding(WaSpaceToken.SpaceM);
 
-        var popoverTitle = new DivSimple<>();
-        popoverTitle.setTag("strong");
+        var popoverTitle = new WaDiv<>("strong");
         popoverTitle.setText("Snapshot Repository Setup");
-        popoverTitle.addStyle("display:block;margin-bottom:var(--wa-spacing-small);font-size:var(--wa-font-size-m)");
+        popoverTitle.addStyle("display", "block");
+        popoverTitle.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
+        popoverTitle.setFontSize(WaTypographyToken.FontSizeM);
         popoverContent.add(popoverTitle);
 
-        var popoverDesc = new DivSimple<>();
-        popoverDesc.setTag("p");
-        popoverDesc.addStyle("margin:0 0 var(--wa-spacing-small) 0;font-size:var(--wa-font-size-s);color:var(--wa-color-neutral-700)");
+        var snapshotVersionLabel = new WaDiv<>();
+        snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
+        snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
+        snapshotVersionLabel.setText("Current snapshot: <code>2.0.1-SNAPSHOT</code>");
+        popoverContent.add(snapshotVersionLabel);
+
+        var popoverDesc = new WaDiv<>("p");
+        popoverDesc.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
+        popoverDesc.setFontSize(WaTypographyToken.FontSizeS);
+        popoverDesc.addStyle("color", "var(--wa-color-neutral-700)");
         popoverDesc.addAttribute("[innerText]", "app.useGradle() ? 'Add to your build.gradle:' : 'Add to your pom.xml:'");
         popoverContent.add(popoverDesc);
 
@@ -260,30 +274,16 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         gradleIf.add(gradleMd);
         popoverContent.add(gradleIf);
 
-        var authNote = new DivSimple<>();
-        authNote.setTag("p");
-        authNote.addStyle("margin:var(--wa-spacing-small) 0 0 0;font-size:var(--wa-font-size-2xs);color:var(--wa-color-neutral-600)");
+        var authNote = new WaDiv<>("p");
+        authNote.addStyle("margin-block-start", WaSpaceToken.SpaceS.var());
+        authNote.setFontSize(WaTypographyToken.FontSize2XS);
+        authNote.addStyle("color", "var(--wa-color-neutral-600)");
         authNote.setText("&#x1F511; GitHub Packages requires authentication — use a personal access token with <code>read:packages</code> scope.");
         popoverContent.add(authNote);
 
         snapshotPopover.add(popoverContent);
         cluster.add(snapshotPopover);
 
-        // ── Snapshot version badge ──
-        WaBadge<?> snapshotBadge = new WaBadge<>();
-        snapshotBadge.addClass("version-badge");
-        snapshotBadge.setVariant(Variant.Neutral);
-        snapshotBadge.setPill(true);
-        snapshotBadge.setFontSize("var(--wa-font-size-2xs)");
-        snapshotBadge.addStyle("cursor: pointer");
-        snapshotBadge.setText("2.0.1-SNAPSHOT-SNAPSHOT");
-        snapshotBadge.setID("snapshot-badge");
-        cluster.add(snapshotBadge);
-
-        WaTooltip<?> snapshotTip = new WaTooltip<>();
-        snapshotTip.setForId("snapshot-badge");
-        snapshotTip.setText("Latest snapshot build");
-        cluster.add(snapshotTip);
 
         primary.add(cluster);
 
@@ -294,11 +294,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         secondary.addClass("wa-gap-2xs");
 
         // Maven / Gradle toggle switch
-        DivSimple<?> buildToolToggle = new DivSimple<>();
+        var buildToolToggle = new WaDiv<>();
         buildToolToggle.addClass("wa-cluster");
         buildToolToggle.addClass("wa-gap-2xs");
         buildToolToggle.addClass("wa-align-items-center");
-        buildToolToggle.addStyle("font-size:var(--wa-font-size-xs);color:var(--wa-color-text-quiet)");
+        buildToolToggle.setFontSize(WaTypographyToken.FontSizeXS);
+        buildToolToggle.addStyle("color", "var(--wa-color-text-quiet)");
 
         var mavenLabel = new DivSimple<>();
         mavenLabel.setTag("span");
@@ -308,7 +309,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         WaSwitch<?> buildToolSwitch = new WaSwitch<>();
         buildToolSwitch.setSize(com.jwebmp.webawesome.components.Size.Small);
         buildToolSwitch.setName("useGradle");
-        buildToolSwitch.addAttribute("[checked]", "app.useGradle()");
+        //buildToolSwitch.bind("app.useGradle()");
         buildToolSwitch.addAttribute("(wa-change)", "onBuildToolChange($event)");
         buildToolToggle.add(buildToolSwitch);
 
@@ -430,9 +431,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // App Builder
         menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
 
-        // Media
-        menuTree.add(createRouterTreeItem("/media", "Media", "photo-film"));
-
+        // Support (external)
+        menuTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
 
         menu.add(menuTree);
 
@@ -479,7 +479,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
         navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
         navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
-        navTree.add(createRouterTreeItem("/media", "Media", "photo-film"));
+        navTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
         burgerMenuNavigation.add(navTree);
 
         // ── Navigation Footer (external links inside the drawer, slot="navigation-footer") ──
@@ -500,7 +500,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navJwebmpLink.setText("JWebMP");
         navFooter.add(navJwebmpLink);
 
-        page.getMain().add(new RouterOutlet());
+        page.getMain().add(new RouterOutlet<>());
         page.getAside().add(new RouterOutlet("aside"));
 
         add(page);
@@ -520,10 +520,27 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         link.setRenderTextBeforeChildren(false);
         if (icon != null)
         {
-            WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color: var(--wa-color-brand-on-normal)");
+            WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color", "var(--wa-color-brand-on-normal)");
             link.add(waIcon);
         }
         link.setText("&nbsp;"+ text);
+        return item;
+    }
+
+    private static WaTreeItem<?> createExternalTreeItem(String url, String text, String icon)
+    {
+        WaTreeItem<?> item = new WaTreeItem<>();
+        Link<?> link = new Link<>("#");
+        item.add(link);
+        link.addAttribute("href", url);
+        link.addAttribute("target", "_blank");
+        link.setRenderTextBeforeChildren(false);
+        if (icon != null)
+        {
+            WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color", "var(--wa-color-brand-on-normal)");
+            link.add(waIcon);
+        }
+        link.setText("&nbsp;" + text);
         return item;
     }
 
@@ -556,7 +573,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     'getting-started': 'getting-started',
                     'capabilities': 'capabilities',
                     'guides/end-to-end': 'guides/end-to-end',
-                    'modules': 'modules'
+                    'modules': 'modules',
+                    'services': 'services'
                 };""");
         return f;
     }

@@ -46,6 +46,7 @@ public class ModulesAsidePage extends DivSimple<ModulesAsidePage> implements INg
         list.add(asideLink("data-persistence", "Data & persistence"));
         list.add(asideLink("observability", "Observability"));
         list.add(asideLink("integration", "Integration"));
+        list.add(asideLink("migration-compatibility", "Migration"));
 
         add(list);
     }

@@ -29,7 +29,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private void packCapabilities()
     {
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
@@ -54,7 +54,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaCard<?> buildIntro()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(headingText("h1", "xl", "Platform Capabilities"));
@@ -79,7 +79,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildArchitectureSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(mermaidDiagramWithTitle("GuicedEE Architecture",
@@ -90,6 +90,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             WS["WebSockets<br/>RFC 6455"]
                             PERSIST["Persistence<br/>Hibernate"]
                             RABBIT["RabbitMQ<br/>AMQP"]
+                            KAFKA["Kafka<br/>Streaming"]
+                            IBMMQ["IBM MQ<br/>JMS"]
                             TELEM["Telemetry<br/>OTLP"]
                             OPENAPI["OpenAPI<br/>Swagger"]
                             VERTXWEB["Vert.x Web · HTTP/HTTPS · Router"]
@@ -105,12 +107,16 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             APP --> WS
                             APP --> PERSIST
                             APP --> RABBIT
+                            APP --> KAFKA
+                            APP --> IBMMQ
                             APP --> TELEM
                             APP --> OPENAPI
                             REST --> VERTXWEB
                             WS --> VERTXWEB
                             PERSIST --> VERTXCORE
                             RABBIT --> VERTXCORE
+                            KAFKA --> VERTXCORE
+                            IBMMQ --> INJECT
                             TELEM --> VERTXCORE
                             OPENAPI --> VERTXWEB
                             VERTXWEB --> VERTXCORE
@@ -135,7 +141,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildInjectionCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -175,7 +181,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildWebCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -211,7 +217,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildRestCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Full-featured REST resource",
@@ -264,7 +270,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildRestClientCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -327,7 +333,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildSecurityCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -474,7 +480,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildVerticleCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -492,7 +498,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 null));
 
         grid.add(featureCard("Capabilities enum",
-                "Rest, RabbitMQ, Web, Telemetry, Persistence, Sockets, OpenAPI, Swagger, " +
+                "Rest, RabbitMQ, Kafka, IBM MQ, Web, Telemetry, Persistence, Sockets, OpenAPI, Swagger, " +
                         "WebServices, Cerial (serial ports) — each maps to its module package.",
                 null));
 
@@ -535,7 +541,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildPersistenceCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -569,7 +575,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildWebSocketCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -589,10 +595,15 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildMessagingCapability()
     {
-        var content = new WaStack();
-        content.setGap(PageSize.Medium);
+        var content = new WaStack<>();
+        content.setGap(PageSize.Large);
 
-        content.add(codeBlockWithTitle("RabbitMQ — annotation-driven messaging",
+        // ── RabbitMQ ──
+        var rabbitSection = new WaStack<>();
+        rabbitSection.setGap(PageSize.Medium);
+        rabbitSection.add(headingText("h3", "m", "RabbitMQ"));
+
+        rabbitSection.add(codeBlockWithTitle("RabbitMQ — annotation-driven messaging",
                 """
                         @RabbitConnectionOptions(
                             host = "localhost", port = 5672,
@@ -607,22 +618,118 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             }
                         }"""));
 
-        var features = new WaGrid<>();
-        features.setMinColumnSize("14rem");
-        features.setGap(PageSize.Small);
-        features.add(featureCard("Annotation-driven", "Connections, exchanges, queues, consumers all via annotations.", null));
-        features.add(featureCard("Auto-recovery", "Connection and channel recovery built in.", null));
-        features.add(featureCard("Vert.x native", "Uses Vert.x RabbitMQ client for non-blocking IO.", null));
-        features.add(featureCard("Env overrides", "Override host, port, credentials via environment variables.", null));
-        content.add(features);
+        var rabbitFeatures = new WaGrid<>();
+        rabbitFeatures.setMinColumnSize("14rem");
+        rabbitFeatures.setGap(PageSize.Small);
+        rabbitFeatures.add(featureCard("Annotation-driven", "Connections, exchanges, queues, consumers all via annotations.", null));
+        rabbitFeatures.add(featureCard("Auto-recovery", "Connection and channel recovery built in.", null));
+        rabbitFeatures.add(featureCard("Vert.x native", "Uses Vert.x RabbitMQ client for non-blocking IO.", null));
+        rabbitFeatures.add(featureCard("Env overrides", "Override host, port, credentials via environment variables.", null));
+        rabbitSection.add(rabbitFeatures);
+        content.add(rabbitSection);
 
-        return buildSection("Messaging", "Event-driven architecture",
-                "com.guicedee:rabbitmq — RabbitMQ integration with Vert.x.", false, content);
+        // ── Kafka ──
+        var kafkaSection = new WaStack<>();
+        kafkaSection.setGap(PageSize.Medium);
+        kafkaSection.add(headingText("h3", "m", "Apache Kafka"));
+
+        var kafkaIntro = bodyTextHtml("Annotation-driven " + brandCode("Apache Kafka") + " integration built on the " + brandCode("Vert.x Kafka Client") + ". " +
+                "Declare connections, topics, consumers, and publishers with annotations — everything is discovered at startup via ClassGraph, wired through Guice, and managed by Vert.x.", "m");
+        kafkaIntro.setWaColorText("quiet");
+        kafkaSection.add(kafkaIntro);
+
+        kafkaSection.add(codeBlockWithTitle("Kafka — define a connection, consumer, and publisher",
+                """
+                        // package-info.java — declare connection and topic
+                        @KafkaConnectionOptions(
+                            value = "my-connection",
+                            bootstrapServers = "localhost:9092",
+                            groupId = "my-group"
+                        )
+                        @KafkaTopicCreate(value = "order-events",
+                            partitions = 3, replicationFactor = 1)
+                        package com.example.messaging;
+                        
+                        // Consumer
+                        @KafkaTopicDefinition("order-events")
+                        public class OrderConsumer
+                                implements KafkaTopicConsumer<String, String> {
+                            @Override
+                            public void consume(KafkaConsumerRecord<String, String> record) {
+                                System.out.println("Received: " + record.value());
+                            }
+                        }
+                        
+                        // Publisher injection
+                        @Inject @Named("order-events")
+                        private KafkaTopicPublisher orderPublisher;"""));
+
+        var kafkaFeatures = new WaGrid<>();
+        kafkaFeatures.setMinColumnSize("14rem");
+        kafkaFeatures.setGap(PageSize.Small);
+        kafkaFeatures.add(featureCard("Annotation-driven", "@KafkaConnectionOptions, @KafkaTopicDefinition, @KafkaTopicCreate — declare the entire topology.", null));
+        kafkaFeatures.add(featureCard("Auto-discovery", "KafkaPreStartup scans the classpath via ClassGraph to find all annotated declarations.", null));
+        kafkaFeatures.add(featureCard("Guice-managed", "Consumers bound as singletons. KafkaTopicPublisher instances injectable by @Named(\"topic-name\").", null));
+        kafkaFeatures.add(featureCard("Admin client", "Topics created at startup via KafkaAdminClient using @KafkaTopicCreate (repeatable).", null));
+        kafkaFeatures.add(featureCard("Worker threads", "@KafkaTopicOptions(worker = true) offloads message processing to the Vert.x worker pool.", null));
+        kafkaFeatures.add(featureCard("Call-scoped handling", "Each message is processed within a GuicedEE CallScoper transaction boundary.", null));
+        kafkaFeatures.add(featureCard("Env overrides", "KAFKA_{NAME}_{PROPERTY} for name-specific, KAFKA_{PROPERTY} for global fallback.", null));
+        kafkaFeatures.add(featureCard("Graceful shutdown", "All consumers, producers, and admin clients are closed on application shutdown.", null));
+        kafkaSection.add(kafkaFeatures);
+        content.add(kafkaSection);
+
+        // ── IBM MQ ──
+        var ibmmqSection = new WaStack<>();
+        ibmmqSection.setGap(PageSize.Medium);
+        ibmmqSection.add(headingText("h3", "m", "IBM MQ"));
+
+        var ibmmqIntro = bodyTextHtml("Annotation-driven " + brandCode("IBM MQ") + " integration using the IBM MQ JMS client. " +
+                "Define connections, queues, consumers, and publishers with annotations — auto-discovered and wired through Guice.", "m");
+        ibmmqIntro.setWaColorText("quiet");
+        ibmmqSection.add(ibmmqIntro);
+
+        ibmmqSection.add(codeBlockWithTitle("IBM MQ — connection, consumer, and publisher",
+                """
+                        // package-info.java — declare connection
+                        @IBMMQConnectionOptions(
+                            value = "my-connection",
+                            host = "localhost",
+                            port = 1414,
+                            queueManager = "QM1",
+                            channel = "DEV.APP.SVRCONN"
+                        )
+                        package com.example.messaging;
+                        
+                        // Consumer
+                        @IBMMQQueueDefinition("DEV.QUEUE.1")
+                        public class OrderConsumer implements IBMMQConsumer {
+                            @Override
+                            public void consume(Message message) {
+                                // process message
+                            }
+                        }
+                        
+                        // Publisher injection
+                        @Inject @Named("DEV.QUEUE.1")
+                        private IBMMQPublisher publisher;"""));
+
+        var ibmmqFeatures = new WaGrid<>();
+        ibmmqFeatures.setMinColumnSize("14rem");
+        ibmmqFeatures.setGap(PageSize.Small);
+        ibmmqFeatures.add(featureCard("Annotation-driven", "@IBMMQConnectionOptions and @IBMMQQueueDefinition — declare connections and queues.", null));
+        ibmmqFeatures.add(featureCard("Auto-discovery", "Classpath scanning via ClassGraph finds all annotated connection and queue declarations.", null));
+        ibmmqFeatures.add(featureCard("Guice-managed", "Consumers and publishers are Guice-managed singletons, injectable by @Named.", null));
+        ibmmqFeatures.add(featureCard("Env overrides", "IBMMQ_{NAME}_{PROPERTY} for name-specific, IBMMQ_{PROPERTY} for global fallback.", null));
+        ibmmqSection.add(ibmmqFeatures);
+        content.add(ibmmqSection);
+
+        return buildSection("Messaging", "Event-driven architecture — RabbitMQ, Kafka, and IBM MQ",
+                "com.guicedee:rabbitmq · com.guicedee:kafka · com.guicedee:ibmmq — three messaging integrations, all annotation-driven.", false, content);
     }
 
     private WaStack buildObservabilityCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -657,7 +764,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildLoggingCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -729,7 +836,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildConfigCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(mermaidDiagramWithTitle("Three-tier configuration model",
@@ -760,7 +867,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         }"""));
 
         var note = bodyText("This three-tier pattern applies to every GuicedEE module: " +
-                "HTTP server, health, metrics, telemetry, persistence, RabbitMQ, and more. " +
+                "HTTP server, health, metrics, telemetry, persistence, RabbitMQ, Kafka, IBM MQ, and more. " +
                 "You only need MicroProfile Config properties files if you want " +
                 "@ConfigProperty injection — everything else works with annotations and env vars.", "m");
         note.setWaColorText("quiet");
@@ -772,7 +879,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildFaultToleranceCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Resilience patterns via annotations",
@@ -811,7 +918,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildJLinkCapability()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -957,7 +1064,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private WaStack buildModuleCatalogSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyText("Every GuicedEE module in the catalog, with coordinates and descriptions.", "m");
@@ -973,7 +1080,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
             var details = new WaDetails<>();
             details.setSummary(module.getName());
 
-            var detailContent = new WaStack();
+            var detailContent = new WaStack<>();
             detailContent.setGap(PageSize.Small);
 
             var description = bodyText(module.getDescription(), "s");

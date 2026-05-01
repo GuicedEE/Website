@@ -1,4 +1,14 @@
 /* #region feature cards */
+wa-card {
+    min-width: 0;
+    overflow: hidden;
+}
+
+wa-card code {
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
 .feature-card {
     transition:
         transform var(--wa-transition-normal, 150ms) var(--wa-transition-easing, ease),
@@ -7,10 +17,12 @@
     --border-color: var(--wa-color-neutral-border-quiet);
     border-top: 3px solid var(--wa-color-brand-normal, var(--wa-color-brand));
     min-width: 0; /* ensure it can shrink */
+    overflow: hidden;
 }
 
 .feature-card::part(base) {
     overflow: hidden;
+    min-width: 0;
 }
 
 .feature-card:hover {
@@ -21,12 +33,21 @@
 
 .feature-card-title {
     color: var(--wa-color-text-normal);
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .feature-card-body {
     overflow-wrap: break-word;
     word-break: break-word;
     min-width: 0;
+}
+
+.feature-card-body code,
+.feature-card-note code,
+.feature-card-title code {
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .feature-card-note {

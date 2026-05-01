@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class ApplicationBuilderService
 {
     private static final AtomicReference<ApplicationBuilderService> INSTANCE = new AtomicReference<>();
-    private final List<String> availableTemplates = List.of("WebAwesome SPA", "JWebMP Module", "Mixed Client/App");
 
     private ApplicationBuilderService()
     {
@@ -26,11 +25,6 @@ public final class ApplicationBuilderService
     public void initialize()
     {
         // placeholder for builder warm-up logic, content generation, dependency checks
-    }
-
-    public List<String> getAvailableTemplates()
-    {
-        return Collections.unmodifiableList(availableTemplates);
     }
 
     public List<ModuleEntry> getAvailableModules()

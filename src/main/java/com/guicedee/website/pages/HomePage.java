@@ -13,6 +13,8 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
+import com.jwebmp.webawesome.components.dialog.WaDialog;
+import com.jwebmp.plugins.markdown.Markdown;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,16 +43,61 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         return a;
     }
 
+    @Override
+    public List<String> fields()
+    {
+        var f = new ArrayList<>(super.fields());
+        f.add("readmeDialogOpen = false;");
+        f.add("readmeModuleTitle = '';");
+        f.add("readmeSrc = '';");
+        f.add("""
+                readmeUrls: Record<string, string> = {
+                    'rest': 'https://raw.githubusercontent.com/GuicedEE/GuicedRestServices/refs/heads/master/README.md',
+                    'websockets': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxSockets/refs/heads/master/README.md',
+                    'persistence': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxPersistence/refs/heads/master/README.md',
+                    'rabbitmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedRabbit/refs/heads/master/README.md',
+                    'kafka': 'https://raw.githubusercontent.com/GuicedEE/GuicedKafka/refs/heads/master/README.md',
+                    'ibmmq': 'https://raw.githubusercontent.com/GuicedEE/GuicedIBMMQ/refs/heads/master/README.md',
+                    'health': 'https://raw.githubusercontent.com/GuicedEE/Health/refs/heads/master/README.md',
+                    'metrics': 'https://raw.githubusercontent.com/GuicedEE/Metrics/refs/heads/master/README.md',
+                    'telemetry': 'https://raw.githubusercontent.com/GuicedEE/GuicedTelemetry/refs/heads/master/README.md',
+                    'openapi': 'https://raw.githubusercontent.com/GuicedEE/OpenAPI/refs/heads/master/README.md',
+                    'swagger-ui': 'https://raw.githubusercontent.com/GuicedEE/SwaggerUI/refs/heads/master/README.md',
+                    'config': 'https://raw.githubusercontent.com/GuicedEE/microprofile-config/refs/heads/master/README.md',
+                    'fault-tolerance': 'https://raw.githubusercontent.com/GuicedEE/FaultTolerance/refs/heads/master/README.md',
+                    'webservices': 'https://raw.githubusercontent.com/GuicedEE/GuicedWebServices/refs/heads/master/README.md',
+                    'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
+                    'cerial': 'https://raw.githubusercontent.com/GuicedEE/Cerial/refs/heads/master/README.md'
+                };
+                """);
+        return f;
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var m = new ArrayList<>(super.methods());
+        m.add("""
+                openReadme(moduleId: string, title: string) {
+                    this.readmeModuleTitle = title;
+                    this.readmeSrc = this.readmeUrls[moduleId] || '';
+                    this.readmeDialogOpen = true;
+                }
+                """);
+        return m;
+    }
+
     private void buildLandingPage()
     {
         // page size handled by WebsitePage base class
 
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
         layout.add(buildHero());
         layout.add(buildThreeLinesPitch());
+        layout.add(buildPluginSection());
         layout.add(buildZeroConfigSection());
         layout.add(buildCodeShowcaseSection());
         layout.add(buildRestServicesSection());
@@ -61,16 +108,39 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         layout.add(buildModularBuildSection());
         layout.add(buildJLinkShippingSection());
         layout.add(buildCloudAwareLoggingSection());
-        layout.add(buildPluginSection());
         layout.add(buildDeveloperSection());
         layout.add(buildCallToActionSection());
+
+        // Module README dialog
+        var dialog = new WaDialog<>("module-readme-dialog");
+        dialog.setLabel("Module Documentation");
+        dialog.setLightDismiss(true);
+        dialog.setScrolling(true);
+        dialog.addAttribute("[open]", "readmeDialogOpen");
+        dialog.addAttribute("(wa-after-hide)", "readmeDialogOpen = false");
+        dialog.addStyle("--width", "min(90vw, 72rem)");
+
+        var dialogHeader = new DivSimple<>();
+        dialogHeader.addAttribute("slot", "label");
+        dialogHeader.setText("{{readmeModuleTitle}}");
+        dialog.add(dialogHeader);
+
+        var md = new Markdown<>();
+        md.setLineNumbers(true);
+        md.setEmoji(true);
+        md.setMermaid(true);
+        md.setClipboard(true);
+        md.addAttribute("[src]", "readmeSrc");
+        dialog.add(md);
+
+        add(dialog);
     }
 
     // ── Hero ──────────────────────────────────────────
 
     private WaStack buildHero()
     {
-        var hero = new WaStack();
+        var hero = new WaStack<>();
         hero.setGap(PageSize.Large);
         hero.setID("hero");
         hero.addClass("hero-banner");
@@ -106,10 +176,10 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var ctas = new WaCluster();
         ctas.setGap(PageSize.Small);
         ctas.addClass("hero-ctas");
-        ctas.add(buildCta("Get Started", "/getting-started", Variant.Brand, Appearance.Filled));
+        ctas.add(buildCta("Get Started", "/getting-started", Variant.Neutral, Appearance.Outlined));
 
-        var pluginBtn = new WaButton<>(escapeAngular("IntelliJ Plugin"), Variant.Success);
-        pluginBtn.setAppearance(Appearance.Filled);
+        var pluginBtn = new WaButton<>(escapeAngular("IntelliJ Plugin"), Variant.Neutral);
+        pluginBtn.setAppearance(Appearance.Outlined);
         pluginBtn.setAsLink("https://plugins.jetbrains.com/plugin/31112-guiced", "_blank", null);
         ctas.add(pluginBtn);
 
@@ -151,7 +221,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildZeroConfigSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var intro = bodyText("Every GuicedEE module follows the same philosophy: sensible defaults out of the box, " +
@@ -212,11 +282,11 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildCodeShowcaseSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Large);
 
         // REST example
-        var restStack = new WaStack();
+        var restStack = new WaStack<>();
         restStack.setGap(PageSize.Small);
         restStack.add(headingText("h3", "m", "REST endpoint — standard Jakarta annotations"));
         restStack.add(codeBlock(
@@ -249,7 +319,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         content.add(divider());
 
         // Health check example
-        var healthStack = new WaStack();
+        var healthStack = new WaStack<>();
         healthStack.setGap(PageSize.Small);
         healthStack.add(headingText("h3", "m", "Health checks — MicroProfile standard"));
         healthStack.add(codeBlock(
@@ -273,7 +343,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         content.add(divider());
 
         // WebSocket example
-        var wsStack = new WaStack();
+        var wsStack = new WaStack<>();
         wsStack.setGap(PageSize.Small);
         wsStack.add(headingText("h3", "m", "WebSockets — action-based routing"));
         wsStack.add(codeBlock(
@@ -299,7 +369,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         content.add(divider());
 
         // Telemetry example
-        var telemetryStack = new WaStack();
+        var telemetryStack = new WaStack<>();
         telemetryStack.setGap(PageSize.Small);
         telemetryStack.add(headingText("h3", "m", "Distributed tracing — just add @Trace"));
         telemetryStack.add(codeBlock(
@@ -329,7 +399,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildRestServicesSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Large);
 
         var intro = bodyTextHtml("GuicedEE's REST module adapts standard Jakarta REST (JAX-RS) annotations to the " + brandCode("Vert.x 5 Router") + ". " +
@@ -428,7 +498,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         // REST Client
         content.add(divider());
 
-        var clientIntro = new WaStack();
+        var clientIntro = new WaStack<>();
         clientIntro.setGap(PageSize.Small);
         clientIntro.add(headingText("h3", "m", "REST Client — annotation-driven outbound calls"));
         var clientDesc = bodyTextHtml("Need to call external APIs? Declare an " + brandCode("@Endpoint") + " on a " + brandCode("RestClient&lt;Send, Receive&gt;") + " field, " +
@@ -485,7 +555,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildSecuritySection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Large);
 
         var intro = bodyTextHtml("Security in GuicedEE uses standard Jakarta security annotations with pluggable " + brandCode("Vert.x") + " " +
@@ -639,7 +709,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildVertxDeploymentSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Large);
 
         var intro = bodyTextHtml("The " + brandCode("Vert.x 5") + " HTTP server, router, and verticle infrastructure are fully managed by GuicedEE. " +
@@ -684,7 +754,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 null));
 
         features.add(featureCard("Capabilities enum",
-                "@Verticle can declare capabilities: Rest, RabbitMQ, Web, Telemetry, Persistence, " +
+                "@Verticle can declare capabilities: Rest, RabbitMQ, Kafka, IBM MQ, Web, Telemetry, Persistence, " +
                         "Sockets, OpenAPI, Swagger, and more. Each maps to its module package.",
                 null));
 
@@ -790,7 +860,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildMicroProfileSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var intro = bodyTextHtml("Eclipse MicroProfile provides an additive support mechanism, implemented through " + brandCode("Guice") + " integration. " +
@@ -873,7 +943,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "One injector to rule them all."));
 
         grid.add(featureCardHtml("Vert.x 5 reactive core",
-                "Non-blocking HTTP, WebSockets, event bus, SQL clients, and RabbitMQ — all on the " + brandCode("Vert.x") + " event loop " +
+                "Non-blocking HTTP, WebSockets, event bus, SQL clients, RabbitMQ, Kafka, and IBM MQ — all on the " + brandCode("Vert.x") + " event loop " +
                         "with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + " support throughout the stack.",
                 "Built for modern runtime constraints."));
 
@@ -896,7 +966,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildModularBuildSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -904,7 +974,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setGap(PageSize.Medium);
 
         grid.add(featureCardHtml("Build it up, never exclude down",
-                "Start with " + brandCode("inject") + " and add only what you need: " + brandCode("rest") + ", " + brandCode("persistence") + ", " + brandCode("websockets") + ", " + brandCode("rabbitmq") + ". " +
+                "Start with " + brandCode("inject") + " and add only what you need: " + brandCode("rest") + ", " + brandCode("persistence") + ", " + brandCode("websockets") + ", " + brandCode("rabbitmq") + ", " + brandCode("kafka") + ", " + brandCode("ibmmq") + ". " +
                         "Each module is self-contained with its own JPMS descriptor.",
                 "Your runtime is only as big as you choose."));
 
@@ -932,7 +1002,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.1-SNAPSHOT</version>
+                                    <version>2.0.0</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -953,7 +1023,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.1-SNAPSHOT')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -969,7 +1039,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildJLinkShippingSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var intro = bodyTextHtml("Because every GuicedEE module is JPMS Level 3 with explicit " + brandCode("module-info.java") + " descriptors, " +
@@ -1142,7 +1212,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildCloudAwareLoggingSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var intro = bodyTextHtml("GuicedEE ships production-ready logging out of the box. Locally, you get colorized, " +
@@ -1251,38 +1321,49 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        String[][] plugins = {
-                {"REST (JAX-RS)", "@Path/@GET/@POST routes auto-registered on Vert.x Router via ClassGraph. Full parameter binding.", "Available"},
-                {"WebSockets", "RFC 6455 with call-scoped connections, action-based routing, and group broadcasting.", "Available"},
-                {"Persistence", "Hibernate Reactive 7 + Mutiny.SessionFactory. Multi-database, env-var driven.", "Available"},
-                {"RabbitMQ", "Annotate connections, exchanges, queues, consumers, and publishers. Auto-recovery included.", "Available"},
-                {"Health", "@Liveness, @Readiness, @Startup checks at /health as JSON.", "Available"},
-                {"Metrics", "Dropwizard + MicroProfile. @Counted, @Timed, Prometheus endpoint.", "Available"},
-                {"Telemetry", "OpenTelemetry tracing with @Trace, OTLP export, Log4j2 correlation.", "Available"},
-                {"OpenAPI", "OpenAPI 3.1 spec at /openapi.json + /openapi.yaml from JAX-RS annotations.", "Available"},
-                {"Swagger UI", "Browsable UI at /swagger/ with zero code. Just add the dependency.", "Available"},
-                {"Config", "@ConfigProperty injection from env vars, system props, and properties files.", "Available"},
-                {"Fault Tolerance", "@Retry, @CircuitBreaker, @Timeout, @Bulkhead via Guice AOP.", "Available"},
-                {"Web Services", "SOAP/JAX-WS via Apache CXF. @WebService endpoints, WS-Security.", "Available"},
-                {"CDI Bridge", "@ApplicationScoped, @RequestScoped, BeanManager — all mapped to Guice.", "Available"},
-                {"Serial (Cerial)", "@Named port injection, auto-reconnect, idle monitoring, health reporting.", "Available"},
-                {"MCP Server", "Model Context Protocol — tools, resources, prompts for AI agent integration.", "Available"},
-        };
+        grid.add(pluginCard("REST (JAX-RS)",
+                brandCode("@Path") + "/" + brandCode("@GET") + "/" + brandCode("@POST") + " routes auto-registered on Vert.x Router via " + brandCode("ClassGraph") + ". Full parameter binding.", "rest"));
+        grid.add(pluginCard("WebSockets",
+                "RFC 6455 with call-scoped connections, action-based routing, and group broadcasting.", "websockets"));
+        grid.add(pluginCard("Persistence",
+                brandCode("Hibernate Reactive 7") + " + " + brandCode("Mutiny.SessionFactory") + ". Multi-database, env-var driven.", "persistence"));
+        grid.add(pluginCard("RabbitMQ",
+                "Annotate connections, exchanges, queues, consumers, and publishers. Auto-recovery included.", "rabbitmq"));
+        grid.add(pluginCard("Kafka",
+                "Annotation-driven Apache Kafka with Vert.x Kafka Client. " + brandCode("@KafkaConnectionOptions") + ", " + brandCode("@KafkaTopicDefinition") + ", consumers, and publishers.", "kafka"));
+        grid.add(pluginCard("IBM MQ",
+                "Annotation-driven IBM MQ via JMS client. " + brandCode("@IBMMQConnectionOptions") + ", " + brandCode("@IBMMQQueueDefinition") + ", consumers, and publishers.", "ibmmq"));
+        grid.add(pluginCard("Health",
+                brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", " + brandCode("@Startup") + " checks at " + brandCode("/health") + " as JSON.", "health"));
+        grid.add(pluginCard("Metrics",
+                "Dropwizard + MicroProfile. " + brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "metrics"));
+        grid.add(pluginCard("Telemetry",
+                "OpenTelemetry tracing with " + brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "telemetry"));
+        grid.add(pluginCard("OpenAPI",
+                "OpenAPI 3.1 spec at " + brandCode("/openapi.json") + " + " + brandCode("/openapi.yaml") + " from JAX-RS annotations.", "openapi"));
+        grid.add(pluginCard("Swagger UI",
+                "Browsable UI at " + brandCode("/swagger/") + " with zero code. Just add the dependency.", "swagger-ui"));
+        grid.add(pluginCard("Config",
+                brandCode("@ConfigProperty") + " injection from env vars, system props, and properties files.", "config"));
+        grid.add(pluginCard("Fault Tolerance",
+                brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + " via Guice AOP.", "fault-tolerance"));
+        grid.add(pluginCard("Web Services",
+                "SOAP/JAX-WS via Apache CXF. " + brandCode("@WebService") + " endpoints, WS-Security.", "webservices"));
+        grid.add(pluginCard("CDI Bridge",
+                brandCode("@ApplicationScoped") + ", " + brandCode("@RequestScoped") + ", " + brandCode("BeanManager") + " — all mapped to Guice.", "cdi"));
+        grid.add(pluginCard("Serial (Cerial)",
+                brandCode("@Named") + " port injection, auto-reconnect, idle monitoring, health reporting.", "cerial"));
 
-        for (String[] plugin : plugins)
-        {
-            grid.add(pluginCard(plugin[0], plugin[1], plugin[2]));
-        }
-
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Large);
-        content.add(grid);
 
         // JetBrains Marketplace plugin widget
         var widgetWrapper = new DivSimple<>();
         widgetWrapper.setID("jetbrains-plugin-widget");
         widgetWrapper.addStyle("display:flex;justify-content:center");
         content.add(widgetWrapper);
+
+        content.add(grid);
 
         return buildSection("Module catalog", "Drop-in capabilities — add a dependency, get a feature",
                 "Each integration ships as a micro-module with its own module-info.java. Zero side effects.",
@@ -1293,7 +1374,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     private WaStack buildDeveloperSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var grid = new WaGrid<>();
@@ -1351,8 +1432,17 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     // ── Card helpers ──────────────────────────────────
 
 
-    private WaCard<?> pluginCard(String title, String body, String status)
+    private WaCard<?> pluginCard(String title, String htmlBody, String moduleId)
     {
-        return contentCard(title, body, status, Appearance.Outlined, "m", "m");
+        var card = featureCardHtml(title, htmlBody, null);
+
+        var cta = new WaButton<>();
+        cta.setText(escapeAngular("View module →"));
+        cta.setVariant(Variant.Brand);
+        cta.setAppearance(Appearance.Outlined);
+        cta.addAttribute("(click)", "openReadme('" + moduleId + "', '" + escapeAngular(title) + "')");
+        card.add(cta);
+
+        return card;
     }
 }

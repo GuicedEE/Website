@@ -28,7 +28,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private void buildPage()
     {
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
@@ -54,7 +54,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaCard<?> buildIntro()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(headingText("h1", "xl", "End-to-End Guide"));
@@ -84,7 +84,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildProjectSetup()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyText("Import the GuicedEE BOM and add the modules you need. " +
@@ -99,7 +99,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.1-SNAPSHOT</version>
+                                    <version>2.0.0</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -130,7 +130,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         </dependencies>""",
                 """
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.1-SNAPSHOT')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.0')
                         
                             implementation 'com.guicedee:rest'
                             implementation 'com.guicedee:health'
@@ -147,33 +147,20 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildModuleDescriptor()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("src/main/java/module-info.java",
                 """
                         module my.service {
-                            requires com.guicedee.guicedinjection;
-                            requires com.guicedee.vertx.web;
-                            requires com.guicedee.rest;
-                            requires com.guicedee.rest.client;
-                            requires com.guicedee.health;
-                            requires com.guicedee.microprofile.config;
-                            requires com.guicedee.guicedpersistence;
-                        
-                            requires jakarta.ws.rs;
-                            requires jakarta.inject;
-                        
-                            opens com.example.myservice to
-                                com.google.guice,
-                                com.guicedee.guicedinjection,
-                                io.github.classgraph;
+                            requires transitive com.guicedee.guicedinjection;
+                            opens com.example.myservice to com.google.guice;
                         
                             provides com.guicedee.client.services.lifecycle.IGuiceModule
                                 with com.example.myservice.AppModule;
                         }"""));
 
-        var note = bodyTextHtml("Explicit " + brandCode("requires") + " for every module you use. " + brandCode("opens") + " for " + brandCode("Guice") + " injection. " +
+        var note = bodyTextHtml("Explicit " + brandCode("requires") + " for every module you use. " + brandCode("opens") + " for private field and AOP injection. " +
                 brandCode("provides") + " to register your Guice module via " + brandCode("ServiceLoader") + ". This is JPMS Level 3 — JLink resolves " +
                 "the entire graph.", "s");
         note.setWaColorText("quiet");
@@ -187,7 +174,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildGuiceModuleAndBootstrap()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("AppModule.java",
@@ -207,12 +194,12 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                             public static void main(String[] args) {
                                 IGuiceContext.registerModuleForScanning
                                     .add("com.example.myservice");
-                                IGuiceContext.instance();
+                                IGuiceContext.instance().inject();
                             }
                         }"""));
 
         return buildSection("Guice module & bootstrap", "Bindings + one-line startup",
-                "IGuiceContext.instance() fires the entire lifecycle: scan, inject, start servers, register routes.",
+                "IGuiceContext.instance().inject() fires the entire lifecycle: scan, inject, start servers, register routes.",
                 true, content);
     }
 
@@ -220,7 +207,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildRestEndpoints()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("OrderResource.java — full REST resource",
@@ -276,7 +263,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildSecuritySection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyTextHtml("Apply standard Jakarta security annotations. Then plug in your " + brandCode("Vert.x") + " authentication " +
@@ -319,7 +306,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildCorsSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("@Cors annotation on a resource",
@@ -347,7 +334,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildRestClientSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Declare a typed REST client",
@@ -391,7 +378,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildHealthChecks()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("AppHealth.java — MicroProfile Health",
@@ -427,7 +414,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildConfiguration()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Inject config values",
@@ -456,7 +443,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildPersistenceSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyTextHtml(brandCode("Hibernate Reactive 7") + " with " + brandCode("Mutiny") + ". Non-blocking database access on the " + brandCode("Vert.x") + " event loop. " +
@@ -523,7 +510,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildVerticleSection()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("package-info.java — isolate the payments API",
@@ -563,7 +550,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildCloudLogging()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("One env var switches to JSON",
@@ -598,7 +585,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildJLinkDeployment()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(mavenGradleCodeBlock("Moditect JLink → Distroless Docker",
@@ -716,7 +703,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildLifecycleAndEnvVars()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(mermaidDiagramWithTitle("Startup lifecycle",
@@ -769,7 +756,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     private WaStack buildModulePages()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyText("Each GuicedEE module has its own dedicated page with full API documentation, " +
@@ -790,6 +777,8 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.add(featureCardHtml("Web server", "HTTP/HTTPS, " + brandCode("Router") + ", " + brandCode("BodyHandler") + ", 3 SPI hooks.", "/modules/web"));
         grid.add(featureCard("WebSockets", "RFC 6455, action routing, group broadcast.", "/modules/websockets"));
         grid.add(featureCard("RabbitMQ", "Annotation-driven queues, exchanges, consumers.", "/modules/rabbitmq"));
+        grid.add(featureCard("Kafka", "Annotation-driven topics, consumers, publishers with Vert.x Kafka Client.", "/modules/kafka"));
+        grid.add(featureCard("IBM MQ", "Annotation-driven queues, consumers, publishers with IBM MQ JMS.", "/modules/ibmmq"));
         grid.add(featureCardHtml("Telemetry", brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "/modules/telemetry"));
         grid.add(featureCardHtml("Metrics", brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "/modules/metrics"));
         grid.add(featureCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "/modules/openapi"));

@@ -23,12 +23,12 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
     private void buildReleasesPage()
     {
 
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
         // Header
-        var introContent = new WaStack();
+        var introContent = new WaStack<>();
         introContent.setGap(PageSize.Medium);
         introContent.add(headingText("h1", "xl", "Releases & Changelog"));
         var desc = bodyText("Track GuicedEE releases, version history, and what's coming next. " +
@@ -42,24 +42,24 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(introCard);
 
         // Current release
-        var currentContent = new WaStack();
+        var currentContent = new WaStack<>();
         currentContent.setGap(PageSize.Medium);
 
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.0.1-SNAPSHOT", "In development"));
+        currentGrid.add(featureCard("Version", "2.0.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.x", "Latest reactive core"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.0.1-SNAPSHOT",
-                "Active development branch targeting JDK 25 and Vert.x 5.",
+        layout.add(buildSection("Current", "v2.0.0",
+                "Current stable release targeting JDK 25 and Vert.x 5.",
                 true, currentContent));
 
         // What's new in 2.0
-        var whatsNewContent = new WaStack();
+        var whatsNewContent = new WaStack<>();
         whatsNewContent.setGap(PageSize.Medium);
 
         var newGrid = new WaGrid<>();
@@ -102,26 +102,32 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 false, whatsNewContent));
 
         // Roadmap
-        var roadmapContent = new WaStack();
+        var roadmapContent = new WaStack<>();
         roadmapContent.setGap(PageSize.Medium);
 
         var roadmapGrid = new WaGrid<>();
         roadmapGrid.setMinColumnSize("16rem");
         roadmapGrid.setGap(PageSize.Medium);
 
-        roadmapGrid.add(featureCard("Workflow engine",
-                "Declarative workflow definitions with state machines, " +
-                        "activity orchestration, and event-driven transitions.",
+        roadmapGrid.add(featureCard("Cassandra & expanded DB support",
+                "Native Cassandra driver integration with reactive Vert.x client, " +
+                        "plus MongoDB, CockroachDB, and ClickHouse service modules.",
+                "In progress"));
+
+        roadmapGrid.add(featureCard("Enhanced CallScope",
+                "Richer call-scope propagation across async boundaries — automatic context " +
+                        "carry through Uni chains, event bus messages, and worker verticles.",
+                "In progress"));
+
+        roadmapGrid.add(featureCard("AI sanity checks",
+                "Automated AI-driven analysis of module configurations, dependency graphs, " +
+                        "and module-info declarations to catch misconfigurations before startup.",
                 "Planned"));
 
-        roadmapGrid.add(featureCard("gRPC support",
-                "Protocol Buffers and gRPC service definitions with Vert.x gRPC client/server.",
-                "Under evaluation"));
-
-        roadmapGrid.add(featureCard("Native image",
-                "GraalVM native-image support for selected modules " +
-                        "with build-time class scanning.",
-                "Experimental"));
+        roadmapGrid.add(featureCard("Version maintenance automation",
+                "AI-assisted dependency upgrades, CVE scanning, and compatibility verification " +
+                        "across the entire BOM with automated PR generation.",
+                "Planned"));
 
         roadmapContent.add(roadmapGrid);
 

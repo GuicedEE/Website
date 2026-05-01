@@ -32,9 +32,23 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         buildGettingStartedPage();
     }
 
+    @Override
+    public List<String> afterViewInit()
+    {
+        var a = new ArrayList<>(super.afterViewInit());
+        a.add("""
+                const script = document.createElement('script');
+                script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
+                script.onload = () => {
+                    (window as any).MarketplaceWidget?.setupMarketplaceWidget('card', 31112, '#jetbrains-plugin-widget');
+                };
+                document.body.appendChild(script);""");
+        return a;
+    }
+
     private void buildGettingStartedPage()
     {
-        var layout = new WaStack();
+        var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
@@ -54,7 +68,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaCard<?> buildIntro()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(headingText("h1", "xl", "Hello World with GuicedEE"));
@@ -82,7 +96,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaCard<?> buildQuickestStart()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(headingText("h2", "l", "Quickest Start — IntelliJ Plugin"));
@@ -93,6 +107,12 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 "in a single wizard. No manual setup required.", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
+
+        // JetBrains Marketplace plugin widget
+        var widgetWrapper = new DivSimple<>();
+        widgetWrapper.setID("jetbrains-plugin-widget");
+        widgetWrapper.addStyle("display:flex;justify-content:center");
+        content.add(widgetWrapper);
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -123,13 +143,6 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         tags.add(buildTag("IntelliJ 2024.2+", Variant.Neutral));
         content.add(tags);
 
-        var ctas = new WaCluster<>();
-        ctas.setGap(PageSize.Small);
-        var pluginBtn = new WaButton<>(escapeAngular("Install from Marketplace"), Variant.Brand);
-        pluginBtn.setAppearance(Appearance.Filled);
-        pluginBtn.setAsLink("https://plugins.jetbrains.com/plugin/com.guicedee.intellij.GEEIntelliJPlugin", "_blank", null);
-        ctas.add(pluginBtn);
-        content.add(ctas);
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
@@ -141,7 +154,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildPrerequisites()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Small);
 
         // Maven prerequisites
@@ -176,7 +189,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildStep1Project()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyText("Create a new Maven project with the GuicedEE BOM and two dependencies: " +
@@ -199,7 +212,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                             <properties>
                                 <maven.compiler.release>25</maven.compiler.release>
-                                <guicedee.version>2.0.1-SNAPSHOT</guicedee.version>
+                                <guicedee.version>2.0.0</guicedee.version>
                             </properties>
                         
                             <dependencyManagement>
@@ -237,7 +250,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         }
                         
                         dependencies {
-                            implementation platform("com.guicedee:guicedee-bom:2.0.1-SNAPSHOT")
+                            implementation platform("com.guicedee:guicedee-bom:2.0.0")
                             implementation("com.guicedee:rest")
                         }"""));
 
@@ -255,7 +268,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildStep2ModuleInfo()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyTextHtml("GuicedEE uses the Java Platform Module System. Create a " + brandCode("module-info.java") +
@@ -284,7 +297,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildStep3Bootstrap()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("Boot.java",
@@ -315,7 +328,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildStep4Endpoint()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(codeBlockWithTitle("HelloResource.java",
@@ -358,7 +371,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildStep5Run()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         content.add(mavenGradleCodeBlock("Build and run",
@@ -390,7 +403,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildWhatsHappening()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyTextHtml("When you called " + brandCode("IGuiceContext.instance()") + ", GuicedEE executed this lifecycle:", "m");
@@ -400,13 +413,14 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.add(mermaidDiagramWithTitle("GuicedEE Bootstrap Lifecycle",
                 """
                         graph TD
-                            A["IGuiceContext.instance()"] --> B["ClassGraph scans com.example.hello"]
-                            B --> C["Discovers HelloResource - @Path"]
-                            C --> D["Loads Guice modules via ServiceLoader"]
-                            D --> E["Creates the Guice injector"]
-                            E --> F["Starts Vert.x HTTP server on :8080"]
-                            F --> G["Maps @Path/@GET to Vert.x Router routes"]
-                            G --> H["Ready to serve requests"]"""));
+                            A["🚀 IGuiceContext.instance()"] --> B["🔍 ClassGraph scans com.example.hello"]
+                            B --> C["📦 Discovers HelloResource @Path"]
+                            B --> D["⚙️ Loads Guice modules via ServiceLoader"]
+                            C --> E["💉 Creates the Guice injector"]
+                            D --> E
+                            E --> F["🌐 Starts Vert.x HTTP server on :8080"]
+                            F --> G["🔗 Maps @Path/@GET to Vert.x routes"]
+                            G --> H["✅ Ready to serve requests"]"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -431,7 +445,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         content.add(grid);
 
         return buildSection("What just happened?", "Zero-magic bootstrapping",
-                "Everything is discovered through " + brandCode("ClassGraph") + " scanning and SPI — no reflection hacks.",
+                "Everything is discovered through ClassGraph scanning and SPI — no reflection hacks.",
                 false, content);
     }
 
@@ -439,7 +453,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     private WaStack buildNextSteps()
     {
-        var content = new WaStack();
+        var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
         var desc = bodyText("Now that you have a running Hello World, explore what GuicedEE can really do.", "m");
@@ -487,7 +501,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         grid.add(featureCard("All modules",
                 "Health, Metrics, Telemetry, Config, WebSockets, RabbitMQ, " +
-                        "OpenAPI, Swagger UI, Fault Tolerance, and more.",
+                        "Kafka, IBM MQ, OpenAPI, Swagger UI, Fault Tolerance, and more.",
                 "/capabilities"));
 
         content.add(grid);

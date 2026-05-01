@@ -8,14 +8,14 @@ import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.text.WaText;
 
 /**
- * Aside component for the Capabilities page.
- * Renders "On this page" anchor links in the named "aside" router-outlet.
+ * Aside component for the Services page.
+ * Renders "On this page" anchor links for service family groups.
  */
-@NgComponent("guicedee-capabilities-aside")
-@NgRoutable(path = "capabilities", outlet = "aside")
-public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> implements INgComponent<CapabilitiesAsidePage>
+@NgComponent("guicedee-services-aside")
+@NgRoutable(path = "services", outlet = "aside")
+public class ServicesAsidePage extends DivSimple<ServicesAsidePage> implements INgComponent<ServicesAsidePage>
 {
-    public CapabilitiesAsidePage()
+    public ServicesAsidePage()
     {
         setTag("aside");
         addClass("page-aside");
@@ -41,22 +41,19 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         list.addStyle("flex-direction:column");
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
-        list.add(asideLink("architecture", "Architecture"));
-        list.add(asideLink("injection-lifecycle", "Injection & Lifecycle"));
-        list.add(asideLink("http-server", "HTTP Server"));
-        list.add(asideLink("rest-jax-rs", "REST (JAX-RS)"));
-        list.add(asideLink("rest-client", "REST Client"));
-        list.add(asideLink("security-authentication", "Security"));
-        list.add(asideLink("verticles-deployment", "Verticles"));
-        list.add(asideLink("persistence", "Persistence"));
-        list.add(asideLink("websockets", "WebSockets"));
-        list.add(asideLink("messaging", "Messaging"));
-        list.add(asideLink("observability", "Observability"));
-        list.add(asideLink("logging", "Logging"));
-        list.add(asideLink("configuration", "Configuration"));
-        list.add(asideLink("fault-tolerance", "Fault Tolerance"));
-        list.add(asideLink("jlink-deployment", "JLink & Deployment"));
-        list.add(asideLink("full-module-catalog", "Full catalog"));
+        list.add(asideLink("how-to-use", "How to use"));
+        list.add(asideLink("apache-commons", "Apache Commons"));
+        list.add(asideLink("apache-cxf-web-services", "Apache CXF"));
+        list.add(asideLink("apache-poi", "Apache POI"));
+        list.add(asideLink("database-driver", "Database"));
+        list.add(asideLink("google", "Google"));
+        list.add(asideLink("hibernate", "Hibernate"));
+        list.add(asideLink("jakarta", "Jakarta"));
+        list.add(asideLink("jcache", "JCache"));
+        list.add(asideLink("jni", "JNI"));
+        list.add(asideLink("library", "Library"));
+        list.add(asideLink("microprofile", "MicroProfile"));
+        list.add(asideLink("vert-x", "Vert.x"));
 
         add(list);
     }
@@ -77,5 +74,4 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         return li;
     }
 }
-
 
