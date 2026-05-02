@@ -72,7 +72,7 @@ public final class ModuleCatalog
                 case "mailclient" -> "Email client integration for GuicedEE with Vert.x 5. SMTP mail sending with Guice-managed configuration and templates.";
                 case "metrics" -> "MicroProfile Metrics for GuicedEE with Vert.x 5 Dropwizard Metrics. @Counted, @Timed annotations, Prometheus scrape endpoint, and Graphite reporting.";
                 case "rest-client" -> "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient. @Endpoint declarations, RestClient injection, and authentication strategies.";
-                case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage and Cassandra wide-column storage via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, and Cassandra.";
+                case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage, Cassandra wide-column storage, and Redis caching via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, Cassandra, and Redis.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -120,7 +120,8 @@ public final class ModuleCatalog
         addServices(services, groupId, version, "Database", "Database Driver", new String[]{
                 "msal4j",
                 "mssql-jdbc",
-                "postgresql"
+                "postgresql",
+                "vertx-redis-client"
         });
         addServices(services, groupId, version, "Google", "Google", new String[]{
                 "aop",
@@ -177,12 +178,13 @@ public final class ModuleCatalog
         });
         addServices(services, groupId, version, "Vert.x", "Vert.x", new String[]{
                 "vertx-cassandra",
+                "vertx-grpc-server",
+                "vertx-grpc-client",
                 "vertx-http-proxy",
                 "vertx-mutiny",
                 "vertx-kafka",
                 "vertx-pg-client",
-                "vertx-rabbitmq",
-                "vertx-redis-client"
+                "vertx-rabbitmq"
         });
         addServices(services, groupId, version, "services", "Misc", new String[]{
                 "untitled"
@@ -238,7 +240,7 @@ public final class ModuleCatalog
             case "rest-client" -> "REST Client";
             case "swagger-ui" -> "Swagger UI";
             case "telemetry" -> "Telemetry";
-            case "vertx" -> "Vert.x Core + HTTP Proxy";
+            case "vertx" -> "Vert.x Core + HTTP Proxy + gRPC";
             case "web" -> "Web Server";
             case "webservices" -> "Web Services (SOAP)";
             case "websockets" -> "WebSockets";
