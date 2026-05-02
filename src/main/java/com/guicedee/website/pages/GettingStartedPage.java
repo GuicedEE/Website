@@ -444,9 +444,11 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 "No " + brandCode("web.xml") + ", no " + brandCode("application.yml") + ", no " + brandCode("beans.xml") + ". Configuration is code + env vars.",
                 null));
 
+/*
         grid.add(featureCardHtml("JPMS Level 3",
                 "Real " + brandCode("module-info.java") + " with explicit " + brandCode("requires") + "/" + brandCode("opens") + ". JLink-ready from day one.",
                 null));
+*/
 
         content.add(grid);
 

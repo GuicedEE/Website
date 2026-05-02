@@ -430,6 +430,9 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Services
         menuTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
 
+        // Environment Variables
+        menuTree.add(createRouterTreeItem("/environment-variables", "Env Variables", "sliders"));
+
         // Releases
         menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
 
@@ -542,6 +545,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
         navTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
         navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
+        navTree.add(createRouterTreeItem("/environment-variables", "En Variables", "sliders"));
         navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
         navTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
         burgerMenuNavigation.add(navTree);
@@ -682,7 +686,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     'capabilities': 'capabilities',
                     'guides/end-to-end': 'guides/end-to-end',
                     'modules': 'modules',
-                    'services': 'services'
+                    'services': 'services',
+                    'environment-variables': 'environment-variables'
                 };""");
         return f;
     }

@@ -241,6 +241,12 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:web",
                 "web", "Web/Basic"));
 
+        grid.add(moduleCard("HTTP Proxy",
+                "Vert.x 5 reverse proxy. ProxyModule abstract class, ProxyConnectionInfo config, " +
+                        "interceptors via Guice, response caching, WebSocket forwarding, @Named multi-proxy.",
+                "com.guicedee:vertx + io.vertx:vertx-http-proxy",
+                "vertx", "Vertx/HttpProxy"));
+
         grid.add(moduleCard("REST Services",
                 "Jakarta REST (JAX-RS) adapter. @Path, @GET, @POST, all parameter annotations, " +
                         "reactive returns, @Cors, @RolesAllowed, ExceptionMapper, RestInterceptor SPI.",

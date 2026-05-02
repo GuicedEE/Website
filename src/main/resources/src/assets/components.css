@@ -437,3 +437,18 @@ wa-page > [slot='navigation'] wa-tree-item::part(item) {
     padding-inline-start: var(--wa-space-2xs);
 }
 
+/* Aside search input: brand color on focus for icon and placeholder */
+wa-input:focus-within::part(prefix) {
+    color: var(--wa-color-brand);
+    transition: color var(--wa-transition-fast) var(--wa-transition-easing);
+}
+
+wa-input::part(prefix) {
+    transition: color var(--wa-transition-fast) var(--wa-transition-easing);
+}
+
+wa-input:focus-within {
+    --wa-input-placeholder-color: var(--wa-color-brand);
+    --wa-input-border-color-focus: var(--wa-color-brand);
+    --wa-input-focus-ring-color: color-mix(in srgb, var(--wa-color-brand) 30%, transparent);
+}

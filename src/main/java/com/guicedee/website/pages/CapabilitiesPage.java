@@ -48,6 +48,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildArchitectureSection());
         layout.add(buildInjectionCapability());
         layout.add(buildWebCapability());
+        layout.add(buildHttpProxyCapability());
+        layout.add(buildRedisCapability());
         layout.add(buildRestCapability());
         layout.add(buildRestClientCapability());
         layout.add(buildSecurityCapability());
@@ -111,6 +113,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             end
                             subgraph Storage
                                 PERSIST["Persistence"]
+                                MONGO["MongoDB"]
+                                CASS["Cassandra"]
                             end
                             subgraph Foundation
                                 VERTXWEB["Vert.x Web"]
@@ -132,6 +136,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             IBMMQ --> INJECT
                             
                             PERSIST --> VERTXCORE
+                            MONGO --> VERTXCORE
+                            CASS --> VERTXCORE
                             
                             VERTXWEB --> VERTXCORE
                             VERTXCORE --> INJECT
@@ -225,6 +231,107 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         return buildSection("HTTP Server", "Reactive by nature",
                 "com.guicedee:web — Vert.x 5 HTTP/HTTPS server with Router and BodyHandler.", false, content);
+    }
+
+    private WaStack buildHttpProxyCapability()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("14rem");
+        grid.setGap(PageSize.Small);
+        grid.add(featureCard("Reverse proxy", "Forward all traffic from a proxy port to an origin server with a single module.", null));
+        grid.add(featureCard("WebSocket support", "WebSocket upgrades forwarded transparently to the origin. Toggle with setWebSocketEnabled().", null));
+        grid.add(featureCard("Response caching", "Built-in cache with CacheOptions. Enable via setCachingEnabled(true).", null));
+        grid.add(featureCard("Interceptors", "Add ProxyInterceptor classes via Guice — rewrite headers, filter bodies, short-circuit responses.", null));
+        grid.add(featureCard("Environment-driven", "PROXY_HOST, PROXY_PORT, PROXY_ORIGIN_HOST, PROXY_ORIGIN_PORT env vars.", null));
+        grid.add(featureCard("@Named binding", "Inject HttpProxy with @Named qualifier for multi-proxy setups.", null));
+        content.add(grid);
+
+        content.add(codeBlockWithTitle("Reverse proxy module",
+                """
+                        public class ApiGateway extends ProxyModule<ApiGateway> {
+                        
+                            @Override
+                            protected ProxyConnectionInfo getProxyConnectionInfo() {
+                                return new ProxyConnectionInfo()
+                                        .setName("api-gateway")
+                                        .setProxyPort(8080)
+                                        .setOriginHost("api-server")
+                                        .setOriginPort(3000)
+                                        .setWebSocketEnabled(true)
+                                        .setCachingEnabled(false);
+                            }
+                        }"""));
+
+        return buildSection("HTTP Proxy", "Reverse proxy made simple",
+                "com.guicedee:vertx + io.vertx:vertx-http-proxy — Vert.x 5 reverse proxy with interceptors, caching, and WebSocket support.", false, content);
+    }
+
+    private WaStack buildRedisCapability()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("14rem");
+        grid.setGap(PageSize.Small);
+        grid.add(featureCard("All 4 modes", "Standalone, Sentinel, Cluster, and Replication — configured via a single RedisConnectionInfo or @RedisOptions annotation.", null));
+        grid.add(featureCard("@RedisOptions annotation", "Zero-code annotation-driven config with ${ENV_VAR:default} placeholder support on any class or package-info.", null));
+        grid.add(featureCard("Connection pooling", "Built-in pool with configurable maxPoolSize and maxWaitingHandlers.", null));
+        grid.add(featureCard("TLS support", "SSL/TLS with PEM certificates and hostname verification.", null));
+        grid.add(featureCard("RESP2 & RESP3", "Choose your protocol version or let the client auto-negotiate RESP3.", null));
+        grid.add(featureCard("Pub/Sub", "Subscribe to channels, publish messages — full Redis messaging support.", null));
+        grid.add(featureCard("Environment-driven", "${REDIS_URL}, REDIS_PASSWORD, REDIS_MODE, REDIS_MAX_POOL_SIZE env vars with override hierarchy.", null));
+        grid.add(featureCard("@Named binding", "Inject Redis and RedisAPI with @Named qualifier for multi-connection setups.", null));
+        content.add(grid);
+
+        content.add(codeBlockWithTitle("Annotation-based Redis (zero code)",
+                """
+                        @RedisOptions(
+                                name = "cache",
+                                connectionString = "${REDIS_URL:redis://localhost:6379/0}",
+                                maxPoolSize = 8
+                        )
+                        package com.example.app;"""));
+
+        content.add(codeBlockWithTitle("Programmatic Redis module",
+                """
+                        public class CacheRedis extends RedisModule<CacheRedis> {
+                        
+                            @Override
+                            protected RedisConnectionInfo getRedisConnectionInfo() {
+                                return new RedisConnectionInfo()
+                                        .setName("cache")
+                                        .setConnectionString("redis://localhost:6379/0")
+                                        .setMaxPoolSize(8)
+                                        .setDefaultConnection(true);
+                            }
+                        }"""));
+
+        content.add(codeBlockWithTitle("Sentinel HA configuration",
+                """
+                        @RedisOptions(
+                                name = "ha-redis",
+                                mode = RedisOptions.Mode.SENTINEL,
+                                connectionString = "redis://sentinel1:5000",
+                                endpoints = {"redis://sentinel2:5000", "redis://sentinel3:5000"},
+                                masterName = "${REDIS_MASTER:mymaster}"
+                        )"""));
+
+        content.add(codeBlockWithTitle("Inject and use",
+                """
+                        @Inject RedisAPI redis;
+                        
+                        redis.set(List.of("key", "value"))
+                                .onSuccess(r -> log.info("stored"));
+                        
+                        redis.get("key")
+                                .onSuccess(v -> log.info("value = {}", v));"""));
+
+        return buildSection("Redis", "High-performance key-value store",
+                "com.guicedee:vertx + io.vertx:vertx-redis-client — Vert.x 5 Redis client with annotation-driven config, pooling, clustering, TLS, pub/sub, and full environment variable support.", false, content);
     }
 
     private WaStack buildRestCapability()
@@ -561,6 +668,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         grid.setGap(PageSize.Small);
         grid.add(featureCard("Hibernate Reactive 7", "Fully async persistence with Mutiny.SessionFactory.", null));
         grid.add(featureCard("Multi-database", "PostgreSQL, MySQL, SQL Server, Oracle, and DB2.", null));
+        grid.add(featureCard("MongoDB", "Vert.x MongoClient with Guice injection via MongoModule. No JPA — native document API.", null));
+        grid.add(featureCard("Cassandra", "Vert.x CassandraClient with Guice injection via CassandraModule. CQL queries, streaming, and prepared statements.", null));
         grid.add(featureCard("Env var resolution", "${DB_URL}, ${DB_USER}, ${DB_PASSWORD} in persistence.xml.", null));
         grid.add(featureCard("Multiple units", "Multiple DatabaseModule subclasses with @Named qualifiers.", null));
         grid.add(featureCard("Vert.x connection pool", "Pre-initialized shared pools on the event loop.", null));
@@ -581,8 +690,61 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                                 .getResultList());
                         }"""));
 
-        return buildSection("Persistence", "Reactive JPA with zero boilerplate",
-                "com.guicedee:persistence — Hibernate Reactive on Vert.x SQL Client.", false, content);
+        content.add(codeBlockWithTitle("MongoDB — document storage with MongoModule",
+                """
+                        // 1. Subclass MongoModule
+                        public class MyMongoModule
+                                extends MongoModule<MyMongoModule> {
+                            @Override
+                            protected MongoConnectionInfo getMongoConnectionInfo() {
+                                return new MongoConnectionInfo()
+                                    .setConnectionString("${MONGO_URL:mongodb://localhost:27017}")
+                                    .setDatabaseName("${MONGO_DB:mydb}");
+                            }
+                        }
+                        
+                        // 2. Register in module-info.java
+                        provides IGuiceModule with MyMongoModule;
+                        
+                        // 3. Inject and use
+                        @Inject private MongoClient mongoClient;
+                        
+                        mongoClient.save("books", new JsonObject()
+                            .put("title", "The Hobbit")
+                            .put("author", "J. R. R. Tolkien"))
+                            .onComplete(res -> {
+                                System.out.println("Saved: " + res.result());
+                            });"""));
+
+        content.add(codeBlockWithTitle("Cassandra — wide-column storage with CassandraModule",
+                """
+                        // 1. Subclass CassandraModule
+                        public class MyCassandraModule
+                                extends CassandraModule<MyCassandraModule> {
+                            @Override
+                            protected CassandraConnectionInfo getCassandraConnectionInfo() {
+                                return new CassandraConnectionInfo()
+                                    .addContactPoint("localhost", 9042)
+                                    .setKeyspace("my_keyspace");
+                            }
+                        }
+                        
+                        // 2. Register in module-info.java
+                        provides IGuiceModule with MyCassandraModule;
+                        
+                        // 3. Inject and use
+                        @Inject private CassandraClient cassandraClient;
+                        
+                        cassandraClient.executeWithFullFetch(
+                            "SELECT * FROM users WHERE id = ?", id)
+                            .onComplete(ar -> {
+                                for (Row row : ar.result()) {
+                                    System.out.println(row.getString("name"));
+                                }
+                            });"""));
+
+        return buildSection("Persistence", "Reactive SQL, document, and wide-column databases",
+                "com.guicedee:persistence — Hibernate Reactive on Vert.x SQL Client + MongoDB + Cassandra.", false, content);
     }
 
     private WaStack buildWebSocketCapability()
@@ -1083,6 +1245,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
             Map.entry("rest-client", "RestClient/Basic"),
             Map.entry("websockets", "WebSockets/Basic"),
             Map.entry("persistence", "Persistence/Basic"),
+            Map.entry("persistence-mongodb", "Persistence/MongoDB"),
+            Map.entry("persistence-cassandra", "Persistence/Cassandra"),
             Map.entry("rabbitmq", "RabbitMQ/Basic"),
             Map.entry("kafka", "Kafka/Basic"),
             Map.entry("ibmmq", "IBMMQ/Basic"),

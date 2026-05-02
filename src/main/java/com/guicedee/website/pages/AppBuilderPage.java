@@ -52,6 +52,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'WebSockets': {groupId: 'com.guicedee', artifactId: 'websockets', moduleName: 'com.guicedee.websockets'},
                     'OpenAPI + Swagger UI': {groupId: 'com.guicedee', artifactId: 'openapi', moduleName: 'com.guicedee.openapi'},
                     'Web Services (SOAP)': {groupId: 'com.guicedee', artifactId: 'webservices', moduleName: 'com.guicedee.webservices'},
+                'HTTP Proxy': {groupId: 'com.guicedee', artifactId: 'vertx', moduleName: 'com.guicedee.vertx'},
                     'Persistence (Hibernate Reactive)': {groupId: 'com.guicedee', artifactId: 'persistence', moduleName: 'com.guicedee.persistence'},
                     'PostgreSQL': {groupId: 'com.guicedee.services', artifactId: 'postgresql', moduleName: 'com.guicedee.services.postgresql'},
                     'MySQL': {groupId: 'com.guicedee.services', artifactId: 'mysql-connector', moduleName: 'com.guicedee.services.mysql'},
@@ -59,6 +60,9 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'DB2': {groupId: 'com.guicedee.services', artifactId: 'db2-jcc', moduleName: 'com.guicedee.services.db2'},
                     'SQL Server': {groupId: 'com.guicedee.services', artifactId: 'mssql-jdbc', moduleName: 'com.guicedee.services.mssql'},
                     'JDBC (generic)': {groupId: 'com.guicedee.services', artifactId: 'jdbc', moduleName: 'com.guicedee.services.jdbc'},
+                'MongoDB': {groupId: 'com.guicedee', artifactId: 'persistence', moduleName: 'com.guicedee.persistence'},
+                'Cassandra': {groupId: 'com.guicedee', artifactId: 'persistence', moduleName: 'com.guicedee.persistence'},
+                'Redis': {groupId: 'com.guicedee', artifactId: 'vertx', moduleName: 'com.guicedee.vertx'},
                     'RabbitMQ': {groupId: 'com.guicedee', artifactId: 'rabbitmq', moduleName: 'com.guicedee.rabbitmq'},
                     'Kafka': {groupId: 'com.guicedee', artifactId: 'kafka', moduleName: 'com.guicedee.kafka'},
                     'IBM MQ': {groupId: 'com.guicedee', artifactId: 'ibmmq', moduleName: 'com.guicedee.ibmmq'},
@@ -180,8 +184,21 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     const requires = deps.length === 0
                         ? '    // requires for each selected module'
                         : deps.map(d => `    requires transitive ${d.moduleName};`).join('\\n');
+                    let extras = '';
+                    if (this.selectedModules.includes('MongoDB')) {
+                        extras += '\\n    requires io.vertx.client.mongo;';
+                    }
+                    if (this.selectedModules.includes('Cassandra')) {
+                        extras += '\\n    requires io.vertx.cassandra.client;';
+                    }
+                    if (this.selectedModules.includes('HTTP Proxy')) {
+                        extras += '\\n    requires io.vertx.httpproxy;';
+                    }
+                    if (this.selectedModules.includes('Redis')) {
+                        extras += '\\n    requires io.vertx.redis.client;';
+                    }
                     return '```java\\n' + `module ${modName} {
-                ${requires}
+                ${requires}${extras}
 
                     opens ${this.packageName} to com.google.guice;
 
@@ -191,7 +208,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
                 """);
         m.add("""
-                getBootPreview(): string {
+                getModuleInfoPreview
                     return '```java\\n' + `package ${this.packageName};
 
                 import com.guicedee.client.IGuiceContext;
@@ -276,8 +293,21 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     const requires = deps.length === 0
                         ? '    // requires for each selected module'
                         : deps.map(d => `    requires transitive ${d.moduleName};`).join('\\n');
+                    let extras = '';
+                    if (this.selectedModules.includes('MongoDB')) {
+                        extras += '\\n    requires io.vertx.client.mongo;';
+                    }
+                    if (this.selectedModules.includes('Cassandra')) {
+                        extras += '\\n    requires io.vertx.cassandra.client;';
+                    }
+                    if (this.selectedModules.includes('HTTP Proxy')) {
+                        extras += '\\n    requires io.vertx.httpproxy;';
+                    }
+                    if (this.selectedModules.includes('Redis')) {
+                        extras += '\\n    requires io.vertx.redis.client;';
+                    }
                     return `module ${modName} {
-                ${requires}
+                ${requires}${extras}
 
                     opens ${this.packageName} to com.google.guice;
 
@@ -424,6 +454,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         webReactive.add(leafItem("WebSockets"));
         webReactive.add(leafItem("OpenAPI + Swagger UI"));
         webReactive.add(leafItem("Web Services (SOAP)"));
+        webReactive.add(leafItem("HTTP Proxy"));
         tree.add(webReactive);
 
         var database = parentItem("Database", false);
@@ -434,6 +465,9 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         database.add(leafItem("DB2"));
         database.add(leafItem("SQL Server"));
         database.add(leafItem("JDBC (generic)"));
+        database.add(leafItem("MongoDB"));
+        database.add(leafItem("Cassandra"));
+        database.add(leafItem("Redis"));
         tree.add(database);
 
         var messaging = parentItem("Messaging", false);

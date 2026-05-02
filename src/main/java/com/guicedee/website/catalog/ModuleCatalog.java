@@ -72,6 +72,7 @@ public final class ModuleCatalog
                 case "mailclient" -> "Email client integration for GuicedEE with Vert.x 5. SMTP mail sending with Guice-managed configuration and templates.";
                 case "metrics" -> "MicroProfile Metrics for GuicedEE with Vert.x 5 Dropwizard Metrics. @Counted, @Timed annotations, Prometheus scrape endpoint, and Graphite reporting.";
                 case "rest-client" -> "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient. @Endpoint declarations, RestClient injection, and authentication strategies.";
+                case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage and Cassandra wide-column storage via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, and Cassandra.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -175,10 +176,13 @@ public final class ModuleCatalog
                 "metrics-core"
         });
         addServices(services, groupId, version, "Vert.x", "Vert.x", new String[]{
+                "vertx-cassandra",
+                "vertx-http-proxy",
                 "vertx-mutiny",
                 "vertx-kafka",
                 "vertx-pg-client",
-                "vertx-rabbitmq"
+                "vertx-rabbitmq",
+                "vertx-redis-client"
         });
         addServices(services, groupId, version, "services", "Misc", new String[]{
                 "untitled"
@@ -227,14 +231,14 @@ public final class ModuleCatalog
             case "mailclient" -> "Mail Client";
             case "metrics" -> "MicroProfile Metrics";
             case "openapi" -> "OpenAPI";
-            case "persistence" -> "Persistence";
+            case "persistence" -> "Persistence (SQL + MongoDB + Cassandra)";
             case "rabbitmq" -> "RabbitMQ";
             case "representations" -> "Representations";
             case "rest" -> "REST Services";
             case "rest-client" -> "REST Client";
             case "swagger-ui" -> "Swagger UI";
             case "telemetry" -> "Telemetry";
-            case "vertx" -> "Vert.x Core";
+            case "vertx" -> "Vert.x Core + HTTP Proxy";
             case "web" -> "Web Server";
             case "webservices" -> "Web Services (SOAP)";
             case "websockets" -> "WebSockets";

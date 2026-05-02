@@ -58,6 +58,54 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Current stable release targeting JDK 25 and Vert.x 5.",
                 true, currentContent));
 
+        // v2.0.1 release
+        var patchContent = new WaStack<>();
+        patchContent.setGap(PageSize.Medium);
+
+        var patchGrid = new WaGrid<>();
+        patchGrid.setMinColumnSize("16rem");
+        patchGrid.setGap(PageSize.Medium);
+
+        patchGrid.add(featureCard("MongoDB support",
+                "Native MongoDB integration via Vert.x MongoClient. " +
+                        "Extend MongoModule, configure MongoConnectionInfo with connection string or host/port/auth, " +
+                        "and inject @Named MongoClient instances. Environment variable driven configuration.",
+                "New feature"));
+
+        patchGrid.add(featureCard("Cassandra support",
+                "Native Cassandra integration via Vert.x CassandraClient. " +
+                        "Extend CassandraModule, configure CassandraConnectionInfo with contact points, keyspace, and auth, " +
+                        "and inject @Named CassandraClient instances. Environment variable driven configuration.",
+                "New feature"));
+
+        patchGrid.add(featureCard("IntelliJ plugin templates",
+                "New file templates for MongoDB Module and Cassandra Module in the IntelliJ plugin, " +
+                        "plus Application Builder integration for scaffolding MongoDB and Cassandra projects.",
+                "Enhancement"));
+
+        patchGrid.add(featureCard("Testcontainers fix",
+                "Fixed org.reactivestreams package split conflict in the Testcontainers shade jar, " +
+                        "enabling Testcontainers-based integration tests for MongoDB and Cassandra.",
+                "Bug fix"));
+
+        patchGrid.add(featureCard("HTTP Proxy support",
+                "Vert.x HttpProxy reverse proxy integration. Extend ProxyModule, configure ProxyConnectionInfo " +
+                        "with proxy/origin host and port, interceptors, caching, and WebSocket support. " +
+                        "Inject @Named HttpProxy instances.",
+                "New feature"));
+
+        patchGrid.add(featureCard("Redis support",
+                "Comprehensive Vert.x Redis integration with @RedisOptions annotation-driven config, " +
+                        "all 4 modes (Standalone, Sentinel, Cluster, Replication), connection pooling, TLS/SSL, " +
+                        "RESP2/RESP3 protocol selection, ${ENV_VAR:default} placeholders, pub/sub, " +
+                        "and @Named multi-connection injection. Zero-code setup via annotation or full programmatic control.",
+                "New feature"));
+
+        patchContent.add(patchGrid);
+        layout.add(buildSection("v2.0.1", "Patch release",
+                "MongoDB, Cassandra, HTTP Proxy, and Redis support with Vert.x native clients, IntelliJ plugin enhancements, and Testcontainers fixes.",
+                true, patchContent));
+
         // What's new in 2.0
         var whatsNewContent = new WaStack<>();
         whatsNewContent.setGap(PageSize.Medium);
@@ -105,10 +153,9 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         roadmapGrid.setMinColumnSize("16rem");
         roadmapGrid.setGap(PageSize.Medium);
 
-        roadmapGrid.add(featureCard("Cassandra & expanded DB support",
-                "Native Cassandra driver integration with reactive Vert.x client, " +
-                        "plus MongoDB, CockroachDB, and ClickHouse service modules.",
-                "In progress"));
+        roadmapGrid.add(featureCard("Expanded DB support",
+                "CockroachDB and ClickHouse service modules with dedicated connection info and module patterns.",
+                "Planned"));
 
         roadmapGrid.add(featureCard("Enhanced CallScope",
                 "Richer call-scope propagation across async boundaries — automatic context " +

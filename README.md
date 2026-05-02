@@ -57,7 +57,7 @@ This site’s Services section lists a complete, statically-defined set of modul
 - **Jakarta**: `jakarta-security-jacc`
 - **Libraries**: `bcrypt`, `cloudevents`, `ibm-mq`, `jandex`, `javassist`, `json`, `kafka-client`, `mapstruct`, `openpdf`, `rabbitmq-client`, `scram`, `swagger`, `testcontainers`, `uadetector-core`, `uadetector-resources`
 - **MicroProfile**: `config-core`, `metrics-core`
-- **Vert.x**: `vertx-mutiny`, `vertx-pg-client`, `vertx-rabbitmq`
+- **Vert.x**: `vertx-cassandra`, `vertx-mutiny`, `vertx-kafka`, `vertx-pg-client`, `vertx-rabbitmq`
 - **Misc**: `untitled`
 
 Each service card describes configuration patterns, integration requirements, and the modular contracts they expose so teams can adopt them independently.
