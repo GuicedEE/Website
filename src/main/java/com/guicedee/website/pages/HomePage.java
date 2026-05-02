@@ -73,7 +73,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                     'webservices': 'https://raw.githubusercontent.com/GedMarc/Guiced-WebServices/refs/heads/master/README.md',
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
                     'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
-                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md'
+                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md',
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
                 };
                 """);
         return f;
@@ -1407,6 +1408,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "OpenTelemetry tracing with " + brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "telemetry", "Telemetry/Basic"));
         grid.add(pluginCard("OpenAPI",
                 "OpenAPI 3.1 spec at " + brandCode("/openapi.json") + " + " + brandCode("/openapi.yaml") + " from JAX-RS annotations.", "openapi", "OpenAPI/Basic"));
+        grid.add(pluginCard("GraphQL",
+                "SPI-driven schema at " + brandCode("/graphql") + " with HTTP + WebSocket + optional " + brandCode("GraphiQL") + " IDE.", "graphql", "GraphQL/Basic"));
         grid.add(pluginCard("Swagger UI",
                 "Browsable UI at " + brandCode("/swagger/") + " with zero code. Just add the dependency.", "swagger-ui", "OpenAPI/Basic"));
         grid.add(pluginCard("Config",

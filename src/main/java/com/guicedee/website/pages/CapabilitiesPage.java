@@ -1410,7 +1410,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                     'webservices': 'https://raw.githubusercontent.com/GedMarc/Guiced-WebServices/refs/heads/master/README.md',
                     'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
-                    'jwt': 'https://raw.githubusercontent.com/GuicedEE/JWT/refs/heads/master/README.md'
+                    'jwt': 'https://raw.githubusercontent.com/GuicedEE/JWT/refs/heads/master/README.md',
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
                 };
                 """);
         return f;

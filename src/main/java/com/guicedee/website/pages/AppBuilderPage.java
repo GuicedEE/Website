@@ -53,6 +53,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'OpenAPI + Swagger UI': {groupId: 'com.guicedee', artifactId: 'openapi', moduleName: 'com.guicedee.openapi'},
                     'Web Services (SOAP)': {groupId: 'com.guicedee', artifactId: 'webservices', moduleName: 'com.guicedee.webservices'},
                 'HTTP Proxy': {groupId: 'com.guicedee', artifactId: 'vertx', moduleName: 'com.guicedee.vertx'},
+                'gRPC': {groupId: 'com.guicedee', artifactId: 'vertx', moduleName: 'com.guicedee.vertx'},
                     'Persistence (Hibernate Reactive)': {groupId: 'com.guicedee', artifactId: 'persistence', moduleName: 'com.guicedee.persistence'},
                     'PostgreSQL': {groupId: 'com.guicedee.services', artifactId: 'postgresql', moduleName: 'com.guicedee.services.postgresql'},
                     'MySQL': {groupId: 'com.guicedee.services', artifactId: 'mysql-connector', moduleName: 'com.guicedee.services.mysql'},
@@ -66,6 +67,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'RabbitMQ': {groupId: 'com.guicedee', artifactId: 'rabbitmq', moduleName: 'com.guicedee.rabbitmq'},
                     'Kafka': {groupId: 'com.guicedee', artifactId: 'kafka', moduleName: 'com.guicedee.kafka'},
                     'IBM MQ': {groupId: 'com.guicedee', artifactId: 'ibmmq', moduleName: 'com.guicedee.ibmmq'},
+                    'GraphQL': {groupId: 'com.guicedee', artifactId: 'graphql', moduleName: 'com.guicedee.vertx.graphql'},
                     'Hazelcast': {groupId: 'com.guicedee.services', artifactId: 'hazelcast', moduleName: 'com.guicedee.services.hazelcast'},
                     'EhCache': {groupId: 'com.guicedee.services', artifactId: 'ehcache', moduleName: 'com.guicedee.services.ehcache'},
                     'OAuth2 / OIDC': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
@@ -197,6 +199,10 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     if (this.selectedModules.includes('Redis')) {
                         extras += '\\n    requires io.vertx.redis.client;';
                     }
+                    if (this.selectedModules.includes('gRPC')) {
+                        extras += '\\n    requires io.vertx.grpc.server;';
+                        extras += '\\n    requires io.vertx.grpc.client;';
+                    }
                     return '```java\\n' + `module ${modName} {
                 ${requires}${extras}
 
@@ -208,7 +214,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
                 """);
         m.add("""
-                getModuleInfoPreview
+                getBootPreview(): string {
                     return '```java\\n' + `package ${this.packageName};
 
                 import com.guicedee.client.IGuiceContext;
@@ -305,6 +311,10 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     }
                     if (this.selectedModules.includes('Redis')) {
                         extras += '\\n    requires io.vertx.redis.client;';
+                    }
+                    if (this.selectedModules.includes('gRPC')) {
+                        extras += '\\n    requires io.vertx.grpc.server;';
+                        extras += '\\n    requires io.vertx.grpc.client;';
                     }
                     return `module ${modName} {
                 ${requires}${extras}
@@ -455,6 +465,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         webReactive.add(leafItem("OpenAPI + Swagger UI"));
         webReactive.add(leafItem("Web Services (SOAP)"));
         webReactive.add(leafItem("HTTP Proxy"));
+        webReactive.add(leafItem("gRPC"));
         tree.add(webReactive);
 
         var database = parentItem("Database", false);

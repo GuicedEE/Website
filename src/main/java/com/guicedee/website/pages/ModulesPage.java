@@ -265,6 +265,12 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:websockets",
                 "websockets", "WebSockets/Basic"));
 
+        grid.add(moduleCard("GraphQL",
+                "SPI-driven GraphQL with Vert.x Web GraphQL. HTTP + WebSocket endpoints, " +
+                        "GraphiQL IDE, DataLoader support, VertxFutureAdapter + JsonObjectAdapter auto-configured.",
+                "com.guicedee:graphql",
+                "graphql", "GraphQL/Basic"));
+
         return buildSection("Web & REST", "HTTP servers, REST services, and real-time communication",
                 "The reactive web stack built on Vert.x 5.", false, grid);
     }
@@ -501,7 +507,8 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                     'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
                     'mail-client': 'https://raw.githubusercontent.com/GuicedEE/MailClient/refs/heads/master/README.md',
-                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md'
+                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md',
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
                 };
                 """);
         return f;

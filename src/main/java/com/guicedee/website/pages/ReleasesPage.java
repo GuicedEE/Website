@@ -101,9 +101,21 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "and @Named multi-connection injection. Zero-code setup via annotation or full programmatic control.",
                 "New feature"));
 
+        patchGrid.add(featureCard("ConnectionBaseInfoFactory",
+                "New factory API for creating database-specific ConnectionBaseInfo implementations. " +
+                        "Use ConnectionBaseInfoFactory.createConnectionBaseInfo(\"postgresql\") instead of " +
+                        "instantiating DB-specific classes directly. Supports postgresql, mysql, sqlserver, oracle, and db2.",
+                "Enhancement"));
+
+        patchGrid.add(featureCard("Updated persistence examples",
+                "All persistence examples (Basic, DB2, MySQL, MSSQL, Oracle) updated to use " +
+                        "ConnectionBaseInfoFactory instead of DB-specific ConnectionBaseInfo subclasses. " +
+                        "IntelliJ plugin persistence template updated with DATABASE_TYPE variable.",
+                "Enhancement"));
+
         patchContent.add(patchGrid);
         layout.add(buildSection("v2.0.1", "Patch release",
-                "MongoDB, Cassandra, HTTP Proxy, and Redis support with Vert.x native clients, IntelliJ plugin enhancements, and Testcontainers fixes.",
+                "MongoDB, Cassandra, HTTP Proxy, Redis support, ConnectionBaseInfoFactory, IntelliJ plugin enhancements, and Testcontainers fixes.",
                 true, patchContent));
 
         // What's new in 2.0

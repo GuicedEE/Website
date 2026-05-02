@@ -541,8 +541,8 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         
                             @Override
                             protected ConnectionBaseInfo getConnectionBaseInfo(
-                                    Properties properties) {
-                                return new PostgreSQLConnectionInfo();
+                                    PersistenceUnitDescriptor unit, Properties properties) {
+                                return ConnectionBaseInfoFactory.createConnectionBaseInfo("postgresql");
                             }
                         }"""));
 
@@ -577,6 +577,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         features.add(featureCardHtml("Hibernate Reactive 7", "Fully async with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + ".", null));
         features.add(featureCardHtml("DatabaseModule required", "GuicedEE creates the persistence unit from supplied properties, merged with " + brandCode("persistence.xml") + " if provided.", null));
         features.add(featureCardHtml("Multi-database", "Multiple " + brandCode("DatabaseModule") + " subclasses with " + brandCode("@Named") + " qualifiers.", null));
+        features.add(featureCardHtml("ConnectionBaseInfoFactory", "Use " + brandCode("ConnectionBaseInfoFactory.createConnectionBaseInfo(\"postgresql\")") + " — supports postgresql, mysql, sqlserver, oracle, db2.", null));
         features.add(featureCardHtml("Vert.x pool", "Pre-initialized connection pools on the event loop.", null));
         content.add(features);
 
@@ -871,6 +872,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         grid.add(guideModuleCard("Telemetry", brandCode("@Trace") + ", OTLP export, Log4j2 correlation.", "telemetry", "Telemetry/Basic"));
         grid.add(guideModuleCard("Metrics", brandCode("@Counted") + ", " + brandCode("@Timed") + ", Prometheus endpoint.", "metrics", "Metrics/Basic"));
         grid.add(guideModuleCard("OpenAPI + Swagger", "Auto-generated spec + browsable UI.", "openapi", "OpenAPI/Basic"));
+        grid.add(guideModuleCard("GraphQL", "SPI-driven HTTP + WebSocket + GraphiQL endpoints.", "graphql", "GraphQL/Basic"));
         grid.add(guideModuleCard("Fault Tolerance", brandCode("@Retry") + ", " + brandCode("@CircuitBreaker") + ", " + brandCode("@Timeout") + ", " + brandCode("@Bulkhead") + ".", "fault-tolerance", "FaultTolerance/Basic"));
         grid.add(guideModuleCard("CDI Bridge (Migration)", "Migration aid: " + brandCode("@ApplicationScoped") + ", " + brandCode("@RequestScoped") + ", " + brandCode("BeanManager") + " → " + brandCode("Guice") + ". Not a foundation module.", "cdi", "CDI/Basic"));
         grid.add(guideModuleCard("Inject (core)", brandCode("GuiceContext") + ", " + brandCode("ClassGraph") + ", lifecycle SPI, " + brandCode("JobService") + ".", "inject", "Inject/Basic"));
@@ -960,7 +962,8 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                     'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
                     'mail-client': 'https://raw.githubusercontent.com/GuicedEE/MailClient/refs/heads/master/README.md',
-                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md'
+                    'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md',
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
                 };
                 """);
         return f;

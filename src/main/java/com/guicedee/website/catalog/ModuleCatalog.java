@@ -35,6 +35,7 @@ public final class ModuleCatalog
                 "client",
                 "config",
                 "fault-tolerance",
+                "graphql",
                 "hazelcast",
                 "health",
                 "ibmmq",
@@ -64,6 +65,7 @@ public final class ModuleCatalog
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
                 case "fault-tolerance" -> "MicroProfile Fault Tolerance for GuicedEE. @Retry, @Timeout, @CircuitBreaker, @Fallback, and @Bulkhead annotations with Guice AOP interceptors.";
+                case "graphql" -> "SPI-driven GraphQL integration for GuicedEE with Vert.x Web GraphQL. HTTP + WebSocket endpoints, GraphiQL IDE, DataLoader support, VertxFutureAdapter and JsonObjectAdapter auto-configured.";
                 case "hazelcast" -> "Hazelcast distributed caching and clustering integration for GuicedEE. JCache provider, distributed data structures, and cluster management.";
                 case "health" -> "MicroProfile Health integration for GuicedEE with Vert.x 5. @Liveness, @Readiness, @Startup health checks with automatic discovery and JSON endpoints.";
                 case "ibmmq" -> "Annotation-driven IBM MQ integration for GuicedEE. @IBMMQConnectionOptions, @IBMMQQueueDefinition, IBMMQConsumer/Publisher with IBM MQ JMS client.";
@@ -224,6 +226,7 @@ public final class ModuleCatalog
             case "client" -> "Client API";
             case "config" -> "MicroProfile Config";
             case "fault-tolerance" -> "Fault Tolerance";
+            case "graphql" -> "GraphQL";
             case "hazelcast" -> "Hazelcast";
             case "health" -> "MicroProfile Health";
             case "ibmmq" -> "IBM MQ";
@@ -240,7 +243,7 @@ public final class ModuleCatalog
             case "rest-client" -> "REST Client";
             case "swagger-ui" -> "Swagger UI";
             case "telemetry" -> "Telemetry";
-            case "vertx" -> "Vert.x Core + HTTP Proxy + gRPC";
+            case "vertx" -> "Vert.x Core + HTTP Proxy";
             case "web" -> "Web Server";
             case "webservices" -> "Web Services (SOAP)";
             case "websockets" -> "WebSockets";

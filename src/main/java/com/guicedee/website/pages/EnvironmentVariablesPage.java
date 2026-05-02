@@ -61,6 +61,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         layout.add(buildMetricsSection());
         layout.add(buildTelemetrySection());
         layout.add(buildRabbitMQSection());
+        layout.add(buildGraphQLSection());
         layout.add(buildKafkaSection());
         layout.add(buildIbmMqSection());
         layout.add(buildPersistenceSection());
@@ -654,6 +655,30 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
         return section("RabbitMQ", "GuicedEE RabbitMQ",
                 "Annotation-driven RabbitMQ messaging with scoped env var overrides.", content);
+    }
+
+    // ── GraphQL ─────────────────────────────────────────
+
+    private WaStack<?> buildGraphQLSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        content.add(envTable(
+                "GraphQL Configuration",
+                new String[][]{
+                        {"GRAPHQL_HTTP_PATH", "HTTP endpoint path", "/graphql"},
+                        {"GRAPHQL_WS_ENABLED", "Enable GraphQL over WebSocket", "true"},
+                        {"GRAPHQL_WS_PATH", "WebSocket endpoint path", "/graphql"},
+                        {"GRAPHIQL_ENABLED", "Enable GraphiQL IDE", "false"},
+                        {"GRAPHIQL_PATH", "GraphiQL mount path", "/graphiql"},
+                        {"GRAPHQL_BATCHING_ENABLED", "Enable query batching", "false"},
+                        {"GRAPHQL_UPLOADS_ENABLED", "Enable multipart file uploads", "false"},
+                }
+        ));
+
+        return section("graphql", "GraphQL",
+                "GraphQL integration with Vert.x Web GraphQL.", content);
     }
 
     // ── Kafka ───────────────────────────────────────────

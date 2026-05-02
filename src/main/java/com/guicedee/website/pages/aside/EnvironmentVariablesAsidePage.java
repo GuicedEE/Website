@@ -75,6 +75,7 @@ public class EnvironmentVariablesAsidePage extends DivSimple<EnvironmentVariable
         list.add(asideLink("metrics", "Metrics"));
         list.add(asideLink("telemetry", "Telemetry"));
         list.add(asideLink("rabbitmq", "RabbitMQ"));
+        list.add(asideLink("graphql", "GraphQL"));
         list.add(asideLink("kafka", "Kafka"));
         list.add(asideLink("ibm-mq", "IBM MQ"));
         list.add(asideLink("persistence", "Persistence"));
