@@ -527,19 +527,21 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         var wrapper = new DivSimple<>();
 
         var icon = new WaIcon<>("up-right-from-square");
-        icon.addClass("header-action-icon");
-        icon.addStyle("cursor", "pointer");
         icon.addStyle("font-size", "var(--wa-font-size-m)");
-        icon.addAttribute("waColorText", "brand");
 
-        var tooltip = new WaTooltip<>(icon);
+        var btn = new WaButton<>();
+        btn.setVariant(Variant.Brand);
+        btn.setAppearance(Appearance.Plain);
+        btn.setSize(com.jwebmp.webawesome.components.Size.Small);
+        btn.addAttribute("href", url);
+        btn.addAttribute("target", "_blank");
+        btn.add(icon);
+
+        var tooltip = new WaTooltip<>(btn);
         tooltip.setText(tooltipText);
 
-        var link = new com.jwebmp.core.base.html.Link<>(url, "_blank");
-        link.add(icon);
-        link.add(tooltip);
-
-        wrapper.add(link);
+        wrapper.add(btn);
+        wrapper.add(tooltip);
         return wrapper;
     }
 

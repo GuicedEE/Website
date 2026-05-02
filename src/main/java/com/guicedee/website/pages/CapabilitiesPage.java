@@ -1180,14 +1180,19 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var headerActions = new WaCluster<>();
         headerActions.setGap(PageSize.ExtraSmall);
 
-        var repoLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
         var repoIcon = new WaIcon<>("github");
-        repoIcon.setLibrary("fab");
-        repoIcon.addStyle("cursor", "pointer");
+        repoIcon.addAttribute("family", "brands");
         repoIcon.addStyle("font-size", "var(--wa-font-size-l)");
-        repoLink.add(repoIcon);
-        repoLink.add(new WaTooltip<>(repoIcon).setText("View Repository").setPlacement(TooltipPlacement.Top));
-        headerActions.add(repoLink);
+
+        var repoBtn = new WaButton<>();
+        repoBtn.setVariant(Variant.Brand);
+        repoBtn.setAppearance(Appearance.Plain);
+        repoBtn.setSize(com.jwebmp.webawesome.components.Size.Small);
+        repoBtn.addAttribute("href", "{{currentRepoUrl}}");
+        repoBtn.addAttribute("target", "_blank");
+        repoBtn.add(repoIcon);
+        headerActions.add(repoBtn);
+        headerActions.add(new WaTooltip<>(repoBtn).setText("View Repository").setPlacement(TooltipPlacement.Top));
 
         headerCluster.add(headerActions);
         dialogHeader.add(headerCluster);

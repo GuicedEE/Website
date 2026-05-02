@@ -88,28 +88,28 @@ public final class ModuleCatalog
 
         List<ServiceDefinition> services = new ArrayList<>();
 
-        addServices(services, groupId, version, "services/Apache/Commons", "Apache Commons", new String[]{
+        addServices(services, groupId, version, "Apache/Commons", "Apache Commons", new String[]{
                 "commons-beanutils",
                 "commons-collections",
                 "commons-csv",
                 "commons-fileupload",
                 "commons-math"
         });
-        addServices(services, groupId, version, "services/Apache/CXF", "Apache CXF (Web Services)", new String[]{
+        addServices(services, groupId, version, "Apache/CXF", "Apache CXF (Web Services)", new String[]{
                 "apache-cxf",
                 "apache-cxf-rt-security",
                 "apache-cxf-rt-transports-http"
         });
-        addServices(services, groupId, version, "services/Apache/POI", "Apache POI", new String[]{
+        addServices(services, groupId, version, "Apache/POI", "Apache POI", new String[]{
                 "apache-poi",
                 "apache-poi-ooxml"
         });
-        addServices(services, groupId, version, "services/Database", "Database Driver", new String[]{
+        addServices(services, groupId, version, "Database", "Database Driver", new String[]{
                 "msal4j",
                 "mssql-jdbc",
                 "postgresql"
         });
-        addServices(services, groupId, version, "services/Google", "Google", new String[]{
+        addServices(services, groupId, version, "Google", "Google", new String[]{
                 "aop",
                 "guice-core",
                 "guice-assistedinject",
@@ -117,14 +117,14 @@ public final class ModuleCatalog
                 "guice-jmx",
                 "guice-jndi"
         });
-        addServices(services, groupId, version, "services/Hibernate", "Hibernate", new String[]{
+        addServices(services, groupId, version, "Hibernate", "Hibernate", new String[]{
                 "hibernate-core",
                 "hibernate-jcache",
                 "hibernate-reactive",
                 "hibernate-validator"
         });
 
-        addServices(services, groupId, version, "services/JCache", "JCache", new String[]{
+        addServices(services, groupId, version, "JCache", "JCache", new String[]{
                 "cache-annotations-ri-common",
                 "cache-annotations-ri-guice",
                 "cache-api",
@@ -132,14 +132,14 @@ public final class ModuleCatalog
                 "hazelcast",
                 "hazelcast-hibernate"
         });
-        addServices(services, groupId, version, "services/JNI", "JNI", new String[]{
+        addServices(services, groupId, version, "JNI", "JNI", new String[]{
                 "jna-platform",
                 "nrjavaserial"
         });
-        addServices(services, groupId, version, "services/Jakarta", "Jakarta", new String[]{
+        addServices(services, groupId, version, "Jakarta", "Jakarta", new String[]{
                 "jakarta-security-jacc"
         });
-        addServices(services, groupId, version, "services/Libraries", "Library", new String[]{
+        addServices(services, groupId, version, "Libraries", "Library", new String[]{
                 "bcrypt",
                 "cloudevents",
                 "ibm-mq",
@@ -157,12 +157,12 @@ public final class ModuleCatalog
                 "uadetector-core",
                 "uadetector-resources"
         });
-        addServices(services, groupId, version, "services/MicroProfile", "MicroProfile", new String[]{
+        addServices(services, groupId, version, "MicroProfile", "MicroProfile", new String[]{
                 "config-core",
                 "jwt-auth-api",
                 "metrics-core"
         });
-        addServices(services, groupId, version, "services/Vert.x", "Vert.x", new String[]{
+        addServices(services, groupId, version, "Vert.x", "Vert.x", new String[]{
                 "vertx-mutiny",
                 "vertx-kafka",
                 "vertx-pg-client",

@@ -70,32 +70,44 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         actions.setGap(PageSize.ExtraSmall);
 
         // GitHub repo link
-        var repoLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
         var repoIcon = new WaIcon<>("github");
-        repoIcon.setLibrary("fab");
-        repoIcon.addStyle("cursor", "pointer");
+        repoIcon.addAttribute("family", "brands");
         repoIcon.addStyle("font-size", "var(--wa-font-size-l)");
-        repoLink.add(repoIcon);
-        repoLink.add(new WaTooltip<>(repoIcon).setText("View Repository").setPlacement(TooltipPlacement.Top));
-        actions.add(repoLink);
+        var repoBtn = new WaButton<>();
+        repoBtn.setVariant(Variant.Brand);
+        repoBtn.setAppearance(Appearance.Plain);
+        repoBtn.setSize(com.jwebmp.webawesome.components.Size.Small);
+        repoBtn.addAttribute("href", "{{currentRepoUrl}}");
+        repoBtn.addAttribute("target", "_blank");
+        repoBtn.add(repoIcon);
+        actions.add(repoBtn);
+        actions.add(new WaTooltip<>(repoBtn).setText("View Repository").setPlacement(TooltipPlacement.Top));
 
         // Star repo link
-        var starLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl}}", "_blank");
         var starIcon = new WaIcon<>("star");
-        starIcon.addStyle("cursor", "pointer");
         starIcon.addStyle("font-size", "var(--wa-font-size-l)");
-        starLink.add(starIcon);
-        starLink.add(new WaTooltip<>(starIcon).setText("Star Repository").setPlacement(TooltipPlacement.Top));
-        actions.add(starLink);
+        var starBtn = new WaButton<>();
+        starBtn.setVariant(Variant.Brand);
+        starBtn.setAppearance(Appearance.Plain);
+        starBtn.setSize(com.jwebmp.webawesome.components.Size.Small);
+        starBtn.addAttribute("href", "{{currentRepoUrl}}");
+        starBtn.addAttribute("target", "_blank");
+        starBtn.add(starIcon);
+        actions.add(starBtn);
+        actions.add(new WaTooltip<>(starBtn).setText("Star Repository").setPlacement(TooltipPlacement.Top));
 
         // Issues link
-        var issuesLink = new com.jwebmp.core.base.html.Link<>("{{currentRepoUrl + '/issues'}}", "_blank");
         var issuesIcon = new WaIcon<>("bug");
-        issuesIcon.addStyle("cursor", "pointer");
         issuesIcon.addStyle("font-size", "var(--wa-font-size-l)");
-        issuesLink.add(issuesIcon);
-        issuesLink.add(new WaTooltip<>(issuesIcon).setText("Log an Issue").setPlacement(TooltipPlacement.Top));
-        actions.add(issuesLink);
+        var issuesBtn = new WaButton<>();
+        issuesBtn.setVariant(Variant.Brand);
+        issuesBtn.setAppearance(Appearance.Plain);
+        issuesBtn.setSize(com.jwebmp.webawesome.components.Size.Small);
+        issuesBtn.addAttribute("href", "{{currentRepoUrl + '/issues'}}");
+        issuesBtn.addAttribute("target", "_blank");
+        issuesBtn.add(issuesIcon);
+        actions.add(issuesBtn);
+        actions.add(new WaTooltip<>(issuesBtn).setText("Log an Issue").setPlacement(TooltipPlacement.Top));
 
         headerCluster.add(actions);
         dialogHeader.add(headerCluster);
@@ -148,14 +160,64 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(moduleCard("Inject (Core Engine)",
-                "GuiceContext, ClassGraph scanning, lifecycle SPI (IGuicePreStartup, IGuiceModule, " +
-                        "IGuicePostStartup, IGuicePreDestroy), JobService, Environment utilities, CallScope. " +
-                        "Client API: com.guicedee:client — IGuiceContext, Environment, CallScoper, CallScopeProperties. " +
-                        "Module: com.guicedee.client (lightweight API that all modules depend on).",
-                "com.guicedee:inject",
-                "inject", "Inject/Basic"));
+        // Single combined Inject + Client API card
+        var card = new WaCard<>();
+        card.setAppearance(Appearance.Outlined);
 
+        var header = new DivSimple<>();
+        var headerCluster = new WaCluster<>();
+        headerCluster.setGap(PageSize.Small);
+        headerCluster.setSplit();
+        headerCluster.add(headingText("h3", "m", "Inject (Core Engine)"));
+        headerCluster.add(exampleHeaderIcon("Inject/Basic"));
+        header.add(headerCluster);
+        card.withHeader(header);
+
+        var stack = new WaStack<>();
+        stack.setGap(PageSize.Small);
+
+        var body = bodyText("GuiceContext, ClassGraph scanning, lifecycle SPI (IGuicePreStartup, IGuiceModule, " +
+                "IGuicePostStartup, IGuicePreDestroy), JobService, Environment utilities, CallScope.", "m");
+        body.setWaColorText("quiet");
+        stack.add(body);
+
+        var clientBody = bodyText("Client API — IGuiceContext interface, Environment, CallScoper, CallScopeProperties. " +
+                "The lightweight API that all modules depend on.", "m");
+        clientBody.setWaColorText("quiet");
+        stack.add(clientBody);
+
+        card.add(stack);
+
+        var footer = new WaStack<>();
+        footer.setGap(PageSize.Small);
+
+        var coords = new WaCluster<>();
+        coords.setGap(PageSize.Small);
+        coords.add(coordinateBlock("com.guicedee:inject"));
+        coords.add(coordinateBlock("com.guicedee:client"));
+        footer.add(coords);
+
+        var buttons = new com.jwebmp.webawesome.components.WaCluster<>();
+        buttons.setGap(PageSize.ExtraSmall);
+
+        var injectCta = new WaButton<>();
+        injectCta.setText(escapeAngular("View Inject →"));
+        injectCta.setVariant(Variant.Brand);
+        injectCta.setAppearance(Appearance.Outlined);
+        injectCta.addAttribute("(click)", "openReadme('inject', 'Inject &#40;Core Engine&#41;')");
+        buttons.add(injectCta);
+
+        var clientCta = new WaButton<>();
+        clientCta.setText(escapeAngular("View Client API →"));
+        clientCta.setVariant(Variant.Neutral);
+        clientCta.setAppearance(Appearance.Outlined);
+        clientCta.addAttribute("(click)", "openReadme('client', 'Client API')");
+        buttons.add(clientCta);
+
+        footer.add(buttons);
+        card.withFooter(footer);
+
+        grid.add(card);
 
         return buildSection("Core modules", "Injection, lifecycle, and scanning",
                 "The foundation that every GuicedEE application is built on.", true, grid);
