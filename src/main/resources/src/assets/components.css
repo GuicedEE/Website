@@ -34,14 +34,41 @@
     .nav-products-full {
         .product {
             /*padding-block: var(--wa-space-m);*/
-            padding-inline: var(--wa-space-s);
+            padding-inline: var(--wa-space-3xs);
+        }
+
+        /* Tighten wa-button internal spacing for product icon buttons */
+        wa-button.product::part(base) {
+            padding-inline: var(--wa-space-2xs);
+            gap: var(--wa-space-3xs);
+            align-items: center;
+        }
+
+        wa-button.product::part(label) {
+            display: flex;
+            align-items: center;
+            gap: var(--wa-space-3xs);
+        }
+
+        /* Vertically center icons inside product buttons */
+        wa-button.product wa-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            vertical-align: middle;
         }
 
         .logo-icon {
             font-size: 1.75rem; /* ~ 28px for product icons in the nav bar */
         }
 
-        .product-active .logo-icon {
+        wa-button.product wa-icon.logo-icon {
+            font-size: 1.75rem;
+        }
+
+        .product-active .logo-icon,
+        wa-button.product-active wa-icon.logo-icon {
             font-size: 2rem; /* slightly larger for the current-product logo */
         }
     }

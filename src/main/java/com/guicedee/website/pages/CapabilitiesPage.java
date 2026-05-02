@@ -1077,7 +1077,6 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
     private static final Map<String, String> EXAMPLE_PATHS = Map.ofEntries(
             Map.entry("inject", "Inject/Basic"),
-            Map.entry("client", "Client/Basic"),
             Map.entry("vertx", "Vertx/Basic"),
             Map.entry("web", "Web/Basic"),
             Map.entry("rest", "Rest/Basic"),
@@ -1087,14 +1086,19 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
             Map.entry("rabbitmq", "RabbitMQ/Basic"),
             Map.entry("kafka", "Kafka/Basic"),
             Map.entry("ibmmq", "IBMMQ/Basic"),
-            Map.entry("openapi", "OpenAPI/Basic"),
-            Map.entry("swagger-ui", "OpenAPI/Basic"),
+            Map.entry("openapi", "OpenAPI/Server"),
+            Map.entry("swagger-ui", "OpenAPI/SwaggerUI"),
             Map.entry("webservices", "WebServices/Basic"),
             Map.entry("cerial", "Cerial/Basic"),
             Map.entry("cdi", "CDI/Basic"),
             Map.entry("config", "Config/Basic"),
             Map.entry("telemetry", "Telemetry/Basic"),
-            Map.entry("jwt", "JWT/Basic")
+            Map.entry("jwt", "JWT/Basic"),
+            Map.entry("health", "Health/Basic"),
+            Map.entry("metrics", "Metrics/Basic"),
+            Map.entry("hazelcast", "Hazelcast/Client"),
+            Map.entry("mailclient", "MailClient"),
+            Map.entry("fault-tolerance", "FaultTolerance/Basic")
     );
 
     private WaStack buildModuleCatalogSection()

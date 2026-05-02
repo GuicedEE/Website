@@ -456,6 +456,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
     protected DivSimple<?> codeBlock(String code, String language)
     {
         var md = new Markdown<>("```" + language + "\n" + code + "\n```");
+        md.setClipboard(true);
         md.addClass("code-block");
         md.addClass("wa-body-s");
         return md;
@@ -473,6 +474,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         details.addClass("code-details");
 
         var md = new Markdown<>("```" + language + "\n" + code + "\n```");
+        md.setClipboard(true);
         md.addClass("code-block");
         md.addClass("wa-body-s");
         details.add(md);
@@ -566,6 +568,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         details.addClass("code-details");
 
         var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
+        mavenMd.setClipboard(true);
         mavenMd.addClass("code-block");
         mavenMd.addClass("wa-body-s");
         var mavenIf = new NgIf("!app.useGradle()");
@@ -573,6 +576,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         details.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
+        gradleMd.setClipboard(true);
         gradleMd.addClass("code-block");
         gradleMd.addClass("wa-body-s");
         var gradleIf = new NgIf("app.useGradle()");
@@ -590,6 +594,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         var wrapper = new DivSimple<>();
 
         var mavenMd = new Markdown<>("```xml\n" + mavenCode + "\n```");
+        mavenMd.setClipboard(true);
         mavenMd.addClass("code-block");
         mavenMd.addClass("wa-body-s");
         var mavenIf = new NgIf("!app.useGradle()");
@@ -597,6 +602,7 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         wrapper.add(mavenIf);
 
         var gradleMd = new Markdown<>("```groovy\n" + gradleCode + "\n```");
+        gradleMd.setClipboard(true);
         gradleMd.addClass("code-block");
         gradleMd.addClass("wa-body-s");
         var gradleIf = new NgIf("app.useGradle()");

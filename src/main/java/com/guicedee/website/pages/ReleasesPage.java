@@ -86,10 +86,6 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "and Uni-aware span completion.",
                 "New module"));
 
-        newGrid.add(featureCard("MCP Server",
-                "Model Context Protocol server for AI agent integration. " +
-                        "Tools, resources, prompts, and completion endpoints.",
-                "New module"));
 
         newGrid.add(featureCard("REST Client",
                 "Annotation-driven REST client with @Endpoint, typed RestClient<Send, Receive>, " +

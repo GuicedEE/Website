@@ -1,6 +1,9 @@
 package com.guicedee.website;
 
 import com.jwebmp.core.Page;
+import com.jwebmp.core.base.angular.client.annotations.boot.NgBootImportProvider;
+import com.jwebmp.core.base.angular.client.annotations.boot.NgBootImportReference;
+import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.services.TypescriptIndexPageConfigurator;
 import com.jwebmp.core.base.references.CSSReference;
 import com.jwebmp.core.services.IPage;
@@ -8,6 +11,12 @@ import com.jwebmp.core.services.IPageConfigurator;
 import com.jwebmp.plugins.fontawesome5pro.FontAwesome5ProPageConfigurator;
 import com.jwebmp.webawesome.components.WebAwesomePageConfigurator;
 
+@NgComponentReference(MarkdownClipboardButton.class)
+@NgBootImportProvider(value = "provideMarkdown({ mermaidOptions: { provide: MERMAID_OPTIONS, useValue: { startOnLoad: false } }, clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: { buttonComponent: MarkdownClipboardButton } } })", overrides = true)
+@NgBootImportReference(value = "provideMarkdown", reference = "ngx-markdown")
+@NgBootImportReference(value = "MERMAID_OPTIONS", reference = "ngx-markdown")
+@NgBootImportReference(value = "CLIPBOARD_OPTIONS", reference = "ngx-markdown")
+@NgBootImportReference(value = "MarkdownClipboardButton", reference = "./com/guicedee/website/MarkdownClipboardButton/MarkdownClipboardButton")
 public class WebsitePageConfigurator implements IPageConfigurator<WebsitePageConfigurator>, TypescriptIndexPageConfigurator<WebsitePageConfigurator>
 {
     @Override

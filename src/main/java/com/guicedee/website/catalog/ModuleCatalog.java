@@ -34,15 +34,21 @@ public final class ModuleCatalog
                 "cerial",
                 "client",
                 "config",
+                "fault-tolerance",
+                "hazelcast",
+                "health",
                 "ibmmq",
                 "inject",
                 "jwt",
                 "kafka",
+                "mailclient",
+                "metrics",
                 "openapi",
                 "persistence",
                 "rabbitmq",
                 "representations",
                 "rest",
+                "rest-client",
                 "swagger-ui",
                 "telemetry",
                 "vertx",
@@ -57,9 +63,15 @@ public final class ModuleCatalog
             String description = switch (id)
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
-                case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";
+                case "fault-tolerance" -> "MicroProfile Fault Tolerance for GuicedEE. @Retry, @Timeout, @CircuitBreaker, @Fallback, and @Bulkhead annotations with Guice AOP interceptors.";
+                case "hazelcast" -> "Hazelcast distributed caching and clustering integration for GuicedEE. JCache provider, distributed data structures, and cluster management.";
+                case "health" -> "MicroProfile Health integration for GuicedEE with Vert.x 5. @Liveness, @Readiness, @Startup health checks with automatic discovery and JSON endpoints.";
                 case "ibmmq" -> "Annotation-driven IBM MQ integration for GuicedEE. @IBMMQConnectionOptions, @IBMMQQueueDefinition, IBMMQConsumer/Publisher with IBM MQ JMS client.";
+                case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";
                 case "kafka" -> "Annotation-driven Kafka consumer and producer integration for GuicedEE. @KafkaConnectionOptions, @KafkaTopicDefinition, KafkaTopicConsumer/Publisher with Vert.x Kafka client.";
+                case "mailclient" -> "Email client integration for GuicedEE with Vert.x 5. SMTP mail sending with Guice-managed configuration and templates.";
+                case "metrics" -> "MicroProfile Metrics for GuicedEE with Vert.x 5 Dropwizard Metrics. @Counted, @Timed annotations, Prometheus scrape endpoint, and Graphite reporting.";
+                case "rest-client" -> "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient. @Endpoint declarations, RestClient injection, and authentication strategies.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -205,15 +217,21 @@ public final class ModuleCatalog
             case "cerial" -> "Cerial (Serial Ports)";
             case "client" -> "Client API";
             case "config" -> "MicroProfile Config";
+            case "fault-tolerance" -> "Fault Tolerance";
+            case "hazelcast" -> "Hazelcast";
+            case "health" -> "MicroProfile Health";
             case "ibmmq" -> "IBM MQ";
             case "inject" -> "Inject (Core Engine)";
             case "jwt" -> "JWT Authentication";
             case "kafka" -> "Apache Kafka";
+            case "mailclient" -> "Mail Client";
+            case "metrics" -> "MicroProfile Metrics";
             case "openapi" -> "OpenAPI";
             case "persistence" -> "Persistence";
             case "rabbitmq" -> "RabbitMQ";
             case "representations" -> "Representations";
             case "rest" -> "REST Services";
+            case "rest-client" -> "REST Client";
             case "swagger-ui" -> "Swagger UI";
             case "telemetry" -> "Telemetry";
             case "vertx" -> "Vert.x Core";
