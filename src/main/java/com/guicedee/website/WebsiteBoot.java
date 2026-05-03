@@ -200,7 +200,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("border", "2px solid var(--wa-color-brand-light)");
         versionBadge.addStyle("box-shadow", "0 0 6px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent)");
         versionBadge.addStyle("cursor", "pointer");
-        versionBadge.setText("2.0.0");
+        versionBadge.setText("2.0.1");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -227,7 +227,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var snapshotVersionLabel = new WaDiv<>();
         snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
         snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
-        snapshotVersionLabel.setText("Current snapshot: <code>2.0.1-SNAPSHOT</code>");
+        snapshotVersionLabel.setText("Current snapshot: <code>2.0.2-SNAPSHOT</code>");
         popoverContent.add(snapshotVersionLabel);
 
         var popoverDesc = new WaDiv<>("p");
