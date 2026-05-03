@@ -84,7 +84,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "2.0.0";
+            String version = "2.0.1";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -98,7 +98,7 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.0.0";
+        String version = "2.0.1";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();

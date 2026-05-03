@@ -1019,6 +1019,24 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         "No manual registration, no classpath scanning hacks.",
                 "Convention over configuration, done right."));
 
+        grid.add(featureCardHtml("Pure environment variable config",
+                "Every runtime setting — ports, pool sizes, credentials, feature flags — resolves from " + brandCode("environment variables") + " or system properties. " +
+                        "No " + brandCode("application.yml") + ", no " + brandCode("bootstrap.properties") + ", no secret files to manage. " +
+                        "12-factor by default, cloud-native from day one.",
+                "Your deployment IS your configuration."));
+
+        grid.add(featureCardHtml("Config files are optional",
+                "Need " + brandCode("microprofile-config.properties") + "? It works. Prefer " + brandCode("persistence.xml") + "? Also works. " +
+                        "But you never <em>need</em> them — every value can be set via annotations, code, or env vars. " +
+                        "Config files are an escape hatch, not a requirement.",
+                "Zero files to deploy if you choose."));
+
+        grid.add(featureCardHtml("One language, end to end",
+                "Your REST endpoints, persistence, messaging, health checks, security, configuration, and deployment logic — all in " + brandCode("Java") + ". " +
+                        "No YAML to debug, no XML to lint, no JSON schemas to validate. " +
+                        "Your IDE catches every error at compile time.",
+                "Type-safe from editor to production."));
+
         return buildSection("Foundations", "What makes GuicedEE different",
                 "A cohesive platform where Guice DI, Vert.x reactivity, and JPMS modularity work together — not against each other.",
                 true, grid);
@@ -1046,7 +1064,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "From 500 MB JRE to 40 MB custom runtime."));
 
         grid.add(featureCardHtml("One BOM, all versions aligned",
-                "Import " + brandCode("guicedee-bom") + " and " + brandCode("jwebmp-bom") + " in your " + brandCode("dependencyManagement") + ". " +
+                "Import " + brandCode("guicedee-bom") + " in your " + brandCode("dependencyManagement") + ". " +
                         "All 20+ modules are version-aligned and tested together.",
                 "No dependency conflicts, ever."));
 
@@ -1064,7 +1082,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.0.0</version>
+                                    <version>2.0.1</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1085,7 +1103,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.0.0')
+                            implementation platform('com.guicedee:guicedee-bom:2.0.1')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'

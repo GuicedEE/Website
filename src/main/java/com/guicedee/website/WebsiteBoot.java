@@ -227,7 +227,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var snapshotVersionLabel = new WaDiv<>();
         snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
         snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
-        snapshotVersionLabel.setText("Current snapshot: <code>2.0.2-SNAPSHOT</code>");
+        snapshotVersionLabel.setText("Current snapshot: <code>2.0.1</code>");
         popoverContent.add(snapshotVersionLabel);
 
         var popoverDesc = new WaDiv<>("p");
@@ -611,7 +611,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
 
         page.getMain().add(new RouterOutlet<>());
-        page.getAside().add(new RouterOutlet("aside"));
+        page.getAside().add(new RouterOutlet<>("aside"));
 
         add(page);
     }

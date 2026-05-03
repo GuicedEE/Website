@@ -133,7 +133,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     <properties>
                         <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.0.0</guicedee.version>
+                        <guicedee.version>2.0.1</guicedee.version>
                     </properties>
 
                     <dependencyManagement>
@@ -174,7 +174,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.0.0")
+                    implementation platform("com.guicedee:guicedee-bom:2.0.1")
                 ${depLines}
                 }` + '\\n```';
                 }
@@ -246,7 +246,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     <properties>
                         <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.0.0</guicedee.version>
+                        <guicedee.version>2.0.1</guicedee.version>
                     </properties>
 
                     <dependencyManagement>
@@ -287,7 +287,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.0.0")
+                    implementation platform("com.guicedee:guicedee-bom:2.0.1")
                 ${depLines}
                 }`;
                 }
