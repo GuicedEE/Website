@@ -208,7 +208,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                             <properties>
                                 <maven.compiler.release>25</maven.compiler.release>
-                                <guicedee.version>2.0.1</guicedee.version>
+                                <guicedee.version>2.0.2</guicedee.version>
                             </properties>
                         
                             <dependencyManagement>
@@ -246,7 +246,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         }
                         
                         dependencies {
-                            implementation platform("com.guicedee:guicedee-bom:2.0.1")
+                            implementation platform("com.guicedee:guicedee-bom:2.0.2")
                             implementation("com.guicedee:rest")
                         }"""));
 

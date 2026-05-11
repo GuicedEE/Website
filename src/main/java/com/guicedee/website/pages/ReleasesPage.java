@@ -48,15 +48,39 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.0.1", "Current release"));
+        currentGrid.add(featureCard("Version", "2.0.2", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.x", "Latest reactive core"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.0.1",
+        layout.add(buildSection("Current", "v2.0.2",
                 "Current stable release targeting JDK 25 and Vert.x 5.",
                 true, currentContent));
+
+        // v2.0.2 release
+        var v202Content = new WaStack<>();
+        v202Content.setGap(PageSize.Medium);
+
+        var v202Grid = new WaGrid<>();
+        v202Grid.setMinColumnSize("16rem");
+        v202Grid.setGap(PageSize.Medium);
+
+        v202Grid.add(featureCard("Log4j2 → 2.26.0",
+                "Upgraded Apache Log4j2 to 2.26.0. " +
+                        "Resolves CVE-2025-68161 — the Socket Appender in Log4j Core versions 2.0-beta9 through 2.25.2 " +
+                        "does not perform TLS hostname verification, allowing man-in-the-middle interception of log traffic.",
+                "Security fix · CVE-2025-68161"));
+
+        v202Grid.add(featureCard("checker-qual → 4.1.0",
+                "Upgraded Checker Framework qualifier annotations (checker-qual) to 4.1.0. " +
+                        "Keeps annotation-processing toolchain current and aligned with Guava and ErrorProne dependencies.",
+                "Dependency upgrade"));
+
+        v202Content.add(v202Grid);
+        layout.add(buildSection("v2.0.2", "Security patch release",
+                "Dependency upgrades addressing CVE-2025-68161 (Log4j2 TLS hostname verification) and checker-qual alignment.",
+                true, v202Content));
 
         // v2.0.1 release
         var patchContent = new WaStack<>();
@@ -116,7 +140,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         patchContent.add(patchGrid);
         layout.add(buildSection("v2.0.1", "Patch release",
                 "MongoDB, Cassandra, HTTP Proxy, Redis support, ConnectionBaseInfoFactory, IntelliJ plugin enhancements, and Testcontainers fixes.",
-                true, patchContent));
+                false, patchContent));
 
         // What's new in 2.0
         var whatsNewContent = new WaStack<>();
