@@ -17,7 +17,7 @@
 
         <ignore.moditect>true</ignore.moditect>
         <flatten.pom>false</flatten.pom>
-        <jwebmp.version>2.1.0-SNAPSHOT</jwebmp.version>
+        <jwebmp.version>2.0.2</jwebmp.version>
         <guicedee.version>2.0.2</guicedee.version>
 
         <maven.compiler.release>25</maven.compiler.release>

@@ -213,7 +213,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         hero.add(eyebrow);
 
         // Main heading
-        var heading = headingText("h1", "xl", "E2E Modular enterprise Java, reactive by nature.");
+        var heading = headingText("h1", "xl", "E2E Modular Enterprise Java, reactive by nature.");
         heading.addClass("hero-heading");
         hero.add(heading);
 

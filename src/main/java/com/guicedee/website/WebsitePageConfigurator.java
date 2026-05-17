@@ -1,6 +1,7 @@
 package com.guicedee.website;
 
 import com.jwebmp.core.Page;
+import com.jwebmp.core.base.angular.client.annotations.angularconfig.NgStyleSheet;
 import com.jwebmp.core.base.angular.client.annotations.boot.NgBootImportProvider;
 import com.jwebmp.core.base.angular.client.annotations.boot.NgBootImportReference;
 import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
@@ -11,6 +12,11 @@ import com.jwebmp.core.services.IPageConfigurator;
 import com.jwebmp.plugins.fontawesome5pro.FontAwesome5ProPageConfigurator;
 import com.jwebmp.webawesome.components.WebAwesomePageConfigurator;
 
+@NgStyleSheet(value = "public/base.css", name = "GuicedEEBase", sortOrder = 200)
+@NgStyleSheet(value = "public/layout.css", name = "GuicedEELayout", sortOrder = 201)
+@NgStyleSheet(value = "public/components.css", name = "GuicedEEComponents", sortOrder = 202)
+@NgStyleSheet(value = "public/features.css", name = "GuicedEEFeatures", sortOrder = 203)
+@NgStyleSheet(value = "public/code.css", name = "GuicedEECode", sortOrder = 204)
 @NgComponentReference(MarkdownClipboardButton.class)
 @NgBootImportProvider(value = "provideMarkdown({ mermaidOptions: { provide: MERMAID_OPTIONS, useValue: { startOnLoad: false } }, clipboardOptions: { provide: CLIPBOARD_OPTIONS, useValue: { buttonComponent: MarkdownClipboardButton } } })", overrides = true)
 @NgBootImportReference(value = "provideMarkdown", reference = "ngx-markdown")
