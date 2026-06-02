@@ -2,7 +2,7 @@ import com.guicedee.website.WebsitePageConfigurator;
 import com.jwebmp.core.base.angular.client.services.TypescriptIndexPageConfigurator;
 import com.jwebmp.core.services.IPageConfigurator;
 
-open module website {
+module website {
     requires com.guicedee.client;
     requires com.guicedee.vertx;
     requires com.jwebmp.client;

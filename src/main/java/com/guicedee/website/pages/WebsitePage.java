@@ -429,9 +429,21 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
     {
         var wrapper = new DivSimple<>();
         wrapper.addClass("mermaid-diagram");
-        var md = new Markdown<>("```mermaid\n" + mermaidCode + "\n```");
-        md.setMermaid(true);
-        wrapper.add(md);
+        wrapper.addStyle("overflow-x", "auto");
+        wrapper.addStyle("width", "100%");
+
+        var darkMd = new Markdown<>("```mermaid\n%%{init: {'theme': 'dark'}}%%\n" + mermaidCode + "\n```");
+        darkMd.setMermaid(true);
+        var darkIf = new NgIf("app.darkMode()");
+        darkIf.add(darkMd);
+        wrapper.add(darkIf);
+
+        var lightMd = new Markdown<>("```mermaid\n" + mermaidCode + "\n```");
+        lightMd.setMermaid(true);
+        var lightIf = new NgIf("!app.darkMode()");
+        lightIf.add(lightMd);
+        wrapper.add(lightIf);
+
         return wrapper;
     }
 

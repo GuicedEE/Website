@@ -8,14 +8,14 @@ import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.text.WaText;
 
 /**
- * Aside component for the Capabilities page.
- * Renders "On this page" anchor links in the named "aside" router-outlet.
+ * Aside component for the Cloud page.
+ * Renders "On this page" anchor links for cloud/service-registry sections.
  */
-@NgComponent("guicedee-capabilities-aside")
-@NgRoutable(path = "capabilities", outlet = "aside")
-public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> implements INgComponent<CapabilitiesAsidePage>
+@NgComponent("guicedee-cloud-aside")
+@NgRoutable(path = "cloud", outlet = "aside")
+public class CloudAsidePage extends DivSimple<CloudAsidePage> implements INgComponent<CloudAsidePage>
 {
-    public CapabilitiesAsidePage()
+    public CloudAsidePage()
     {
         setTag("aside");
         addClass("page-aside");
@@ -41,26 +41,15 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         list.addStyle("flex-direction:column");
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
-        list.add(asideLink("architecture", "Architecture"));
-        list.add(asideLink("injection-lifecycle", "Injection & Lifecycle"));
-        list.add(asideLink("http-server", "HTTP Server"));
-        list.add(asideLink("http-proxy", "HTTP Proxy"));
-        list.add(asideLink("service-discovery", "Service Discovery"));
-        list.add(asideLink("runtime-autoconfigure", "Runtime Autoconfigure"));
-        list.add(asideLink("redis", "Redis"));
-        list.add(asideLink("rest-jax-rs", "REST (JAX-RS)"));
-        list.add(asideLink("rest-client", "REST Client"));
-        list.add(asideLink("security-authentication", "Security"));
-        list.add(asideLink("verticles-deployment", "Verticles"));
-        list.add(asideLink("persistence", "Persistence"));
-        list.add(asideLink("websockets", "WebSockets"));
-        list.add(asideLink("messaging", "Messaging"));
-        list.add(asideLink("observability", "Observability"));
-        list.add(asideLink("logging", "Logging"));
+        list.add(asideLink("architecture", "How It Works"));
+        list.add(asideLink("platforms", "Platform Detection"));
+        list.add(asideLink("declaration", "Declaring Services"));
+        list.add(asideLink("resolution", "URL Resolution"));
+        list.add(asideLink("rest-client", "REST Client Integration"));
+        list.add(asideLink("health", "Health Monitoring"));
+        list.add(asideLink("spi", "SPI & Extensions"));
         list.add(asideLink("configuration", "Configuration"));
-        list.add(asideLink("fault-tolerance", "Fault Tolerance"));
-        list.add(asideLink("jlink-deployment", "JLink & Deployment"));
-        list.add(asideLink("full-module-catalog", "Full catalog"));
+        list.add(asideLink("installation", "Getting Started"));
 
         add(list);
     }
@@ -81,5 +70,4 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         return li;
     }
 }
-
 

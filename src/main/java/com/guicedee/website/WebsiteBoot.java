@@ -17,6 +17,7 @@ import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.Variant;
+import com.jwebmp.webawesome.components.callout.WaCallout;
 import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.toast.WaToastDataService;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
@@ -64,6 +65,7 @@ import java.util.List;
 @NgImportReference(value = "inject", reference = "@angular/core")
 @NgImportReference(value = "filter", reference = "rxjs/operators")
 @NgComponentReference(value = WaToastDataService.class)
+@NgComponentReference(value = StatusService.class)
 @NgComponentReference(value = App.class)
 public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot> {
     public WebsiteBoot() {
@@ -104,6 +106,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
         // GuicedEE — active product
         WaButton<?> guicedeeBtn = new WaButton<>();
+        guicedeeBtn.addStyle("position", "relative");
         guicedeeBtn.setAppearance(Appearance.Plain);
         guicedeeBtn.setVariant(Variant.Brand);
         guicedeeBtn.addAttribute("routerLink", "/home");
@@ -121,10 +124,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         guicedeeBtn.add(guicedeeLogo);
         guicedeeBtn.setText("GuicedEE");
         guicedeeBtn.setRenderTextBeforeChildren(false);
+        guicedeeBtn.add(createStatusBadge("guicedee-website"));
         cluster.add(guicedeeBtn);
+        cluster.add(createStatusTooltip("product-guicedee", "guicedee-website"));
 
         // JWebMP
         WaButton<?> jwebmpBtn = new WaButton<>();
+        jwebmpBtn.addStyle("position", "relative");
         jwebmpBtn.setAppearance(Appearance.Plain);
         jwebmpBtn.setVariant(Variant.Brand);
         jwebmpBtn.setAsLink("https://jwebmp.com", "jwebmp", null);
@@ -139,14 +145,14 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         jwebmpLogo.addClass("logo-jwebmp");
         jwebmpLogo.addAttribute("label", "JWebMP");
         jwebmpBtn.add(jwebmpLogo);
+        jwebmpBtn.setRenderTextBeforeChildren(false);
+        jwebmpBtn.add(createStatusBadge("jwebmp-website"));
         cluster.add(jwebmpBtn);
-        WaTooltip<?> jwebmpTip = new WaTooltip<>();
-        jwebmpTip.setForId("product-jwebmp");
-        jwebmpTip.setText("JWebMP");
-        cluster.add(jwebmpTip);
+        cluster.add(createStatusTooltip("product-jwebmp", "jwebmp-website"));
 
         // Entity Assist
         WaButton<?> entityBtn = new WaButton<>();
+        entityBtn.addStyle("position", "relative");
         entityBtn.setAppearance(Appearance.Plain);
         entityBtn.setVariant(Variant.Brand);
         entityBtn.setAsLink("https://entityassist.com", "entityassist", null);
@@ -161,14 +167,14 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         entityLogo.addClass("logo-entity-assist");
         entityLogo.addAttribute("label", "Entity Assist");
         entityBtn.add(entityLogo);
+        entityBtn.setRenderTextBeforeChildren(false);
+        entityBtn.add(createStatusBadge("entity-assist-website"));
         cluster.add(entityBtn);
-        WaTooltip<?> entityTip = new WaTooltip<>();
-        entityTip.setForId("product-entity-assist");
-        entityTip.setText("Entity Assist");
-        cluster.add(entityTip);
+        cluster.add(createStatusTooltip("product-entity-assist", "entity-assist-website"));
 
         // Activity Master
         WaButton<?> activityBtn = new WaButton<>();
+        activityBtn.addStyle("position", "relative");
         activityBtn.setAppearance(Appearance.Plain);
         activityBtn.setVariant(Variant.Brand);
         activityBtn.setAsLink("https://activity-master.com/", "activitymaster", null);
@@ -183,11 +189,10 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         activityLogo.addClass("logo-activity-master");
         activityLogo.addAttribute("label", "Activity Master");
         activityBtn.add(activityLogo);
+        activityBtn.setRenderTextBeforeChildren(false);
+        activityBtn.add(createStatusBadge("activity-master-website"));
         cluster.add(activityBtn);
-        WaTooltip<?> activityTip = new WaTooltip<>();
-        activityTip.setForId("product-activity-master");
-        activityTip.setText("Activity Master");
-        cluster.add(activityTip);
+        cluster.add(createStatusTooltip("product-activity-master", "activity-master-website"));
 
         // ── Version badge (Central release) ──
         WaBadge<?> versionBadge = new WaBadge<>();
@@ -200,7 +205,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("border", "2px solid var(--wa-color-brand-light)");
         versionBadge.addStyle("box-shadow", "0 0 6px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent)");
         versionBadge.addStyle("cursor", "pointer");
-        versionBadge.setText("2.0.2");
+        versionBadge.addStyle("margin-inline-start", "var(--wa-space-m)");
+        versionBadge.setText("2.1.0");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -227,7 +233,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var snapshotVersionLabel = new WaDiv<>();
         snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
         snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
-        snapshotVersionLabel.setText("Current snapshot: <code>2.0.2</code>");
+        snapshotVersionLabel.setText("Current snapshot: <code>2.1.1-SNAPSHOT</code>");
         popoverContent.add(snapshotVersionLabel);
 
         var popoverDesc = new WaDiv<>("p");
@@ -287,6 +293,39 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
 
         primary.add(cluster);
+
+        // ── Guice-Core callout banner ──
+        WaCallout<?> guiceCoreBanner = new WaCallout<>().setVariant(Variant.Neutral);
+        guiceCoreBanner.addClass("guice-core-banner");
+        guiceCoreBanner.addClass("wa-cluster");
+        guiceCoreBanner.addClass("wa-gap-xs");
+        guiceCoreBanner.addStyle("border", "none");
+        guiceCoreBanner.addStyle("padding", "0");
+        guiceCoreBanner.addStyle("background", "transparent");
+
+        Link<?> guiceCoreLink = new Link<>("https://central.sonatype.com/artifact/com.guicedee.modules.services/guice");
+        guiceCoreLink.addAttribute("target", "_blank");
+        guiceCoreLink.addClass("wa-justify-content-center");
+        guiceCoreLink.addClass("wa-gap-2xs");
+        guiceCoreLink.addStyle("color", "var(--wa-color-brand-normal)");
+        guiceCoreLink.addStyle("text-decoration", "none");
+        guiceCoreLink.addStyle("font-weight", "500");
+
+        WaIcon<?> searchIcon = new WaIcon<>("magnifying-glass");
+        searchIcon.setFamily("sharp-duotone");
+        searchIcon.addStyle("font-size", "var(--wa-font-size-s)");
+        //guiceCoreLink.add(searchIcon);
+        guiceCoreLink.setText("Just want guice-core for JDK 25?");
+        guiceCoreLink.setRenderTextBeforeChildren(true);
+
+        WaIcon<?> externalIcon = new WaIcon<>("arrow-up-right-from-square");
+        externalIcon.setFamily("sharp-duotone");
+        externalIcon.addStyle("font-size", "var(--wa-font-size-2xs)");
+        externalIcon.addStyle("opacity", "0.7");
+        guiceCoreLink.add(externalIcon);
+
+        guiceCoreBanner.add(guiceCoreLink);
+        primary.add(guiceCoreBanner);
 
         // Secondary links (GitHub, Blog)
         DivSimple<?> secondary = new DivSimple<>();
@@ -388,7 +427,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         themeBtn.addClass("product-theme");
         themeBtn.setID("product-theme");
         var themeIcon = new WaIcon<>();
-        themeIcon.addAttribute("[name]", "darkMode() ? 'sun-bright' : 'moon'");
+        themeIcon.addAttribute("[name]", "app.darkMode() ? 'moon' : 'sun-bright'");
         themeIcon.addAttribute("family", "sharp-duotone");
         themeIcon.addAttribute("label", "Toggle Theme");
         themeBtn.add(themeIcon);
@@ -412,6 +451,9 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Home
         menuTree.add(createRouterTreeItem("/home", "Home", "house"));
 
+        // Releases
+        menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
+
         // App Builder
         menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
 
@@ -430,11 +472,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // Services
         menuTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
 
+        // Cloud
+        menuTree.add(createRouterTreeItem("/cloud", "Cloud", "cloud"));
+
         // Environment Variables
         menuTree.add(createRouterTreeItem("/environment-variables", "Env Variables", "sliders"));
 
-        // Releases
-        menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
 
 
         // Support (external)
@@ -539,6 +582,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
         navTree.add(createRouterTreeItem("/home", "Home", "house"));
+        navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
         navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
         navTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
         navTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
@@ -546,7 +590,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
         navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
         navTree.add(createRouterTreeItem("/environment-variables", "En Variables", "sliders"));
-        navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
+/*        navTree.add(createExternalTreeItem("https://mcp.jwebmp.com", "Mermaid MCP", "diagram-project"));*/
         navTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
         burgerMenuNavigation.add(navTree);
 
@@ -656,6 +700,68 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         return item;
     }
 
+    /**
+     * Creates a small status badge dot that reflects the health status of a service.
+     * Uses Angular attribute binding to dynamically set the variant based on status.
+     */
+    private static WaBadge<?> createStatusBadge(String serviceName)
+    {
+        WaBadge<?> badge = new WaBadge<>();
+        badge.setPill(true);
+        badge.addAttribute("[attr.variant]", "statusService.getStatusVariant('" + serviceName + "')");
+        badge.addStyle("position", "absolute");
+        badge.addStyle("top", "10px");
+        badge.addStyle("right", "10px");
+        badge.addStyle("transform", "translate(50%, -50%)");
+        badge.addStyle("z-index", "10");
+        badge.addStyle("width", "12px");
+        badge.addStyle("height", "12px");
+        badge.addStyle("padding", "0");
+        badge.addStyle("display", "flex");
+        badge.addStyle("align-items", "center");
+        badge.addStyle("justify-content", "center");
+        badge.addStyle("font-size", "10px");
+        badge.setID("status-badge-" + serviceName);
+        badge.addStyle("cursor", "help");
+
+        WaIcon<?> tick = new WaIcon<>("check");
+        tick.addAttribute("family", "solid");
+        tick.addAttribute("*ngIf", "statusService.getServiceStatus('" + serviceName + "') === 'UP'");
+        badge.add(tick);
+
+        WaIcon<?> cross = new WaIcon<>("xmark");
+        cross.addAttribute("family", "solid");
+        cross.addAttribute("*ngIf", "statusService.getServiceStatus('" + serviceName + "') === 'DOWN'");
+        badge.add(cross);
+
+        WaIcon<?> warn = new WaIcon<>("exclamation");
+        warn.addAttribute("family", "solid");
+        warn.addAttribute("*ngIf", "statusService.getServiceStatus('" + serviceName + "') === 'DEGRADED' || statusService.getServiceStatus('" + serviceName + "') === 'WARNING'");
+        badge.add(warn);
+
+        WaIcon<?> quest = new WaIcon<>("question");
+        quest.addAttribute("family", "solid");
+        quest.addAttribute("*ngIf", "statusService.getServiceStatus('" + serviceName + "') === 'UNKNOWN'");
+        badge.add(quest);
+
+        return badge;
+    }
+
+    /**
+     * Creates a tooltip for a product button that shows the health status from the StatusService.
+     * The tooltip targets the button's ID rather than the small badge, ensuring reliable display.
+     */
+    private static WaTooltip<?> createStatusTooltip(String buttonId, String serviceName)
+    {
+        WaTooltip<?> tooltip = new WaTooltip<>();
+        tooltip.setForId(buttonId);
+        tooltip.addAttribute("placement", "bottom");
+        tooltip.addAttribute("distance", "8");
+        tooltip.addAttribute("hoist", "");
+        tooltip.setText("{{statusService.getHealthTooltip('" + serviceName + "')}}");
+        return tooltip;
+    }
+
     @Override
     public List<String> host() {
         return List.of("""
@@ -678,7 +784,6 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
-        f.add("darkMode = signal(true);");
         f.add("""
                 private asideRoutes: Record<string, string> = {
                     'home': 'home',
@@ -687,6 +792,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     'guides/end-to-end': 'guides/end-to-end',
                     'modules': 'modules',
                     'services': 'services',
+                    'cloud': 'cloud',
                     'environment-variables': 'environment-variables'
                 };""");
         return f;
@@ -697,8 +803,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var m = new ArrayList<>(INgComponent.super.methods());
         m.add("""
                 toggleDarkMode() {
-                    const isDark = !this.darkMode();
-                    this.darkMode.set(isDark);
+                    const isDark = !this.app.darkMode();
+                    this.app.darkMode.set(isDark);
                     this.document.body.classList.toggle('wa-dark', isDark);
                     localStorage.setItem('guicedee-theme', isDark ? 'dark' : 'light');
                 }""");
@@ -719,7 +825,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         init.add("""
                 const savedTheme = localStorage.getItem('guicedee-theme');
                 const prefersDark = savedTheme ? savedTheme === 'dark' : true;
-                this.darkMode.set(prefersDark);
+                this.app.darkMode.set(prefersDark);
                 this.document.body.classList.toggle('wa-dark', prefersDark);""");
         init.add("""
                 const savedBuildTool = localStorage.getItem('guicedee-build-tool');

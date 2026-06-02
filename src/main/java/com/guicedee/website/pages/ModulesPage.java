@@ -27,15 +27,12 @@ import java.util.List;
 @NgComponent("guicedee-modules")
 @NgRoutable(path = "modules")
 @NgComponentReference(App.class)
-public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponent<ModulesPage>
-{
-    public ModulesPage()
-    {
+public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponent<ModulesPage> {
+    public ModulesPage() {
         buildPage();
     }
 
-    private void buildPage()
-    {
+    private void buildPage() {
         var layout = new WaStack<>();
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
@@ -127,8 +124,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         add(dialog);
     }
 
-    private WaCard<?> buildIntro()
-    {
+    private WaCard<?> buildIntro() {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
@@ -154,8 +150,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         return card;
     }
 
-    private WaStack buildCoreModules()
-    {
+    private WaStack buildCoreModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -223,8 +218,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The foundation that every GuicedEE application is built on.", true, grid);
     }
 
-    private WaStack buildWebModules()
-    {
+    private WaStack buildWebModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -267,7 +261,8 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
         grid.add(moduleCard("GraphQL",
                 "SPI-driven GraphQL with Vert.x Web GraphQL. HTTP + WebSocket endpoints, " +
-                        "GraphiQL IDE, DataLoader support, VertxFutureAdapter + JsonObjectAdapter auto-configured.",
+                        "GraphiQL IDE, DataLoader support. Optional Gateway stitches remote schemas " +
+                        "from services in the service registry with environment-filtered discovery.",
                 "com.guicedee:graphql",
                 "graphql", "GraphQL/Basic"));
 
@@ -275,8 +270,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The reactive web stack built on Vert.x 5.", false, grid);
     }
 
-    private WaStack buildDataModules()
-    {
+    private WaStack buildDataModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -297,8 +291,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "Hibernate Reactive, Jackson, and shared JSON representations.", true, grid);
     }
 
-    private WaStack buildObservabilityModules()
-    {
+    private WaStack buildObservabilityModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -337,8 +330,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "MicroProfile specifications with zero-config defaults.", false, grid);
     }
 
-    private WaStack buildIntegrationModules()
-    {
+    private WaStack buildIntegrationModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -399,12 +391,46 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:hazelcast",
                 "hazelcast", "Hazelcast/Basic"));
 
+        grid.add(moduleCard("Service Registry",
+                "Named service registry with health-aware resolution. @RegisteredService annotations, " +
+                        "auto-constructed URLs from cloud DNS, periodic health monitoring, OpenAPI spec merge, " +
+                        "GraphQL schema stitching, and environment-filtered discovery.",
+                "com.guicedee:service-registry",
+                "service-registry", "ServiceRegistry/Basic"));
+
+        grid.add(moduleCard("Service Discovery",
+                "Vert.x Service Resolver integration. Client-side service discovery via " +
+                        "Kubernetes endpoints or DNS SRV records, pluggable IServiceResolverProvider SPI, " +
+                        "round-robin load balancing, and environment-driven configuration.",
+                "com.guicedee:service-discovery",
+                "service-discovery", "ServiceDiscovery/Basic"));
+
+        grid.add(moduleCard("Consul",
+                "HashiCorp Consul integration for GuicedEE. Annotation-driven @ConsulOptions for connection " +
+                        "configuration, automatic service registration with health checks, " +
+                        "deregistration on shutdown, ACL token support, and KV config prefix.",
+                "com.guicedee:consul",
+                "consul"));
+
+        grid.add(moduleCard("Consul Service Resolver",
+                "Consul-based address resolver for the service-discovery module. Provides " +
+                        "IServiceResolverProvider SPI implementation that queries Consul's health API " +
+                        "for healthy service instances — enabling client-side load balancing via Consul.",
+                "com.guicedee:consul-service-resolver",
+                "consul-service-resolver"));
+
+        grid.add(moduleCard("Runtime Autoconfigure",
+                "Cloud runtime detection SPI. Auto-detects Azure Container Apps, AWS ECS/Lambda, " +
+                        "GCP Cloud Run, DigitalOcean App Platform, and Kubernetes — populates service name, " +
+                        "hostname, port, region, and replica identity for all GuicedEE modules.",
+                "com.guicedee:runtime-autoconfigure",
+                "runtime-autoconfigure"));
+
         return buildSection("Integration", "Messaging, API documentation, serial ports, and web services",
                 "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
     }
 
-    private WaStack buildMigrationModules()
-    {
+    private WaStack buildMigrationModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -422,13 +448,11 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                         "New projects should use Guice annotations and APIs directly.", false, grid);
     }
 
-    private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId)
-    {
+    private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId) {
         return moduleCard(title, description, artifact, moduleId, null);
     }
 
-    private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId, String examplePath)
-    {
+    private WaCard<?> moduleCard(String title, String description, String artifact, String moduleId, String examplePath) {
         var card = new WaCard<>();
         card.setAppearance(Appearance.Outlined);
 
@@ -437,8 +461,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         headerCluster.setGap(PageSize.Small);
         headerCluster.setSplit();
         headerCluster.add(headingText("h3", "m", title));
-        if (examplePath != null)
-        {
+        if (examplePath != null) {
             headerCluster.add(exampleHeaderIcon(examplePath));
         }
         header.add(headerCluster);
@@ -475,8 +498,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
     }
 
     @Override
-    public List<String> fields()
-    {
+    public List<String> fields() {
         var f = new ArrayList<>(super.fields());
         f.add("readmeDialogOpen = false;");
         f.add("readmeModuleTitle = '';");
@@ -508,15 +530,17 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
                     'mail-client': 'https://raw.githubusercontent.com/GuicedEE/MailClient/refs/heads/master/README.md',
                     'hazelcast': 'https://raw.githubusercontent.com/GuicedEE/Hazelcast/refs/heads/master/README.md',
-                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md',
+                'service-discovery': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxServiceDiscovery/refs/heads/master/README.md',
+                'service-registry': 'https://raw.githubusercontent.com/GuicedEE/ServiceRegistry/refs/heads/master/README.md',
+                'runtime-autoconfigure': 'https://raw.githubusercontent.com/GuicedEE/RuntimeAutoconfigure/refs/heads/master/README.md'
                 };
                 """);
         return f;
     }
 
     @Override
-    public List<String> methods()
-    {
+    public List<String> methods() {
         var m = new ArrayList<>(super.methods());
         m.add("""
                 openReadme(moduleId: string, title: string) {

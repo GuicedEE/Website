@@ -343,6 +343,45 @@ wa-tag[variant="warning"] {
     color: var(--wa-color-brand-normal) !important;
 }
 
+/* Guice-Core callout banner link hover */
+.guice-core-banner a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--wa-space-3xs);
+    transition:
+        color var(--wa-transition-fast) var(--wa-transition-easing),
+        text-shadow var(--wa-transition-fast) var(--wa-transition-easing);
+}
+
+.guice-core-banner a wa-icon {
+    font-size: inherit;
+    opacity: 0.7;
+    transition: opacity var(--wa-transition-fast) var(--wa-transition-easing);
+}
+
+.guice-core-banner a:hover {
+    color: var(--wa-color-brand-dark) !important;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--wa-color-brand-normal) 50%, transparent);
+}
+
+.guice-core-banner a:hover wa-icon {
+    opacity: 1;
+    color: var(--wa-color-brand-dark);
+}
+
+.wa-dark .guice-core-banner a:hover {
+    color: var(--wa-color-brand-light) !important;
+    text-shadow: 0 0 10px color-mix(in srgb, var(--wa-color-brand-light) 50%, transparent);
+    text-decoration-color: color-mix(in srgb, var(--wa-color-brand-light) 50%, transparent);
+}
+
+.wa-dark .guice-core-banner a:hover wa-icon {
+    color: var(--wa-color-brand-light);
+}
+
 pre {
     border-radius: inherit !important;
 

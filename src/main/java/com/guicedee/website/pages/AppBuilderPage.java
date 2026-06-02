@@ -85,8 +85,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'Fault Tolerance': {groupId: 'com.guicedee', artifactId: 'fault-tolerance', moduleName: 'com.guicedee.faulttolerance'},
                     'Mail Client': {groupId: 'com.guicedee', artifactId: 'mail', moduleName: 'com.guicedee.mail'},
                     'Cerial': {groupId: 'com.guicedee', artifactId: 'cerial', moduleName: 'com.guicedee.cerial'},
+                    'Service Registry': {groupId: 'com.guicedee', artifactId: 'service-registry', moduleName: 'com.guicedee.service.registry'},
+                    'Service Discovery': {groupId: 'com.guicedee', artifactId: 'service-discovery', moduleName: 'com.guicedee.vertx.servicediscovery'},
+                    'Consul': {groupId: 'com.guicedee', artifactId: 'consul', moduleName: 'com.guicedee.consul'},
+                    'Consul Service Resolver': {groupId: 'com.guicedee', artifactId: 'consul-service-resolver', moduleName: 'com.guicedee.consul.resolver'},
+                    'Runtime Autoconfigure': {groupId: 'com.guicedee', artifactId: 'runtime-autoconfigure', moduleName: 'com.guicedee.runtime.autoconfigure'},
                     'TestContainers': {groupId: 'com.guicedee.services', artifactId: 'testcontainers', moduleName: 'com.guicedee.services.testcontainers'}
                 };
+                
                 """);
         return f;
     }
@@ -133,7 +139,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     <properties>
                         <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.0.2</guicedee.version>
+                        <guicedee.version>2.1.0</guicedee.version>
                     </properties>
 
                     <dependencyManagement>
@@ -174,7 +180,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.0.2")
+                    implementation platform("com.guicedee:guicedee-bom:2.1.0")
                 ${depLines}
                 }` + '\\n```';
                 }
@@ -246,7 +252,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     <properties>
                         <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.0.2</guicedee.version>
+                        <guicedee.version>2.1.0</guicedee.version>
                     </properties>
 
                     <dependencyManagement>
@@ -287,7 +293,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.0.2")
+                    implementation platform("com.guicedee:guicedee-bom:2.1.0")
                 ${depLines}
                 }`;
                 }
@@ -510,6 +516,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         microProfile.add(leafItem("Telemetry"));
         microProfile.add(leafItem("Fault Tolerance"));
         tree.add(microProfile);
+
+        var serviceDiscovery = parentItem("Service Discovery", false);
+        serviceDiscovery.add(leafItem("Service Registry"));
+        serviceDiscovery.add(leafItem("Service Discovery"));
+        serviceDiscovery.add(leafItem("Consul"));
+        serviceDiscovery.add(leafItem("Consul Service Resolver"));
+        serviceDiscovery.add(leafItem("Runtime Autoconfigure"));
+        tree.add(serviceDiscovery);
 
         var mail = parentItem("Mail", false);
         mail.add(leafItem("Mail Client"));

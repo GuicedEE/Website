@@ -30,7 +30,6 @@ import java.util.Map;
 
 @NgComponent("guicedee-capabilities")
 @NgRoutable(path = "capabilities")
-@NgComponentReference(App.class)
 public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements INgComponent<CapabilitiesPage>
 {
     public CapabilitiesPage()
@@ -49,6 +48,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildInjectionCapability());
         layout.add(buildWebCapability());
         layout.add(buildHttpProxyCapability());
+        layout.add(buildServiceDiscoveryCapability());
+        layout.add(buildRuntimeAutoconfigureCapability());
         layout.add(buildRedisCapability());
         layout.add(buildRestCapability());
         layout.add(buildRestClientCapability());
@@ -97,59 +98,93 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(mermaidDiagramWithTitle("GuicedEE Architecture",
                 """
-                        graph LR
-                            subgraph App["Your Application"]
-                                APP["Your Business Logic"]
-                            end
-                            subgraph Protocol["Protocol Layers"]
-                                REST["REST (JAX-RS)"]
-                                WS["WebSockets"]
-                                OPENAPI["OpenAPI"]
-                            end
-                            subgraph Messaging
-                                RABBIT["RabbitMQ"]
-                                KAFKA["Kafka"]
-                                IBMMQ["IBM MQ"]
-                            end
-                            subgraph Storage
-                                PERSIST["Persistence"]
-                                MONGO["MongoDB"]
-                                CASS["Cassandra"]
-                            end
-                            subgraph Foundation
-                                VERTXWEB["Vert.x Web"]
-                                VERTXCORE["Vert.x Core"]
-                                INJECT["GuicedEE Inject"]
-                                BOM["BOM & JPMS"]
+                        graph TD
+                            subgraph Client["Client Tier"]
+                                direction LR
+                                WEB["Web Browser"]
+                                MOBILE["Mobile App"]
+                                IOT["IoT / Serial Device"]
                             end
                             
-                            APP --> Protocol
-                            APP --> Messaging
-                            APP --> Storage
-                            
-                            REST --> VERTXWEB
-                            WS --> VERTXWEB
-                            OPENAPI --> VERTXWEB
-                            
-                            RABBIT --> VERTXCORE
-                            KAFKA --> VERTXCORE
-                            IBMMQ --> INJECT
-                            
-                            PERSIST --> VERTXCORE
-                            MONGO --> VERTXCORE
-                            CASS --> VERTXCORE
-                            
-                            VERTXWEB --> VERTXCORE
-                            VERTXCORE --> INJECT
-                            INJECT --> BOM
-                            
-                            style Foundation fill:#f9f,stroke:#333
-                            style Messaging fill:#bbf,stroke:#333
-                            style Protocol fill:#dfd,stroke:#333
-                            style Storage fill:#ffd,stroke:#333"""));
+                            WEB --- Prot
+                            MOBILE --- Prot
+                            IOT --- Cerial
 
-        var explain = bodyText("Your application sits at the top. You pick the layers you need. " +
-                "The inject layer and BOM are always present — everything else is opt-in.", "m");
+                            subgraph Interface["Interface Layer"]
+                                direction TB
+                                subgraph Prot["Protocols"]
+                                    REST["REST (JAX-RS)"]
+                                    WS["WebSockets"]
+                                    GQL["GraphQL"]
+                                    GRPC["gRPC"]
+                                    SOAP["SOAP (CXF)"]
+                                end
+                                subgraph Discovery["Discovery & Docs"]
+                                    SD["Service Discovery"]
+                                    SR["Service Registry"]
+                                    OAI["OpenAPI (Swagger)"]
+                                    SWUI["Swagger UI"]
+                                end
+                            end
+
+                            Interface --- Core
+
+                            subgraph Core["GuicedEE Core"]
+                                direction TB
+                                VX["Vert.x 5 Web/Core"]
+                                INJ["GuicedEE Injection"]
+                                BOM["BOM & JPMS"]
+                                subgraph Services["Support Services"]
+                                    direction LR
+                                    CONF["Config"]
+                                    SEC["Security (OAuth2, SAML, Multi-JWT)"]
+                                    HLT["Health"]
+                                    MET["Metrics"]
+                                    TRC["Telemetry"]
+                                end
+                                subgraph Runtime["Runtime"]
+                                    AUTO["Autoconfigure"]
+                                    LOG["Logging"]
+                                    FT["Fault Tolerance"]
+                                end
+                            end
+
+                            Core -.-> Integration
+
+                            subgraph Integration["Integration Layer (Optional)"]
+                                direction TB
+                                subgraph Msg["Messaging"]
+                                    KAFKA["Apache Kafka"]
+                                    RABBIT["RabbitMQ"]
+                                    IBMMQ["IBM MQ"]
+                                    MAIL["Mail Client"]
+                                end
+                                subgraph Data["Persistence & Cache"]
+                                    HBN["Hibernate Reactive"]
+                                    MONGO["MongoDB"]
+                                    CASS["Cassandra"]
+                                    REDIS["Redis"]
+                                    HZ["Hazelcast"]
+                                    JCache["JCache"]
+                                end
+                                subgraph Tools["Utilities"]
+                                    POI["Apache POI"]
+                                    Cerial["Cerial (Serial Port)"]
+                                    PDF["OpenPDF"]
+                                end
+                            end
+                            
+                            style Core fill:#f9f,stroke:#333,stroke-width:2px
+                            style Interface fill:#dfd,stroke:#333
+                            style Integration fill:#ffd,stroke:#333,stroke-dasharray: 5 5
+                            style Client fill:#bbf,stroke:#333"""));
+
+        var explain = bodyText("The GuicedEE architecture is designed for extreme composability. " +
+                "While the Client, Interface, and Core tiers form the backbone of most applications, " +
+                "the Integration Layer is entirely optional. " +
+                "Our security engine is a highlight — supporting everything from simple JWT to complex Multi-JWT setups, OAuth2, SAML, and ABAC. " +
+                "Dashed lines and borders indicate components you only add when your business logic requires them. " +
+                "Every block is a JPMS module — build exactly what you need.", "m");
         explain.setWaColorText("quiet");
         content.add(explain);
 
@@ -267,6 +302,69 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         return buildSection("HTTP Proxy", "Reverse proxy made simple",
                 "com.guicedee:vertx + io.vertx:vertx-http-proxy — Vert.x 5 reverse proxy with interceptors, caching, and WebSocket support.", false, content);
+    }
+
+    private WaStack buildServiceDiscoveryCapability()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("14rem");
+        grid.setGap(PageSize.Small);
+        grid.add(featureCard("Kubernetes resolution", "Resolves services via Kubernetes endpoints API with automatic namespace detection.", null));
+        grid.add(featureCard("DNS SRV resolution", "Resolves services via DNS SRV records for non-Kubernetes environments.", null));
+        grid.add(featureCard("Pluggable providers", "IServiceResolverProvider SPI for custom resolver backends (e.g. Consul, Eureka).", null));
+        grid.add(featureCard("Load balancing", "Built-in round-robin load balancing across healthy service instances.", null));
+        grid.add(featureCard("Environment-driven", "SERVICE_RESOLVER_TYPE, KUBERNETES_NAMESPACE, SRV_DNS_SERVER env vars.", null));
+        grid.add(featureCard("Guice lifecycle", "Automatic startup/shutdown via IGuicePostStartup / IGuicePreDestroy.", null));
+        content.add(grid);
+
+        content.add(codeBlockWithTitle("Using the service resolver with HttpClient",
+                """
+                        HttpClient client = vertx.httpClientBuilder()
+                                .withAddressResolver(resolver)
+                                .build();
+                        
+                        ServiceAddress serviceAddress = ServiceAddress.of("my-service");
+                        client.request(new RequestOptions()
+                                .setMethod(HttpMethod.GET)
+                                .setURI("/api/data")
+                                .setServer(serviceAddress));"""));
+
+        return buildSection("Service Discovery", "Client-side service resolution",
+                "com.guicedee:service-discovery — Vert.x Service Resolver with Kubernetes and DNS SRV backends, pluggable providers, and round-robin load balancing.", false, content);
+    }
+
+    private WaStack buildRuntimeAutoconfigureCapability()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("14rem");
+        grid.setGap(PageSize.Small);
+        grid.add(featureCard("Azure Container Apps", "Detects CONTAINER_APP_NAME, CONTAINER_APP_REVISION, ACA regions, and internal DNS.", null));
+        grid.add(featureCard("AWS ECS / Fargate / Lambda", "Detects ECS_CONTAINER_METADATA_URI, AWS_REGION, task ARN, and VPC networking.", null));
+        grid.add(featureCard("GCP Cloud Run", "Detects K_SERVICE, K_REVISION, CLOUD_RUN_REGION, and Cloud Run URLs.", null));
+        grid.add(featureCard("DigitalOcean App Platform", "Detects DIGITALOCEAN_APP_NAME, APP_URL, and DO region codes.", null));
+        grid.add(featureCard("Kubernetes (generic)", "Detects KUBERNETES_SERVICE_HOST, POD_NAME, namespace, and cluster DNS.", null));
+        grid.add(featureCard("ICloudRuntimeProvider SPI", "Plug in custom cloud providers — implement and register via ServiceLoader.", null));
+        grid.add(featureCard("Zero-config pairing", "Pairs with service-discovery 'auto' resolver type. When runtime is detected, the correct resolver is chosen automatically.", null));
+        grid.add(featureCard("Environment defaults", "Infers service name, port, hostname, region, and fills missing GuicedEE config automatically.", null));
+        content.add(grid);
+
+        content.add(codeBlockWithTitle("Auto-detected runtime info",
+                """
+                        @Inject private CloudRuntimeInfo runtimeInfo;
+                        
+                        runtimeInfo.getPlatform();    // AZURE_CONTAINER_APPS, AWS_ECS, GCP_CLOUD_RUN, ...
+                        runtimeInfo.getServiceName(); // from CONTAINER_APP_NAME, K_SERVICE, etc.
+                        runtimeInfo.getRegion();      // from cloud-specific env vars
+                        runtimeInfo.getHostname();    // pod/container hostname"""));
+
+        return buildSection("Runtime Autoconfigure", "Cloud-aware from the first request",
+                "com.guicedee:runtime-autoconfigure — zero-config cloud platform detection SPI with providers for Azure, AWS, GCP, DigitalOcean, and Kubernetes.", false, content);
     }
 
     private WaStack buildRedisCapability()
@@ -464,14 +562,15 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         "The foundation that all auth providers chain into.",
                 null));
 
-        grid.add(featureCard("@OAuth2Options",
-                "OAuth2 and OpenID Connect with well-known providers (Google, Keycloak, Azure AD, GitHub, etc.). " +
+        grid.add(featureCard("@OAuth2Options / SAML / OIDC",
+                "OAuth2, OpenID Connect, and SAML support with well-known providers (Google, Keycloak, Azure AD, GitHub, Okta, etc.). " +
                         "Authorization Code, Password, Client Credentials, and JWT flows.",
                 null));
 
-        grid.add(featureCard("@JwtAuthOptions",
+        grid.add(featureCard("@JwtAuthOptions / Multi-JWT",
                 "JWT authentication with KeyStore, PEM, or JWK keys. HS256/RS256/ES256. " +
-                        "Token generation, validation, issuer/audience checks, and JWTAuthorization or MicroProfileAuthorization.",
+                        "Token generation, validation, issuer/audience checks. Supports multiple JWT configurations " +
+                        "simultaneously via named providers or path-based selection.",
                 null));
 
         grid.add(featureCard("@AbacOptions",
@@ -1262,7 +1361,9 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
             Map.entry("metrics", "Metrics/Basic"),
             Map.entry("hazelcast", "Hazelcast/Client"),
             Map.entry("mailclient", "MailClient"),
-            Map.entry("fault-tolerance", "FaultTolerance/Basic")
+            Map.entry("fault-tolerance", "FaultTolerance/Basic"),
+            Map.entry("service-discovery", "ServiceDiscovery/Basic"),
+            Map.entry("runtime-autoconfigure", "RuntimeAutoconfigure/Basic")
     );
 
     private WaStack buildModuleCatalogSection()
@@ -1411,7 +1512,9 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                     'cerial': 'https://raw.githubusercontent.com/GedMarc/GuicedCerial/refs/heads/master/README.md',
                     'cdi': 'https://raw.githubusercontent.com/GuicedEE/GuicedCDI/refs/heads/master/README.md',
                     'jwt': 'https://raw.githubusercontent.com/GuicedEE/JWT/refs/heads/master/README.md',
-                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
+                    'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md',
+                    'service-discovery': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxServiceDiscovery/refs/heads/master/README.md',
+                    'runtime-autoconfigure': 'https://raw.githubusercontent.com/GuicedEE/RuntimeAutoconfigure/refs/heads/master/README.md'
                 };
                 """);
         return f;

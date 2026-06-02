@@ -50,6 +50,9 @@ public final class ModuleCatalog
                 "representations",
                 "rest",
                 "rest-client",
+                "runtime-autoconfigure",
+                "service-discovery",
+                "service-registry",
                 "swagger-ui",
                 "telemetry",
                 "vertx",
@@ -65,8 +68,8 @@ public final class ModuleCatalog
             {
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
                 case "fault-tolerance" -> "MicroProfile Fault Tolerance for GuicedEE. @Retry, @Timeout, @CircuitBreaker, @Fallback, and @Bulkhead annotations with Guice AOP interceptors.";
-                case "graphql" -> "SPI-driven GraphQL integration for GuicedEE with Vert.x Web GraphQL. HTTP + WebSocket endpoints, GraphiQL IDE, DataLoader support, VertxFutureAdapter and JsonObjectAdapter auto-configured.";
-                case "hazelcast" -> "Hazelcast distributed caching and clustering integration for GuicedEE. JCache provider, distributed data structures, and cluster management.";
+            case "graphql" -> "SPI-driven GraphQL integration for GuicedEE with Vert.x Web GraphQL. HTTP + WebSocket endpoints, GraphiQL IDE, DataLoader support, VertxFutureAdapter and JsonObjectAdapter auto-configured. Optional GraphQL Gateway stitches remote schemas from services in the service registry.";
+            case "hazelcast" -> "Hazelcast distributed caching and clustering integration for GuicedEE. JCache provider, distributed data structures, and cluster management.";
                 case "health" -> "MicroProfile Health integration for GuicedEE with Vert.x 5. @Liveness, @Readiness, @Startup health checks with automatic discovery and JSON endpoints.";
                 case "ibmmq" -> "Annotation-driven IBM MQ integration for GuicedEE. @IBMMQConnectionOptions, @IBMMQQueueDefinition, IBMMQConsumer/Publisher with IBM MQ JMS client.";
                 case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";
@@ -74,7 +77,10 @@ public final class ModuleCatalog
                 case "mailclient" -> "Email client integration for GuicedEE with Vert.x 5. SMTP mail sending with Guice-managed configuration and templates.";
                 case "metrics" -> "MicroProfile Metrics for GuicedEE with Vert.x 5 Dropwizard Metrics. @Counted, @Timed annotations, Prometheus scrape endpoint, and Graphite reporting.";
                 case "rest-client" -> "Annotation-driven REST client for GuicedEE using Vert.x 5 WebClient. @Endpoint declarations, RestClient injection, and authentication strategies.";
-                case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage, Cassandra wide-column storage, and Redis caching via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, Cassandra, and Redis.";
+                case "runtime-autoconfigure" -> "Cloud runtime detection SPI for GuicedEE. Auto-detects Azure Container Apps, AWS ECS/Lambda, GCP Cloud Run, DigitalOcean App Platform, and Kubernetes — provides environment defaults for service discovery, health, and config.";
+            case "service-discovery" -> "Vert.x Service Resolver integration for GuicedEE. Client-side service discovery via Kubernetes endpoints or DNS SRV records with built-in load balancing and pluggable IServiceResolverProvider SPI.";
+            case "service-registry" -> "Named service registry with health-aware resolution for GuicedEE. Declarative @RegisteredService annotations, auto-constructed URLs from cloud DNS, periodic health monitoring, OpenAPI spec merge, GraphQL schema stitching gateway, and environment-filtered service discovery.";
+            case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage, Cassandra wide-column storage, and Redis caching via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, Cassandra, and Redis.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -84,7 +90,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "2.0.2";
+            String version = "2.1.0";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -98,7 +104,7 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.0.2";
+        String version = "2.1.0";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
@@ -186,7 +192,8 @@ public final class ModuleCatalog
                 "vertx-mutiny",
                 "vertx-kafka",
                 "vertx-pg-client",
-                "vertx-rabbitmq"
+                "vertx-rabbitmq",
+                "vertx-service-resolver"
         });
         addServices(services, groupId, version, "services", "Misc", new String[]{
                 "untitled"
@@ -241,6 +248,9 @@ public final class ModuleCatalog
             case "representations" -> "Representations";
             case "rest" -> "REST Services";
             case "rest-client" -> "REST Client";
+            case "runtime-autoconfigure" -> "Runtime Autoconfigure";
+            case "service-discovery" -> "Service Discovery";
+            case "service-registry" -> "Service Registry";
             case "swagger-ui" -> "Swagger UI";
             case "telemetry" -> "Telemetry";
             case "vertx" -> "Vert.x Core + HTTP Proxy";

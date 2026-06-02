@@ -48,15 +48,106 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.0.2", "Current release"));
+        currentGrid.add(featureCard("Version", "2.1.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
-        currentGrid.add(featureCard("Vert.x", "5.x", "Latest reactive core"));
+        currentGrid.add(featureCard("Vert.x", "5.1.x", "Latest reactive core"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.0.2",
-                "Current stable release targeting JDK 25 and Vert.x 5.",
+        layout.add(buildSection("Current", "v2.1.0",
+                "Current stable release targeting JDK 25 and Vert.x 5.1",
                 true, currentContent));
+
+        // v2.1.0 release
+        var v203Content = new WaStack<>();
+        v203Content.setGap(PageSize.Medium);
+
+        var v203Grid = new WaGrid<>();
+        v203Grid.setMinColumnSize("16rem");
+        v203Grid.setGap(PageSize.Medium);
+
+        v203Grid.add(featureCard("Service Discovery",
+                "New module: Vert.x Service Resolver integration providing client-side service discovery " +
+                        "via Kubernetes endpoints or DNS SRV records. Pluggable IServiceResolverProvider SPI, " +
+                        "round-robin load balancing, and environment-driven configuration.",
+                "New module"));
+
+        v203Grid.add(featureCard("Runtime Autoconfigure",
+                "New module family: cloud runtime detection SPI with providers for Azure Container Apps, " +
+                        "AWS ECS/Fargate/Lambda, GCP Cloud Run, DigitalOcean App Platform, and generic Kubernetes. " +
+                        "Auto-detects platform, infers service name/port/hostname/region, and fills missing GuicedEE config. " +
+                        "Pairs with service-discovery 'auto' resolver type for zero-config multi-cloud resolution.",
+                "New module"));
+
+        v203Grid.add(featureCard("Jackson → 2.21.3",
+                "Upgraded Jackson core, databind, and all modules to 2.21.3. Patch-level bug fixes.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("JUnit → 6.1.0",
+                "Upgraded JUnit Jupiter and Platform to 6.1.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Dropwizard Metrics → 4.2.39",
+                "Upgraded all Dropwizard Metrics modules to 4.2.39.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("SmallRye Common → 2.18.1",
+                "Upgraded SmallRye Common libraries to 2.18.1.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Mutiny → 3.2.1",
+                "Upgraded SmallRye Mutiny reactive library to 3.2.1.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Kafka → 4.3.0",
+                "Upgraded Apache Kafka clients to 4.3.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Selenium → 4.44.0",
+                "Upgraded Selenium WebDriver to 4.44.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Protobuf → 4.35.0",
+                "Upgraded Google Protocol Buffers to 4.35.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("CloudEvents → 4.1.0",
+                "Upgraded CloudEvents API and core to 4.1.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("RabbitMQ Client → 5.31.0",
+                "Upgraded RabbitMQ AMQP client to 5.31.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Oracle JDBC → 23.26.2.0.0",
+                "Upgraded Oracle JDBC driver (ojdbc11) to 23.26.2.0.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("IBM MQ → 9.4.5.1",
+                "Upgraded IBM MQ client to 9.4.5.1.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Woodstox → 7.2.0",
+                "Upgraded Woodstox XML parser to 7.2.0.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("ASM → 9.10.1",
+                "Upgraded ASM bytecode library to 9.10.1.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("JAXB Runtime → 4.0.9",
+                "Upgraded GlassFish JAXB core and runtime to 4.0.9.",
+                "Dependency upgrade"));
+
+        v203Grid.add(featureCard("Other upgrades",
+                "OpenPDF 3.0.5, JavaParser 3.28.1, org.json 20260522, Jaxen 2.0.4, " +
+                        "Glassfish Faces 4.1.9, context-propagation 1.2.1, saslprep/stringprep 2.3.",
+                "Dependency upgrades"));
+
+        v203Content.add(v203Grid);
+        layout.add(buildSection("v2.1.0", "Dependency update release",
+                "Batch update of third-party dependencies — all non-major, stable releases keeping the platform current.",
+                true, v203Content));
 
         // v2.0.2 release
         var v202Content = new WaStack<>();

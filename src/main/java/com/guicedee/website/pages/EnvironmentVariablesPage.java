@@ -66,6 +66,9 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         layout.add(buildIbmMqSection());
         layout.add(buildPersistenceSection());
         layout.add(buildWebServicesSection());
+        layout.add(buildServiceDiscoverySection());
+        layout.add(buildServiceRegistrySection());
+        layout.add(buildConsulSection());
         layout.add(buildMcpSection());
     }
 
@@ -509,11 +512,12 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
                         {"HEALTH_LIVENESS_PATH", "Liveness probe path", "/health/live"},
                         {"HEALTH_READINESS_PATH", "Readiness probe path", "/health/ready"},
                         {"HEALTH_STARTUP_PATH", "Startup probe path", "/health/started"},
+                        {"HEALTH_DOWNSTREAM_ENABLED", "Enable downstream service health aggregation in readiness checks", "true"},
                 }
         ));
 
         return section("Health Checks", "GuicedEE Health",
-                "MicroProfile Health integration with Vert.x.", content);
+                "MicroProfile Health integration with Vert.x — includes downstream health aggregation.", content);
     }
 
     // ── Metrics ─────────────────────────────────────────
@@ -674,6 +678,15 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
                         {"GRAPHIQL_PATH", "GraphiQL mount path", "/graphiql"},
                         {"GRAPHQL_BATCHING_ENABLED", "Enable query batching", "false"},
                         {"GRAPHQL_UPLOADS_ENABLED", "Enable multipart file uploads", "false"},
+                }
+        ));
+
+        content.add(envTable(
+                "GraphQL Gateway (Schema Stitching)",
+                new String[][]{
+                        {"GRAPHQL_GATEWAY_ENABLED", "Enable remote schema stitching from service registry", "false"},
+                        {"GRAPHQL_GATEWAY_ENVIRONMENT", "Only merge services allowed in this environment (e.g. dev, int, prod)", "(empty = all)"},
+                        {"GRAPHQL_GATEWAY_TIMEOUT_MS", "Introspection timeout per remote service in milliseconds", "10000"},
                 }
         ));
 
@@ -845,6 +858,87 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
         return section("Web Services", "GuicedEE Web Services",
                 "SOAP web services configuration using Apache CXF conventions.", content);
+    }
+
+    // ── Service Discovery ─────────────────────────────────────────────
+
+    private WaStack<?> buildServiceDiscoverySection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        content.add(envTable(
+                "Service Resolver",
+                new String[][]{
+                        {"SERVICE_RESOLVER_TYPE", "Resolver type: kubernetes, kube, srv, dns, or empty to disable", "(disabled)"},
+                        {"KUBERNETES_SERVICE_HOST", "Kubernetes API host", "from pod env"},
+                        {"KUBERNETES_SERVICE_PORT", "Kubernetes API port", "443"},
+                        {"KUBERNETES_NAMESPACE", "Kubernetes namespace", "from pod env"},
+                        {"SRV_DNS_SERVER", "DNS server for SRV resolution", "(system default)"},
+                        {"SRV_DNS_PORT", "DNS server port", "53"},
+                }
+        ));
+
+        return section("Service Discovery", "GuicedEE Service Discovery",
+                "Vert.x Service Resolver integration with Kubernetes and DNS SRV backends.", content);
+    }
+
+    // ── Service Registry ───────────────────────────────────
+
+    private WaStack<?> buildServiceRegistrySection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        content.add(envTable(
+                "Service Registry",
+                new String[][]{
+                        {"CONTAINER_APP_ENV_DNS_SUFFIX", "Azure Container Apps DNS suffix for auto-URL construction", "(from Azure runtime)"},
+                        {"SERVICE_REGISTRY_DNS_SUFFIX", "Fallback DNS suffix when no cloud provider is detected", "(empty)"},
+                        {"HEALTH_DOWNSTREAM_ENABLED", "Enable downstream service health aggregation in readiness checks", "true"},
+                }
+        ));
+
+        return section("Service Registry", "GuicedEE Service Registry",
+                "Named service registry with health-aware resolution, status change events, "
+                + "exponential backoff, and graceful shutdown.", content);
+    }
+
+    // ── Consul ─────────────────────────────────────────────
+
+    private WaStack<?> buildConsulSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        content.add(envTable(
+                "Consul Connection",
+                new String[][]{
+                        {"CONSUL_HOST", "Consul agent host (global fallback)", "localhost"},
+                        {"CONSUL_PORT", "Consul agent HTTP port (global fallback)", "8500"},
+                        {"CONSUL_SSL", "Use SSL for Consul connection (global fallback)", "false"},
+                        {"CONSUL_TOKEN", "Consul ACL token (global fallback)", "(empty)"},
+                        {"CONSUL_DATACENTER", "Consul datacenter (global fallback)", "(empty)"},
+                        {"CONSUL_{NAME}_HOST", "Named Consul host (overrides global)", "localhost"},
+                        {"CONSUL_{NAME}_PORT", "Named Consul port (overrides global)", "8500"},
+                        {"CONSUL_{NAME}_SSL", "Named Consul SSL (overrides global)", "false"},
+                        {"CONSUL_{NAME}_TOKEN", "Named Consul ACL token (overrides global)", "(empty)"},
+                        {"CONSUL_{NAME}_DATACENTER", "Named Consul datacenter (overrides global)", "(empty)"},
+                }
+        ));
+
+        content.add(envTable(
+                "Consul Service Resolver",
+                new String[][]{
+                        {"CONSUL_RESOLVER_HOST", "Consul host for service resolver", "(from @ConsulOptions or localhost)"},
+                        {"CONSUL_RESOLVER_PORT", "Consul port for service resolver", "(from @ConsulOptions or 8500)"},
+                        {"CONSUL_RESOLVER_PASSING_ONLY", "Only resolve healthy/passing instances", "true"},
+                }
+        ));
+
+        return section("Consul", "GuicedEE Consul",
+                "HashiCorp Consul integration — service registration, health checks, "
+                + "KV config, and Consul-based address resolution.", content);
     }
 
     // ── MCP ─────────────────────────────────────────────
