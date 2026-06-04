@@ -150,7 +150,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         return card;
     }
 
-    private WaStack buildCoreModules() {
+    private WaStack<?> buildCoreModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -218,7 +218,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The foundation that every GuicedEE application is built on.", true, grid);
     }
 
-    private WaStack buildWebModules() {
+    private WaStack<?> buildWebModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -262,7 +262,9 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         grid.add(moduleCard("GraphQL",
                 "SPI-driven GraphQL with Vert.x Web GraphQL. HTTP + WebSocket endpoints, " +
                         "GraphiQL IDE, DataLoader support. Optional Gateway stitches remote schemas " +
-                        "from services in the service registry with environment-filtered discovery.",
+                        "from services in the service registry with environment-filtered discovery. " +
+                        "The shaded com.graphqljava module strips GraphQL-Java's embedded Guava and " +
+                        "reuses the canonical com.google.common — no duplicate, no stale CVEs.",
                 "com.guicedee:graphql",
                 "graphql", "GraphQL/Basic"));
 
@@ -270,7 +272,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "The reactive web stack built on Vert.x 5.", false, grid);
     }
 
-    private WaStack buildDataModules() {
+    private WaStack<?> buildDataModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -291,7 +293,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "Hibernate Reactive, Jackson, and shared JSON representations.", true, grid);
     }
 
-    private WaStack buildObservabilityModules() {
+    private WaStack<?> buildObservabilityModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -330,7 +332,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "MicroProfile specifications with zero-config defaults.", false, grid);
     }
 
-    private WaStack buildIntegrationModules() {
+    private WaStack<?> buildIntegrationModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -430,7 +432,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "Connect to the ecosystem with messaging, OpenAPI, serial ports, and SOAP.", true, grid);
     }
 
-    private WaStack buildMigrationModules() {
+    private WaStack<?> buildMigrationModules() {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);

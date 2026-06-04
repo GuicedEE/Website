@@ -48,15 +48,42 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.1.0", "Current release"));
+        currentGrid.add(featureCard("Version", "2.1.1", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.1.x", "Latest reactive core"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.1.0",
+        layout.add(buildSection("Current", "v2.1.1",
                 "Current stable release targeting JDK 25 and Vert.x 5.1",
                 true, currentContent));
+
+        // v2.1.1 release
+        var v211Content = new WaStack<>();
+        v211Content.setGap(PageSize.Medium);
+
+        var v211Grid = new WaGrid<>();
+        v211Grid.setMinColumnSize("16rem");
+        v211Grid.setGap(PageSize.Medium);
+
+        v211Grid.add(featureCard("GraphQL instrumentation fix",
+                "GraphQL.newGraphQL now combines the VertxFutureAdapter and JsonObjectAdapter through a single " +
+                        "ChainedInstrumentation. Previously the second instrumentation() call silently replaced the first, " +
+                        "dropping the Vert.x future adapter — now both instrumentations are applied correctly.",
+                "Bug fix"));
+
+        v211Grid.add(featureCard("GraphQL dependency hygiene",
+                "GraphQL-Java ships a shaded copy of Guava under graphql.com.google.common. The com.graphqljava " +
+                        "shade module now strips that embedded copy and rewrites references back to the canonical " +
+                        "com.google.common module. This removes duplicate Guava from the module path, tracks centrally " +
+                        "managed Guava CVE fixes, and yields a clean JPMS graph (com.graphqljava requires transitive " +
+                        "com.google.common).",
+                "Enhancement · Security"));
+
+        v211Content.add(v211Grid);
+        layout.add(buildSection("v2.1.1", "GraphQL fixes",
+                "Fixes to the GraphQL module: chained instrumentation and Guava de-shading for a cleaner, more secure module path.",
+                true, v211Content));
 
         // v2.1.0 release
         var v203Content = new WaStack<>();

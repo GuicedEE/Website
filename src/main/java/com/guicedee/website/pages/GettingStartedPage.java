@@ -94,7 +94,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Quickest Start: IntelliJ Plugin ─────────────────
 
-    private WaStack buildQuickestStart()
+    private WaStack<?> buildQuickestStart()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -148,7 +148,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Prerequisites ─────────────────────────────────
 
-    private WaStack buildPrerequisites()
+    private WaStack<?> buildPrerequisites()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Small);
@@ -183,7 +183,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 1: Create the project ────────────────────
 
-    private WaStack buildStep1Project()
+    private WaStack<?> buildStep1Project()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -262,7 +262,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 2: Module descriptor ─────────────────────
 
-    private WaStack buildStep2ModuleInfo()
+    private WaStack<?> buildStep2ModuleInfo()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -291,7 +291,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 3: Bootstrap ─────────────────────────────
 
-    private WaStack buildStep3Bootstrap()
+    private WaStack<?> buildStep3Bootstrap()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -322,7 +322,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 4: REST endpoint ─────────────────────────
 
-    private WaStack buildStep4Endpoint()
+    private WaStack<?> buildStep4Endpoint()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -365,7 +365,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Step 5: Run it ────────────────────────────────
 
-    private WaStack buildStep5Run()
+    private WaStack<?> buildStep5Run()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -397,7 +397,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── What just happened? ───────────────────────────
 
-    private WaStack buildWhatsHappening()
+    private WaStack<?> buildWhatsHappening()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -459,7 +459,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
     // ── Next steps ────────────────────────────────────
 
-    private WaStack buildNextSteps()
+    private WaStack<?> buildNextSteps()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);

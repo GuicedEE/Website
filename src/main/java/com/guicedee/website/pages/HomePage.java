@@ -200,7 +200,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Hero ──────────────────────────────────────────
 
-    private WaStack buildHero()
+    private WaStack<?> buildHero()
     {
         var hero = new WaStack<>();
         hero.setGap(PageSize.Large);
@@ -254,7 +254,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Three-line pitch ─────────────────────────────
 
-    private WaStack buildThreeLinesPitch()
+    private WaStack<?> buildThreeLinesPitch()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -281,7 +281,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Zero-configuration section ────────────────────
 
-    private WaStack buildZeroConfigSection()
+    private WaStack<?> buildZeroConfigSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -342,7 +342,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Code showcase ─────────────────────────────────
 
-    private WaStack buildCodeShowcaseSection()
+    private WaStack<?> buildCodeShowcaseSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
@@ -459,7 +459,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── REST services deep dive ───────────────────────
 
-    private WaStack buildRestServicesSection()
+    private WaStack<?> buildRestServicesSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
@@ -615,7 +615,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Security section ──────────────────────────────
 
-    private WaStack buildSecuritySection()
+    private WaStack<?> buildSecuritySection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
@@ -769,7 +769,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Vert.x deployment & configuration ─────────────
 
-    private WaStack buildVertxDeploymentSection()
+    private WaStack<?> buildVertxDeploymentSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
@@ -920,7 +920,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── MicroProfile section ──────────────────────────
 
-    private WaStack buildMicroProfileSection()
+    private WaStack<?> buildMicroProfileSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -993,7 +993,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Foundation section ────────────────────────────
 
-    private WaStack buildFoundationSection()
+    private WaStack<?> buildFoundationSection()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("15rem");
@@ -1044,7 +1044,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Modular build section ─────────────────────────
 
-    private WaStack buildModularBuildSection()
+    private WaStack<?> buildModularBuildSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1117,7 +1117,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── JLink / Docker shipping section ───────────────
 
-    private WaStack buildJLinkShippingSection()
+    private WaStack<?> buildJLinkShippingSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1290,7 +1290,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Cloud-aware logging section ───────────────────
 
-    private WaStack buildCloudAwareLoggingSection()
+    private WaStack<?> buildCloudAwareLoggingSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1400,7 +1400,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Plugin section ────────────────────────────────
 
-    private WaStack buildPluginSection()
+    private WaStack<?> buildPluginSection()
     {
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
@@ -1459,7 +1459,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Developer section ─────────────────────────────
 
-    private WaStack buildDeveloperSection()
+    private WaStack<?> buildDeveloperSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1511,7 +1511,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
     // ── Call to action ────────────────────────────────
 
-    private WaStack buildCallToActionSection()
+    private WaStack<?> buildCallToActionSection()
     {
         var cta = buildCallToAction();
         // Add browse examples to the CTA cluster

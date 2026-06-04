@@ -405,7 +405,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
     // ── Metadata ─────────────────────────────────────
 
-    private WaStack buildMetadataSection()
+    private WaStack<?> buildMetadataSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -447,7 +447,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
     // ── Module selection + Preview ────────────────────
 
-    private WaStack buildModuleSelectionSection()
+    private WaStack<?> buildModuleSelectionSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);

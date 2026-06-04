@@ -91,7 +91,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         return card;
     }
 
-    private WaStack buildArchitectureSection()
+    private WaStack<?> buildArchitectureSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -192,7 +192,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "Every layer is a JPMS module. Build up your stack — never exclude down.", false, content);
     }
 
-    private WaStack buildInjectionCapability()
+    private WaStack<?> buildInjectionCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -232,7 +232,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 true, content);
     }
 
-    private WaStack buildWebCapability()
+    private WaStack<?> buildWebCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -268,7 +268,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:web — Vert.x 5 HTTP/HTTPS server with Router and BodyHandler.", false, content);
     }
 
-    private WaStack buildHttpProxyCapability()
+    private WaStack<?> buildHttpProxyCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -304,7 +304,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:vertx + io.vertx:vertx-http-proxy — Vert.x 5 reverse proxy with interceptors, caching, and WebSocket support.", false, content);
     }
 
-    private WaStack buildServiceDiscoveryCapability()
+    private WaStack<?> buildServiceDiscoveryCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -336,7 +336,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:service-discovery — Vert.x Service Resolver with Kubernetes and DNS SRV backends, pluggable providers, and round-robin load balancing.", false, content);
     }
 
-    private WaStack buildRuntimeAutoconfigureCapability()
+    private WaStack<?> buildRuntimeAutoconfigureCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -367,7 +367,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:runtime-autoconfigure — zero-config cloud platform detection SPI with providers for Azure, AWS, GCP, DigitalOcean, and Kubernetes.", false, content);
     }
 
-    private WaStack buildRedisCapability()
+    private WaStack<?> buildRedisCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -432,7 +432,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:vertx + io.vertx:vertx-redis-client — Vert.x 5 Redis client with annotation-driven config, pooling, clustering, TLS, pub/sub, and full environment variable support.", false, content);
     }
 
-    private WaStack buildRestCapability()
+    private WaStack<?> buildRestCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -485,7 +485,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:rest — Jakarta REST adapter for Vert.x 5.", true, content);
     }
 
-    private WaStack buildRestClientCapability()
+    private WaStack<?> buildRestClientCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -548,7 +548,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
-    private WaStack buildSecurityCapability()
+    private WaStack<?> buildSecurityCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -696,7 +696,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 true, content);
     }
 
-    private WaStack buildVerticleCapability()
+    private WaStack<?> buildVerticleCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -757,7 +757,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
-    private WaStack buildPersistenceCapability()
+    private WaStack<?> buildPersistenceCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -846,7 +846,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:persistence — Hibernate Reactive on Vert.x SQL Client + MongoDB + Cassandra.", false, content);
     }
 
-    private WaStack buildWebSocketCapability()
+    private WaStack<?> buildWebSocketCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -866,7 +866,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:websockets — RFC 6455 with action-based routing and group management.", true, content);
     }
 
-    private WaStack buildMessagingCapability()
+    private WaStack<?> buildMessagingCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
@@ -1000,7 +1000,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:rabbitmq · com.guicedee:kafka · com.guicedee:ibmmq — three messaging integrations, all annotation-driven.", false, content);
     }
 
-    private WaStack buildObservabilityCapability()
+    private WaStack<?> buildObservabilityCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1035,7 +1035,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "Health, Metrics, Telemetry, and OpenAPI — all discoverable and auto-registered.", true, content);
     }
 
-    private WaStack buildLoggingCapability()
+    private WaStack<?> buildLoggingCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1108,7 +1108,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 false, content);
     }
 
-    private WaStack buildConfigCapability()
+    private WaStack<?> buildConfigCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1151,7 +1151,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee.microprofile:config — MicroProfile Config via SmallRye.", false, content);
     }
 
-    private WaStack buildFaultToleranceCapability()
+    private WaStack<?> buildFaultToleranceCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1190,7 +1190,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "com.guicedee:fault-tolerance — MicroProfile Fault Tolerance via Guice AOP.", true, content);
     }
 
-    private WaStack buildJLinkCapability()
+    private WaStack<?> buildJLinkCapability()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -1366,7 +1366,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
             Map.entry("runtime-autoconfigure", "RuntimeAutoconfigure/Basic")
     );
 
-    private WaStack buildModuleCatalogSection()
+    private WaStack<?> buildModuleCatalogSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);

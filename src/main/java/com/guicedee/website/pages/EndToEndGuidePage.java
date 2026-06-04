@@ -161,7 +161,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Project setup ─────────────────────────────────
 
-    private WaStack buildProjectSetup()
+    private WaStack<?> buildProjectSetup()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -224,7 +224,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Module descriptor ─────────────────────────────
 
-    private WaStack buildModuleDescriptor()
+    private WaStack<?> buildModuleDescriptor()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -251,7 +251,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Guice module & bootstrap ──────────────────────
 
-    private WaStack buildGuiceModuleAndBootstrap()
+    private WaStack<?> buildGuiceModuleAndBootstrap()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -284,7 +284,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── REST endpoints ────────────────────────────────
 
-    private WaStack buildRestEndpoints()
+    private WaStack<?> buildRestEndpoints()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -340,7 +340,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Security ──────────────────────────────────────
 
-    private WaStack buildSecuritySection()
+    private WaStack<?> buildSecuritySection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -383,7 +383,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── CORS ──────────────────────────────────────────
 
-    private WaStack buildCorsSection()
+    private WaStack<?> buildCorsSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -411,7 +411,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── REST client ───────────────────────────────────
 
-    private WaStack buildRestClientSection()
+    private WaStack<?> buildRestClientSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -455,7 +455,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Health checks ─────────────────────────────────
 
-    private WaStack buildHealthChecks()
+    private WaStack<?> buildHealthChecks()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -491,7 +491,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Configuration ─────────────────────────────────
 
-    private WaStack buildConfiguration()
+    private WaStack<?> buildConfiguration()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -520,7 +520,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Persistence ───────────────────────────────────
 
-    private WaStack buildPersistenceSection()
+    private WaStack<?> buildPersistenceSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -588,7 +588,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Verticle isolation ────────────────────────────
 
-    private WaStack buildVerticleSection()
+    private WaStack<?> buildVerticleSection()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -628,7 +628,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Cloud-aware logging ───────────────────────────
 
-    private WaStack buildCloudLogging()
+    private WaStack<?> buildCloudLogging()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -663,7 +663,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── JLink deployment ──────────────────────────────
 
-    private WaStack buildJLinkDeployment()
+    private WaStack<?> buildJLinkDeployment()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -781,7 +781,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Lifecycle & env vars ──────────────────────────
 
-    private WaStack buildLifecycleAndEnvVars()
+    private WaStack<?> buildLifecycleAndEnvVars()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
@@ -844,7 +844,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
     // ── Module pages ──────────────────────────────────
 
-    private WaStack buildModulePages()
+    private WaStack<?> buildModulePages()
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
