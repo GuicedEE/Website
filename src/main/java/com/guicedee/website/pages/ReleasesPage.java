@@ -80,6 +80,11 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "com.google.common).",
                 "Enhancement · Security"));
 
+        v211Grid.add(featureCard("Telemetry — 3 new endpoints",
+                "The telemetry module now supports 3 new endpoints, with its underlying dependency " +
+                        "upgraded to the latest version.",
+                "Enhancement · Dependency upgrade"));
+
         v211Content.add(v211Grid);
         layout.add(buildSection("v2.1.1", "GraphQL fixes",
                 "Fixes to the GraphQL module: chained instrumentation and Guava de-shading for a cleaner, more secure module path.",

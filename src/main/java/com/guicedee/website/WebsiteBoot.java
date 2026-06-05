@@ -19,7 +19,7 @@ import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.callout.WaCallout;
 import com.jwebmp.webawesome.components.icon.WaIcon;
-import com.jwebmp.webawesome.components.toast.WaToastDataService;
+import com.jwebmp.webawesomepro.components.toast.WaToastDataService;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.badge.WaBadge;
 import com.jwebmp.webawesome.components.popover.WaPopover;
