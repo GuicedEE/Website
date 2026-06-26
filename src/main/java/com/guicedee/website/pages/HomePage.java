@@ -229,6 +229,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         tags.addClass("hero-tags");
         tags.add(buildTag("GuicedEE", Variant.Brand));
         tags.add(buildTag("Vert.x 5", Variant.Success));
+        tags.add(buildTag("Jackson 3", Variant.Success));
         tags.add(buildTag("Java 25+", Variant.Neutral));
         tags.add(buildTag("JPMS Level 3", Variant.Neutral));
         tags.add(buildTag("Zero Config", Variant.Warning));

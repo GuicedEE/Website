@@ -50,12 +50,13 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         currentGrid.setGap(PageSize.Small);
         currentGrid.add(featureCard("Version", "2.1.1", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
-        currentGrid.add(featureCard("Vert.x", "5.1.x", "Latest reactive core"));
+        currentGrid.add(featureCard("Vert.x", "5.1.3", "Latest reactive core"));
+        currentGrid.add(featureCard("Jackson", "3.x", "tools.jackson across the board"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
         layout.add(buildSection("Current", "v2.1.1",
-                "Current stable release targeting JDK 25 and Vert.x 5.1",
+                "Current stable release targeting JDK 25, Vert.x 5.1.3, and Jackson 3",
                 true, currentContent));
 
         // v2.1.1 release
@@ -65,6 +66,22 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var v211Grid = new WaGrid<>();
         v211Grid.setMinColumnSize("16rem");
         v211Grid.setGap(PageSize.Medium);
+
+        v211Grid.add(featureCard("Jackson 3 across the board",
+                "Migrated the entire platform from Jackson 2 (com.fasterxml.jackson) to Jackson 3 " +
+                        "(tools.jackson). The shared DefaultObjectMapper, IJsonRepresentation, REST request/response " +
+                        "serialization, event-bus codecs, and all modules now run on Jackson 3.1.x. The stable " +
+                        "com.fasterxml.jackson.annotation annotations (2.x, per JSTEP-1) are retained, so " +
+                        "@JsonProperty, @JsonInclude, @JsonAutoDetect, @JsonIdentityInfo, and the reference " +
+                        "annotations continue to work unchanged.",
+                "Migration · Breaking change"));
+
+        v211Grid.add(featureCard("Vert.x JSON uses our Jackson 3 mapper",
+                "Vert.x is now explicitly configured to use the GuicedEE Jackson 3 ObjectMapper via the " +
+                        "io.vertx.core.spi.JsonFactory SPI. All Vert.x JSON — Json.encode/decode, " +
+                        "JsonObject.mapTo/mapFrom, and event-bus payloads — flows through the same mapper, " +
+                        "avoiding Vert.x's Jackson 2 fallback codec.",
+                "Enhancement"));
 
         v211Grid.add(featureCard("GraphQL instrumentation fix",
                 "GraphQL.newGraphQL now combines the VertxFutureAdapter and JsonObjectAdapter through a single " +
@@ -86,8 +103,9 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Enhancement · Dependency upgrade"));
 
         v211Content.add(v211Grid);
-        layout.add(buildSection("v2.1.1", "GraphQL fixes",
-                "Fixes to the GraphQL module: chained instrumentation and Guava de-shading for a cleaner, more secure module path.",
+        layout.add(buildSection("v2.1.1", "Jackson 3 migration",
+                "Platform-wide migration to Jackson 3 (tools.jackson), with Vert.x JSON routed through the " +
+                        "same mapper, plus GraphQL chained-instrumentation and Guava de-shading fixes.",
                 true, v211Content));
 
         // v2.1.0 release
