@@ -41,23 +41,51 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
-        // Current release
+        // Current release (v5.3)
         var currentContent = new WaStack<>();
         currentContent.setGap(PageSize.Medium);
 
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.1.1", "Current release"));
+        currentGrid.add(featureCard("Version", "5.3.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.1.3", "Latest reactive core"));
-        currentGrid.add(featureCard("Jackson", "3.x", "tools.jackson across the board"));
+        currentGrid.add(featureCard("Jackson", "5.3 (tools.jackson)", "New namespace across the board"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.1.1",
-                "Current stable release targeting JDK 25, Vert.x 5.1.3, and Jackson 3",
+        layout.add(buildSection("Current", "v5.3.0",
+                "Current stable release targeting JDK 25, Vert.x 5.1.3, and Jackson 5.3 (tools.jackson)",
                 true, currentContent));
+
+        // v5.3 release
+        var v53Content = new WaStack<>();
+        v53Content.setGap(PageSize.Medium);
+
+        var v53Grid = new WaGrid<>();
+        v53Grid.setMinColumnSize("16rem");
+        v53Grid.setGap(PageSize.Medium);
+
+        v53Grid.add(featureCard("Jackson 5.3 (tools.jackson)",
+                "Upgraded the platform from Jackson 3.x to Jackson 5.3 in the tools.jackson namespace. " +
+                        "All modules — DefaultObjectMapper, IJsonRepresentation, REST serialization, event-bus codecs, " +
+                        "and Vert.x JSON routing — are updated to the 5.3.x API. The stable " +
+                        "com.fasterxml.jackson.annotation annotations (per JSTEP-1) are retained so " +
+                        "@JsonProperty, @JsonInclude, and related annotations continue to work unchanged.",
+                "Dependency upgrade · Breaking change"));
+
+        v53Grid.add(featureCard("JCache — Uni/Multi reactive support",
+                "The JCache integration (cache-annotations-ri-guice, hazelcast) now supports SmallRye Mutiny " +
+                        "Uni and Multi reactive types. Cache operations can return Uni<V> for single-value lookups " +
+                        "and Multi<V> for streamed results, enabling non-blocking cache access within Vert.x event-loop " +
+                        "verticles and reactive pipelines without bridging to blocking threads.",
+                "Enhancement · Reactive"));
+
+        v53Content.add(v53Grid);
+        layout.add(buildSection("v5.3.0", "Jackson 5.3 + JCache reactive",
+                "Jackson upgraded to 5.3 in the tools.jackson namespace, plus Uni/Multi reactive support added to the JCache implementation.",
+                true, v53Content));
 
         // v2.1.1 release
         var v211Content = new WaStack<>();
@@ -106,7 +134,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.1.1", "Jackson 3 migration",
                 "Platform-wide migration to Jackson 3 (tools.jackson), with Vert.x JSON routed through the " +
                         "same mapper, plus GraphQL chained-instrumentation and Guava de-shading fixes.",
-                true, v211Content));
+                false, v211Content));
 
         // v2.1.0 release
         var v203Content = new WaStack<>();
