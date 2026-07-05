@@ -17,7 +17,7 @@
 
         <ignore.moditect>true</ignore.moditect>
         <flatten.pom>false</flatten.pom>
-        <jwebmp.version>2.2.0</jwebmp.version>
+        <jwebmp.version>2.0.3-SNAPSHOT</jwebmp.version>
         <guicedee.version>5.3-SNAPSHOT</guicedee.version>
 
         <maven.compiler.release>25</maven.compiler.release>
@@ -184,7 +184,7 @@
                     <installDependencies>true</installDependencies>
                     <buildAngular>true</buildAngular>
                     <buildDockerImage>true</buildDockerImage>
-                    <dockerImageName>gedmarc/guicedee-website:2.0.2</dockerImageName>
+                    <dockerImageName>gedmarc/guicedee-website:2.2.0</dockerImageName>
                     <dockerBaseImage>nginx:alpine</dockerBaseImage>
                     <nginxServerName>guicedee.com www.guicedee.com</nginxServerName>
                     <nginxLetsEncrypt>false</nginxLetsEncrypt>
