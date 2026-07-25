@@ -48,26 +48,26 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.1.1", "Current release"));
+        currentGrid.add(featureCard("Version", "2.2.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("Vert.x", "5.1.3", "Latest reactive core"));
         currentGrid.add(featureCard("Jackson", "3.x", "tools.jackson across the board"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.1.1",
+        layout.add(buildSection("Current", "v2.2.0",
                 "Current stable release targeting JDK 25, Vert.x 5.1.3, and Jackson 3",
                 true, currentContent));
 
-        // v2.1.1 release
-        var v211Content = new WaStack<>();
-        v211Content.setGap(PageSize.Medium);
+        // v2.2.0 release
+        var v220Content = new WaStack<>();
+        v220Content.setGap(PageSize.Medium);
 
-        var v211Grid = new WaGrid<>();
-        v211Grid.setMinColumnSize("16rem");
-        v211Grid.setGap(PageSize.Medium);
+        var v220Grid = new WaGrid<>();
+        v220Grid.setMinColumnSize("16rem");
+        v220Grid.setGap(PageSize.Medium);
 
-        v211Grid.add(featureCard("Jackson 3 across the board",
+        v220Grid.add(featureCard("Jackson 3 across the board",
                 "Migrated the entire platform from Jackson 2 (com.fasterxml.jackson) to Jackson 3 " +
                         "(tools.jackson). The shared DefaultObjectMapper, IJsonRepresentation, REST request/response " +
                         "serialization, event-bus codecs, and all modules now run on Jackson 3.1.x. The stable " +
@@ -76,20 +76,20 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "annotations continue to work unchanged.",
                 "Migration · Breaking change"));
 
-        v211Grid.add(featureCard("Vert.x JSON uses our Jackson 3 mapper",
+        v220Grid.add(featureCard("Vert.x JSON uses our Jackson 3 mapper",
                 "Vert.x is now explicitly configured to use the GuicedEE Jackson 3 ObjectMapper via the " +
                         "io.vertx.core.spi.JsonFactory SPI. All Vert.x JSON — Json.encode/decode, " +
                         "JsonObject.mapTo/mapFrom, and event-bus payloads — flows through the same mapper, " +
                         "avoiding Vert.x's Jackson 2 fallback codec.",
                 "Enhancement"));
 
-        v211Grid.add(featureCard("GraphQL instrumentation fix",
+        v220Grid.add(featureCard("GraphQL instrumentation fix",
                 "GraphQL.newGraphQL now combines the VertxFutureAdapter and JsonObjectAdapter through a single " +
                         "ChainedInstrumentation. Previously the second instrumentation() call silently replaced the first, " +
                         "dropping the Vert.x future adapter — now both instrumentations are applied correctly.",
                 "Bug fix"));
 
-        v211Grid.add(featureCard("GraphQL dependency hygiene",
+        v220Grid.add(featureCard("GraphQL dependency hygiene",
                 "GraphQL-Java ships a shaded copy of Guava under graphql.com.google.common. The com.graphqljava " +
                         "shade module now strips that embedded copy and rewrites references back to the canonical " +
                         "com.google.common module. This removes duplicate Guava from the module path, tracks centrally " +
@@ -97,16 +97,16 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "com.google.common).",
                 "Enhancement · Security"));
 
-        v211Grid.add(featureCard("Telemetry — 3 new endpoints",
+        v220Grid.add(featureCard("Telemetry — 3 new endpoints",
                 "The telemetry module now supports 3 new endpoints, with its underlying dependency " +
                         "upgraded to the latest version.",
                 "Enhancement · Dependency upgrade"));
 
-        v211Content.add(v211Grid);
-        layout.add(buildSection("v2.1.1", "Jackson 3 migration",
+        v220Content.add(v220Grid);
+        layout.add(buildSection("v2.2.0", "Jackson 3 migration",
                 "Platform-wide migration to Jackson 3 (tools.jackson), with Vert.x JSON routed through the " +
                         "same mapper, plus GraphQL chained-instrumentation and Guava de-shading fixes.",
-                true, v211Content));
+                true, v220Content));
 
         // v2.1.0 release
         var v203Content = new WaStack<>();
