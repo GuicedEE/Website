@@ -48,16 +48,98 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.2.0", "Current release"));
+        currentGrid.add(featureCard("Version", "2.2.2", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
-        currentGrid.add(featureCard("Vert.x", "5.1.3", "Latest reactive core"));
-        currentGrid.add(featureCard("Jackson", "3.x", "tools.jackson across the board"));
+        currentGrid.add(featureCard("MicroProfile Config", "3.1.1", "Actionable source diagnostics"));
+        currentGrid.add(featureCard("Vert.x", "5.1.5", "Latest reactive core"));
+        currentGrid.add(featureCard("Jackson", "3.2.1", "tools.jackson across the board"));
+        currentGrid.add(featureCard("Hibernate", "7.4.3", "ORM 7.4.3 + Reactive 4.5.1"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.2.0",
-                "Current stable release targeting JDK 25, Vert.x 5.1.3, and Jackson 3",
+        layout.add(buildSection("Current", "v2.2.2",
+                "Full dependency refresh with Config maintained one patch ahead",
                 true, currentContent));
+
+        // v2.2.2 release
+        var v222Content = new WaStack<>();
+        v222Content.setGap(PageSize.Medium);
+
+        var v222Grid = new WaGrid<>();
+        v222Grid.setMinColumnSize("16rem");
+        v222Grid.setGap(PageSize.Medium);
+
+        v222Grid.add(featureCard("Config stays one version ahead",
+                "The 2.2.2 platform BOM selects com.guicedee.microprofile:config 2.2.3. This includes the " +
+                        "source-aware startup diagnostics introduced in 2.2.1 while preserving a deliberate " +
+                        "independent patch lane for configuration fixes.",
+                "Dependency management"));
+
+        v222Grid.add(featureCard("Hibernate ORM 7.4.3 + Hibernate Reactive 4.5.1",
+                "Hibernate ORM, its bytecode enhancer and annotation processor are aligned on 7.4.3.Final, " +
+                        "with Hibernate Reactive 4.5.1.Final. Keeping those versions together prevents runtime " +
+                        "linkage failures against ORM internals.",
+                "Dependency upgrade"));
+
+        v222Grid.add(featureCard("Platform dependency refresh",
+                "Managed versions now include Jackson 3.2.1, Vert.x 5.1.5, Apache CXF 4.2.2, SmallRye " +
+                        "Mutiny 3.3.0, OpenTelemetry 1.64.0, Micrometer 1.17.0, Jandex 3.6.0, RabbitMQ 5.34.0, " +
+                        "OkHttp 5.5.0, JUnit 6.1.3 and Selenium 4.47.0.",
+                "Dependency upgrade"));
+
+        v222Grid.add(featureCard("MongoDB modules for jlink",
+                "Five new shaded JPMS services cover bson, bson-record-codec, mongodb-driver-core, " +
+                        "mongodb-driver-reactivestreams and reactor-core. Vert.x MongoDB applications can now " +
+                        "include the full driver chain in custom jlink runtime images.",
+                "New modules"));
+
+        v222Grid.add(featureCard("Build and module-path fixes",
+                "The release corrects shaded module descriptors and source/javadoc inputs across PostgreSQL, " +
+                        "CloudEvents, RabbitMQ, Swagger, Hibernate and OpenTelemetry, and makes BOM import " +
+                        "precedence deterministic under Maven 4.",
+                "Build"));
+
+        v222Grid.add(featureCard("Security maintenance",
+                "PostgreSQL, SCRAM, Jackson, Spring, Bouncy Castle and netty-tcnative move to maintained patch " +
+                        "levels as part of the managed dependency update.",
+                "Security"));
+
+        v222Content.add(v222Grid);
+        layout.add(buildSection("v2.2.2", "Dependency refresh and expanded JPMS coverage",
+                "A complete GuicedEE release train with refreshed runtime dependencies, five new MongoDB " +
+                        "service modules and Config 2.2.3 selected by the BOM.",
+                true, v222Content));
+
+        // v2.2.1 release
+        var v221Content = new WaStack<>();
+        v221Content.setGap(PageSize.Medium);
+
+        var v221Grid = new WaGrid<>();
+        v221Grid.setMinColumnSize("16rem");
+        v221Grid.setGap(PageSize.Medium);
+
+        v221Grid.add(featureCard("Actionable Config startup failures",
+                "Malformed Unicode escapes in META-INF/microprofile-config.properties now report the " +
+                        "offending resource URL, line, column and source text. Startup no longer stops at SmallRye's " +
+                        "context-free Malformed \\uXXXX encoding message.",
+                "Bug fix"));
+
+        v221Grid.add(featureCard("Config source validator",
+                "The Config module can scan every visible MicroProfile Config properties resource before or " +
+                        "outside application startup. It distinguishes valid escaped Windows paths, identifies " +
+                        "truncated Unicode escapes and reports UTF-16 byte-order marks with a corrective hint.",
+                "Diagnostics"));
+
+        v221Grid.add(featureCard("Scoped patch BOM",
+                "guicedee-bom 2.2.1 selects com.guicedee.microprofile:config 2.2.1 while keeping the rest of " +
+                        "the GuicedEE runtime and shaded service modules on the compatible 2.2.0 release train.",
+                "Dependency management"));
+
+        v221Content.add(v221Grid);
+        layout.add(buildSection("v2.2.1", "MicroProfile Config diagnostics",
+                "A focused patch that turns opaque properties parsing failures into precise, fixable startup " +
+                        "diagnostics and exposes the update through the GuicedEE BOM.",
+                true, v221Content));
 
         // v2.2.0 release
         var v220Content = new WaStack<>();
@@ -70,10 +152,12 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         v220Grid.add(featureCard("Jackson 3 across the board",
                 "Migrated the entire platform from Jackson 2 (com.fasterxml.jackson) to Jackson 3 " +
                         "(tools.jackson). The shared DefaultObjectMapper, IJsonRepresentation, REST request/response " +
-                        "serialization, event-bus codecs, and all modules now run on Jackson 3.1.x. The stable " +
+                        "serialization, event-bus codecs, and all modules now run on Jackson 3.2.1. The stable " +
                         "com.fasterxml.jackson.annotation annotations (2.x, per JSTEP-1) are retained, so " +
                         "@JsonProperty, @JsonInclude, @JsonAutoDetect, @JsonIdentityInfo, and the reference " +
-                        "annotations continue to work unchanged.",
+                        "annotations continue to work unchanged. GuicedEE tracks the latest Jackson 3 release " +
+                        "rather than the older LTS pinned by vertx-dependencies: standalone-bom imports the " +
+                        "Jackson BOM ahead of the Vert.x depchain, so the whole graph resolves from one Jackson.",
                 "Migration · Breaking change"));
 
         v220Grid.add(featureCard("Vert.x JSON uses our Jackson 3 mapper",
@@ -104,7 +188,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
 
         v220Content.add(v220Grid);
         layout.add(buildSection("v2.2.0", "Jackson 3 migration",
-                "Platform-wide migration to Jackson 3 (tools.jackson), with Vert.x JSON routed through the " +
+                "Platform-wide migration to Jackson 3 (tools.jackson) with Vert.x JSON routed through the " +
                         "same mapper, plus GraphQL chained-instrumentation and Guava de-shading fixes.",
                 true, v220Content));
 

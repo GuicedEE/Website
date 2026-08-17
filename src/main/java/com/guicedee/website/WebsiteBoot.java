@@ -9,6 +9,8 @@ import com.jwebmp.core.base.angular.client.annotations.references.NgImportRefere
 import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
+import com.jwebmp.core.base.angular.components.modules.RouterConfig;
+import com.jwebmp.core.base.angular.components.modules.RouterModuleConfig;
 import com.jwebmp.core.base.angular.services.RouterOutlet;
 import com.jwebmp.core.base.html.DivSimple;
 import com.guicedee.website.App;
@@ -61,12 +63,14 @@ import java.util.List;
 @NgImportReference(value = "registerLocaleData", reference = "@angular/common")
 @NgImportReference(value = "signal", reference = "@angular/core")
 @NgImportReference(value = "DOCUMENT", reference = "@angular/common")
-@NgImportReference(value = "Router, NavigationStart, NavigationEnd", reference = "@angular/router")
+@NgImportReference(value = "NavigationStart, NavigationEnd", reference = "@angular/router")
 @NgImportReference(value = "inject", reference = "@angular/core")
 @NgImportReference(value = "filter", reference = "rxjs/operators")
 @NgComponentReference(value = WaToastDataService.class)
 @NgComponentReference(value = StatusService.class)
 @NgComponentReference(value = App.class)
+@NgComponentReference(RouterModuleConfig.class)
+@NgComponentReference(RouterConfig.class)
 public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<WebsiteBoot> {
     public WebsiteBoot() {
         setTag("ng-container");
@@ -206,7 +210,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("box-shadow", "0 0 6px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent)");
         versionBadge.addStyle("cursor", "pointer");
         versionBadge.addStyle("margin-inline-start", "var(--wa-space-m)");
-        versionBadge.setText("2.2.0");
+        versionBadge.setText("2.2.2");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -233,7 +237,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var snapshotVersionLabel = new WaDiv<>();
         snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
         snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
-        snapshotVersionLabel.setText("Current snapshot: <code>2.2.1-SNAPSHOT</code>");
+        snapshotVersionLabel.setText("Current snapshot: <code>2.2.3-SNAPSHOT</code>");
         popoverContent.add(snapshotVersionLabel);
 
         var popoverDesc = new WaDiv<>("p");
@@ -781,7 +785,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> fields() {
         var f = new ArrayList<>(INgComponent.super.fields());
-        f.add("private router: Router = inject(Router);");
+        //f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
         f.add("""

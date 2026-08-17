@@ -12,7 +12,7 @@ This repository powers the **public GuicedEE website** hosted at `https://guiced
 - Offer an **Application Builder** UI that lets visitors choose GuicedEE modules/plugins, configure settings, and download a ready-to-run ZIP containing the generated source package tailored to their selections.
 - Treat GuicedVertx and GuicedInject as implicit foundations for every construction flow; they are assumed by default whenever GuicedEE modules are composed.
 - Host a single monolithic boot implementation that invokes `IGuiceContext.inject()` so the site remains focused and simple for visitors (no multi-module boot wiring is required on the site itself).
-- Document hosting/security expectations: the site is fronted by **GCP Cloud Armor** for DDoS protection and remains otherwise open to the public.
+- Document hosting/security expectations: the site runs on **Azure Container Apps** behind the platform's managed ingress (TLS termination + Azure edge protection) and remains otherwise open to the public.
 - Curate extensive **media-rich write-ups and imagery** for each module, service, and plugin, enabling the marketing/evangelism story to come alive alongside the data and application builder.
 - Generate every page with the JWebMP/WebAwesome stack so that the WebAwesome components (`WaButton`, `WaInput`, `WaCluster`, `WaStack`, etc.) drive the layout, styling, and interactive media galleries.
 - Define the primary navigation and page structure using WebAwesome’s `WaPage`/`WaMenu` paradigms: a `Home` page that narrates the platform story, a `Capabilities` page for features breakdown, a `Services` catalog page, the App Builder page, and supporting destinations for releases, media, and onboarding resources.
@@ -77,9 +77,44 @@ Visitors can craft a custom GuicedEE application by:
 
 The generated ZIP mirrors production builds so teams can iterate quickly without configuring every dependency manually.
 
-## 🚀 Hosting & Security
-- Deployed as a static + server-rendered hybrid site on `https://guicedee.com`.
-- GCP Cloud Armor handles edge protection; no additional application-level firewalling is applied today.
+## 🚀 Hosting & Deployment
+The public site is a **static Angular SPA served by nginx** — the `angular-maven-plugin` emits the Angular project to `target/webroot/guicedee-website`, `ng build` writes `dist/jwebmp/browser`, and the generated `Dockerfile` copies that into an `nginx:alpine` image. Dynamic data comes from the separate `website-backend` deliverable, not from this container.
+
+**Runtime topology**
+
+| Setting | Value |
+| --- | --- |
+| Platform | Azure Container Apps |
+| Container app | `guicedee-website` |
+| Resource group / region | `DevSites` / UK West |
+| Image | `docker.io/gedmarc/guicedee-website:<version>` (public Docker Hub, anonymous pull) |
+| Ingress | External, target port `80`, transport `Auto` |
+| Custom domain | `guicedee.com` via Azure **managed certificate** (SNI) |
+| Revisions | `Single` mode, traffic pinned to `latestRevision` at 100% |
+| Scale | min `0` / max `1`, HTTP scaler at 10 concurrent requests |
+| Resources | 0.25 vCPU / 0.5 GiB, `Consumption` workload profile |
+| Probes | TCP `:80` liveness, readiness, and startup |
+
+> Because `minReplicas` is `0`, the app scales to zero when idle — the first request after a quiet period pays a cold start.
+
+**Deploying a new version**
+
+1. Build and push the image (see `build-guicedee-website.ps1 -Push`, or `mvn install` then `docker build`/`docker push` from `target/webroot/guicedee-website`). Keep `<dockerImageName>` in `pom.xml` in step with the release.
+2. Point the container app at the new tag. Because revisions run in `Single` mode with `latestRevision: true`, the new revision automatically takes 100% of traffic — no manual traffic split:
+
+   ```powershell
+   az containerapp update `
+     --name guicedee-website `
+     --resource-group DevSites `
+     --image docker.io/gedmarc/guicedee-website:2.2.2 `
+     --revision-suffix v222
+   ```
+
+   Without the `containerapp` CLI extension, an ARM `PATCH` against `properties.template.containers[0].image` achieves the same result. If you hand-roll the payload, re-send the probes, resources, and scale rule as well — a `template` patch replaces the containers array. Note that the read API returns `scale.cooldownPeriod` and `scale.pollingInterval`, but api-version `2024-03-01` **rejects** those two on write; omit them and the existing values are retained.
+3. Verify: `provisioningState` is `Succeeded`, `latestReadyRevisionName` matches the new suffix, and `https://guicedee.com/` returns the freshly built `index.html` (compare `content-length` / `last-modified` against `dist/jwebmp/browser/index.html`). Confirm the SPA fallback still serves deep links such as `/releases` and `/modules`.
+
+**Security**
+- TLS terminates at the Azure Container Apps managed ingress using the Azure managed certificate; no application-level firewalling is applied today.
 - CI harness uses GuicedEE/Workflows shared GitHub Actions templates with secrets such as `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`.
 
 ## 🧭 Development & Reference
