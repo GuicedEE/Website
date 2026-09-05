@@ -1,11 +1,8 @@
 package com.guicedee.website.pages;
 
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
-import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
-import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
-import com.jwebmp.core.base.angular.components.modules.RouterModuleConfig;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -139,7 +136,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var dialogHeader = new DivSimple<>();
         dialogHeader.addAttribute("slot", "label");
         var headerCluster = new WaCluster<>();
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.setGap(PageSize.Small);
         var titleSpan = new DivSimple<>();
         titleSpan.setText("{{readmeModuleTitle}}");
@@ -1534,7 +1531,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var header = new DivSimple<>();
         var headerCluster = new WaCluster<>();
         headerCluster.setGap(PageSize.Small);
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.add(headingText("h3", "m", title));
         if (examplePath != null)
         {

@@ -57,7 +57,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         var dialogHeader = new DivSimple<>();
         dialogHeader.addAttribute("slot", "label");
         var headerCluster = new WaCluster<>();
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.setGap(PageSize.Small);
         var titleSpan = new DivSimple<>();
         titleSpan.setText("{{readmeModuleTitle}}");
@@ -162,7 +162,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         var header = new DivSimple<>();
         var headerCluster = new WaCluster<>();
         headerCluster.setGap(PageSize.Small);
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.add(headingText("h3", "m", "Inject (Core Engine)"));
         headerCluster.add(exampleHeaderIcon("Inject/Basic"));
         header.add(headerCluster);
@@ -461,7 +461,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         var header = new DivSimple<>();
         var headerCluster = new WaCluster<>();
         headerCluster.setGap(PageSize.Small);
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.add(headingText("h3", "m", title));
         if (examplePath != null) {
             headerCluster.add(exampleHeaderIcon(examplePath));

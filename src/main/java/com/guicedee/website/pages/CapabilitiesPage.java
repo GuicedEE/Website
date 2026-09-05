@@ -1,12 +1,8 @@
 package com.guicedee.website.pages;
 
-import com.guicedee.website.App;
 import com.guicedee.website.catalog.ModuleCatalog;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
-import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
-import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
-import com.jwebmp.core.base.angular.client.annotations.structures.NgField;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -1440,7 +1436,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var dialogHeader = new DivSimple<>();
         dialogHeader.addAttribute("slot", "label");
         var headerCluster = new WaCluster<>();
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.setGap(PageSize.Small);
         var titleSpan = new DivSimple<>();
         titleSpan.setText("{{readmeModuleTitle}}");

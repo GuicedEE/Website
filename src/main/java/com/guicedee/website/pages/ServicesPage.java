@@ -136,7 +136,7 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
         var header = new DivSimple<>();
         var headerCluster = new WaCluster<>();
         headerCluster.setGap(PageSize.Small);
-        headerCluster.setSplit();
+        headerCluster.split();
         headerCluster.add(headingText("h4", "s", service.getArtifactId()));
         var actionCluster = new WaCluster<>();
         actionCluster.setGap(PageSize.Small);
