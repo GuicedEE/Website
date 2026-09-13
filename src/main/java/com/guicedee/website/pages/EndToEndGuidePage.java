@@ -176,7 +176,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.2.2</version>
+                                    <version>2.2.3</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -207,7 +207,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                         </dependencies>""",
                 """
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.2.2')
+                            implementation platform('com.guicedee:guicedee-bom:2.2.3')
                         
                             implementation 'com.guicedee:rest'
                             implementation 'com.guicedee:health'
@@ -523,7 +523,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyTextHtml(brandCode("Hibernate Reactive 7") + " with " + brandCode("Mutiny") + ". Non-blocking database access on the " + brandCode("Vert.x") + " event loop. " +
+        var desc = bodyTextHtml(brandCode("Hibernate Reactive 4.5 and ORM 7.4") + " with " + brandCode("Mutiny") + ". Non-blocking database access on the " + brandCode("Vert.x") + " event loop. " +
                 "Multi-database support with env-var driven connection details.", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
@@ -572,14 +572,14 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
         features.setGap(PageSize.Small);
-        features.add(featureCardHtml("Hibernate Reactive 7", "Fully async with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + ".", null));
+        features.add(featureCardHtml("Hibernate Reactive 4.5 and ORM 7.4", "Fully async with " + brandCode("Mutiny") + " " + brandCode("Uni") + "/" + brandCode("Multi") + ".", null));
         features.add(featureCardHtml("DatabaseModule required", "GuicedEE creates the persistence unit from supplied properties, merged with " + brandCode("persistence.xml") + " if provided.", null));
         features.add(featureCardHtml("Multi-database", "Multiple " + brandCode("DatabaseModule") + " subclasses with " + brandCode("@Named") + " qualifiers.", null));
         features.add(featureCardHtml("ConnectionBaseInfoFactory", "Use " + brandCode("ConnectionBaseInfoFactory.createConnectionBaseInfo(\"postgresql\")") + " — supports postgresql, mysql, sqlserver, oracle, db2.", null));
         features.add(featureCardHtml("Vert.x pool", "Pre-initialized connection pools on the event loop.", null));
         content.add(features);
 
-        return buildSection("Persistence", "Hibernate Reactive 7 with Mutiny",
+        return buildSection("Persistence", "Hibernate Reactive 4.5 and ORM 7.4 with Mutiny",
                 "Fully async database access. See the persistence module page for entities, transactions, and multi-db setup.",
                 false, content);
     }
@@ -858,7 +858,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
         grid.add(guideModuleCard("REST services", brandCode("@Path") + ", " + brandCode("@GET") + ", CORS, security, " + brandCode("ExceptionMapper") + ", " + brandCode("RestInterceptor") + ".", "rest", "Rest/Basic"));
         grid.add(guideModuleCard("REST client", brandCode("@Endpoint") + ", " + brandCode("RestClient&lt;S,R&gt;") + ", auth strategies, path params.", "rest-client", "RestClient/Basic"));
-        grid.add(guideModuleCard("Persistence", brandCode("Hibernate Reactive 7") + ", " + brandCode("Mutiny") + ", " + brandCode("DatabaseModule") + ", multi-db.", "persistence", "Persistence/Basic"));
+        grid.add(guideModuleCard("Persistence", brandCode("Hibernate Reactive 4.5 and ORM 7.4") + ", " + brandCode("Mutiny") + ", " + brandCode("DatabaseModule") + ", multi-db.", "persistence", "Persistence/Basic"));
         grid.add(guideModuleCard("Health", brandCode("@Liveness") + ", " + brandCode("@Readiness") + ", " + brandCode("@Startup") + ", env-var paths.", "health", "Health/Basic"));
         grid.add(guideModuleCard("Config", brandCode("@ConfigProperty") + ", source priority, env-var overrides.", "config", "Config/Basic"));
         grid.add(guideModuleCard("Vert.x core", brandCode("EventBus") + ", Verticles, Codecs, deployment.", "vertx", "Vertx/Basic"));

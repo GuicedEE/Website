@@ -278,7 +278,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         grid.setGap(PageSize.Medium);
 
         grid.add(moduleCard("Persistence",
-                "Hibernate Reactive 7 with Mutiny. DatabaseModule, ConnectionBaseInfo, " +
+                "Hibernate Reactive 4.5 and ORM 7.4 with Mutiny. DatabaseModule, ConnectionBaseInfo, " +
                         "env-var driven config, multi-database support, reactive sessions.",
                 "com.guicedee:persistence",
                 "persistence", "Persistence/Basic"));

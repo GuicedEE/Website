@@ -48,67 +48,115 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.2.2", "Current release"));
+        currentGrid.add(featureCard("Version", "2.2.3", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.1", "Actionable source diagnostics"));
-        currentGrid.add(featureCard("Vert.x", "5.1.5", "Latest reactive core"));
-        currentGrid.add(featureCard("Jackson", "3.2.1", "tools.jackson across the board"));
-        currentGrid.add(featureCard("Hibernate", "7.4.3", "ORM 7.4.3 + Reactive 4.5.1"));
+        currentGrid.add(featureCard("Vert.x", "5.1.8", "SmallRye bindings 4.0.2"));
+        currentGrid.add(featureCard("Jackson", "3.2.2", "tools.jackson across the board"));
+        currentGrid.add(featureCard("Hibernate ORM", "7.4.7.Final", "Reactive 4.5.5.Final + Models 1.3.1"));
+        currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.2.2",
+        layout.add(buildSection("Current", "v2.2.3",
                 "Full dependency refresh with Config maintained one patch ahead",
                 true, currentContent));
 
-        // v2.2.2 release
-        var v222Content = new WaStack<>();
-        v222Content.setGap(PageSize.Medium);
+        // v2.2.3 release
+        var v223Content = new WaStack<>();
+        v223Content.setGap(PageSize.Medium);
 
-        var v222Grid = new WaGrid<>();
-        v222Grid.setMinColumnSize("16rem");
-        v222Grid.setGap(PageSize.Medium);
+        var v223Grid = new WaGrid<>();
+        v223Grid.setMinColumnSize("16rem");
+        v223Grid.setGap(PageSize.Medium);
 
-        v222Grid.add(featureCard("Config stays one version ahead",
-                "The 2.2.2 platform BOM selects com.guicedee.microprofile:config 2.2.3. This includes the " +
+        v223Grid.add(featureCard("Config stays one version ahead",
+                "The 2.2.3 platform BOM selects com.guicedee.microprofile:config 2.2.4. This includes the " +
                         "source-aware startup diagnostics introduced in 2.2.1 while preserving a deliberate " +
                         "independent patch lane for configuration fixes.",
                 "Dependency management"));
 
-        v222Grid.add(featureCard("Hibernate ORM 7.4.3 + Hibernate Reactive 4.5.1",
-                "Hibernate ORM, its bytecode enhancer and annotation processor are aligned on 7.4.3.Final, " +
-                        "with Hibernate Reactive 4.5.1.Final. Keeping those versions together prevents runtime " +
-                        "linkage failures against ORM internals.",
+        v223Grid.add(featureCard("Hibernate ORM 7.4.7 + Hibernate Reactive 4.5.5",
+                "Hibernate ORM, its bytecode enhancer and annotation processor are aligned on 7.4.7.Final, " +
+                        "with Hibernate Reactive 4.5.5.Final, Hibernate Models 1.3.1 and Validator 9.1.3.Final. " +
+                        "The BOM tracks stable minor and patch releases, with compatibility checked across the stack.",
                 "Dependency upgrade"));
 
-        v222Grid.add(featureCard("Platform dependency refresh",
-                "Managed versions now include Jackson 3.2.1, Vert.x 5.1.5, Apache CXF 4.2.2, SmallRye " +
-                        "Mutiny 3.3.0, OpenTelemetry 1.64.0, Micrometer 1.17.0, Jandex 3.6.0, RabbitMQ 5.34.0, " +
-                        "OkHttp 5.5.0, JUnit 6.1.3 and Selenium 4.47.0.",
+        v223Grid.add(featureCard("Platform dependency refresh",
+                "Managed versions now include Jackson 3.2.2, Vert.x 5.1.8, Apache CXF 4.2.3, SmallRye " +
+                        "Mutiny 3.3.0, Vert.x bindings 4.0.2, SmallRye Config 3.18.3, Micrometer 1.17.1 " +
+                        "and RabbitMQ 5.35.0. OpenTelemetry remains on 1.64.0.",
                 "Dependency upgrade"));
 
-        v222Grid.add(featureCard("MongoDB modules for jlink",
+        v223Grid.add(featureCard("GraphQL Java 26.1",
+                "GraphQL Java moves to 26.1 with Java DataLoader 6.0.0. Jackson 3.2.2 is managed through " +
+                        "a single BOM, ahead of the older Jackson baseline in the Vert.x dependency chain.",
+                "Dependency upgrade"));
+
+        v223Grid.add(featureCard("Runtime libraries and developer tools",
+                "The refresh includes ClassGraph 4.8.195, Byte Buddy 1.18.13, Guava 33.7.1-jre, " +
+                        "Protobuf 4.36.1, Lombok 1.18.48, Selenium 4.49.0 and SpotBugs 4.10.4.",
+                "Dependency upgrade"));
+
+        v223Grid.add(featureCard("MongoDB modules for jlink",
                 "Five new shaded JPMS services cover bson, bson-record-codec, mongodb-driver-core, " +
                         "mongodb-driver-reactivestreams and reactor-core. Vert.x MongoDB applications can now " +
-                        "include the full driver chain in custom jlink runtime images.",
+                        "include the full driver chain in custom jlink runtime images. The managed versions " +
+                        "are MongoDB 5.11.1 and Reactor Core 3.8.7.",
                 "New modules"));
 
-        v222Grid.add(featureCard("Build and module-path fixes",
+        v223Grid.add(featureCard("Build and module-path fixes",
                 "The release corrects shaded module descriptors and source/javadoc inputs across PostgreSQL, " +
-                        "CloudEvents, RabbitMQ, Swagger, Hibernate and OpenTelemetry, and makes BOM import " +
+                        "CloudEvents, RabbitMQ, Swagger, Hibernate, MongoDB, Hazelcast and OpenTelemetry, and makes BOM import " +
                         "precedence deterministic under Maven 4.",
                 "Build"));
 
-        v222Grid.add(featureCard("Security maintenance",
-                "PostgreSQL, SCRAM, Jackson, Spring, Bouncy Castle and netty-tcnative move to maintained patch " +
-                        "levels as part of the managed dependency update.",
+        v223Grid.add(featureCard("Consistent shaded dependencies",
+                "Config, CXF, Ehcache, SCRAM, XML Security and supporting libraries now follow the BOM " +
+                        "inside their shaded service modules.",
+                "Dependency alignment"));
+
+        v223Grid.add(featureCard("Security maintenance",
+                "Managed updates include Bouncy Castle 1.86, netty-tcnative 2.0.84.Final, jose4j 0.9.7, " +
+                        "Log4j2 2.26.1 and SLF4J 2.0.19. Dependency updates use stable minor and patch " +
+                        "releases; prereleases receive a separate review.",
                 "Security"));
 
-        v222Content.add(v222Grid);
-        layout.add(buildSection("v2.2.2", "Dependency refresh and expanded JPMS coverage",
+        v223Grid.add(featureCard("Telemetry logging stability",
+                "OpenTelemetry internal logs are excluded from the telemetry appender before dispatch, " +
+                        "preventing recursive logging. Reconfiguration removes and stops previous appenders.",
+                "Runtime fix"));
+
+        v223Grid.add(featureCard("Oracle service-name connections",
+                "Oracle JDBC service-name URLs now use the explicit //host:port/service format. " +
+                        "SID connections retain their host:port:SID format.",
+                "Persistence fix"));
+
+        v223Grid.add(featureCard("IBM MQ 10 Jakarta provider",
+                "Connection factories select IBM MQ's Jakarta provider explicitly. Messaging integration " +
+                        "checks cover transactional consumption, correlation IDs and multiple messages.",
+                "Compatibility fix"));
+
+        v223Grid.add(featureCard("Native reactive SQL Server pools",
+                "SQL Server pools consistently use Vert.x MSSQLConnectOptions. Pool lifetimes retain " +
+                        "their explicit time unit, avoiding integer overflow during pool creation.",
+                "Persistence fix"));
+
+        v223Content.add(v223Grid);
+        layout.add(buildSection("v2.2.3", "Dependency refresh and expanded JPMS coverage",
                 "A complete GuicedEE release train with refreshed runtime dependencies, five new MongoDB " +
-                        "service modules and Config 2.2.3 selected by the BOM.",
-                true, v222Content));
+                        "service modules and Config 2.2.4 selected by the BOM.",
+                true, v223Content));
+
+        // v2.2.2 release
+        var v222Content = new WaStack<>();
+        v222Content.setGap(PageSize.Medium);
+        v222Content.add(featureCard("Coordinated platform release",
+                "GuicedEE runtime and shaded service modules use 2.2.2, with Config 2.2.3 selected by the BOM. " +
+                        "Includes expanded JPMS service coverage and module-path packaging fixes.",
+                "Release history"));
+        layout.add(buildSection("v2.2.2", "Platform and service modules",
+                "The previous coordinated GuicedEE release.", false, v222Content));
 
         // v2.2.1 release
         var v221Content = new WaStack<>();

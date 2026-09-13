@@ -80,7 +80,7 @@ public final class ModuleCatalog
                 case "runtime-autoconfigure" -> "Cloud runtime detection SPI for GuicedEE. Auto-detects Azure Container Apps, AWS ECS/Lambda, GCP Cloud Run, DigitalOcean App Platform, and Kubernetes — provides environment defaults for service discovery, health, and config.";
             case "service-discovery" -> "Vert.x Service Resolver integration for GuicedEE. Client-side service discovery via Kubernetes endpoints or DNS SRV records with built-in load balancing and pluggable IServiceResolverProvider SPI.";
             case "service-registry" -> "Named service registry with health-aware resolution for GuicedEE. Declarative @RegisteredService annotations, auto-constructed URLs from cloud DNS, periodic health monitoring, OpenAPI spec merge, GraphQL schema stitching gateway, and environment-filtered service discovery.";
-            case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 7 and Vert.x 5 SQL clients, plus MongoDB document storage, Cassandra wide-column storage, and Redis caching via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, Cassandra, and Redis.";
+            case "persistence" -> "Reactive JPA persistence with Hibernate Reactive 4.5 and ORM 7.4 and Vert.x 5 SQL clients, plus MongoDB document storage, Cassandra wide-column storage, and Redis caching via Vert.x clients. Supports PostgreSQL, MySQL, SQL Server, Oracle, DB2, MongoDB, Cassandra, and Redis.";
                 default -> String.format("GuicedEE module %s exposed on the public site.", name);
             };
             String bootClass = String.format("com.guicedee.%s.Boot", toPascalCase(id));
@@ -90,7 +90,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "2.2.2";
+            String version = "config".equals(id) ? "2.2.4" : "2.2.3";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -104,10 +104,15 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.2.2";
+        String version = "2.2.3";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
+
+        services.add(new ServiceDefinition("oauth2-oidc-sdk", groupId, "oauth2-oidc-sdk", version,
+                "Security integration service: Nimbus OAuth2/OIDC and DPoP, bundling content-type, lang-tag, " +
+                        "JSON Smart and Accessors Smart. Uses the native Nimbus JOSE/JWT module.",
+                "oauth2.oidc.sdk", "Libraries/oauth2-oidc-sdk"));
 
         addServices(services, groupId, version, "Apache/Commons", "Apache Commons", new String[]{
                 "commons-beanutils",

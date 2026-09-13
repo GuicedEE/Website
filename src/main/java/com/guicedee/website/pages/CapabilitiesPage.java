@@ -558,8 +558,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         "The foundation that all auth providers chain into.",
                 null));
 
-        grid.add(featureCard("@OAuth2Options / SAML / OIDC",
-                "OAuth2, OpenID Connect, and SAML support with well-known providers (Google, Keycloak, Azure AD, GitHub, Okta, etc.). " +
+        grid.add(featureCard("@OAuth2Options / OIDC",
+                "OAuth2 and OpenID Connect support with well-known providers (Google, Keycloak, Azure AD, GitHub, Okta, etc.). " +
                         "Authorization Code, Password, Client Credentials, and JWT flows.",
                 null));
 
@@ -604,6 +604,11 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         "JWT, OAuth2, Basic, UsernamePassword — implement and register in module-info.java.",
                 null));
 
+        grid.add(featureCard("Nimbus OAuth2/OIDC & DPoP",
+                "BOM-managed oauth2-oidc-sdk service with an explicit JPMS descriptor and bundled JSON dependencies. " +
+                        "Use Nimbus JOSE/JWT and DPoP APIs in jlink images; configure request validation in your application.",
+                null));
+
         grid.add(featureCard("IGuicedAuthorizationProvider SPI",
                 "Register authorization providers via ServiceLoader. " +
                         "Role-based, permission-based, wildcard, and logical combinations (And/Or/Not).",
@@ -633,13 +638,38 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(codeBlockWithTitle("OAuth2 with OIDC Discovery",
                 """
                         @OAuth2Options(
-                            flow = OAuth2Options.FlowType.AUTH_CODE,
+                            flow = OAuth2Flow.AUTH_CODE,
                             clientId = "${OAUTH2_CLIENT_ID}",
                             clientSecret = "${OAUTH2_CLIENT_SECRET}",
-                            discoveryUrl = "${OAUTH2_DISCOVERY_URL}",
-                            callbackPath = "/callback"
+                            wellKnownProvider = WellKnownProvider.KEYCLOAK,
+                            site = "https://identity.example.com/realms/my-app"
                         )
                         package com.example.auth;"""));
+
+        content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
+                """
+                        <!-- Import com.guicedee:guicedee-bom:2.2.3 in dependencyManagement -->
+                        <dependency>
+                            <groupId>com.guicedee.modules.services</groupId>
+                            <artifactId>oauth2-oidc-sdk</artifactId>
+                        </dependency>
+
+                        // module-info.java
+                        module my.app {
+                            requires oauth2.oidc.sdk;
+                            requires com.nimbusds.jose.jwt;
+                        }"""));
+        content.add(bodyText("The service bundles Nimbus OAuth2/OIDC 11.38.2, content-type 2.3, lang-tag 1.7, " +
+                "JSON Smart and Accessors Smart 2.6.0. Nimbus JOSE/JWT 10.9.1 and ASM remain separate named modules. " +
+                "Replace the original OAuth2/OIDC dependency and exclude duplicate bundled libraries from other dependency paths.", "m"));
+        content.add(bodyText("DPoP request validation combines access-token signature, issuer, audience and expiry checks " +
+                "with proof signature, HTTP method/URI, token hash and cnf.jkt key binding checks. Enforce single-use proof IDs " +
+                "with a replay store shared by all instances, and reject requests when trust configuration or replay storage is unavailable. " +
+                "OAuth2 discovery and Jakarta role annotations do not install this request-proof boundary; " +
+                "authenticate the request before applying role authorization.", "m"));
+        content.add(bodyText("This service covers core OAuth2/OIDC and JDK-backed DPoP cryptography. " +
+                "Optional upstream SAML, servlet and additional crypto-provider integrations require separate dependency " +
+                "and module-read configuration; they are not enabled by adding the service.", "m"));
 
         content.add(codeBlockWithTitle("ABAC policy-based authorization",
                 """
@@ -761,7 +791,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
-        grid.add(featureCard("Hibernate Reactive 7", "Fully async persistence with Mutiny.SessionFactory.", null));
+        grid.add(featureCard("Hibernate Reactive 4.5 and ORM 7.4", "Fully async persistence with Mutiny.SessionFactory.", null));
         grid.add(featureCard("Multi-database", "PostgreSQL, MySQL, SQL Server, Oracle, and DB2.", null));
         grid.add(featureCard("MongoDB", "Vert.x MongoClient with Guice injection via MongoModule. No JPA — native document API.", null));
         grid.add(featureCard("Cassandra", "Vert.x CassandraClient with Guice injection via CassandraModule. CQL queries, streaming, and prepared statements.", null));

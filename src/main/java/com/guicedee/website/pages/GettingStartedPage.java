@@ -208,7 +208,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                             <properties>
                                 <maven.compiler.release>25</maven.compiler.release>
-                                <guicedee.version>2.2.2</guicedee.version>
+                                <guicedee.version>2.2.3</guicedee.version>
                             </properties>
                         
                             <dependencyManagement>
@@ -246,7 +246,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         }
                         
                         dependencies {
-                            implementation platform("com.guicedee:guicedee-bom:2.2.2")
+                            implementation platform("com.guicedee:guicedee-bom:2.2.3")
                             implementation("com.guicedee:rest")
                         }"""));
 
@@ -488,7 +488,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 "/modules/rest-client"));
 
         grid.add(featureCardHtml("Persistence",
-                brandCode("Hibernate Reactive 7") + " with " + brandCode("Mutiny") + ". Multi-database, " +
+                brandCode("Hibernate Reactive 4.5 and ORM 7.4") + " with " + brandCode("Mutiny") + ". Multi-database, " +
                         "env-var driven, fully managed by " + brandCode("Guice") + ".",
                 "/modules/persistence"));
 

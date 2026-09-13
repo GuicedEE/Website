@@ -106,8 +106,8 @@ The public site is a **static Angular SPA served by nginx** — the `angular-mav
    az containerapp update `
      --name guicedee-website `
      --resource-group DevSites `
-     --image docker.io/gedmarc/guicedee-website:2.2.2 `
-     --revision-suffix v222
+     --image docker.io/gedmarc/guicedee-website:2.2.3 `
+     --revision-suffix v223
    ```
 
    Without the `containerapp` CLI extension, an ARM `PATCH` against `properties.template.containers[0].image` achieves the same result. If you hand-roll the payload, re-send the probes, resources, and scale rule as well — a `template` patch replaces the containers array. Note that the read API returns `scale.cooldownPeriod` and `scale.pollingInterval`, but api-version `2024-03-01` **rejects** those two on write; omit them and the existing values are retained.

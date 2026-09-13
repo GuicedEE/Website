@@ -73,6 +73,7 @@ public class ServicesAsidePage extends DivSimple<ServicesAsidePage> implements I
         list.add(asideLink("jni", "JNI"));
         list.add(asideLink("library", "Library"));
         list.add(asideLink("microprofile", "MicroProfile"));
+        list.add(asideLink("security", "Security / Nimbus"));
         list.add(asideLink("vert-x", "Vert.x"));
 
         add(list);

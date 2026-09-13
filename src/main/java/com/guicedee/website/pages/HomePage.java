@@ -1082,7 +1082,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.2.2</version>
+                                    <version>2.2.3</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1103,7 +1103,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.2.2')
+                            implementation platform('com.guicedee:guicedee-bom:2.2.3')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -1411,7 +1411,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.add(pluginCard("WebSockets",
                 "RFC 6455 with call-scoped connections, action-based routing, and group broadcasting.", "websockets", "WebSockets/Basic"));
         grid.add(pluginCard("Persistence",
-                brandCode("Hibernate Reactive 7") + " + " + brandCode("Mutiny.SessionFactory") + ". Multi-database, env-var driven.", "persistence", "Persistence/Basic"));
+                brandCode("Hibernate Reactive 4.5 and ORM 7.4") + " + " + brandCode("Mutiny.SessionFactory") + ". Multi-database, env-var driven.", "persistence", "Persistence/Basic"));
         grid.add(pluginCard("RabbitMQ",
                 "Annotate connections, exchanges, queues, consumers, and publishers. Auto-recovery included.", "rabbitmq", "RabbitMQ/Basic"));
         grid.add(pluginCard("Kafka",

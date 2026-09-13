@@ -34,8 +34,11 @@ public class WebsitePageConfigurator implements IPageConfigurator<WebsitePageCon
         page.addCssReference(new CSSReference("GuicedEEFeatures", 1.0, "/features.css"));
         page.addCssReference(new CSSReference("GuicedEECode", 1.0, "/code.css"));
         WebAwesomePageConfigurator.setWaKitCode("6ea54e8336d3409b");
-        FontAwesome5ProPageConfigurator.setKitCode("3f59d88b7f");
         Page<?> p = (Page<?>) page;
+        // The hosted kit loads WebAwesome; this site does not ship a local loader.
+        p.getJavascriptReferences().removeIf(reference ->
+                "webawesome.loader.js".equals(reference.getLocalReference()));
+        FontAwesome5ProPageConfigurator.setKitCode("3f59d88b7f");
         p.getOptions().setFavIcon("/guicedee-logo.svg");
         p.getOptions().setIcon("/guicedee-logo.svg", "any");
         return page;
