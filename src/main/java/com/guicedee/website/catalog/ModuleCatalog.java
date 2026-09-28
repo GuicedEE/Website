@@ -90,7 +90,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "config".equals(id) ? "2.2.4" : "2.2.3";
+            String version = "2.3.0";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -104,10 +104,15 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.2.3";
+        String version = "2.3.0";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
+
+        services.add(new ServiceDefinition("keycloak-api", groupId, "keycloak-api", version,
+                "Compile-only Keycloak provider API bundle with an explicit JPMS descriptor and Jackson 3 relocation. " +
+                        "Use it to compile modular Keycloak extensions; never deploy the bundle into Keycloak.",
+                "org.keycloak.api", "Libraries/keycloak"));
 
         services.add(new ServiceDefinition("oauth2-oidc-sdk", groupId, "oauth2-oidc-sdk", version,
                 "Security integration service: Nimbus OAuth2/OIDC and DPoP, bundling content-type, lang-tag, " +

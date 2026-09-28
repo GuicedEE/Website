@@ -1070,8 +1070,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         grid.add(featureCardHtml("Grouped library wrappers",
                 "Third-party libraries (Hibernate, Jackson, Vert.x) are repackaged with proper " + brandCode("module-info.java") + " descriptors. " +
-                        "They plug into the module system cleanly.",
-                "Over 50 JPMS-wrapped service modules."));
+                        "The descriptors are trimmed to owned packages and necessary dependency edges, keeping the module path clean and transitive requirements predictable.",
+                "Over 50 focused JPMS-wrapped service modules."));
 
         content.add(grid);
 
@@ -1082,7 +1082,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.2.3</version>
+                                    <version>2.3.0</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1103,7 +1103,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.2.3')
+                            implementation platform('com.guicedee:guicedee-bom:2.3.0')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'

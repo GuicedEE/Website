@@ -106,7 +106,7 @@ The public site is a **static Angular SPA served by nginx** — the `angular-mav
    az containerapp update `
      --name guicedee-website `
      --resource-group DevSites `
-     --image docker.io/gedmarc/guicedee-website:2.2.3 `
+     --image docker.io/gedmarc/guicedee-website:2.3.0 `
      --revision-suffix v223
    ```
 

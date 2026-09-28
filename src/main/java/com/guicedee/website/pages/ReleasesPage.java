@@ -48,19 +48,68 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.2.3", "Current release"));
+        currentGrid.add(featureCard("Version", "2.3.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.1", "Actionable source diagnostics"));
-        currentGrid.add(featureCard("Vert.x", "5.1.8", "SmallRye bindings 4.0.2"));
-        currentGrid.add(featureCard("Jackson", "3.2.2", "tools.jackson across the board"));
+        currentGrid.add(featureCard("Vert.x", "5.2.0", "SmallRye bindings 4.0.2"));
+        currentGrid.add(featureCard("Jackson", "3.2.3", "tools.jackson across the board"));
         currentGrid.add(featureCard("Hibernate ORM", "7.4.7.Final", "Reactive 4.5.5.Final + Models 1.3.1"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.2.3",
-                "Full dependency refresh with Config maintained one patch ahead",
+        layout.add(buildSection("Current", "v2.3.0",
+                "Synchronized platform release with Vert.x 5.2 and the Keycloak JPMS API service",
                 true, currentContent));
+
+        // v2.3.0 release
+        var v230Content = new WaStack<>();
+        v230Content.setGap(PageSize.Medium);
+
+        var v230Grid = new WaGrid<>();
+        v230Grid.setMinColumnSize("16rem");
+        v230Grid.setGap(PageSize.Medium);
+
+        v230Grid.add(featureCard("One synchronized 2.3.0 train",
+                "Config, BOMs, parent, runtime modules and shaded services now share version 2.3.0. " +
+                        "Consumers can import one BOM version across the complete GuicedEE stack.",
+                "Release alignment"));
+
+        v230Grid.add(featureCard("Keycloak provider API module",
+                "The new com.guicedee.modules.services:keycloak-api artifact combines the provider-facing Keycloak 26.7.4 " +
+                        "APIs behind the named module org.keycloak.api. Binary Jackson references are relocated to Jackson 3, " +
+                        "with qualified opens for model binding. The artifact is compile-only and must not be deployed into Keycloak.",
+                "New JPMS service"));
+
+        v230Grid.add(featureCard("Vert.x 5.2",
+                "The complete Vert.x dependency chain is aligned on 5.2.0 with SmallRye Mutiny bindings 4.0.2 and Mutiny 3.3.0. " +
+                        "The Vert.x BOM continues to pin every io.vertx artifact to one version.",
+                "Dependency upgrade"));
+
+        v230Grid.add(featureCard("Stable dependency refresh",
+                "Jackson 3.2.3, MongoDB 5.12.0, RabbitMQ 5.36.0, IBM MQ 10.0.0.5, SmallRye Commons 2.21.1, " +
+                        "Nimbus JOSE/JWT 10.10, ClassGraph 4.8.196, Byte Buddy 1.18.14 and Joda-Time 2.14.4.",
+                "Dependency upgrade"));
+
+        v230Grid.add(featureCard("Cleaner module paths",
+                "JPMS descriptors were trimmed to the packages and dependency edges each wrapper actually owns. " +
+                        "This removes stale exports, reduces module-path noise and gives consumers clearer transitive dependency management.",
+                "JPMS"));
+
+        v230Grid.add(featureCard("Current secure Keycloak baseline",
+                "Keycloak 26.7.4 includes the current 26.7 patch fixes. The shaded API build is validated as a named JPMS module " +
+                        "against Jackson 3.2.3.",
+                "Security maintenance"));
+
+        v230Grid.add(featureCard("Build tool updates",
+                "Maven publishing, dependency, install, deploy, resources, enforcer, plugin, flatten, JaCoCo, Sonar and supporting " +
+                        "plugins were advanced to their latest stable patch or minor versions.",
+                "Build"));
+
+        v230Content.add(v230Grid);
+        layout.add(buildSection("v2.3.0", "Synchronized platform and Keycloak JPMS API",
+                "The coordinated GuicedEE release with Vert.x 5.2.0, current stable dependencies and the new Keycloak provider API service.",
+                true, v230Content));
 
         // v2.2.3 release
         var v223Content = new WaStack<>();

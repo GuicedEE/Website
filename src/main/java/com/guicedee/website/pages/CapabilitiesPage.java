@@ -609,6 +609,11 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         "Use Nimbus JOSE/JWT and DPoP APIs in jlink images; configure request validation in your application.",
                 null));
 
+        grid.add(featureCard("Keycloak provider API for JPMS",
+                "BOM-managed keycloak-api service for compiling modular Keycloak extensions. It combines the provider-facing " +
+                        "Keycloak API packages in org.keycloak.api and relocates binary Jackson usage to Jackson 3.",
+                null));
+
         grid.add(featureCard("IGuicedAuthorizationProvider SPI",
                 "Register authorization providers via ServiceLoader. " +
                         "Role-based, permission-based, wildcard, and logical combinations (And/Or/Not).",
@@ -648,7 +653,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
                 """
-                        <!-- Import com.guicedee:guicedee-bom:2.2.3 in dependencyManagement -->
+                        <!-- Import com.guicedee:guicedee-bom:2.3.0 in dependencyManagement -->
                         <dependency>
                             <groupId>com.guicedee.modules.services</groupId>
                             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -660,7 +665,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                             requires com.nimbusds.jose.jwt;
                         }"""));
         content.add(bodyText("The service bundles Nimbus OAuth2/OIDC 11.38.2, content-type 2.3, lang-tag 1.7, " +
-                "JSON Smart and Accessors Smart 2.6.0. Nimbus JOSE/JWT 10.9.1 and ASM remain separate named modules. " +
+                "JSON Smart and Accessors Smart 2.6.0. Nimbus JOSE/JWT 10.10 and ASM remain separate named modules. " +
                 "Replace the original OAuth2/OIDC dependency and exclude duplicate bundled libraries from other dependency paths.", "m"));
         content.add(bodyText("DPoP request validation combines access-token signature, issuer, audience and expiry checks " +
                 "with proof signature, HTTP method/URI, token hash and cnf.jkt key binding checks. Enforce single-use proof IDs " +
@@ -670,6 +675,22 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         content.add(bodyText("This service covers core OAuth2/OIDC and JDK-backed DPoP cryptography. " +
                 "Optional upstream SAML, servlet and additional crypto-provider integrations require separate dependency " +
                 "and module-read configuration; they are not enabled by adding the service.", "m"));
+
+        content.add(codeBlockWithTitle("Compile a modular Keycloak provider against Jackson 3",
+                """
+                        <dependency>
+                            <groupId>com.guicedee.modules.services</groupId>
+                            <artifactId>keycloak-api</artifactId>
+                            <scope>provided</scope>
+                        </dependency>
+
+                        // module-info.java
+                        module my.keycloak.provider {
+                            requires static org.keycloak.api;
+                        }"""));
+        content.add(bodyText("keycloak-api 2.3.0 is built from Keycloak 26.7.4 and is a compile-only boundary. " +
+                "Do not copy the GuicedEE bundle into a Keycloak server; deploy only your provider JAR and let the server supply " +
+                "its own Keycloak runtime classes.", "m"));
 
         content.add(codeBlockWithTitle("ABAC policy-based authorization",
                 """
