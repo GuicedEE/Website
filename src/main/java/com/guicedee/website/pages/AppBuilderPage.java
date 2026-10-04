@@ -49,7 +49,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 moduleMap: Record<string, {groupId: string, artifactId: string, moduleName: string}> = {
                     'REST Services': {groupId: 'com.guicedee', artifactId: 'rest', moduleName: 'com.guicedee.rest'},
                     'REST Client': {groupId: 'com.guicedee', artifactId: 'rest-client', moduleName: 'com.guicedee.rest.client'},
-                    'WebSockets': {groupId: 'com.guicedee', artifactId: 'websockets', moduleName: 'com.guicedee.websockets'},
+                    'WebSockets': {groupId: 'com.guicedee', artifactId: 'websockets', moduleName: 'com.guicedee.vertx.sockets'},
                     'OpenAPI + Swagger UI': {groupId: 'com.guicedee', artifactId: 'openapi', moduleName: 'com.guicedee.openapi'},
                     'Web Services (SOAP)': {groupId: 'com.guicedee', artifactId: 'webservices', moduleName: 'com.guicedee.webservices'},
                 'HTTP Proxy': {groupId: 'com.guicedee', artifactId: 'vertx', moduleName: 'com.guicedee.vertx'},
@@ -68,7 +68,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'Kafka': {groupId: 'com.guicedee', artifactId: 'kafka', moduleName: 'com.guicedee.kafka'},
                     'IBM MQ': {groupId: 'com.guicedee', artifactId: 'ibmmq', moduleName: 'com.guicedee.ibmmq'},
                     'GraphQL': {groupId: 'com.guicedee', artifactId: 'graphql', moduleName: 'com.guicedee.vertx.graphql'},
-                    'Hazelcast': {groupId: 'com.guicedee.services', artifactId: 'hazelcast', moduleName: 'com.guicedee.services.hazelcast'},
+                    'Hazelcast': {groupId: 'com.guicedee', artifactId: 'hazelcast', moduleName: 'com.guicedee.guicedhazelcast'},
                     'EhCache': {groupId: 'com.guicedee.services', artifactId: 'ehcache', moduleName: 'com.guicedee.services.ehcache'},
                     'OAuth2 / OIDC': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
                     'JWT': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},

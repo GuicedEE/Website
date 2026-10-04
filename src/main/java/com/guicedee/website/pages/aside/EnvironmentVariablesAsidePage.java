@@ -66,6 +66,7 @@ public class EnvironmentVariablesAsidePage extends DivSimple<EnvironmentVariable
         list.add(asideLink("http-server", "Web"));
         list.add(asideLink("vert-x-runtime-consumers", "Vert.x"));
         list.add(asideLink("eventbus", "EventBus"));
+        list.add(asideLink("hazelcast-clustering", "Hazelcast"));
         list.add(asideLink("filesystem", "FileSystem"));
         list.add(asideLink("address-resolver", "Address Resolver"));
         list.add(asideLink("rest-client", "REST Client"));

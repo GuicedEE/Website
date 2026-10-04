@@ -53,6 +53,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildVerticleCapability());
         layout.add(buildPersistenceCapability());
         layout.add(buildWebSocketCapability());
+        layout.add(buildClusteringCapability());
         layout.add(buildMessagingCapability());
         layout.add(buildObservabilityCapability());
         layout.add(buildLoggingCapability());
@@ -903,7 +904,8 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         grid.setGap(PageSize.Small);
         grid.add(featureCard("Call-scoped", "Each connection gets its own Guice @CallScope.", null));
         grid.add(featureCard("Action routing", "JSON messages dispatched to receivers by action name.", null));
-        grid.add(featureCard("Group broadcast", "Join/leave named groups, broadcast to all members.", null));
+        grid.add(featureCard("Group broadcast", "Publish to named groups across nodes, once per local recipient. Empty groups release their consumers.", null));
+        grid.add(featureCard("Bounded slow clients", "64 KiB write queues, outgoing UTF-8 payloads up to 1 MiB, and overload close status 1013 with a two-second physical transport deadline.", null));
         grid.add(featureCard("Per-message compression", "RFC 7692 enabled by default.", null));
         grid.add(featureCard("SPI lifecycle hooks", "Intercept group add/remove/publish operations.", null));
         grid.add(featureCard("Reactive", "receiveMessage() returns Uni<Void> for non-blocking flow.", null));
@@ -911,6 +913,88 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         return buildSection("WebSockets", "Real-time communication",
                 "com.guicedee:websockets — RFC 6455 with action-based routing and group management.", true, content);
+    }
+
+    private WaStack<?> buildClusteringCapability()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Large);
+        content.add(bodyText("Adding com.guicedee:hazelcast alone does not start a member or client. " +
+                "Enable the event-bus cluster explicitly with VERTX_CLUSTER_ENABLED=true or intentional server configuration. " +
+                "An explicit false overrides cluster activation; an intentionally requested embedded cache member can still run.", "m"));
+        content.add(codeBlockWithTitle("package-info.java — explicit local TCP cluster",
+                """
+                        @com.guicedee.guicedhazelcast.HazelcastServerOptions(
+                            clusterName = "orders-local", clustered = true, startLocal = false,
+                            port = 5701, portAutoIncrement = false,
+                            interfaces = "127.0.0.1", interfacesEnabled = true,
+                            joinType = com.guicedee.guicedhazelcast.HazelcastServerOptions.JoinType.TCP,
+                            tcpMembers = "127.0.0.1:5701,127.0.0.1:5702")
+                        @com.guicedee.vertx.spi.EventBusOptions(
+                            host = "127.0.0.1", port = 7801,
+                            clusterPublicHost = "127.0.0.1", clusterPublicPort = 7801)
+                        package com.example.orders.cluster;
+                        """));
+        content.add(codeBlockWithTitle("Separate processes — node A / node B",
+                """
+                        # Both processes: export these variables before starting the application.
+                        # This example uses the annotation above; .env files are not auto-loaded.
+                        VERTX_CLUSTER_ENABLED=true
+                        HAZELCAST_CLIENT_ENABLED=false
+
+                        # Node A                 # Node B
+                        HAZELCAST_PORT=5701       # HAZELCAST_PORT=5702
+                        HAZELCAST_PUBLIC_ADDRESS=127.0.0.1:5701
+                        # Node B: HAZELCAST_PUBLIC_ADDRESS=127.0.0.1:5702
+                        VERTX_EVENTBUS_PORT=7801  # VERTX_EVENTBUS_PORT=7802
+                        VERTX_EVENTBUS_CLUSTER_PUBLIC_PORT=7801
+                        # Node B: VERTX_EVENTBUS_CLUSTER_PUBLIC_PORT=7802
+                        HTTP_PORT=8081           # HTTP_PORT=8082
+
+                        # Single instance using the same annotation:
+                        # VERTX_CLUSTER_ENABLED=false
+                        # HAZELCAST_CLIENT_ENABLED=false
+                        """));
+        content.add(bodyText("Membership ports and event-bus ports are separate. Use reachable bind and advertised addresses " +
+                "when nodes run on different hosts; these loopback values are for local examples. Add com.guicedee:hazelcast " +
+                "and requires com.guicedee.guicedhazelcast. Keep one server annotation per assembled application. " +
+                "Cache-only applications use startLocal=true, clustered=false, and joinType=NONE.", "m"));
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("16rem");
+        grid.setGap(PageSize.Medium);
+        grid.add(featureCard("Lifecycle ownership", "Prepare Hazelcast before Vert.x without depending on a running event loop. Reuse one owned member; await Vert.x close before member shutdown. Failed joins and binds roll back startup.", null));
+        grid.add(featureCard("Options composition", "VertxConfigurator.options customizes shared VertxOptions before builder hooks. Preserve metrics, bind/advertised endpoints and pool sizes together.", null));
+        grid.add(featureCard("Owned JCache", "Injected clients/members, caching providers and annotation cache resolvers reuse lifecycle-owned resources rather than starting another instance.", null));
+        grid.add(featureCard("Readiness", "Require VertXPreStartup.ready() plus the application's configured member quorum when clustered. Unclustered readiness needs no peers. Membership checks include failure-detection delay.", null));
+        content.add(grid);
+
+        content.add(codeBlockWithTitle("JWebMP Angular STOMP — command and broadcast paths",
+                """
+                        SEND /toBus/incoming
+                          -> application policy -> socket-owner local consumer
+                          -> private reply on that connection's registered subscription
+                          -> /toStomp/<guid>.SessionStorage and .LocalStorage on that connection
+
+                        Public group publish /toStomp/<group>
+                          -> event-bus cluster -> intended subscribers on every node
+                        """));
+        content.add(bodyText("Keep public group publish semantics. StompServerHandlerConfigurator composes subscribe, send, " +
+                "unsubscribe and close policies before protected ingress. Browser GUIDs are correlation, not user authority. " +
+                "Cross-node single-use tickets need atomic redemption and verified actor, server session, destination and expiry " +
+                "bindings; distribute only bounded lease metadata, while sockets remain local.", "m"));
+        content.add(bodyText("Reconnect restores ordinary listeners before the bounded command queue flushes. Secure tickets " +
+                "are never queued or replayed across sessions: obtain fresh capabilities, restore authorized subscriptions, " +
+                "and refresh an authoritative snapshot. Event-bus delivery is best effort, without durable replay or exactly-once effects.", "m"));
+        content.add(bodyText("The STOMP bridge bounds commands at 32 in flight per connection with a ten-second request timeout, " +
+                "bodies at 1 MiB, and ordinary subscriptions at 128. Its browser queue holds at most 256 commands and reports overflow. " +
+                "Raw and STOMP sockets clean up on close, end and errors; physical transport closure bounds peers that stop reading.", "m"));
+        content.add(bodyText("Validate single-instance regression and separate-JVM command ownership, fan-out, private channels, " +
+                "ticket races, owner loss, quorum recovery, and actual slow TCP peers. Regenerate Java-authored Angular and exercise " +
+                "two isolated browser contexts. Repeat against the packaged application and compare the exact tested framework JARs. " +
+                "Local acceptance does not establish behavior on an untested production network.", "m"));
+        return buildSection("Clustering & WebSocket Continuity", "Scale with explicit ownership",
+                "GuicedEE Hazelcast lifecycle, JWebMP STOMP routing, bounded sockets and reconnect recovery.", true, content);
     }
 
     private WaStack<?> buildMessagingCapability()

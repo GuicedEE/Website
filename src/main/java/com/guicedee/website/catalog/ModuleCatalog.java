@@ -69,7 +69,7 @@ public final class ModuleCatalog
                 case "cerial" -> "Modular serial port communications in Java. @Named port injection, auto-reconnect, idle monitoring, and health reporting.";
                 case "fault-tolerance" -> "MicroProfile Fault Tolerance for GuicedEE. @Retry, @Timeout, @CircuitBreaker, @Fallback, and @Bulkhead annotations with Guice AOP interceptors.";
             case "graphql" -> "SPI-driven GraphQL integration for GuicedEE with Vert.x Web GraphQL. HTTP + WebSocket endpoints, GraphiQL IDE, DataLoader support, VertxFutureAdapter and JsonObjectAdapter auto-configured. Optional GraphQL Gateway stitches remote schemas from services in the service registry.";
-            case "hazelcast" -> "Hazelcast distributed caching and clustering integration for GuicedEE. JCache provider, distributed data structures, and cluster management.";
+            case "hazelcast" -> "Intentional Hazelcast clustering and distributed caching. Explicit activation, lifecycle-owned members/clients, JCache and distributed data structures; an incidental dependency starts no cluster.";
                 case "health" -> "MicroProfile Health integration for GuicedEE with Vert.x 5. @Liveness, @Readiness, @Startup health checks with automatic discovery and JSON endpoints.";
                 case "ibmmq" -> "Annotation-driven IBM MQ integration for GuicedEE. @IBMMQConnectionOptions, @IBMMQQueueDefinition, IBMMQConsumer/Publisher with IBM MQ JMS client.";
                 case "jwt" -> "MicroProfile JWT Auth bridge for Vert.x 5. Maps Vert.x User to JsonWebToken, @Claim injection without @Inject, CallScope-aware context, Keycloak/OIDC support.";

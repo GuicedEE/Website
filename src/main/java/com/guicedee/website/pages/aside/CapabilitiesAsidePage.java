@@ -54,6 +54,7 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         list.add(asideLink("verticles-deployment", "Verticles"));
         list.add(asideLink("persistence", "Persistence"));
         list.add(asideLink("websockets", "WebSockets"));
+        list.add(asideLink("clustering-websocket-continuity", "Clustering & Continuity"));
         list.add(asideLink("messaging", "Messaging"));
         list.add(asideLink("observability", "Observability"));
         list.add(asideLink("logging", "Logging"));

@@ -7,6 +7,28 @@
 This repository powers the **public GuicedEE website** hosted at `https://guicedee.com`, presenting the entire GuicedEE ecosystem with the documentation, samples, and builder tools consumers expect.
 
 ## ✨ Site Vision
+## Clustering and WebSocket continuity
+
+The capabilities page documents explicit cluster activation, lifecycle ownership, separate member/event-bus endpoints,
+owner-local STOMP commands, private replies/storage, broadcast fan-out, bounded socket cleanup and reconnect recovery.
+The environment reference includes the activation gates and Hazelcast member settings. The application builder uses
+`com.guicedee:hazelcast` / `com.guicedee.guicedhazelcast` and `com.guicedee:websockets` / `com.guicedee.vertx.sockets`.
+The development changelog describes the local work without claiming publication or production deployment.
+
+Regenerate from Java and build the production front end locally, without creating a Docker image:
+
+```powershell
+# From GuicedEE/website with the required JDK 25 selected:
+mvn.cmd -B -ntp install '-Djwebmp.angular.docker=false' '-Dmaven.javadoc.skip=true'
+Push-Location target/webroot/guicedee-website
+npm.cmd run build-prod
+Pop-Location
+```
+
+Check the regenerated production bundle and its new section/aside anchors; Maven success alone does not prove fresh
+browser output. Keep generated TypeScript untouched and fix its Java owners. Publishing or deploying is separate.
+
+## ✨ Site Vision
 - Surface every GuicedEE module and plugin alongside its capabilities so users can discover, inspect, and compose the platform into new apps.
 - Provide a dedicated **Services** directory that highlights each modular service offering and explains how it plugs into the larger GuicedEE stack.
 - Offer an **Application Builder** UI that lets visitors choose GuicedEE modules/plugins, configure settings, and download a ready-to-run ZIP containing the generated source package tailored to their selections.

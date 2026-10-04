@@ -28,6 +28,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jwebmp.angular.docker>true</jwebmp.angular.docker>
     </properties>
 
     <dependencies>
@@ -165,7 +166,7 @@
                 <configuration>
                     <installDependencies>true</installDependencies>
                     <buildAngular>true</buildAngular>
-                    <buildDockerImage>true</buildDockerImage>
+                    <buildDockerImage>${jwebmp.angular.docker}</buildDockerImage>
                     <dockerImageName>gedmarc/guicedee-website:2.3.0</dockerImageName>
                     <dockerBaseImage>nginx:alpine</dockerBaseImage>
                     <nginxServerName>guicedee.com www.guicedee.com</nginxServerName>

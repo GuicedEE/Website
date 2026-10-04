@@ -41,6 +41,17 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var continuityContent = new WaStack<>();
+        continuityContent.setGap(PageSize.Medium);
+        continuityContent.add(featureCard("Explicit clustering and lifecycle",
+                "Intentional activation, prepared member configuration, shared Vert.x options, owned JCache and ordered shutdown with failed-startup rollback.", null));
+        continuityContent.add(featureCard("WebSocket continuity",
+                "Cross-node raw group broadcast, socket-owner STOMP commands, private replies/storage, bounded slow-client closure and fresh-capability reconnect recovery.", null));
+        continuityContent.add(featureCard("IntelliJ scaffolding",
+                "Separate cache-only and clustered Hazelcast options, TCP node examples, shared-options configurator templates and explicit shutdown ordering.", null));
+        layout.add(buildSection("In Development", "Clustering & WebSocket continuity",
+                "Locally implemented and validated on 4 October 2026; publication and deployment are separate.", true, continuityContent));
+
         // Current release
         var currentContent = new WaStack<>();
         currentContent.setGap(PageSize.Medium);

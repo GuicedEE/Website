@@ -52,6 +52,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         layout.add(buildWebSection());
         layout.add(buildVertxSection());
         layout.add(buildVertxEventBusSection());
+        layout.add(buildHazelcastSection());
         layout.add(buildVertxFileSystemSection());
         layout.add(buildVertxAddressResolverSection());
         layout.add(buildRestClientSection());
@@ -83,6 +84,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
                 "Logging & Runtime",
                 new String[][]{
                         {"GUICEDEE_LOG_LEVEL", "Log level for GuicedEE internals (also: guicedee.log.level)", "INFO"},
+                        {"GUICEDEE_STARTUP_TIMEOUT_SECONDS", "Pre-startup wait timeout; failure aborts startup and rolls back owned resources", "60"},
                         {"LOG_LEVEL", "Global application log level", "INFO"},
                         {"DEBUG", "Enable debug logging (set to true; also: guicedee.debug)", "false"},
                         {"TRACE", "Enable trace logging (set to true; also: guicedee.trace)", "false"},
@@ -243,6 +245,31 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
     }
 
     // ── Vert.x FileSystem ───────────────────────────────
+
+    private WaStack<?> buildHazelcastSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(envTable("Activation and membership", new String[][]{
+                {"VERTX_CLUSTER_ENABLED", "Explicit true/false override; absent uses intentional server configuration, not dependency presence", "intentional config"},
+                {"HAZELCAST_CLIENT_ENABLED", "Independent client gate; absent starts only an intentionally configured client", "intentional config"},
+                {"HAZELCAST_CLUSTER_NAME", "Server annotation cluster name override; isolate application/environment", "annotation / guicedee-local"},
+                {"HAZELCAST_START_LOCAL", "Request an externally owned embedded member; independent of event-bus cluster activation", "annotation / false"},
+                {"HAZELCAST_PORT", "Membership listen port", "5701"},
+                {"HAZELCAST_PORT_AUTO_INCREMENT", "Allow an alternate membership port; use false for explicit node examples", "true"},
+                {"HAZELCAST_PUBLIC_ADDRESS", "Membership endpoint advertised to peers (host:port)", "annotation / empty"},
+                {"HAZELCAST_INTERFACES", "Comma-separated bind interfaces", "annotation / empty"},
+                {"HAZELCAST_INTERFACES_ENABLED", "Apply membership interface filtering", "false"},
+                {"HAZELCAST_JOIN_TYPE", "Server annotation discovery: TCP, MULTICAST, KUBERNETES or NONE", "annotation"},
+                {"HAZELCAST_TCP_MEMBERS", "Comma-separated membership endpoints for TCP join", "annotation / empty"}
+        }));
+        content.add(bodyText("Server network overrides require @HazelcastServerOptions; use a server configuration SPI " +
+                "for programmatic configuration. No incidental dependency starts a member or client. An explicit cache-only " +
+                "startLocal=true, clustered=false member can still run with VERTX_CLUSTER_ENABLED=false. Use VERTX_EVENTBUS_HOST/PORT " +
+                "and VERTX_EVENTBUS_CLUSTER_PUBLIC_HOST/PORT separately for event-bus transport. No HAZELCAST_CLUSTERED override exists.", "m"));
+        return section("Hazelcast Clustering", "Intentional activation and member endpoints",
+                "Membership discovery and event-bus networking have separate configuration and lifecycle ownership.", content);
+    }
 
     private WaStack<?> buildVertxFileSystemSection()
     {

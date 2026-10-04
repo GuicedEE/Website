@@ -388,8 +388,8 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "mail-client", "MailClient/Basic"));
 
         grid.add(moduleCard("Hazelcast",
-                "Clustered Vert.x support with Hazelcast. Shared maps, queues, " +
-                        "and distributed events.",
+                "Explicit Vert.x cluster activation, owned members/clients and JCache. " +
+                        "Shared maps and cross-node events; dependency presence alone stays unclustered.",
                 "com.guicedee:hazelcast",
                 "hazelcast", "Hazelcast/Basic"));
 
