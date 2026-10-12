@@ -62,7 +62,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         currentGrid.add(featureCard("Version", "2.3.0", "Current release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.1", "Actionable source diagnostics"));
-        currentGrid.add(featureCard("Vert.x", "5.2.0", "SmallRye bindings 4.0.2"));
+        currentGrid.add(featureCard("Vert.x", "5.2.1", "SmallRye bindings 4.0.2"));
         currentGrid.add(featureCard("Jackson", "3.2.3", "tools.jackson across the board"));
         currentGrid.add(featureCard("Hibernate ORM", "7.4.7.Final", "Reactive 4.5.5.Final + Models 1.3.1"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
@@ -70,7 +70,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         currentContent.add(currentGrid);
 
         layout.add(buildSection("Current", "v2.3.0",
-                "Synchronized platform release with Vert.x 5.2 and the Keycloak JPMS API service",
+                "Synchronized platform release with Vert.x 5.2.1 and the Keycloak JPMS API service",
                 true, currentContent));
 
         // v2.3.0 release
@@ -92,9 +92,9 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                         "with qualified opens for model binding. The artifact is compile-only and must not be deployed into Keycloak.",
                 "New JPMS service"));
 
-        v230Grid.add(featureCard("Vert.x 5.2",
-                "The complete Vert.x dependency chain is aligned on 5.2.0 with SmallRye Mutiny bindings 4.0.2 and Mutiny 3.3.0. " +
-                        "The Vert.x BOM continues to pin every io.vertx artifact to one version.",
+        v230Grid.add(featureCard("Vert.x 5.2.1",
+                "The Vert.x runtime dependency chain is aligned on 5.2.1 with Netty 4.2.19.Final, SmallRye Mutiny bindings 4.0.2 and Mutiny 3.3.0. " +
+                        "The GuicedEE BOM imports the Vert.x BOM so applications and IntelliJ-generated projects inherit the same managed versions.",
                 "Dependency upgrade"));
 
         v230Grid.add(featureCard("Stable dependency refresh",
@@ -119,7 +119,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
 
         v230Content.add(v230Grid);
         layout.add(buildSection("v2.3.0", "Synchronized platform and Keycloak JPMS API",
-                "The coordinated GuicedEE release with Vert.x 5.2.0, current stable dependencies and the new Keycloak provider API service.",
+                "The coordinated GuicedEE release with Vert.x 5.2.1, current stable dependencies and the new Keycloak provider API service.",
                 true, v230Content));
 
         // v2.2.3 release
