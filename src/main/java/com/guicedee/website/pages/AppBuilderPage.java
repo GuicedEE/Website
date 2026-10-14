@@ -69,6 +69,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     'IBM MQ': {groupId: 'com.guicedee', artifactId: 'ibmmq', moduleName: 'com.guicedee.ibmmq'},
                     'GraphQL': {groupId: 'com.guicedee', artifactId: 'graphql', moduleName: 'com.guicedee.vertx.graphql'},
                     'Hazelcast': {groupId: 'com.guicedee', artifactId: 'hazelcast', moduleName: 'com.guicedee.guicedhazelcast'},
+                    'Vert.x clustering (Hazelcast)': {groupId: 'com.guicedee', artifactId: 'hazelcast', moduleName: 'com.guicedee.guicedhazelcast'},
                     'EhCache': {groupId: 'com.guicedee.services', artifactId: 'ehcache', moduleName: 'com.guicedee.services.ehcache'},
                     'OAuth2 / OIDC': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
                     'JWT': {groupId: 'com.guicedee', artifactId: 'auth', moduleName: 'com.guicedee.auth'},
@@ -111,8 +112,10 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 """);
         m.add("""
                 getSelectedDeps(): {groupId: string, artifactId: string, moduleName: string}[] {
-                    const seen = new Set<string>();
-                    const deps: {groupId: string, artifactId: string, moduleName: string}[] = [];
+                    const seen = new Set<string>(['inject']);
+                    const deps: {groupId: string, artifactId: string, moduleName: string}[] = [
+                        {groupId: 'com.guicedee', artifactId: 'inject', moduleName: 'com.guicedee.guicedinjection'}
+                    ];
                     for (const name of this.selectedModules) {
                         const dep = this.moduleMap[name];
                         if (dep && !seen.has(dep.artifactId)) {
@@ -157,6 +160,15 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     <dependencies>
                 ${depXml}
                     </dependencies>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.15.0</version>
+                            </plugin>
+                        </plugins>
+                    </build>
                 </project>` + '\\n```';
                 }
                 """);
@@ -166,12 +178,16 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     const depLines = deps.length === 0
                         ? '    // Select modules from the tree'
                         : deps.map(d => `    implementation("${d.groupId}:${d.artifactId}")`).join('\\n');
-                    return '```groovy\\n' + `plugins {
+                    return '```kotlin\\n' + `plugins {
                     java
                 }
 
                 group = "${this.groupId}"
                 version = "${this.version}"
+
+                repositories {
+                    mavenCentral()
+                }
 
                 java {
                     toolchain {
@@ -180,7 +196,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.3.0")
+                    implementation(platform("com.guicedee:guicedee-bom:2.3.0"))
                 ${depLines}
                 }` + '\\n```';
                 }
@@ -224,12 +240,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     return '```java\\n' + `package ${this.packageName};
 
                 import com.guicedee.client.IGuiceContext;
+                import com.guicedee.guicedinjection.GuiceApplication;
 
                 public class Boot {
                     public static void main(String[] args) {
-                        IGuiceContext.registerModuleForScanning
-                            .add("${this.packageName}");
-                        IGuiceContext.instance().inject();
+                        GuiceApplication.run(() -> {
+                            IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}");
+                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(true);
+                        });
                     }
                 }` + '\\n```';
                 }
@@ -270,6 +288,15 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     <dependencies>
                 ${depXml}
                     </dependencies>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.15.0</version>
+                            </plugin>
+                        </plugins>
+                    </build>
                 </project>`;
                 }
                 """);
@@ -286,6 +313,10 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 group = "${this.groupId}"
                 version = "${this.version}"
 
+                repositories {
+                    mavenCentral()
+                }
+
                 java {
                     toolchain {
                         languageVersion.set(JavaLanguageVersion.of(25))
@@ -293,7 +324,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation platform("com.guicedee:guicedee-bom:2.3.0")
+                    implementation(platform("com.guicedee:guicedee-bom:2.3.0"))
                 ${depLines}
                 }`;
                 }
@@ -337,12 +368,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     return `package ${this.packageName};
 
                 import com.guicedee.client.IGuiceContext;
+                import com.guicedee.guicedinjection.GuiceApplication;
 
                 public class Boot {
                     public static void main(String[] args) {
-                        IGuiceContext.registerModuleForScanning
-                            .add("${this.packageName}");
-                        IGuiceContext.instance().inject();
+                        GuiceApplication.run(() -> {
+                            IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}");
+                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(true);
+                        });
                     }
                 }`;
                 }
@@ -363,6 +396,87 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
                 """);
         m.add("""
+                hasHazelcast(): boolean {
+                    return this.selectedModules.includes('Hazelcast') || this.isClustered();
+                }
+
+                isClustered(): boolean {
+                    return this.selectedModules.includes('Vert.x clustering (Hazelcast)');
+                }
+
+                getRawClusterOptions(): string {
+                    if (!this.hasHazelcast()) return '';
+                    const options = this.isClustered() ? `@com.guicedee.vertx.spi.EventBusOptions(
+                    host = "127.0.0.1", port = 7801,
+                    clusterPublicHost = "127.0.0.1", clusterPublicPort = 7801)
+                @com.guicedee.guicedhazelcast.HazelcastServerOptions(
+                    clusterName = "${this.artifactId}-cluster", clustered = true, startLocal = false,
+                    port = 5701, portAutoIncrement = false,
+                    interfaces = "127.0.0.1", interfacesEnabled = true,
+                    joinType = com.guicedee.guicedhazelcast.HazelcastServerOptions.JoinType.TCP,
+                    tcpMembers = "127.0.0.1:5701,127.0.0.1:5702")` : `@com.guicedee.guicedhazelcast.HazelcastServerOptions(
+                    clusterName = "${this.artifactId}-cache", clustered = false, startLocal = true,
+                    joinType = com.guicedee.guicedhazelcast.HazelcastServerOptions.JoinType.NONE)`;
+                    return options + `\\npackage ${this.packageName}.cluster;\\n`;
+                }
+
+                getClusterOptionsPreview(): string {
+                    return '```java\\n' + this.getRawClusterOptions() + '```';
+                }
+
+                getNodeEnvironment(node: number): string {
+                    return `VERTX_CLUSTER_ENABLED=true
+                HAZELCAST_CLIENT_ENABLED=false
+                HAZELCAST_START_LOCAL=false
+                HAZELCAST_PORT=${5700 + node}
+                HAZELCAST_PUBLIC_ADDRESS=127.0.0.1:${5700 + node}
+                VERTX_EVENTBUS_HOST=127.0.0.1
+                VERTX_EVENTBUS_PORT=${7800 + node}
+                VERTX_EVENTBUS_CLUSTER_PUBLIC_HOST=127.0.0.1
+                VERTX_EVENTBUS_CLUSTER_PUBLIC_PORT=${7800 + node}
+                HTTP_PORT=${8080 + node}
+                `.split('\\n').map(line => line.trim()).join('\\n').trim() + '\\n';
+                }
+
+                getSingleInstanceEnvironment(): string {
+                    return `VERTX_CLUSTER_ENABLED=false
+                HAZELCAST_CLIENT_ENABLED=false
+                HAZELCAST_START_LOCAL=false
+                HTTP_PORT=8080
+                `.split('\\n').map(line => line.trim()).join('\\n').trim() + '\\n';
+                }
+
+                getClusterEnvironmentPreview(): string {
+                    return '### cluster-a.env.example\\n```properties\\n' + this.getNodeEnvironment(1) +
+                        '```\\n### cluster-b.env.example\\n```properties\\n' + this.getNodeEnvironment(2) +
+                        '```\\n### single-instance.env.example\\n```properties\\n' + this.getSingleInstanceEnvironment() + '```';
+                }
+
+                getClusteringGuide(): string {
+                    return `# Clustering
+
+                Load cluster-a.env.example and cluster-b.env.example into separate processes running this application.
+                These files are not loaded automatically. Export their values or copy the appropriate file to
+                .env.local in each process's working directory. The default annotation configuration matches node A.
+                They bind only to loopback; choose reachable membership and event-bus bind/advertised addresses
+                for another host or deployment. Membership and event-bus ports are separate endpoints.
+                single-instance.env.example disables the event-bus cluster, local member and client.
+
+                The built-in GuicedEE configurator owns the cluster manager; do not create another one.
+                Configure only one HazelcastServerOptions annotation per assembled application.
+                Selecting Hazelcast alone generates an owned cache member with clustered=false;
+                selecting Vert.x clustering intentionally enables TCP membership and the event-bus cluster.
+
+                Public broadcasts can fan out across nodes. Socket commands and private replies/storage remain
+                with the owning connection. Reconnect with fresh session-bound capabilities, restore subscriptions
+                and refresh authoritative state. Delivery is best effort without durable replay.
+
+                See https://guicedee.com/capabilities#clustering-websocket-continuity
+                and https://guicedee.com/environment-variables#hazelcast-clustering.
+                `.split('\\n').map(line => line.trim()).join('\\n').trim() + '\\n';
+                }
+                """);
+        m.add("""
                 async downloadZip() {
                     const zip = new JSZip();
                     const base = this.artifactId;
@@ -380,6 +494,17 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     zip.file(base + '/src/main/java/module-info.java', this.getRawModuleInfo());
                     zip.file(base + '/src/main/java/' + pkgPath + '/Boot.java', this.getRawBoot());
                     zip.file(base + '/src/main/java/' + pkgPath + '/AppModule.java', this.getRawAppModule());
+                    zip.file(base + '/src/main/resources/META-INF/services/com.guicedee.client.services.lifecycle.IGuiceModule',
+                        this.packageName + '.AppModule\\n');
+                    if (this.hasHazelcast()) {
+                        zip.file(base + '/src/main/java/' + pkgPath + '/cluster/package-info.java', this.getRawClusterOptions());
+                    }
+                    if (this.isClustered()) {
+                        zip.file(base + '/cluster-a.env.example', this.getNodeEnvironment(1));
+                        zip.file(base + '/cluster-b.env.example', this.getNodeEnvironment(2));
+                        zip.file(base + '/single-instance.env.example', this.getSingleInstanceEnvironment());
+                        zip.file(base + '/CLUSTERING.md', this.getClusteringGuide());
+                    }
 
                     const blob = await zip.generateAsync({type: 'blob'});
                     const url = URL.createObjectURL(blob);
@@ -495,6 +620,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
         var caching = parentItem("Caching", false);
         caching.add(leafItem("Hazelcast"));
+        caching.add(leafItem("Vert.x clustering (Hazelcast)"));
         caching.add(leafItem("EhCache"));
         tree.add(caching);
 
@@ -540,6 +666,8 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         tree.addAttribute("(wa-selection-change)", "onTreeSelectionChange($event)");
 
         treeColumn.add(tree);
+        treeColumn.add(bodyText("Hazelcast starts a local cache member. Vert.x clustering adds Hazelcast TCP membership " +
+                "and event-bus configuration. Select clustering to include two-node and single-instance environment examples.", "s"));
         columns.add(treeColumn);
 
         // ── Right column: Preview ──
@@ -592,6 +720,24 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         bootDetails.add(bootMd);
 
         previewColumn.add(bootDetails);
+
+        var hazelcastIf = new NgIf("hasHazelcast()");
+        var clusterDetails = new WaDetails<>();
+        clusterDetails.setSummary("cluster/package-info.java");
+        clusterDetails.addClass("code-details");
+        clusterDetails.add(Markdown.fromData("getClusterOptionsPreview()").addClass("code-block").addClass("wa-body-s"));
+        hazelcastIf.add(clusterDetails);
+        previewColumn.add(hazelcastIf);
+
+        var clusteredIf = new NgIf("isClustered()");
+        var environmentDetails = new WaDetails<>();
+        environmentDetails.setSummary("Cluster environment examples");
+        environmentDetails.addClass("code-details");
+        environmentDetails.add(Markdown.fromData("getClusterEnvironmentPreview()").addClass("code-block").addClass("wa-body-s"));
+        clusteredIf.add(environmentDetails);
+        clusteredIf.add(bodyText("The ZIP includes CLUSTERING.md. Load the example environment files explicitly into separate " +
+                "processes; they are not read automatically. Choose reachable addresses for deployment.", "s"));
+        previewColumn.add(clusteredIf);
 
         // Download button
         var buildBtn = new WaButton<>("Download ZIP", Variant.Brand);

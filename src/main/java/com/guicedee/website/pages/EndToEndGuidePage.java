@@ -267,16 +267,20 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
         content.add(codeBlockWithTitle("Boot.java",
                 """
+                        import com.guicedee.client.IGuiceContext;
+                        import com.guicedee.guicedinjection.GuiceApplication;
+
                         public class Boot {
                             public static void main(String[] args) {
-                                IGuiceContext.registerModuleForScanning
-                                    .add("com.example.myservice");
-                                IGuiceContext.instance().inject();
+                                GuiceApplication.run(() -> {
+                                    IGuiceContext.registerModule("my.service");
+                                });
                             }
                         }"""));
 
         return buildSection("Guice module & bootstrap", "Bindings + one-line startup",
-                "IGuiceContext.instance().inject() fires the entire lifecycle: scan, inject, start servers, register routes.",
+                "GuiceApplication.run(Runnable) runs preparation, injects, starts servers, registers routes, and waits for asynchronous startup. " +
+                "Failed startup triggers cleanup and an unsuccessful process exit. Use it in your application's main entry point.",
                 true, content);
     }
 
@@ -788,7 +792,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                 """
                         graph LR
                             subgraph init ["Initialization"]
-                                A["IGuiceContext.instance()"] --> B["IGuiceConfigurator"]
+                                A["GuiceApplication.run(Runnable)"] --> B["IGuiceConfigurator"]
                                 B --> C["IGuicePreStartup"]
                             end
                             subgraph discovery ["Discovery & Binding"]

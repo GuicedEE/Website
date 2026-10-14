@@ -66,6 +66,9 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Cross-node raw group broadcast, socket-owner STOMP commands, private replies/storage, bounded slow-client closure and fresh-capability reconnect recovery.", null));
         continuityContent.add(featureCard("IntelliJ scaffolding",
                 "Separate cache-only and clustered Hazelcast options, TCP node examples, shared-options configurator templates and explicit shutdown ordering.", null));
+        continuityContent.add(featureCard("Application Builder",
+                "Cache-only and Vert.x clustering choices now generate package configuration and node environment examples in Maven and Gradle ZIPs. " +
+                        "Website and IntelliJ entry points use GuiceApplication.run to await startup and handle failure.", "14 October 2026 — local update"));
         layout.add(buildSection("In Development", "Clustering & WebSocket continuity",
                 "Locally implemented and validated on 4 October 2026; publication and deployment are separate.", true, continuityContent));
 

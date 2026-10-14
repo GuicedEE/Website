@@ -301,18 +301,21 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         package com.example.hello;
                         
                         import com.guicedee.client.IGuiceContext;
+                        import com.guicedee.guicedinjection.GuiceApplication;
                         
                         public class Boot {
                             public static void main(String[] args) {
-                                IGuiceContext.registerModuleForScanning
-                                    .add("com.example.hello");
-                                IGuiceContext.instance();
+                                GuiceApplication.run(() -> {
+                                    IGuiceContext.registerModule("hello.guicedee");
+                                });
                             }
                         }"""));
 
-        var explain = bodyTextHtml("Two lines of code. Register your package for scanning, then call " + brandCode("instance()") + ". " +
+        var explain = bodyTextHtml("Call " + brandCode("GuiceApplication.run(Runnable)") + " and register the module name from " +
+                brandCode("module-info.java") + " in its preparation callback. " +
                 "GuicedEE discovers your classes, creates the " + brandCode("Guice") + " injector, starts the " + brandCode("Vert.x") + " HTTP server, " +
-                "and registers your REST routes — all automatically.", "m");
+                "and registers your REST routes — all automatically. The call returns after asynchronous startup completes. " +
+                "Failed startup triggers cleanup and exits the process unsuccessfully. Use this runner in your application's main entry point.", "m");
         explain.setWaColorText("quiet");
         content.add(explain);
 
@@ -402,7 +405,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
-        var desc = bodyTextHtml("When you called " + brandCode("IGuiceContext.instance()") + ", GuicedEE executed this lifecycle:", "m");
+        var desc = bodyTextHtml("When you called " + brandCode("GuiceApplication.run(Runnable)") + ", GuicedEE executed this lifecycle:", "m");
         desc.setWaColorText("quiet");
         content.add(desc);
 

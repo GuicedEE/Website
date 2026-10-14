@@ -331,7 +331,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         //   - A dev console for management
                         
                         // ✅ GuicedEE:
-                        IGuiceContext.instance().inject();
+                        GuiceApplication.run(() -> {});
                         // That's it. Your REST endpoints, health checks,
                         // persistence units, and WebSocket handlers are live."""));
 
