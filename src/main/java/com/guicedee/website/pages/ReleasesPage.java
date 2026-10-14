@@ -41,6 +41,23 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var classGraphContent = new WaStack<>();
+        classGraphContent.setGap(PageSize.Medium);
+        classGraphContent.add(featureCard("ClassGraph 6.0.0",
+                "The BOM now targets the Java 25+ scanner. Classpath and module sources are enabled explicitly, " +
+                        "and hierarchy queries use the new getAll and getDirect APIs.", "Dependency upgrade"));
+        classGraphContent.add(featureCard("Application-owned class loading",
+                "GuicedEE and JWebMP load discovered classes without initialization through application-owned classloaders. " +
+                        "Package configuration continues to read directly declared annotations.", "Migration"));
+        classGraphContent.add(featureCard("Consumer migration",
+                "ClassGraph 6 changes the public metadata API and splits scanning, classpath discovery and the virtual filesystem " +
+                        "into separate modules. Rebuild dependent libraries together and follow the upstream porting guide.", "Java 25+"));
+        var portingGuide = new com.jwebmp.webawesome.components.button.WaButton<>("ClassGraph 4.x to 6.x porting guide");
+        portingGuide.setAsLink("https://github.com/classgraph/classgraph/wiki/Porting-ClassGraph-4.x-code-to-ClassGraph-6.x", "_blank", null);
+        classGraphContent.add(portingGuide);
+        layout.add(buildSection("In Development", "ClassGraph 6 migration",
+                "14 October 2026 — source migration to ClassGraph 6.0.0 for the Java 25 baseline.", true, classGraphContent));
+
         var continuityContent = new WaStack<>();
         continuityContent.setGap(PageSize.Medium);
         continuityContent.add(featureCard("Explicit clustering and lifecycle",
