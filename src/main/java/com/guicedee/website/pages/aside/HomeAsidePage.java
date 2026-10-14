@@ -42,6 +42,7 @@ public class HomeAsidePage extends DivSimple<HomeAsidePage> implements INgCompon
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
         list.add(asideLink("hero", "Overview"));
+        list.add(asideLink("intellij-plugin", "IntelliJ plugin"));
         list.add(asideLink("how-it-works", "How it works"));
         list.add(asideLink("foundations", "Foundations"));
         list.add(asideLink("modular-by-design", "Modular build"));

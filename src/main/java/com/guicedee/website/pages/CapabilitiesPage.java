@@ -654,7 +654,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
                 """
-                        <!-- Import com.guicedee:guicedee-bom:2.3.0 in dependencyManagement -->
+                        <!-- Import com.guicedee:guicedee-bom:2.4.0 in dependencyManagement -->
                         <dependency>
                             <groupId>com.guicedee.modules.services</groupId>
                             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -689,7 +689,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         module my.keycloak.provider {
                             requires static org.keycloak.api;
                         }"""));
-        content.add(bodyText("keycloak-api 2.3.0 is built from Keycloak 26.7.4 and is a compile-only boundary. " +
+        content.add(bodyText("keycloak-api 2.4.0 is built from Keycloak 26.8.1 and is a compile-only boundary. " +
                 "Do not copy the GuicedEE bundle into a Keycloak server; deploy only your provider JAR and let the server supply " +
                 "its own Keycloak runtime classes.", "m"));
 

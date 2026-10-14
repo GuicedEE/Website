@@ -41,6 +41,15 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var refreshContent = new WaStack<>();
+        refreshContent.setGap(PageSize.Medium);
+        refreshContent.add(featureCard("Reviewed major updates",
+                "Spring 7.0.9 follows the Apache CXF 4.2.4 dependency baseline. FastDoubleParser 2.0.1 adds configurable number parsing while retaining the existing parser classes.", "Compatibility reviewed"));
+        refreshContent.add(featureCard("Stable dependency refresh",
+                "Kafka clients 4.4.0, IBM MQ 10.0.1.0, CloudEvents 5.1.0, Keycloak 26.8.1, Hibernate Validator 9.1.5.Final, Byte Buddy 1.18.15 and ASM 9.11.", "Minor and patch updates"));
+        layout.add(buildSection("v2.4.0", "Final dependency refresh",
+                "Stable dependency updates for the Java 25 release, with selected major versions checked against their consumers.", true, refreshContent));
+
         var classGraphContent = new WaStack<>();
         classGraphContent.setGap(PageSize.Medium);
         classGraphContent.add(featureCard("ClassGraph 6.0.0",
@@ -55,8 +64,8 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var portingGuide = new com.jwebmp.webawesome.components.button.WaButton<>("ClassGraph 4.x to 6.x porting guide");
         portingGuide.setAsLink("https://github.com/classgraph/classgraph/wiki/Porting-ClassGraph-4.x-code-to-ClassGraph-6.x", "_blank", null);
         classGraphContent.add(portingGuide);
-        layout.add(buildSection("In Development", "ClassGraph 6 migration",
-                "14 October 2026 — source migration to ClassGraph 6.0.0 for the Java 25 baseline.", true, classGraphContent));
+        layout.add(buildSection("v2.4.0", "ClassGraph 6 migration",
+                "14 October 2026 — ClassGraph 6.0.0 and coordinated Java 25 consumer migration.", true, classGraphContent));
 
         var continuityContent = new WaStack<>();
         continuityContent.setGap(PageSize.Medium);
@@ -68,9 +77,9 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Separate cache-only and clustered Hazelcast options, TCP node examples, shared-options configurator templates and explicit shutdown ordering.", null));
         continuityContent.add(featureCard("Application Builder",
                 "Cache-only and Vert.x clustering choices now generate package configuration and node environment examples in Maven and Gradle ZIPs. " +
-                        "Website and IntelliJ entry points use GuiceApplication.run to await startup and handle failure.", "14 October 2026 — local update"));
-        layout.add(buildSection("In Development", "Clustering & WebSocket continuity",
-                "Locally implemented and validated on 4 October 2026; publication and deployment are separate.", true, continuityContent));
+                        "Website and IntelliJ entry points use GuiceApplication.run to await startup and handle failure.", "2.4.0"));
+        layout.add(buildSection("v2.4.0", "Clustering & WebSocket continuity",
+                "Explicit cluster configuration, WebSocket recovery and synchronized application scaffolding.", true, continuityContent));
 
         // Current release
         var currentContent = new WaStack<>();
@@ -79,18 +88,19 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.3.0", "Current release"));
+        currentGrid.add(featureCard("Version", "2.4.0", "Release target"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
-        currentGrid.add(featureCard("MicroProfile Config", "3.1.1", "Actionable source diagnostics"));
+        currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
         currentGrid.add(featureCard("Vert.x", "5.2.1", "SmallRye bindings 4.0.2"));
         currentGrid.add(featureCard("Jackson", "3.2.3", "tools.jackson across the board"));
-        currentGrid.add(featureCard("Hibernate ORM", "7.4.7.Final", "Reactive 4.5.5.Final + Models 1.3.1"));
+        currentGrid.add(featureCard("Hibernate ORM", "7.4.13.Final", "Reactive 4.5.10.Final + Models 1.3.4"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
+        currentGrid.add(featureCard("ClassGraph", "6.0.0", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current", "v2.3.0",
-                "Synchronized platform release with Vert.x 5.2.1 and the Keycloak JPMS API service",
+        layout.add(buildSection("Release target", "v2.4.0",
+                "Coordinated platform, ClassGraph 6 migration, clustering and WebSocket continuity. Publication and deployment are separate.",
                 true, currentContent));
 
         // v2.3.0 release

@@ -109,6 +109,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         getMain().add(layout);
 
         layout.add(buildHero());
+        layout.add(buildIntelliJPluginSection());
         layout.add(buildThreeLinesPitch());
         layout.add(buildFoundationSection());
         layout.add(buildModularBuildSection());
@@ -250,6 +251,36 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         hero.add(ctas);
 
         return hero;
+    }
+
+    private WaStack<?> buildIntelliJPluginSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+
+        var description = bodyTextHtml("Create a GuicedEE application right inside IntelliJ IDEA. " +
+                "Choose your modules and let the project wizard generate your " + brandCode("pom.xml") + ", " +
+                brandCode("module-info.java") + " and application bootstrap.", "m");
+        description.setWaColorText("quiet");
+        content.add(description);
+
+        var widgetWrapper = new DivSimple<>();
+        widgetWrapper.setID("jetbrains-plugin-widget");
+        widgetWrapper.addStyle("display:flex;justify-content:center");
+        content.add(widgetWrapper);
+
+        var actions = new WaCluster<>();
+        actions.setGap(PageSize.Small);
+        var marketplace = new WaButton<>(escapeAngular("Get the IntelliJ plugin"), Variant.Brand);
+        marketplace.setAsLink("https://plugins.jetbrains.com/plugin/31112-guiced", "_blank", null);
+        actions.add(marketplace);
+        actions.add(buildCta("Plugin setup guide", "/getting-started", Variant.Neutral, Appearance.Outlined));
+        content.add(actions);
+
+        var section = buildSection("IntelliJ Plugin", "Start your next project in IntelliJ IDEA",
+                "From idea to a modular application, with the Guiced project wizard.", true, content);
+        section.setID("intellij-plugin");
+        return section;
     }
 
     // ── Three-line pitch ─────────────────────────────
@@ -1082,7 +1113,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.3.0</version>
+                                    <version>2.4.0</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1103,7 +1134,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.3.0')
+                            implementation platform('com.guicedee:guicedee-bom:2.4.0')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -1444,12 +1475,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack<>();
         content.setGap(PageSize.Large);
 
-        // JetBrains Marketplace plugin widget
-        var widgetWrapper = new DivSimple<>();
-        widgetWrapper.setID("jetbrains-plugin-widget");
-        widgetWrapper.addStyle("display:flex;justify-content:center");
-        content.add(widgetWrapper);
-
         content.add(grid);
 
         return buildSection("Module catalog", "Drop-in capabilities — add a dependency, get a feature",
@@ -1468,9 +1493,10 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("AI Rules repository",
-                "Open guidance for AI-assisted development keeps patterns consistent across teams and LLMs.",
-                "Use it to drive better outputs from AI coding tools."));
+        grid.add(featureCard("AI skills marketplace",
+                "Install reusable GuicedEE, JWebMP, EntityAssist and ActivityMaster guidance with Agent Package Manager (APM). " +
+                        "Choose the skills your project needs from the AI Rules catalog.",
+                "Consistent patterns for AI-assisted development."));
 
         grid.add(featureCard("End-to-end testable",
                 "Test the entire stack with JUnit 5 + Jupiter. Health checks, REST endpoints, persistence — all verifiable in CI.",
@@ -1487,6 +1513,28 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Open source with practical guardrails."));
 
         content.add(grid);
+
+        content.add(codeBlockWithTitle("Install APM — Windows (PowerShell)",
+                "irm https://aka.ms/apm-windows | iex"));
+        content.add(codeBlockWithTitle("Install APM — Linux and macOS",
+                "curl -sSL https://aka.ms/apm-unix | sh"));
+        content.add(bodyText("Open a new terminal after installing APM, then run these commands in your application project.", "m"));
+        content.add(codeBlockWithTitle("Install AI development skills with APM — all platforms",
+                """
+                        apm --version
+                        apm marketplace add GuicedEE/ai-rules
+                        apm install guicedee-inject@guicedee-ai-rules
+                        """));
+        var skillLinks = new WaCluster<>();
+        skillLinks.setGap(PageSize.Small);
+        var skills = new WaButton<>(escapeAngular("Browse the AI skills marketplace"), Variant.Brand);
+        skills.setAsLink("https://github.com/GuicedEE/ai-rules", "_blank", null);
+        skillLinks.add(skills);
+        var apmGuide = new WaButton<>(escapeAngular("Install APM"), Variant.Neutral);
+        apmGuide.setAppearance(Appearance.Outlined);
+        apmGuide.setAsLink("https://microsoft.github.io/apm/getting-started/installation/", "_blank", null);
+        skillLinks.add(apmGuide);
+        content.add(skillLinks);
 
         content.add(codeBlockWithTitle("Full JPMS module declaration",
                 """

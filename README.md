@@ -130,6 +130,13 @@ The public site is a **static Angular SPA served by nginx** — the `angular-mav
 
 **Deploying a new version**
 
+Deployment verified on 14 October 2026: revision `guicedee-website--v240-20261014`
+serves 100% of traffic from image
+`docker.io/gedmarc/guicedee-website@sha256:8175c168eeaec132c6b427e6ea0275a947c28e8a463c05eee52d1e17cbdedcbb`
+(tag `2.4.0-20261014`). The homepage, `/releases`, `/modules` and main JavaScript
+bundle match the local production output. The deployment includes the IntelliJ
+plugin section and APM marketplace/installer instructions. The backend is unchanged.
+
 1. Build and push the image (see `build-guicedee-website.ps1 -Push`, or `mvn install` then `docker build`/`docker push` from `target/webroot/guicedee-website`). Keep `<dockerImageName>` in `pom.xml` in step with the release.
 2. Point the container app at the new tag. Because revisions run in `Single` mode with `latestRevision: true`, the new revision automatically takes 100% of traffic — no manual traffic split:
 
@@ -137,8 +144,8 @@ The public site is a **static Angular SPA served by nginx** — the `angular-mav
    az containerapp update `
      --name guicedee-website `
      --resource-group DevSites `
-     --image docker.io/gedmarc/guicedee-website:2.3.0 `
-     --revision-suffix v223
+     --image docker.io/gedmarc/guicedee-website:2.4.0 `
+     --revision-suffix v240
    ```
 
    Without the `containerapp` CLI extension, an ARM `PATCH` against `properties.template.containers[0].image` achieves the same result. If you hand-roll the payload, re-send the probes, resources, and scale rule as well — a `template` patch replaces the containers array. Note that the read API returns `scale.cooldownPeriod` and `scale.pollingInterval`, but api-version `2024-03-01` **rejects** those two on write; omit them and the existing values are retained.
