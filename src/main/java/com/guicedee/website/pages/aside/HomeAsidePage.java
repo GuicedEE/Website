@@ -43,6 +43,7 @@ public class HomeAsidePage extends DivSimple<HomeAsidePage> implements INgCompon
 
         list.add(asideLink("hero", "Overview"));
         list.add(asideLink("intellij-plugin", "IntelliJ plugin"));
+        list.add(asideLink("ai-skills", "AI skills & APM"));
         list.add(asideLink("how-it-works", "How it works"));
         list.add(asideLink("foundations", "Foundations"));
         list.add(asideLink("modular-by-design", "Modular build"));

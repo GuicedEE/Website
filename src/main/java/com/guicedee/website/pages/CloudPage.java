@@ -377,7 +377,7 @@ public class CloudPage extends WebsitePage<CloudPage> implements INgComponent<Cl
                 </dependency>
                 """,
                 """
-                implementation("com.guicedee:service-registry:2.4.0")
+                implementation("com.guicedee:service-registry:2.4.1")
                 """));
 
         installContent.add(codeBlock("""

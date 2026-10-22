@@ -93,100 +93,62 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
-        content.add(mermaidDiagramWithTitle("GuicedEE Architecture",
-                """
-                        graph TD
-                            subgraph Client["Client Tier"]
-                                direction LR
-                                WEB["Web Browser"]
-                                MOBILE["Mobile App"]
-                                IOT["IoT / Serial Device"]
-                            end
-                            
-                            WEB --- Prot
-                            MOBILE --- Prot
-                            IOT --- Cerial
+        var diagram = new WaStack<>();
+        diagram.setTag("figure");
+        diagram.addAttribute("aria-label", "Application architecture: your code, selected modules, and the GuicedEE foundation");
+        diagram.setGap(PageSize.Small);
+        diagram.addStyle("width:100%;max-width:48rem;margin:0 auto;box-sizing:border-box");
 
-                            subgraph Interface["Interface Layer"]
-                                direction TB
-                                subgraph Prot["Protocols"]
-                                    REST["REST (JAX-RS)"]
-                                    WS["WebSockets"]
-                                    GQL["GraphQL"]
-                                    GRPC["gRPC"]
-                                    SOAP["SOAP (CXF)"]
-                                end
-                                subgraph Discovery["Discovery & Docs"]
-                                    SD["Service Discovery"]
-                                    SR["Service Registry"]
-                                    OAI["OpenAPI (Swagger)"]
-                                    SWUI["Swagger UI"]
-                                end
-                            end
+        diagram.add(architectureLayer("Your application", "Business logic, services and endpoints", false));
+        diagram.add(architectureConnector());
 
-                            Interface --- Core
+        var modules = architectureLayer("Modules you choose", "Add the capabilities your application needs", false);
+        var choices = new WaCluster<>();
+        choices.setGap(PageSize.Small);
+        choices.add(buildTag("HTTP & APIs", Variant.Neutral));
+        choices.add(buildTag("Data & messaging", Variant.Neutral));
+        choices.add(buildTag("Security & observability", Variant.Neutral));
+        modules.add(choices);
+        diagram.add(modules);
+        diagram.add(architectureConnector());
+        diagram.add(architectureLayer("GuicedEE foundation", "Guice injection and lifecycle · Vert.x reactive runtime", true));
 
-                            subgraph Core["GuicedEE Core"]
-                                direction TB
-                                VX["Vert.x 5 Web/Core"]
-                                INJ["GuicedEE Injection"]
-                                BOM["BOM & JPMS"]
-                                subgraph Services["Support Services"]
-                                    direction LR
-                                    CONF["Config"]
-                                    SEC["Security (OAuth2, SAML, Multi-JWT)"]
-                                    HLT["Health"]
-                                    MET["Metrics"]
-                                    TRC["Telemetry"]
-                                end
-                                subgraph Runtime["Runtime"]
-                                    AUTO["Autoconfigure"]
-                                    LOG["Logging"]
-                                    FT["Fault Tolerance"]
-                                end
-                            end
-
-                            Core -.-> Integration
-
-                            subgraph Integration["Integration Layer (Optional)"]
-                                direction TB
-                                subgraph Msg["Messaging"]
-                                    KAFKA["Apache Kafka"]
-                                    RABBIT["RabbitMQ"]
-                                    IBMMQ["IBM MQ"]
-                                    MAIL["Mail Client"]
-                                end
-                                subgraph Data["Persistence & Cache"]
-                                    HBN["Hibernate Reactive"]
-                                    MONGO["MongoDB"]
-                                    CASS["Cassandra"]
-                                    REDIS["Redis"]
-                                    HZ["Hazelcast"]
-                                    JCache["JCache"]
-                                end
-                                subgraph Tools["Utilities"]
-                                    POI["Apache POI"]
-                                    Cerial["Cerial (Serial Port)"]
-                                    PDF["OpenPDF"]
-                                end
-                            end
-                            
-                            style Core fill:#f9f,stroke:#333,stroke-width:2px
-                            style Interface fill:#dfd,stroke:#333
-                            style Integration fill:#ffd,stroke:#333,stroke-dasharray: 5 5
-                            style Client fill:#bbf,stroke:#333"""));
-
-        var explain = bodyText("The GuicedEE architecture is designed for extreme composability. " +
-                "While the Client, Interface, and Core tiers form the backbone of most applications, " +
-                "the Integration Layer is entirely optional. " +
-                "Our security engine is a highlight — supporting everything from simple JWT to complex Multi-JWT setups, OAuth2, SAML, and ABAC. " +
-                "Dashed lines and borders indicate components you only add when your business logic requires them. " +
-                "Every block is a JPMS module — build exactly what you need.", "m");
-        explain.setWaColorText("quiet");
-        content.add(explain);
+        var caption = bodyText("Java 25 · JPMS modules · One aligned BOM", "s");
+        caption.setTag("figcaption");
+        caption.setWaColorText("quiet");
+        caption.addStyle("text-align:center;padding-top:var(--wa-spacing-small)");
+        diagram.add(caption);
+        content.add(diagram);
 
         return buildSection("Architecture", "Layered, composable, modular",
-                "Every layer is a JPMS module. Build up your stack — never exclude down.", false, content);
+                "Compose your application from JPMS modules. Add only what you need.", false, content);
+    }
+
+    private WaCard<?> architectureLayer(String title, String description, boolean foundation)
+    {
+        var card = new WaCard<>();
+        card.setAppearance(foundation ? Appearance.Filled : Appearance.Outlined);
+        card.addStyle("width:100%;box-sizing:border-box");
+        if (foundation) {
+            card.addStyle("--wa-panel-border-color:var(--wa-color-brand)");
+        }
+        var text = new WaStack<>();
+        text.setGap(PageSize.ExtraSmall);
+        text.add(headingText("h3", "m", title));
+        var detail = bodyText(description, "m");
+        detail.setWaColorText("quiet");
+        text.add(detail);
+        card.add(text);
+        return card;
+    }
+
+    private DivSimple<?> architectureConnector()
+    {
+        var connector = new DivSimple<>();
+        connector.addAttribute("aria-hidden", "true");
+        connector.addStyle("text-align:center;color:var(--wa-color-brand);font-size:1.5rem;line-height:1");
+        connector.setText("↓");
+        return connector;
     }
 
     private WaStack<?> buildInjectionCapability()
@@ -654,7 +616,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
                 """
-                        <!-- Import com.guicedee:guicedee-bom:2.4.0 in dependencyManagement -->
+                        <!-- Import com.guicedee:guicedee-bom:2.4.1 in dependencyManagement -->
                         <dependency>
                             <groupId>com.guicedee.modules.services</groupId>
                             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -689,7 +651,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         module my.keycloak.provider {
                             requires static org.keycloak.api;
                         }"""));
-        content.add(bodyText("keycloak-api 2.4.0 is built from Keycloak 26.8.1 and is a compile-only boundary. " +
+        content.add(bodyText("keycloak-api 2.4.1 is built from Keycloak 26.8.1 and is a compile-only boundary. " +
                 "Do not copy the GuicedEE bundle into a Keycloak server; deploy only your provider JAR and let the server supply " +
                 "its own Keycloak runtime classes.", "m"));
 

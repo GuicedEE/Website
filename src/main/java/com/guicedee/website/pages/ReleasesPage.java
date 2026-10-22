@@ -41,6 +41,19 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var jacksonPatchContent = new WaStack<>();
+        jacksonPatchContent.setGap(PageSize.Medium);
+        jacksonPatchContent.add(featureCard("Cloud startup without Jackson 2",
+                "CLOUD=true and explicit JSON console logging use Log4j JSON Template Layout. This removes the missing FilterProvider startup failure without adding Jackson 2.", "Startup fix"));
+        jacksonPatchContent.add(featureCard("Hazelcast uses managed Jackson 3",
+                "Removed the unused embedded Jackson 2 runtime and replaced Hazelcast's old private Jackson 3 core/databind with the shared 3.2.3 modules. Jackson Jr is aligned to the same version.", "Packaging fix"));
+        jacksonPatchContent.add(featureCard("Console logs reach their destinations",
+                "Corrected console level ranges so INFO/DEBUG and WARN/ERROR messages are emitted. Fresh-JVM cloud startup and two-member JSON replication have regression coverage.", "Runtime verified"));
+        jacksonPatchContent.add(featureCard("Migration scope",
+                "The Jackson annotations artifact remains shared with Jackson 3. Optional Azure, Cassandra, CXF OpenAPI, CloudEvents and test tooling still need separate Jackson 2 migrations.", "Dependency inventory"));
+        layout.add(buildSection("v2.4.1", "Cloud logging & Hazelcast JSON fixes",
+                "16 October 2026 - maintenance release for Jackson 3 applications and cloud startup.", true, jacksonPatchContent));
+
         var refreshContent = new WaStack<>();
         refreshContent.setGap(PageSize.Medium);
         refreshContent.add(featureCard("Reviewed major updates",
@@ -48,7 +61,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         refreshContent.add(featureCard("Stable dependency refresh",
                 "Kafka clients 4.4.0, IBM MQ 10.0.1.0, CloudEvents 5.1.0, Keycloak 26.8.1, Hibernate Validator 9.1.5.Final, Byte Buddy 1.18.15 and ASM 9.11.", "Minor and patch updates"));
         layout.add(buildSection("v2.4.0", "Final dependency refresh",
-                "Stable dependency updates for the Java 25 release, with selected major versions checked against their consumers.", true, refreshContent));
+                "Stable dependency updates for the Java 25 release, with selected major versions checked against their consumers.", false, refreshContent));
 
         var classGraphContent = new WaStack<>();
         classGraphContent.setGap(PageSize.Medium);
@@ -65,7 +78,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         portingGuide.setAsLink("https://github.com/classgraph/classgraph/wiki/Porting-ClassGraph-4.x-code-to-ClassGraph-6.x", "_blank", null);
         classGraphContent.add(portingGuide);
         layout.add(buildSection("v2.4.0", "ClassGraph 6 migration",
-                "14 October 2026 — ClassGraph 6.0.0 and coordinated Java 25 consumer migration.", true, classGraphContent));
+                "14 October 2026 — ClassGraph 6.0.0 and coordinated Java 25 consumer migration.", false, classGraphContent));
 
         var continuityContent = new WaStack<>();
         continuityContent.setGap(PageSize.Medium);
@@ -79,7 +92,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Cache-only and Vert.x clustering choices now generate package configuration and node environment examples in Maven and Gradle ZIPs. " +
                         "Website and IntelliJ entry points use GuiceApplication.run to await startup and handle failure.", "2.4.0"));
         layout.add(buildSection("v2.4.0", "Clustering & WebSocket continuity",
-                "Explicit cluster configuration, WebSocket recovery and synchronized application scaffolding.", true, continuityContent));
+                "Explicit cluster configuration, WebSocket recovery and synchronized application scaffolding.", false, continuityContent));
 
         // Current release
         var currentContent = new WaStack<>();
@@ -88,19 +101,19 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.4.0", "Release target"));
+        currentGrid.add(featureCard("Version", "2.4.1", "Maintenance release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
         currentGrid.add(featureCard("Vert.x", "5.2.1", "SmallRye bindings 4.0.2"));
-        currentGrid.add(featureCard("Jackson", "3.2.3", "tools.jackson across the board"));
+        currentGrid.add(featureCard("Jackson", "3.2.3", "Managed application runtime"));
         currentGrid.add(featureCard("Hibernate ORM", "7.4.13.Final", "Reactive 4.5.10.Final + Models 1.3.4"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentGrid.add(featureCard("ClassGraph", "6.0.0", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Release target", "v2.4.0",
-                "Coordinated platform, ClassGraph 6 migration, clustering and WebSocket continuity. Publication and deployment are separate.",
+        layout.add(buildSection("Current release", "v2.4.1",
+                "Jackson 3 cloud logging, Hazelcast packaging and console output fixes on the Java 25 platform.",
                 true, currentContent));
 
         // v2.3.0 release

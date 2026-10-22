@@ -110,6 +110,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         layout.add(buildHero());
         layout.add(buildIntelliJPluginSection());
+        layout.add(buildAiSkillsSection());
         layout.add(buildThreeLinesPitch());
         layout.add(buildFoundationSection());
         layout.add(buildModularBuildSection());
@@ -251,6 +252,43 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         hero.add(ctas);
 
         return hero;
+    }
+
+    private WaStack<?> buildAiSkillsSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        var description = bodyText("Give your AI assistant the same patterns your team uses. " +
+                "Install individual skills for GuicedEE, JWebMP, EntityAssist and ActivityMaster with Agent Package Manager.", "m");
+        description.setWaColorText("quiet");
+        content.add(description);
+
+        content.add(codeBlockWithTitle("Install APM — Windows (PowerShell)",
+                "irm https://aka.ms/apm-windows | iex"));
+        content.add(codeBlockWithTitle("Install APM — Linux and macOS",
+                "curl -sSL https://aka.ms/apm-unix | sh"));
+        content.add(bodyText("Open a new terminal after installing APM, then run these commands in your application project.", "m"));
+        content.add(codeBlockWithTitle("Install AI development skills with APM — all platforms",
+                """
+                        apm --version
+                        apm marketplace add GuicedEE/ai-rules
+                        apm install guicedee-inject@guicedee-ai-rules
+                        """));
+        var skillLinks = new WaCluster<>();
+        skillLinks.setGap(PageSize.Small);
+        var skills = new WaButton<>(escapeAngular("Browse the AI skills marketplace"), Variant.Brand);
+        skills.setAsLink("https://github.com/GuicedEE/ai-rules", "_blank", null);
+        skillLinks.add(skills);
+        var apmGuide = new WaButton<>(escapeAngular("Install APM"), Variant.Neutral);
+        apmGuide.setAppearance(Appearance.Outlined);
+        apmGuide.setAsLink("https://microsoft.github.io/apm/getting-started/installation/", "_blank", null);
+        skillLinks.add(apmGuide);
+        content.add(skillLinks);
+
+        var section = buildSection("AI skills marketplace", "Build with your IDE. Guide your AI.",
+                "Reusable development skills, ready to install in your project.", true, content);
+        section.setID("ai-skills");
+        return section;
     }
 
     private WaStack<?> buildIntelliJPluginSection()
@@ -1113,7 +1151,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.4.0</version>
+                                    <version>2.4.1</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1134,7 +1172,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.4.0')
+                            implementation platform('com.guicedee:guicedee-bom:2.4.1')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -1513,28 +1551,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Open source with practical guardrails."));
 
         content.add(grid);
-
-        content.add(codeBlockWithTitle("Install APM — Windows (PowerShell)",
-                "irm https://aka.ms/apm-windows | iex"));
-        content.add(codeBlockWithTitle("Install APM — Linux and macOS",
-                "curl -sSL https://aka.ms/apm-unix | sh"));
-        content.add(bodyText("Open a new terminal after installing APM, then run these commands in your application project.", "m"));
-        content.add(codeBlockWithTitle("Install AI development skills with APM — all platforms",
-                """
-                        apm --version
-                        apm marketplace add GuicedEE/ai-rules
-                        apm install guicedee-inject@guicedee-ai-rules
-                        """));
-        var skillLinks = new WaCluster<>();
-        skillLinks.setGap(PageSize.Small);
-        var skills = new WaButton<>(escapeAngular("Browse the AI skills marketplace"), Variant.Brand);
-        skills.setAsLink("https://github.com/GuicedEE/ai-rules", "_blank", null);
-        skillLinks.add(skills);
-        var apmGuide = new WaButton<>(escapeAngular("Install APM"), Variant.Neutral);
-        apmGuide.setAppearance(Appearance.Outlined);
-        apmGuide.setAsLink("https://microsoft.github.io/apm/getting-started/installation/", "_blank", null);
-        skillLinks.add(apmGuide);
-        content.add(skillLinks);
 
         content.add(codeBlockWithTitle("Full JPMS module declaration",
                 """

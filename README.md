@@ -130,22 +130,30 @@ The public site is a **static Angular SPA served by nginx** — the `angular-mav
 
 **Deploying a new version**
 
-Deployment verified on 14 October 2026: revision `guicedee-website--v240-20261014`
+Deployment verified on 16 October 2026: revision `guicedee-website--v241-20261016`
+serves 100% of traffic from `docker.io/gedmarc/guicedee-website@sha256:5a59bea733666fa5472a9fe3b33c514cb8a2d4b6ec3fd849ce3f106f11dcf316`
+(tag `2.4.1-20261016`). All 94 HTML/JavaScript/CSS assets and six public routes
+match the local production build. The catalog, examples, application downloads and
+release notes target GuicedEE 2.4.1. The website backend was also upgraded to revision
+`website-backend--v241-20261016`; readiness, APIs, CORS and protected internal routes passed.
+
+Previous deployment, verified on 15 October 2026: revision `guicedee-website--v240-apm-20261015`
 serves 100% of traffic from image
-`docker.io/gedmarc/guicedee-website@sha256:8175c168eeaec132c6b427e6ea0275a947c28e8a463c05eee52d1e17cbdedcbb`
-(tag `2.4.0-20261014`). The homepage, `/releases`, `/modules` and main JavaScript
+`docker.io/gedmarc/guicedee-website@sha256:ac058aecc740e83bfe2969bdc83987ecdcb2bbc81ffa08dc9ad83f825652b8df`
+(tag `2.4.0-20261015-apm`). The homepage and main JavaScript
 bundle match the local production output. The deployment includes the IntelliJ
-plugin section and APM marketplace/installer instructions. The backend is unchanged.
+plugin section, APM marketplace/installer instructions directly below it and simplified three-layer
+architecture diagram. The backend is unchanged.
 
 1. Build and push the image (see `build-guicedee-website.ps1 -Push`, or `mvn install` then `docker build`/`docker push` from `target/webroot/guicedee-website`). Keep `<dockerImageName>` in `pom.xml` in step with the release.
-2. Point the container app at the new tag. Because revisions run in `Single` mode with `latestRevision: true`, the new revision automatically takes 100% of traffic — no manual traffic split:
+2. Point the container app at the immutable image digest. Because revisions run in `Single` mode with `latestRevision: true`, the new revision automatically takes 100% of traffic — no manual traffic split:
 
    ```powershell
    az containerapp update `
      --name guicedee-website `
      --resource-group DevSites `
-     --image docker.io/gedmarc/guicedee-website:2.4.0 `
-     --revision-suffix v240
+     --image docker.io/gedmarc/guicedee-website@sha256:5a59bea733666fa5472a9fe3b33c514cb8a2d4b6ec3fd849ce3f106f11dcf316 `
+     --revision-suffix v241-20261016
    ```
 
    Without the `containerapp` CLI extension, an ARM `PATCH` against `properties.template.containers[0].image` achieves the same result. If you hand-roll the payload, re-send the probes, resources, and scale rule as well — a `template` patch replaces the containers array. Note that the read API returns `scale.cooldownPeriod` and `scale.pollingInterval`, but api-version `2024-03-01` **rejects** those two on write; omit them and the existing values are retained.
@@ -156,7 +164,7 @@ plugin section and APM marketplace/installer instructions. The backend is unchan
 - CI harness uses GuicedEE/Workflows shared GitHub Actions templates with secrets such as `USERNAME`, `USER_TOKEN`, `SONA_USERNAME`, `SONA_PASSWORD`.
 
 ## 🧭 Development & Reference
-- Run `mvn -B -U clean verify` to build the website; `docs/architecture/` and `docs/PROMPT_REFERENCE.md` link all stage-gated artifacts.
+- Run `mvn -B -U verify` to build the website; `docs/architecture/` and `docs/PROMPT_REFERENCE.md` link all stage-gated artifacts.
 - Stage 1–3 docs (PACT/RULES/GLOSSARY/GUIDES/IMPLEMENTATION) are required before any Stage 4 scaffolding touches actual Angular or Java sources.
 - See `.env.example` for environment variables aligned with `rules/generative/platform/secrets-config/env-variables.md`.
 - Architecture diagrams (C4, sequences, ERD) live under `docs/architecture/`; Mermaid sources are served via Mermaid MCP (`https://mcp.mermaidchart.com/mcp`).
