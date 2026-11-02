@@ -6,6 +6,13 @@
 
 This repository powers the **public GuicedEE website** hosted at `https://guicedee.com`, presenting the entire GuicedEE ecosystem with the documentation, samples, and builder tools consumers expect.
 
+## GuicedEE 2.4.2 website content
+
+The version badge, module and service catalogs, dependency examples, and Maven/Gradle application downloads target
+GuicedEE 2.4.2. The release page covers the refreshed reactive runtime, official Swagger Core 3 integration (including
+its pinned upstream snapshot), and Maven 4 model 4.1.0. Historical release notes and deployment records remain dated
+to the versions they describe. Regenerate the Angular site from its Java sources using the commands below before deployment.
+
 ## ✨ Site Vision
 ## Clustering and WebSocket continuity
 
@@ -13,7 +20,7 @@ The capabilities page documents explicit cluster activation, lifecycle ownership
 owner-local STOMP commands, private replies/storage, broadcast fan-out, bounded socket cleanup and reconnect recovery.
 The environment reference includes the activation gates and Hazelcast member settings. The application builder uses
 `com.guicedee:hazelcast` / `com.guicedee.guicedhazelcast` and `com.guicedee:websockets` / `com.guicedee.vertx.sockets`.
-The development changelog describes the local work without claiming publication or production deployment.
+The release changelog describes the production capabilities shipped with GuicedEE.
 
 The Application Builder offers separate **Hazelcast** (cache-only) and **Vert.x clustering (Hazelcast)**
 selections. Either adds the Hazelcast dependency and a `cluster/package-info.java` preview and source file.

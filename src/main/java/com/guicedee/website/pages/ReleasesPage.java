@@ -41,6 +41,23 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var v242Content = new WaStack<>();
+        v242Content.setGap(PageSize.Medium);
+        v242Content.add(featureCard("Updated reactive runtime",
+                "Vert.x 5.2.2, Mutiny 3.3.1, Jackson 3.2.4, Hibernate ORM 7.4.14.Final and Hibernate Reactive 4.5.12.Final are managed together by the GuicedEE BOM.", "Dependency refresh"));
+        v242Content.add(featureCard("Official Swagger Core 3 integration",
+                "OpenAPI generation now uses the official io.swagger.core.v3 artifacts with Jackson 3 and Jakarta REST 4. " +
+                        "The runtime remains available through com.guicedee.modules.services:swagger. " +
+                        "Swagger Core is pinned to upstream snapshot 3.0.0-20261023.100341-12.", "OpenAPI"));
+        v242Content.add(featureCard("Maven 4 project model",
+                "Project POMs use model 4.1.0 and its matching XML schema. Build with Maven 4.0.0-rc-7 or newer and JDK 25; " +
+                        "the published consumer POMs remain available for dependency resolution.", "Build baseline"));
+        v242Content.add(featureCard("Published together",
+                "All 117 BOMs, parents, runtime modules and JPMS service wrappers are available on Maven Central as 2.4.2. " +
+                        "Import com.guicedee:guicedee-bom:2.4.2 to align your application dependencies.", "Maven Central"));
+        layout.add(buildSection("v2.4.2", "Reactive runtime refresh & official Swagger Core 3",
+                "26 October 2026 — coordinated runtime dependencies, official Swagger integration and the Maven 4 project model.", true, v242Content));
+
         var jacksonPatchContent = new WaStack<>();
         jacksonPatchContent.setGap(PageSize.Medium);
         jacksonPatchContent.add(featureCard("Cloud startup without Jackson 2",
@@ -101,19 +118,19 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.4.1", "Maintenance release"));
+        currentGrid.add(featureCard("Version", "2.4.2", "Production release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
-        currentGrid.add(featureCard("Vert.x", "5.2.1", "SmallRye bindings 4.0.2"));
-        currentGrid.add(featureCard("Jackson", "3.2.3", "Managed application runtime"));
-        currentGrid.add(featureCard("Hibernate ORM", "7.4.13.Final", "Reactive 4.5.10.Final + Models 1.3.4"));
+        currentGrid.add(featureCard("Vert.x", "5.2.2", "Mutiny 3.3.1"));
+        currentGrid.add(featureCard("Jackson", "3.2.4", "Managed application runtime"));
+        currentGrid.add(featureCard("Hibernate ORM", "7.4.14.Final", "Reactive 4.5.12.Final + Models 1.3.4"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
         currentGrid.add(featureCard("ClassGraph", "6.0.0", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current release", "v2.4.1",
-                "Jackson 3 cloud logging, Hazelcast packaging and console output fixes on the Java 25 platform.",
+        layout.add(buildSection("Current release", "v2.4.2",
+                "Updated reactive dependencies, official Swagger Core 3 integration and Maven 4 on the Java 25 platform.",
                 true, currentContent));
 
         // v2.3.0 release

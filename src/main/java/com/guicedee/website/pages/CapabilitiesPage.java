@@ -616,7 +616,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
                 """
-                        <!-- Import com.guicedee:guicedee-bom:2.4.1 in dependencyManagement -->
+                        <!-- Import com.guicedee:guicedee-bom:2.4.2 in dependencyManagement -->
                         <dependency>
                             <groupId>com.guicedee.modules.services</groupId>
                             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -651,7 +651,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         module my.keycloak.provider {
                             requires static org.keycloak.api;
                         }"""));
-        content.add(bodyText("keycloak-api 2.4.1 is built from Keycloak 26.8.1 and is a compile-only boundary. " +
+        content.add(bodyText("keycloak-api 2.4.2 is built from Keycloak 26.8.1 and is a compile-only boundary. " +
                 "Do not copy the GuicedEE bundle into a Keycloak server; deploy only your provider JAR and let the server supply " +
                 "its own Keycloak runtime classes.", "m"));
 
@@ -953,8 +953,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                 "Raw and STOMP sockets clean up on close, end and errors; physical transport closure bounds peers that stop reading.", "m"));
         content.add(bodyText("Validate single-instance regression and separate-JVM command ownership, fan-out, private channels, " +
                 "ticket races, owner loss, quorum recovery, and actual slow TCP peers. Regenerate Java-authored Angular and exercise " +
-                "two isolated browser contexts. Repeat against the packaged application and compare the exact tested framework JARs. " +
-                "Local acceptance does not establish behavior on an untested production network.", "m"));
+                "two isolated browser contexts. Repeat against the packaged application and compare the exact tested framework JARs.", "m"));
         return buildSection("Clustering & WebSocket Continuity", "Scale with explicit ownership",
                 "GuicedEE Hazelcast lifecycle, JWebMP STOMP routing, bounded sockets and reconnect recovery.", true, content);
     }
