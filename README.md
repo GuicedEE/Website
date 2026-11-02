@@ -6,6 +6,15 @@
 
 This repository powers the **public GuicedEE website** hosted at `https://guicedee.com`, presenting the entire GuicedEE ecosystem with the documentation, samples, and builder tools consumers expect.
 
+## GuicedEE 2.5.0 website deployment
+
+Revision `guicedee-website--v250-20261102` is healthy and serves 100% of traffic.
+The image is `docker.io/gedmarc/guicedee-website@sha256:0f2aa357fd405c2ba514740686577260c59329b2dc49ec033c320aa585a6f3fe`.
+All 94 public HTML/JavaScript/CSS assets match the local production build, and
+six SPA routes return the matching index. Release notes, current catalog versions
+and application examples target 2.5.0. The separate backend was not redeployed.
+Evidence: `target/release-2.5.0-website-public-verification.json` in DevSuite.
+
 ## GuicedEE 2.4.2 website content
 
 The version badge, module and service catalogs, dependency examples, and Maven/Gradle application downloads target

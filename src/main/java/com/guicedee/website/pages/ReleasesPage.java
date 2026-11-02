@@ -41,6 +41,18 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var v250Content = new WaStack<>();
+        v250Content.setGap(PageSize.Medium);
+        v250Content.add(featureCard("GuicedEE 2.5.0 on Maven Central",
+                "All 117 BOMs, parents, runtime modules and JPMS service wrappers are published. " +
+                        "Import com.guicedee:guicedee-bom:2.5.0 to align application dependencies.", "Production release"));
+        v250Content.add(featureCard("Official Swagger Core 3 release",
+                "OpenAPI integration uses Swagger Core 3.0.0 with Jackson 3 and Jakarta REST 4.", "OpenAPI"));
+        v250Content.add(featureCard("Verified release artifacts",
+                "All 423 published POM/JAR files were downloaded from Maven Central and verified against the release hashes.", "Release verification"));
+        layout.add(buildSection("v2.5.0", "Coordinated platform release",
+                "November 2026 — Java 25 and Maven 4 with updated application examples.", true, v250Content));
+
         var v242Content = new WaStack<>();
         v242Content.setGap(PageSize.Medium);
         v242Content.add(featureCard("Updated reactive runtime",
@@ -118,7 +130,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.4.2", "Production release"));
+        currentGrid.add(featureCard("Version", "2.5.0", "Production release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
         currentGrid.add(featureCard("Vert.x", "5.2.2", "Mutiny 3.3.1"));
@@ -129,7 +141,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         currentGrid.add(featureCard("ClassGraph", "6.0.0", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current release", "v2.4.2",
+        layout.add(buildSection("Current release", "v2.5.0",
                 "Updated reactive dependencies, official Swagger Core 3 integration and Maven 4 on the Java 25 platform.",
                 true, currentContent));
 
