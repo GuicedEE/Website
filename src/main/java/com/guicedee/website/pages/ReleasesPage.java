@@ -41,6 +41,17 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var v251Content = new WaStack<>();
+        v251Content.setGap(PageSize.Medium);
+        v251Content.add(featureCard("GuicedEE 2.5.1 on Maven Central",
+                "117 components published with 423 POM/JAR files verified against the signed release manifest. Import com.guicedee:guicedee-bom:2.5.1.", "Production release"));
+        v251Content.add(featureCard("Dependency refresh",
+                "Vert.x 5.2.3, Jackson 3.3.0, Hibernate ORM 7.4.15.Final, Hibernate Reactive 4.5.14.Final and ClassGraph 6.0.2.", "Reactive runtime"));
+        v251Content.add(featureCard("Build and compatibility checks",
+                "Updated third-party build plugins, verified Hibernate enhancement and passing client and persistence checks. Official Apache Maven plugin versions remain pinned.", "Maintenance release"));
+        layout.add(buildSection("v2.5.1", "Dependency maintenance release",
+                "8 November 2026 — refreshed runtime dependencies and verified Maven Central artifacts.", true, v251Content));
+
         var v250Content = new WaStack<>();
         v250Content.setGap(PageSize.Medium);
         v250Content.add(featureCard("GuicedEE 2.5.0 on Maven Central",
@@ -51,7 +62,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         v250Content.add(featureCard("Verified release artifacts",
                 "All 423 published POM/JAR files were downloaded from Maven Central and verified against the release hashes.", "Release verification"));
         layout.add(buildSection("v2.5.0", "Coordinated platform release",
-                "November 2026 — Java 25 and Maven 4 with updated application examples.", true, v250Content));
+                "November 2026 — Java 25 and Maven 4 with updated application examples.", false, v250Content));
 
         var v242Content = new WaStack<>();
         v242Content.setGap(PageSize.Medium);
@@ -130,18 +141,18 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.5.0", "Production release"));
+        currentGrid.add(featureCard("Version", "2.5.1", "Production release"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
-        currentGrid.add(featureCard("Vert.x", "5.2.2", "Mutiny 3.3.1"));
-        currentGrid.add(featureCard("Jackson", "3.2.4", "Managed application runtime"));
-        currentGrid.add(featureCard("Hibernate ORM", "7.4.14.Final", "Reactive 4.5.12.Final + Models 1.3.4"));
+        currentGrid.add(featureCard("Vert.x", "5.2.3", "Mutiny 3.3.1"));
+        currentGrid.add(featureCard("Jackson", "3.3.0", "Managed application runtime"));
+        currentGrid.add(featureCard("Hibernate ORM", "7.4.15.Final", "Reactive 4.5.14.Final + Models 1.3.4"));
         currentGrid.add(featureCard("GraphQL Java", "26.1", "Java DataLoader 6.0.0"));
         currentGrid.add(featureCard("Guice", "7.x", "Latest DI framework"));
-        currentGrid.add(featureCard("ClassGraph", "6.0.0", "Java 25+ scanner"));
+        currentGrid.add(featureCard("ClassGraph", "6.0.2", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current release", "v2.5.0",
+        layout.add(buildSection("Current release", "v2.5.1",
                 "Updated reactive dependencies, official Swagger Core 3 integration and Maven 4 on the Java 25 platform.",
                 true, currentContent));
 

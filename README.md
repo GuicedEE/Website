@@ -162,10 +162,13 @@ plugin section, APM marketplace/installer instructions directly below it and sim
 architecture diagram. The backend is unchanged.
 
 1. Build and push the image (see `build-guicedee-website.ps1 -Push`, or `mvn install` then `docker build`/`docker push` from `target/webroot/guicedee-website`). Keep `<dockerImageName>` in `pom.xml` in step with the release.
+Use subscription `aee3c089-49a8-472c-8d40-5bf568a1ff55` (Pay-As-You-Go), tenant `58d3b009-4fc6-44c1-bc98-197165d3fd04`, explicitly. Do not rely on the Azure CLI default subscription.
+
 2. Point the container app at the immutable image digest. Because revisions run in `Single` mode with `latestRevision: true`, the new revision automatically takes 100% of traffic — no manual traffic split:
 
    ```powershell
    az containerapp update `
+     --subscription aee3c089-49a8-472c-8d40-5bf568a1ff55 `
      --name guicedee-website `
      --resource-group DevSites `
      --image docker.io/gedmarc/guicedee-website@sha256:5a59bea733666fa5472a9fe3b33c514cb8a2d4b6ec3fd849ce3f106f11dcf316 `
