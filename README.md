@@ -199,3 +199,7 @@ Use subscription `aee3c089-49a8-472c-8d40-5bf568a1ff55` (Pay-As-You-Go), tenant 
 
 ## 📝 License
 - Apache 2.0 — see `LICENSE`.
+
+## Upcoming 2.6.0 content
+
+The Releases and Capabilities pages preview the modular Firebase/Commercetools SDKs, external modular dependencies, Jackson 3 policy for Commercetools, SDK Javadocs and full application jlink validation. See the [release notes](../RELEASE-2.6.0.md). The preview does not change the published 2.5.1 examples or announce deployment.

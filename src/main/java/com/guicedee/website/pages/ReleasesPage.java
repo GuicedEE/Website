@@ -41,6 +41,19 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
+        var v260Content = new WaStack<>();
+        v260Content.setGap(PageSize.Medium);
+        v260Content.add(featureCard("Modular Firebase and Commercetools SDKs",
+                "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "Upcoming 2.6.0"));
+        v260Content.add(featureCard("Shared modular dependencies",
+                "Commercetools now uses external Netty, Bouncy Castle, Javassist, Zstd, logging and other modular libraries. Its resolved graph uses Jackson 3 core/databind only, with shared Jackson annotations. New Zstd and Okio wrappers complete the linkable graph.", "JPMS"));
+        v260Content.add(featureCard("SDK API documentation",
+                "Firebase Admin and Commercetools SDK Javadocs build against the current shaded binaries, clear stale generated sources and fail on documentation errors. Commercetools includes GraphQL, HTTP and RMF APIs.", "Javadoc"));
+        v260Content.add(featureCard("Complete application jlink images",
+                "Oracle JDK builds link the application and its dependency graph with generated module launchers. SPI and scanner fixture checks pass after extraction. Historical JDK-only jlink measurements are excluded from application comparisons; fresh release measurements are still required.", "Packaging validation"));
+        layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
+                "Upcoming — prepared changes, not yet a published release. Current published examples remain on 2.5.1.", true, v260Content));
+
         var v251Content = new WaStack<>();
         v251Content.setGap(PageSize.Medium);
         v251Content.add(featureCard("GuicedEE 2.5.1 on Maven Central",

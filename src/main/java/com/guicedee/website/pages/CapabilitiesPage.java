@@ -59,6 +59,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildLoggingCapability());
         layout.add(buildConfigCapability());
         layout.add(buildFaultToleranceCapability());
+        layout.add(buildModularSdkPreview());
         layout.add(buildJLinkCapability());
         layout.add(buildModuleCatalogSection());
     }
@@ -1280,6 +1281,23 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         return buildSection("Fault Tolerance", "Production resilience, zero effort",
                 "com.guicedee:fault-tolerance — MicroProfile Fault Tolerance via Guice AOP.", true, content);
+    }
+
+    private WaStack<?> buildModularSdkPreview()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(featureCard("Firebase Admin",
+                "com.guicedee.modules.services:firebase-admin exposes firebase.admin and groups the Google SDK dependency closure for Auth, Messaging and Firestore. Firebase can be used independently of Commercetools.", "Upcoming 2.6.0"));
+        content.add(featureCard("Commercetools API and GraphQL client",
+                "com.guicedee.modules.services:commercetools exposes commercetools.sdk.java.api, including GraphQL request/response models, RMF and HTTP integration. This supplies the commerce SDK client, not a GraphQL server.", "Upcoming 2.6.0"));
+        content.add(featureCard("Shared dependencies and Jackson 3",
+                "Commercetools uses external modular Netty, SLF4J, Bouncy Castle, Javassist, Commons, Failsafe, Java Money and Reactive Streams. Jackson 3 core/databind and shared annotations are external; its resolved graph contains no Jackson 2 core/databind. Firebase's private dependency closure is separate.", "Modular libraries"));
+        content.add(featureCard("Zstd and Okio wrappers",
+                "The zstd-jni artifact preserves com.github.luben.zstd_jni and native resources while correcting its descriptor. The okio artifact supplies the explicit okio module needed by Moneta, OkHttp and Kotlin. Both use the com.guicedee.modules.services group.", "Linkable dependency graph"));
+        content.add(bodyText("Use the GuicedEE BOM to align wrapper versions; Versioner and StandaloneBOM manage upstream versions. These additions are prepared for 2.6.0 and have passed local application-linking checks. Publication is pending.", "m"));
+        return buildSection("Modular SDKs", "Firebase and commerce integrations",
+                "Upcoming in 2.6.0: grouped vendor SDKs with shared modular support libraries and SDK-scoped API documentation.", true, content);
     }
 
     private WaStack<?> buildJLinkCapability()
