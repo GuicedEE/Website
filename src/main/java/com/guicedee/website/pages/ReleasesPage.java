@@ -20,6 +20,15 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         buildReleasesPage();
     }
 
+    private WaGrid<?> releaseHighlights()
+    {
+        var highlights = new WaGrid<>();
+        highlights.setMinColumnSize("18rem");
+        highlights.setGap(PageSize.Medium);
+        highlights.addClass("release-highlights");
+        return highlights;
+    }
+
     private void buildReleasesPage()
     {
 
@@ -41,10 +50,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
-        var v260Content = new WaGrid<>();
-        v260Content.setMinColumnSize("18rem");
-        v260Content.setGap(PageSize.Medium);
-        v260Content.addClass("release-highlights");
+        var v260Content = releaseHighlights();
         v260Content.add(featureCard("Modular Firebase and Commercetools SDKs",
                 "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "2.6.0"));
         v260Content.add(featureCard("Shared modular dependencies",
@@ -58,8 +64,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
                 "Release target 2.6.0. Maven Central publication is pending.", true, v260Content));
 
-        var v251Content = new WaStack<>();
-        v251Content.setGap(PageSize.Medium);
+        var v251Content = releaseHighlights();
         v251Content.add(featureCard("GuicedEE 2.5.1 on Maven Central",
                 "117 components published with 423 POM/JAR files verified against the signed release manifest. Import com.guicedee:guicedee-bom:2.5.1.", "Production release"));
         v251Content.add(featureCard("Dependency refresh",
@@ -69,8 +74,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.5.1", "Dependency maintenance release",
                 "8 November 2026 — refreshed runtime dependencies and verified Maven Central artifacts.", true, v251Content));
 
-        var v250Content = new WaStack<>();
-        v250Content.setGap(PageSize.Medium);
+        var v250Content = releaseHighlights();
         v250Content.add(featureCard("GuicedEE 2.5.0 on Maven Central",
                 "All 117 BOMs, parents, runtime modules and JPMS service wrappers are published. " +
                         "Import com.guicedee:guicedee-bom:2.5.0 to align application dependencies.", "Production release"));
@@ -81,8 +85,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.5.0", "Coordinated platform release",
                 "November 2026 — Java 25 and Maven 4 with updated application examples.", false, v250Content));
 
-        var v242Content = new WaStack<>();
-        v242Content.setGap(PageSize.Medium);
+        var v242Content = releaseHighlights();
         v242Content.add(featureCard("Updated reactive runtime",
                 "Vert.x 5.2.2, Mutiny 3.3.1, Jackson 3.2.4, Hibernate ORM 7.4.14.Final and Hibernate Reactive 4.5.12.Final are managed together by the GuicedEE BOM.", "Dependency refresh"));
         v242Content.add(featureCard("Official Swagger Core 3 integration",
@@ -98,8 +101,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.4.2", "Reactive runtime refresh & official Swagger Core 3",
                 "26 October 2026 — coordinated runtime dependencies, official Swagger integration and the Maven 4 project model.", true, v242Content));
 
-        var jacksonPatchContent = new WaStack<>();
-        jacksonPatchContent.setGap(PageSize.Medium);
+        var jacksonPatchContent = releaseHighlights();
         jacksonPatchContent.add(featureCard("Cloud startup without Jackson 2",
                 "CLOUD=true and explicit JSON console logging use Log4j JSON Template Layout. This removes the missing FilterProvider startup failure without adding Jackson 2.", "Startup fix"));
         jacksonPatchContent.add(featureCard("Hazelcast uses managed Jackson 3",
@@ -111,8 +113,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(buildSection("v2.4.1", "Cloud logging & Hazelcast JSON fixes",
                 "16 October 2026 - maintenance release for Jackson 3 applications and cloud startup.", true, jacksonPatchContent));
 
-        var refreshContent = new WaStack<>();
-        refreshContent.setGap(PageSize.Medium);
+        var refreshContent = releaseHighlights();
         refreshContent.add(featureCard("Reviewed major updates",
                 "Spring 7.0.9 follows the Apache CXF 4.2.4 dependency baseline. FastDoubleParser 2.0.1 adds configurable number parsing while retaining the existing parser classes.", "Compatibility reviewed"));
         refreshContent.add(featureCard("Stable dependency refresh",
@@ -122,23 +123,26 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
 
         var classGraphContent = new WaStack<>();
         classGraphContent.setGap(PageSize.Medium);
-        classGraphContent.add(featureCard("ClassGraph 6.0.0",
+        var classGraphCards = releaseHighlights();
+        classGraphCards.add(featureCard("ClassGraph 6.0.0",
                 "The BOM now targets the Java 25+ scanner. Classpath and module sources are enabled explicitly, " +
                         "and hierarchy queries use the new getAll and getDirect APIs.", "Dependency upgrade"));
-        classGraphContent.add(featureCard("Application-owned class loading",
+        classGraphCards.add(featureCard("Application-owned class loading",
                 "GuicedEE and JWebMP load discovered classes without initialization through application-owned classloaders. " +
                         "Package configuration continues to read directly declared annotations.", "Migration"));
-        classGraphContent.add(featureCard("Consumer migration",
+        classGraphCards.add(featureCard("Consumer migration",
                 "ClassGraph 6 changes the public metadata API and splits scanning, classpath discovery and the virtual filesystem " +
                         "into separate modules. Rebuild dependent libraries together and follow the upstream porting guide.", "Java 25+"));
+        classGraphContent.add(classGraphCards);
         var portingGuide = new com.jwebmp.webawesome.components.button.WaButton<>("ClassGraph 4.x to 6.x porting guide");
         portingGuide.setAsLink("https://github.com/classgraph/classgraph/wiki/Porting-ClassGraph-4.x-code-to-ClassGraph-6.x", "_blank", null);
         classGraphContent.add(portingGuide);
-        layout.add(buildSection("v2.4.0", "ClassGraph 6 migration",
-                "14 October 2026 — ClassGraph 6.0.0 and coordinated Java 25 consumer migration.", false, classGraphContent));
+        var classGraphSection = buildSection("v2.4.0", "ClassGraph 6 migration",
+                "14 October 2026 — ClassGraph 6.0.0 and coordinated Java 25 consumer migration.", false, classGraphContent);
+        classGraphSection.setID("v2-4-0-classgraph");
+        layout.add(classGraphSection);
 
-        var continuityContent = new WaStack<>();
-        continuityContent.setGap(PageSize.Medium);
+        var continuityContent = releaseHighlights();
         continuityContent.add(featureCard("Explicit clustering and lifecycle",
                 "Intentional activation, prepared member configuration, shared Vert.x options, owned JCache and ordered shutdown with failed-startup rollback.", null));
         continuityContent.add(featureCard("WebSocket continuity",
@@ -148,8 +152,10 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         continuityContent.add(featureCard("Application Builder",
                 "Cache-only and Vert.x clustering choices now generate package configuration and node environment examples in Maven and Gradle ZIPs. " +
                         "Website and IntelliJ entry points use GuiceApplication.run to await startup and handle failure.", "2.4.0"));
-        layout.add(buildSection("v2.4.0", "Clustering & WebSocket continuity",
-                "Explicit cluster configuration, WebSocket recovery and synchronized application scaffolding.", false, continuityContent));
+        var continuitySection = buildSection("v2.4.0", "Clustering & WebSocket continuity",
+                "Explicit cluster configuration, WebSocket recovery and synchronized application scaffolding.", false, continuityContent);
+        continuitySection.setID("v2-4-0-clustering");
+        layout.add(continuitySection);
 
         // Current release
         var currentContent = new WaStack<>();
