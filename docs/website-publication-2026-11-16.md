@@ -166,8 +166,8 @@ The shared desktop/mobile tree allows one open page and one open capability
 group. Direct links, search results, reload and browser history reveal the
 matching group, including on the Web Awesome kit's initial component upgrade.
 
-Revision `guicedee-website--v260-20261116-0b7e65e` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-0b7e65e`.
+Revision `guicedee-website--v260-20261116-0b7e65e` was verified healthy, ready and
+serving 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-0b7e65e`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:fae402d16d31a6e523615e9b070442b370c1e26cef7cf508363124afc3c0968a`.
 
@@ -178,3 +178,27 @@ direct links, search, reload/back, filters and legacy URLs. Desktop, tablet and
 mobile drawer checks passed at 1440, 1024 and 390 pixels. All 298 public assets
 match the production build. Evidence and screenshots are retained under
 `target/website-nested-navigation/` in DevSuite.
+
+## Explore the platform submenu
+
+Source `78978748a08d7eef799af74d75d7de7c2788548b` nests Home's platform exploration
+links beneath Explore the platform. Overview preserves the existing section
+destination; 13 further links cover AI skills, foundations, modular design,
+the module catalog, configuration, code examples, REST services, security,
+Vert.x deployment, MicroProfile, JLink deployment, cloud-aware logging and
+developer resources. Selecting a section opens the disclosure, scrolls below
+the fixed header and focuses the destination. The same tree is used in the
+desktop menu and mobile drawer, with the existing exclusive expansion rules.
+
+Revision `guicedee-website--v260-20261116-7897874` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-7897874`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:03db02c34149d6e674f52e38127dc4cb6cfa362611f4fe6dab61818c7c1551c3`.
+
+The production build and search regression checks passed. Local and public
+Chromium checks covered all 135 section links across ten pages, every Explore
+destination, direct/repeat links, disclosure reopening, search, refresh/back,
+exclusive expansion, filters, legacy URLs and mobile drawer navigation at
+1440, 1024 and 390 pixels. All 298 public assets match the production build.
+Evidence and screenshots are retained under `target/website-explore-navigation/`
+in DevSuite.

@@ -27,8 +27,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `0b7e65e6740419b6ee1617f3da9e7660ee0a6756` is now live in revision
-`guicedee-website--v260-20261116-0b7e65e`, with benchmark snapshot `f5770f2`.
+Website source `78978748a08d7eef799af74d75d7de7c2788548b` is now live in revision
+`guicedee-website--v260-20261116-7897874`, with benchmark snapshot `f5770f2`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
@@ -38,6 +38,8 @@ site are nested under their page in both menus, with one expanded branch and no
 right sidebar. Navigation automatically opens the destination page's branch.
 Releases includes version links, and Capabilities adds five exclusive nested
 groups that follow section links, search results and browser history.
+Home's Explore the platform branch also links to its 13 sections and overview,
+automatically opening the disclosure and revealing the requested section.
 See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 
