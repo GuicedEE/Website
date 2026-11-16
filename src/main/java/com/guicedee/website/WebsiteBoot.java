@@ -602,6 +602,17 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
         page.getMain().add(new RouterOutlet<>());
         add(page);
+        var backToTop = new WaButton<>("", Variant.Brand);
+        backToTop.addClass("back-to-top");
+        backToTop.addAttribute("aria-label", "Back to top");
+        backToTop.addAttribute("title", "Back to top");
+        backToTop.addAttribute("[hidden]", "!showBackToTop");
+        backToTop.addAttribute("(window:scroll)", "updateBackToTop()");
+        backToTop.addAttribute("(click)", "scrollBackToTop()");
+        var upIcon = new WaIcon<>("arrow-up");
+        upIcon.addAttribute("aria-hidden", "true");
+        backToTop.add(upIcon);
+        add(backToTop);
         // Recognize old named-outlet URLs without reserving a sidebar or rendering content.
         var legacyAside = new DivSimple<>();
         legacyAside.addAttribute("hidden", "");
@@ -713,6 +724,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         f.add("private _asideNavigating = false;");
         f.add(SiteNavigation.fields());
         f.add("private document = inject(DOCUMENT);");
+        f.add("showBackToTop = false;");
         return f;
     }
 
@@ -722,6 +734,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         m.add(SiteSearch.methods());
         m.add(SiteNavigation.methods());
         m.add(SiteDiscovery.metadataMethod());
+        m.add("""
+                updateBackToTop() { this.showBackToTop = window.scrollY > 400; }
+                scrollBackToTop() {
+                    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+                }
+                """);
         m.add("""
                 onBuildToolChange(event: any) {
                     const value = event.target.checked;

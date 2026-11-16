@@ -127,11 +127,15 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
+        var diagrams = new WaGrid<>();
+        diagrams.addClass("architecture-comparison");
+        diagrams.setGap(PageSize.Large);
         var diagram = new WaStack<>();
         diagram.setTag("figure");
         diagram.addAttribute("aria-label", "Application architecture: your code, selected modules, and the GuicedEE foundation");
         diagram.setGap(PageSize.Small);
         diagram.addStyle("width:100%;max-width:48rem;margin:0 auto;box-sizing:border-box");
+        diagram.add(headingText("h3", "m", "JVM application"));
 
         diagram.add(architectureLayer("Your application", "Business logic, services and endpoints", false));
         diagram.add(architectureConnector());
@@ -152,7 +156,26 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         caption.setWaColorText("quiet");
         caption.addStyle("text-align:center;padding-top:var(--wa-spacing-small)");
         diagram.add(caption);
-        content.add(diagram);
+        diagrams.add(diagram);
+
+        var wasm = new WaStack<>();
+        wasm.setTag("figure");
+        wasm.setGap(PageSize.Small);
+        wasm.addAttribute("aria-label", "Experimental WebAssembly architecture: application logic, Guice and WASI host");
+        wasm.addStyle("width:100%;margin:0;box-sizing:border-box");
+        wasm.add(headingText("h3", "m", "WebAssembly · experimental"));
+        wasm.add(architectureLayer("Java application logic", "Portable application workloads · typed clients and rendering are planned", false));
+        wasm.add(architectureConnector());
+        wasm.add(architectureLayer("Guice injection", "Providers, singletons and custom scopes verified in a standalone WASI probe", false));
+        wasm.add(architectureConnector());
+        wasm.add(architectureLayer("WASI host", "A separate HTTP probe verifies outbound requests; integrated runtime is still in research", true));
+        var wasmCaption = bodyText("Independent probes · integration and browser support not yet qualified", "s");
+        wasmCaption.setTag("figcaption");
+        wasmCaption.setWaColorText("quiet");
+        wasmCaption.addStyle("text-align:center;padding-top:var(--wa-spacing-small)");
+        wasm.add(wasmCaption);
+        diagrams.add(wasm);
+        content.add(diagrams);
 
         return buildSection("Architecture", "Layered, composable, modular",
                 "Compose your application from JPMS modules. Add only what you need.", false, content);
@@ -193,13 +216,19 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
         grid.setGap(PageSize.Small);
-        grid.add(featureCard("ClassGraph scanning", "Discovers annotated classes, SPI providers, and modules at startup. Fast and deterministic.", null));
+        grid.add(featureCard("ClassGraph discovery", "Scans application classes and annotations at startup to discover components and modules.", "JVM scanner mode"));
+        grid.add(featureCard("SPI discovery", "Registers application discovery providers through JPMS or META-INF/services without a ClassGraph scan. Native-image uses SPI discovery.", "JVM and native-image"));
         grid.add(featureCard("Guice injector", "Full Google Guice 7 injector with AOP, multibindings, and assisted inject support.", null));
         grid.add(featureCard("SPI lifecycle", "IGuiceConfigurator → IGuicePreStartup → IGuiceModule → IGuicePostStartup → IGuicePreDestroy.", null));
         grid.add(featureCard("@CallScope", "Request-scoped injection for REST requests, WebSocket connections, and event bus messages.", null));
         grid.add(featureCard("@InjectLogger", "Named Log4j2 logger injection — no static fields, no boilerplate.", null));
         grid.add(featureCard("@Verticle", "Scope components to dedicated Vert.x verticles for isolated execution.", null));
         content.add(grid);
+        var discoveryBenchmarks = new WaButton<>("Compare discovery benchmarks", Variant.Brand);
+        discoveryBenchmarks.setAppearance(Appearance.Outlined);
+        discoveryBenchmarks.setAsLink("https://github.com/GuicedEE/benchmarks/blob/master/RESULTS.md#jvm-discovery-boundaries", "_blank", null);
+        discoveryBenchmarks.addAttribute("rel", "noopener noreferrer");
+        content.add(discoveryBenchmarks);
 
         content.add(codeBlockWithTitle("Example: Custom lifecycle hook",
                 """
@@ -221,7 +250,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         }"""));
 
         return buildSection("Injection & Lifecycle", "The foundation of everything",
-                "com.guicedee:inject — ClassGraph scanning, Guice DI, and deterministic lifecycle hooks.",
+                "com.guicedee:inject — ClassGraph or SPI discovery, Guice DI, and deterministic lifecycle hooks.",
                 true, content);
     }
 

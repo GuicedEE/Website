@@ -727,16 +727,22 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
+        var layout = new WaGrid<>();
+        layout.addClass("home-plugin-layout");
+        layout.setGap(PageSize.Large);
+        var pluginCopy = new WaStack<>();
+        pluginCopy.setGap(PageSize.Medium);
         var description = bodyTextHtml("Create a GuicedEE application right inside IntelliJ IDEA. " +
                 "Choose your modules and let the project wizard generate your " + brandCode("pom.xml") + ", " +
                 brandCode("module-info.java") + " and application bootstrap.", "m");
         description.setWaColorText("quiet");
-        content.add(description);
+        pluginCopy.add(description);
 
         var widgetWrapper = new DivSimple<>();
         widgetWrapper.setID("jetbrains-plugin-widget");
-        widgetWrapper.addStyle("display:flex;justify-content:center");
-        content.add(widgetWrapper);
+        widgetWrapper.setTag("aside");
+        widgetWrapper.addClass("home-plugin-widget");
+        widgetWrapper.addAttribute("aria-label", "IntelliJ Marketplace plugin");
 
         var actions = new WaCluster<>();
         actions.setGap(PageSize.Small);
@@ -744,7 +750,10 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         marketplace.setAsLink("https://plugins.jetbrains.com/plugin/31112-guiced", "_blank", null);
         actions.add(marketplace);
         actions.add(buildCta("Plugin setup guide", "/getting-started", Variant.Neutral, Appearance.Outlined));
-        content.add(actions);
+        pluginCopy.add(actions);
+        layout.add(pluginCopy);
+        layout.add(widgetWrapper);
+        content.add(layout);
 
         var section = buildSection("IntelliJ Plugin", "Start your next project in IntelliJ IDEA",
                 "From idea to a modular application, with the Guiced project wizard.", true, content);

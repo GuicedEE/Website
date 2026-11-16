@@ -251,6 +251,23 @@
 /* #endregion */
 
 
+/* Midnight palette for Java examples rendered by ngx-markdown / Prism. */
+.wa-dark .code-block pre.language-java,
+.wa-dark .code-block pre.language-java > code.language-java { background: #101827 !important; color: #e4eaf4; }
+.wa-dark code.language-java .token.comment { color: #a7b8cc; font-style: italic; }
+.wa-dark code.language-java .token.keyword { color: #d6a5ff; }
+.wa-dark code.language-java .token.string,
+.wa-dark code.language-java .token.char { color: #a9d993; }
+.wa-dark code.language-java .token.class-name,
+.wa-dark code.language-java .token.namespace { color: #8cd8e8; }
+.wa-dark code.language-java .token.function { color: #f6d58a; }
+.wa-dark code.language-java .token.number,
+.wa-dark code.language-java .token.boolean { color: #f7b08a; }
+.wa-dark code.language-java .token.punctuation,
+.wa-dark code.language-java .token.operator { color: #d0d9e8; }
+.wa-dark code.language-java .token.annotation,
+.wa-dark code.language-java .token.annotation .token.punctuation { color: #ffb4d4; }
+
 /* aside snippet code styles */
 .aside-snippet-code {
     background: transparent;

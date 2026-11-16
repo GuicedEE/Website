@@ -218,6 +218,16 @@ wa-icon.icon-shrink {
 }
 
 /* Compact, manually navigated homepage performance stories. */
+.architecture-comparison { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1000px) { .architecture-comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.home-plugin-layout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; }
+.home-plugin-widget { min-width: 0; display: flex; justify-content: center; }
+@media (min-width: 900px) {
+    .home-plugin-layout { grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); }
+}
+.back-to-top { position: fixed; right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 90; }
+.back-to-top[hidden] { display: none; }
+.back-to-top::part(base) { width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 50%; box-shadow: var(--wa-shadow-m); }
 .performance-showcase { min-width: 0; gap: 1rem; }
 .showcase-navigation { justify-content: center; gap: .35rem; flex-wrap: wrap; }
 .showcase-navigation .showcase-icon { color: var(--wa-color-brand-fill-loud); font-size: 1rem; }
