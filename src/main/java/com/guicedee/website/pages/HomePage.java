@@ -264,7 +264,18 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         carousel.add(buildCdiSlide());
         carousel.add(buildKotlinSlide());
         carousel.add(buildWebAssemblySlide());
-        section.add(carousel);
+        var carouselFrame = new DivSimple<>();
+        carouselFrame.addClass("showcase-carousel-frame");
+        carouselFrame.add(carousel);
+        for (int direction : new int[]{-1, 1}) {
+            var arrow = new WaButton<>(direction < 0 ? "‹" : "›", Variant.Brand);
+            arrow.addClass("showcase-overlay-arrow " + (direction < 0 ? "showcase-overlay-previous" : "showcase-overlay-next"));
+            arrow.addAttribute("aria-label", direction < 0 ? "Previous slide" : "Next slide");
+            arrow.addAttribute("(click)", "$any(showcase).goToSlide(showcaseIndex " + (direction < 0 ? "- 1" : "+ 1") + ")");
+            arrow.addAttribute("[disabled]", direction < 0 ? "showcaseIndex === 0" : "showcaseIndex === 7");
+            carouselFrame.add(arrow);
+        }
+        section.add(carouselFrame);
         return section;
     }
 
@@ -558,6 +569,26 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
             runtime.add(bodyText("Startup includes the first complete response from the stack example. Warm p50 is per-start request latency; peak memory covers the whole container. 0.25 CPU / 500 MiB. Native results use their separate cohort and remain unchanged when switching JVM profiles.", "s"));
             runtime.add(captionText("{{ runtimeSources[runtimeProfile] }}"));
             panel.add(runtime);
+        }
+        if (index == 2) {
+            var nativeResults = new WaStack<>();
+            nativeResults.addClass("build-comparison-grid");
+            nativeResults.add(headingText("h3", "m", "Native runtime results"));
+            var nativeTable = new WaDataGrid<>();
+            nativeTable.setLabel("Native runtime comparison: first stack result, latency and peak memory");
+            nativeTable.setSize(com.jwebmp.webawesome.components.Size.Small);
+            nativeTable.setRowKey("key");
+            nativeTable.addAttribute("data-wa-preload", "wa-progress-bar");
+            nativeTable.setRowHeight("2.5rem");
+            nativeTable.setHeaderRowHeight("2.5rem");
+            nativeTable.setCellPadding("0.25rem 0.4rem");
+            nativeTable.bindColumns("runtimeColumns");
+            nativeTable.bindData("runtimeGrids[0].slice(-3)");
+            nativeTable.addClass("benchmark-grid build-grid runtime-grid");
+            nativeResults.add(nativeTable);
+            nativeResults.add(bodyText("Startup is the time to the first complete stack example response; peak MiB is whole-container charged memory. Warm p50 is request latency. Results use 0.25 CPU / 500 MiB.", "s"));
+            nativeResults.add(captionText("{{ runtimeSources[0] }}"));
+            panel.add(nativeResults);
         }
         if (index == 3) panel.add(buildPersistenceExample());
         slide.add(showcaseScroller(panel, title));

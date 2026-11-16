@@ -284,7 +284,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                         ${this.isNative() ? 'System.setProperty("GUICEDEE_DISCOVERY_MODE", "spi");' : ''}
                         GuiceApplication.run(() -> {
                             IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}");
-                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(${!this.isNative()});
+                            ${this.isNative() ? 'IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(false);' : ''}
                         });
                     }
                 }`;
@@ -435,12 +435,18 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
     private void renderBuilder()
     {
-        var layout = new WaStack<>();
-        layout.setGap(PageSize.ExtraLarge);
+        var layout = new WaGrid<>();
+        layout.addClass("builder-page-layout");
+        layout.setGap(PageSize.Large);
         getMain().add(layout);
 
-        layout.add(buildMetadataSection());
-        layout.add(buildModuleSelectionSection());
+        var configuration = new WaStack<>();
+        configuration.addClass("builder-configuration");
+        configuration.setGap(PageSize.ExtraLarge);
+        configuration.add(buildMetadataSection());
+        configuration.add(buildModuleSelectionSection());
+        layout.add(configuration);
+        layout.add(buildPreview());
     }
 
     // ── Metadata ─────────────────────────────────────
@@ -509,11 +515,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         content.addClass("builder-selection");
         content.setGap(PageSize.Medium);
 
-        var columns = new WaGrid<>();
-        columns.addClass("builder-selection-layout");
-        columns.setMinColumnSize("22rem");
-        columns.setGap(PageSize.Large);
-
         // ── Left column: Module tree ──
         var treeColumn = new WaStack<>();
         treeColumn.addClass("builder-modules");
@@ -525,7 +526,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         tree.addAttribute("aria-label", "Available modules");
         tree.setSelection(TreeSelectionMode.Multiple);
 
-        var webReactive = parentItem("Web Reactive", true);
+        var webReactive = parentItem("Web Reactive", false);
         webReactive.add(leafItem("REST Services"));
         webReactive.add(leafItem("REST Client"));
         webReactive.add(leafItem("WebSockets"));
@@ -571,7 +572,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         auth.add(leafItem("htdigest"));
         tree.add(auth);
 
-        var sdks = parentItem("Cloud SDKs", true);
+        var sdks = parentItem("Cloud SDKs", false);
         sdks.add(leafItem("Firebase Admin"));
         sdks.add(leafItem("Commercetools SDK"));
 
@@ -607,11 +608,19 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         tree.addAttribute("(wa-selection-change)", "onTreeSelectionChange($event)");
 
         treeColumn.add(tree);
-        treeColumn.add(bodyText("Hazelcast starts a local cache member. Vert.x clustering adds Hazelcast TCP membership " +
-                "and event-bus configuration. Select clustering to include two-node and single-instance environment examples.", "s"));
-        columns.add(treeColumn);
+        var clusteringNote = new NgIf("isClustered()");
+        clusteringNote.add(bodyText("Vert.x clustering adds Hazelcast TCP membership and event-bus configuration. " +
+                "The generated project includes two-node and single-instance environment examples.", "s"));
+        treeColumn.add(clusteringNote);
+        content.add(treeColumn);
+        return buildSection("Select", "Modules",
+                "Choose the modules for your generated project.",
+                false, content);
+    }
 
-        // ── Right column: Preview ──
+    private WaStack<?> buildPreview()
+    {
+        // ── Project preview ──
         var previewColumn = new WaStack<>();
         previewColumn.addClass("builder-preview");
         previewColumn.setGap(PageSize.Medium);
@@ -694,12 +703,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         buildBtn.addAttribute("(click)", "downloadZip()");
         previewColumn.add(buildBtn);
 
-        columns.add(previewColumn);
-        content.add(columns);
-
-        return buildSection("Select", "Modules & preview",
-                "Choose your modules and preview the generated project files.",
-                false, content);
+        return previewColumn;
     }
 
 

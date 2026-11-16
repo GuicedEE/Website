@@ -55,7 +55,7 @@ public final class KotlinBuilderSupport {
                             ${this.isNative() ? 'System.setProperty("GUICEDEE_DISCOVERY_MODE", "spi")' : ''}
                             GuiceApplication.run {
                                 IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}")
-                                IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(${!this.isNative()})
+                                ${this.isNative() ? 'IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(false)' : ''}
                             }
                         }
                     }

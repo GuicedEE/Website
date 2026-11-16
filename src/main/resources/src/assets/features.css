@@ -57,6 +57,10 @@ wa-card code {
     word-break: break-word;
     min-width: 0;
 }
+.build-tool-card-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.next-step-card-link { display: block; height: 100%; color: inherit; text-decoration: none; border-radius: .5rem; }
+.next-step-card-link:focus-visible { outline: 2px solid var(--wa-color-brand-fill-loud); outline-offset: 3px; }
+.next-step-card-link .feature-card { height: 100%; }
 
 .wa-dark .feature-card:hover {
     box-shadow: var(--wa-shadow-m, 0 4px 16px rgba(0, 0, 0, 0.3));
@@ -191,9 +195,12 @@ wa-icon.icon-shrink {
 .environment-table.table-wrapped td > span { white-space: normal; overflow-wrap: anywhere; }
 
 /* Module groups share one selection tree across responsive columns. */
+.builder-page-layout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.builder-configuration { min-width: 0; }
 .builder-selection { container: builder-selection / inline-size; }
-.builder-selection-layout { grid-template-columns: minmax(0, 1fr); align-items: start; }
 .builder-modules, .builder-preview, .builder-module-tree { min-width: 0; }
+.builder-preview { padding: 1.25rem; border: 1px solid var(--wa-color-neutral-border-quiet);
+    border-radius: 1rem; background: var(--wa-color-surface-raised); }
 .builder-module-tree::part(base) {
     display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: .75rem 1rem;
 }
@@ -205,8 +212,9 @@ wa-icon.icon-shrink {
 @container builder-selection (min-width: 42rem) {
     .builder-module-tree::part(base) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@container builder-selection (min-width: 64rem) {
-    .builder-selection-layout { grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr); }
+@media (min-width: 1100px) {
+    .builder-page-layout { grid-template-columns: minmax(0, 2fr) minmax(20rem, 1fr); }
+    .builder-preview { position: sticky; top: 5rem; max-height: calc(100svh - 6rem); overflow: auto; }
 }
 
 /* Compact, manually navigated homepage performance stories. */
@@ -224,8 +232,12 @@ wa-icon.icon-shrink {
 .release-highlights > wa-card > .wa-stack { flex: 1; min-width: 0; }
 .release-highlights .feature-card-note { margin-block-start: auto; }
 
-.performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0;
-    --showcase-height: clamp(30rem, calc(100svh - 14rem), 46rem); }
+.showcase-carousel-frame { position: relative; min-width: 0; --showcase-height: clamp(30rem, calc(100svh - 14rem), 46rem); }
+.showcase-overlay-arrow { position: absolute; z-index: 2; top: calc(var(--showcase-height, 30rem) / 2); transform: translateY(-50%); }
+.showcase-overlay-previous { left: .35rem; }
+.showcase-overlay-next { right: .35rem; }
+.showcase-overlay-arrow::part(base) { width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 50%; font-size: 1.75rem; opacity: .9; }
+.performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0; }
 .performance-carousel::part(base) {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     grid-template-areas: "slides slides slides" "previous pagination next";
@@ -264,7 +276,7 @@ wa-icon.icon-shrink {
 .benchmark-values { font-variant-numeric: tabular-nums; font-weight: 650; }
 .benchmark-visual p { margin: 0; }
 @media (max-width: 720px) {
-    .performance-carousel { --showcase-height: clamp(28rem, calc(100svh - 17rem), 38rem); }
+    .showcase-carousel-frame { --showcase-height: clamp(28rem, calc(100svh - 17rem), 38rem); }
     .benchmark-panel { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.25rem; }
     .benchmark-visual { padding: 1rem; }
     .showcase-navigation wa-button { font-size: .8rem; }

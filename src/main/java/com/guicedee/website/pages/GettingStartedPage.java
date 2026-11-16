@@ -8,6 +8,7 @@ import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
 import com.jwebmp.core.base.html.DivSimple;
+import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.PageSize;
 
 import java.util.ArrayList;
@@ -30,6 +31,19 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
     public GettingStartedPage()
     {
         buildGettingStartedPage();
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var methods = new ArrayList<>(super.methods());
+        methods.add("""
+                selectBuildTool(gradle: boolean) {
+                    this.app.useGradle.set(gradle);
+                    localStorage.setItem('guicedee-build-tool', gradle ? 'gradle' : 'maven');
+                }
+                """);
+        return methods;
     }
 
     @Override
@@ -160,7 +174,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         mavenGrid.setMinColumnSize("14rem");
         mavenGrid.setGap(PageSize.Small);
         mavenGrid.add(featureCard("JDK 25+", "Download from adoptium.net or use SDKMAN.", "Required"));
-        mavenGrid.add(featureCard("Maven 3.9+ / 4+", "Any modern Maven version works. GuicedEE itself is built with Maven 4.", "Required"));
+        mavenGrid.add(buildToolCard("Maven 3.9+ / 4+", "Any modern Maven version works. GuicedEE itself is built with Maven 4.", true));
         mavenGrid.add(featureCard("Your IDE", "IntelliJ IDEA, VS Code, or Eclipse — all work.", "Recommended"));
         mavenPrereqs.add(mavenGrid);
         content.add(mavenPrereqs);
@@ -172,13 +186,31 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         gradleGrid.setMinColumnSize("14rem");
         gradleGrid.setGap(PageSize.Small);
         gradleGrid.add(featureCard("JDK 25+", "Download from adoptium.net or use SDKMAN.", "Required"));
-        gradleGrid.add(featureCard("Gradle 8.6+", "Any modern Gradle version with JPMS support.", "Required"));
+        gradleGrid.add(buildToolCard("Gradle 8.6+", "Any modern Gradle version with JPMS support.", false));
         gradleGrid.add(featureCard("Your IDE", "IntelliJ IDEA, VS Code, or Eclipse — all work.", "Recommended"));
         gradlePrereqs.add(gradleGrid);
         content.add(gradlePrereqs);
 
         return buildSection("Prerequisites", "What you need",
                 "GuicedEE targets the latest Java and tooling.", false, content);
+    }
+
+    private WaCard<?> buildToolCard(String title, String description, boolean switchToGradle)
+    {
+        var card = featureCard(title, description, null);
+        var footer = new DivSimple<>();
+        footer.addAttribute("slot", "footer");
+        footer.addClass("build-tool-card-footer");
+        var required = captionText("Required");
+        required.setWaColorText("quiet");
+        footer.add(required);
+        var change = new WaButton<>(switchToGradle ? "Use Gradle" : "Use Maven", Variant.Brand);
+        change.setAppearance(Appearance.Plain);
+        change.setSize(com.jwebmp.webawesome.components.Size.Small);
+        change.addAttribute("(click)", "selectBuildTool(" + switchToGradle + ")");
+        footer.add(change);
+        card.add(footer);
+        return card;
     }
 
     // ── Step 1: Create the project ────────────────────
@@ -427,9 +459,9 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                                 G --> H["✅ Ready"]
                             end
                             
-                            style Discovery fill:#f9f,stroke:#333
-                            style Wiring fill:#bbf,stroke:#333
-                            style Serving fill:#dfd,stroke:#333"""));
+                            style Discovery fill:#29202a,stroke:#a94f78,color:#f5edf2
+                            style Wiring fill:#202434,stroke:#777bc1,color:#f1f1f8
+                            style Serving fill:#192b27,stroke:#459e85,color:#eaf7f2"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");
@@ -475,45 +507,37 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
 
-        grid.add(featureCard("End-to-end guide",
+        grid.add(nextStepLink(featureCard("End-to-end guide",
                 "Build a real-world microservice with security, persistence, " +
-                        "REST clients, CORS, cloud logging, and JLink deployment.",
-                "/guides/end-to-end"));
+                        "REST clients, CORS, cloud logging, and JLink deployment.", "/guides/end-to-end"), "/guides/end-to-end"));
 
-        grid.add(featureCardHtml("REST services",
+        grid.add(nextStepLink(featureCardHtml("REST services",
                 "Full JAX-RS adapter — CORS, security, reactive returns, " +
-                        "exception mapping, and " + brandCode("RestInterceptor") + " SPI.",
-                "/modules/rest"));
+                        "exception mapping, and " + brandCode("RestInterceptor") + " SPI.", "/guides/end-to-end#rest-endpoints"), "/guides/end-to-end#rest-endpoints"));
 
-        grid.add(featureCardHtml("REST client",
+        grid.add(nextStepLink(featureCardHtml("REST client",
                 brandCode("@Endpoint") + " annotation, typed " + brandCode("RestClient&lt;S,R&gt;") + ", path parameters, " +
-                        "Bearer/Basic/ApiKey auth, env-var secrets.",
-                "/modules/rest-client"));
+                        "Bearer/Basic/ApiKey auth, env-var secrets.", "/guides/end-to-end#rest-client"), "/guides/end-to-end#rest-client"));
 
-        grid.add(featureCardHtml("Persistence",
+        grid.add(nextStepLink(featureCardHtml("Persistence",
                 brandCode("Hibernate Reactive 4.5 and ORM 7.4") + " with " + brandCode("Mutiny") + ". Multi-database, " +
-                        "env-var driven, fully managed by " + brandCode("Guice") + ".",
-                "/modules/persistence"));
+                        "env-var driven, fully managed by " + brandCode("Guice") + ".", "/guides/end-to-end#persistence"), "/guides/end-to-end#persistence"));
 
-        grid.add(featureCardHtml("Security",
+        grid.add(nextStepLink(featureCardHtml("Security",
                 brandCode("@RolesAllowed") + ", " + brandCode("@PermitAll") + ", pluggable " + brandCode("Vert.x") + " auth handlers, " +
-                        "HTTPS/TLS, call-scoped isolation.",
-                "/modules/security"));
+                        "HTTPS/TLS, call-scoped isolation.", "/guides/end-to-end#security"), "/guides/end-to-end#security"));
 
-        grid.add(featureCardHtml("Cloud & deployment",
+        grid.add(nextStepLink(featureCardHtml("Cloud & deployment",
                 brandCode("CLOUD=true") + " for JSON logging, JLink custom runtimes, " +
-                        "distroless Docker, ~300 ms cold start.",
-                "/guides/deployment"));
+                        "distroless Docker, ~300 ms cold start.", "/guides/end-to-end#jlink-deployment"), "/guides/end-to-end#jlink-deployment"));
 
-        grid.add(featureCardHtml("Verticles & SPI",
+        grid.add(nextStepLink(featureCardHtml("Verticles & SPI",
                 brandCode("@Verticle") + " isolation, 3 server SPI hooks, " +
-                        "per-pool threading, " + brandCode("VertxRouterConfigurator") + ".",
-                "/modules/vertx"));
+                        "per-pool threading, " + brandCode("VertxRouterConfigurator") + ".", "/guides/end-to-end#verticle-isolation"), "/guides/end-to-end#verticle-isolation"));
 
-        grid.add(featureCard("All modules",
+        grid.add(nextStepLink(featureCard("All modules",
                 "Health, Metrics, Telemetry, Config, WebSockets, RabbitMQ, " +
-                        "Kafka, IBM MQ, OpenAPI, Swagger UI, Fault Tolerance, and more.",
-                "/capabilities"));
+                        "Kafka, IBM MQ, OpenAPI, Swagger UI, Fault Tolerance, and more.", "/modules"), "/modules"));
 
         content.add(grid);
 
@@ -529,5 +553,13 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 "Hello World was just the beginning. Each module has its own dedicated guide.",
                 true, content);
     }
+    private Link<?> nextStepLink(WaCard<?> card, String destination)
+    {
+        var link = new Link<>(destination);
+        link.addClass("next-step-card-link");
+        link.add(card);
+        return link;
+    }
+
 }
 
