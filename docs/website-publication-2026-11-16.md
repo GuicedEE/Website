@@ -92,8 +92,9 @@ to Developer and explicitly names GuicedEE, Quarkus and Micronaut in the
 Native-Image caption. Micronaut was already included in the published chart and
 table; the comparison data and its measurement date remain unchanged.
 
-Revision `guicedee-website--v260-20261116-4ed17e8` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-4ed17e8`.
+Revision `guicedee-website--v260-20261116-4ed17e8` was verified healthy and ready
+with 100% of traffic before the navigation follow-up below.
+Image tag: `gedmarc/guicedee-website:2.6.0-20261116-4ed17e8`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:df28ba06a83a34d1f90cc34fae6e39a80b64510b64951e70bfcc74c0ab2fa293`.
 
@@ -104,3 +105,25 @@ build modes and complete grids. Native peak container memory is 68.57 MiB for
 GuicedEE, 55.30 MiB for Quarkus and 85.26 MiB for Micronaut. All 298 live assets
 match the production build. Evidence is retained under
 `target/website-native-comparison/` in DevSuite.
+
+## Homepage section navigation
+
+Source `af6b645552fe8219190ac93050e5beba849b4fe5` moves Highlights & benchmarks,
+How it works, IntelliJ plugin and Explore the platform under Home in the desktop
+menu and mobile drawer. The homepage's right sidebar and reserved column are
+removed. Documentation sidebars still activate normally. Section links support
+keyboard navigation, refresh/back navigation and the mobile drawer; Explore the
+platform opens its disclosure. Old `/home(aside:home)` bookmarks are normalized
+while preserving query parameters and fragments.
+
+Revision `guicedee-website--v260-20261116-af6b645` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-af6b645`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:0077a0d727a5d05e6c69176d77722b0562f5881f7a19a07aa210eca5300ffd98`.
+
+The production build passed. Local and public navigation checks covered 1440,
+1024 and 390 pixels, all four destinations, legacy URLs and documentation aside
+transitions. Search checks and all three local benchmark scenarios passed.
+Benchmark verification uses revision `f5770f2`, matching the persistence snapshot
+already committed in `f60400e`. All 298 public assets match the production build.
+Evidence is retained under `target/website-home-navigation/` in DevSuite.

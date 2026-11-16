@@ -17,13 +17,15 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-4ed17e8` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-af6b645` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
 reads Developer, and the Native-Image comparison names GuicedEE, Quarkus and
 Micronaut alongside their chart and table values. The site also serves the complete
-AI reference, robots and sitemap. See the
+AI reference, robots and sitemap. Homepage section links sit under Home in the
+desktop menu and mobile drawer, and the homepage uses the freed aside space.
+See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.
 
