@@ -451,7 +451,7 @@ in DevSuite.
 ## Page asides and capability styling
 
 Website source `785d533aa16ef80b78fe7ba127d888d4075b2587` is deployed in
-revision `guicedee-website--v260-20261116-785d533`, healthy and serving 100%
+revision `guicedee-website--v260-20261116-785d533`, verified healthy and serving 100%
 of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:f1af75edeeea06e6e2896821065d8d8e858d91417d0249591b2ca4574fe34c93`.
 
 The home Marketplace display is beside the carousel; the builder preview and
@@ -463,3 +463,16 @@ The navigation tracks the visible section while scrolling.
 Production build passed. Public browser checks at 1440 and 390 pixels verified
 the asides, banner and capability content. All 298 live assets match the build;
 evidence is retained under `target/website-publish-785d533/` in DevSuite.
+
+## Generated project file browser
+
+Website source `83391ea6ae2bbda716f7bd5c329d8094bcbdaced` is deployed in
+revision `guicedee-website--v260-20261116-83391ea`, healthy and serving 100%
+of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:ab104e043abf3d49f313c6ae4b582ebfd938dad20363aeea91cad0b644b57164`.
+
+The builder opens a generated file browser from the same ZIP data as the
+download, and provides a native-image setup dialog. Page-level navigation
+returns to the top, including on the current page. Production build passed.
+Live browser checks at 1440 and 390 pixels verified file selection and the
+native dialog; all 298 public assets match the production build. Evidence is
+retained under `target/website-publish-83391ea/` in DevSuite.
