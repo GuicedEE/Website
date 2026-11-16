@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-bf98bac` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-35cfd61` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -50,6 +50,9 @@ The App Builder groups its module options into two columns when space permits,
 with the preview alongside on large screens and below on smaller screens. Phones
 use one option column. Selections and generated project downloads work across both
 columns, including nested Service Discovery options under Cloud SDKs.
+Environment reference tables use compact rows and predictable column widths.
+Each table has a Wrap text switch; full values also appear on hover. The tables
+remain semantic HTML, with their complete text available to search and readers.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.

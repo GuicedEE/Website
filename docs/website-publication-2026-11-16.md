@@ -320,7 +320,7 @@ column. Group cards and wrapping labels keep the expanded options readable.
 One Web Awesome selection tree retains all module selections, including the
 Service Discovery group nested under Cloud SDKs.
 
-Revision `guicedee-website--v260-20261116-bf98bac` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-bf98bac` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bf98bac`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:451e2be104ffa8bde75fae56ed67621d7ea4ce8efd25832faea76a91fb5c1e16`.
@@ -334,3 +334,29 @@ native starters with Firebase and Commercetools. This layout change did not reru
 compilation of the generated projects. All 298 public assets match the production
 build. Evidence and screenshots are retained under
 `target/website-builder-columns/` in DevSuite.
+
+## Compact environment reference tables
+
+Source `35cfd61db713a2b0337e60ee92224ace5d26d77c` keeps the environment reference
+tables as semantic HTML and adds a Wrap text switch beside each table. Rows are
+compact by default, long values use ellipses with full-text hover titles, and
+wrapping can be enabled independently for each table. Predictable column widths
+give Application / status a defined share of the contract tables. Narrow screens
+scroll within the table region, including via keyboard.
+
+The 28 Telemetry rows are 34.25 px high in compact mode at the checked widths;
+most were 128.95 px before the change at 1440 px. All original content across
+44 tables and 703 rows, including headers, was compared before publication and
+preserved. Complete text stays in the DOM for search and accessibility.
+
+Revision `guicedee-website--v260-20261116-35cfd61` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-35cfd61`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:3981e94bd6f85b74da4bf914f2fe9dcabf8bb19fb918946b1ee7ec0288a8aad6`.
+
+The production build and existing site-search checks passed. Local and public
+browser checks at 1440, 1024 and 390 pixels verified compact and wrapped row
+heights, independent switches, keyboard activation, full-text titles, header
+fit, mobile table scrolling and no horizontal page overflow or JavaScript errors.
+All 298 public assets match the verified production build. Evidence and screenshots
+are retained under `target/website-environment-tables/` in DevSuite.

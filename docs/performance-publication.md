@@ -34,8 +34,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `bf98bac2d827999c22868abf144f0ed375ac867c` is now live in revision
-`guicedee-website--v260-20261116-bf98bac`, with benchmark snapshot `db61c9a`.
+Website source `35cfd61db713a2b0337e60ee92224ace5d26d77c` is now live in revision
+`guicedee-website--v260-20261116-35cfd61`, with benchmark snapshot `db61c9a`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
