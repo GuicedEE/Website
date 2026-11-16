@@ -24,3 +24,33 @@ results at 0.25 CPU / 500 MiB per application. Instrumented phase timings are ex
 The generated Angular production build and public browser checks verify the chart
 values, labels and source dates. Website deployment is independent of framework
 artifact publication and leaves the website backend unchanged.
+
+## Verified deployment — 16 November 2026
+
+The production front end at [guicedee.com](https://guicedee.com/home) serves the
+build from website commit `b63114d600519d5b303b3fcad5ee065f6772e032`, using benchmark
+revision `3d97924`. Azure Container Apps revision `guicedee-website--perf-20261116`
+is ready and receives 100% of traffic.
+
+Image: `docker.io/gedmarc/guicedee-website@sha256:819ff571e023dd478a2fb04c0d458d2016f64f29c08d4e87b3cc4ec90368d4aa`.
+
+Verification completed:
+
+- Maven generation and Angular production build passed.
+- All 153 live assets match the production build by SHA-256.
+- `/`, `/home`, `/releases`, and `/modules` return the matching SPA index with
+  `Cache-Control: no-store`.
+- Public Chromium checks verified startup/read/CRUD chart values and units,
+  published source dates, nine-row runtime/build grids, Micronaut rows, and normal
+  page refresh, with no JavaScript errors.
+- Local browser checks also passed with unavailable and invalid dataset responses.
+
+The public persistence startup chart shows GuicedEE **14.45 s** and Quarkus
+**11.85 s**. The underlying dataset includes Micronaut at **15.45 s**. These are
+three-start medians under the quota above, not unrestricted-machine startup times.
+The SDK figures retain their 15 November measurement date.
+
+Local deployment evidence is retained in DevSuite under
+`benchmarks/target/hibernate-startup-20261116/`; browser evidence is under the
+isolated website worktree's `target/public-benchmark-verification/`. Generated
+build outputs and screenshots are not committed to the repository.

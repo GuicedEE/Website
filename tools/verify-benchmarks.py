@@ -103,10 +103,21 @@ def main():
                     assert len(build_rows) == len(runtime_rows) == 9
                     assert any('Micronaut' in row['artifact'] for row in build_rows)
                     assert any('Micronaut' in row['artifact'] for row in runtime_rows)
+                    if args.url:
+                        page.reload(wait_until='domcontentloaded', timeout=60000)
+                        page.wait_for_function("""([expected, date]) => {
+                            const panel = [...document.querySelectorAll('.benchmark-panel')].find(p => p.textContent.includes('Real transactions.'));
+                            let config = panel?.querySelector('wa-chart')?.config;
+                            if (typeof config === 'string') config = JSON.parse(config);
+                            return JSON.stringify(config?.data?.datasets?.[0]?.data) === JSON.stringify(expected)
+                                && panel.textContent.includes('Published') && panel.textContent.includes(date)
+                                && document.querySelector('.runtime-grid')?.data?.length === 9
+                                && document.querySelector('.build-grid')?.data?.length === 9;
+                        }""", arg=[expected[0], persistence['measuredAt'][:10]], timeout=30000)
                     assert not errors, errors
                     evidence.append(dict(mode=mode, url=page.url, persistenceValues=expected,
                         buildRows=len(build_rows), runtimeRows=len(runtime_rows), source=source,
-                        requests=requests, pageErrors=errors))
+                        requests=requests, pageErrors=errors, refreshVerified=bool(args.url)))
                     page.close()
     finally:
         if server:

@@ -6,13 +6,23 @@
 
 This repository powers the **public GuicedEE website** hosted at `https://guicedee.com`, presenting the entire GuicedEE ecosystem with the documentation, samples, and builder tools consumers expect.
 
-## GuicedEE 2.5.0 website deployment
+## Current performance website deployment
 
-Revision `guicedee-website--v250-20261102` is healthy and serves 100% of traffic.
-The image is `docker.io/gedmarc/guicedee-website@sha256:0f2aa357fd405c2ba514740686577260c59329b2dc49ec033c320aa585a6f3fe`.
-All 94 public HTML/JavaScript/CSS assets match the local production build, and
-six SPA routes return the matching index. Release notes, current catalog versions
-and application examples target 2.5.0. The separate backend was not redeployed.
+The performance charts and complete runtime/build grids are live at
+[guicedee.com](https://guicedee.com/home), including persistence startup, read and
+CRUD views. Revision `guicedee-website--perf-20261116` serves 100% of traffic.
+All 153 public assets match the production build; browser checks also verified
+the current datasets and normal page refresh. See the
+[deployment record](docs/performance-publication.md#verified-deployment--16-november-2026)
+for the source revision, immutable image and validation details.
+
+## Historical GuicedEE 2.5.0 website deployment
+
+Revision `guicedee-website--v250-20261102` served 100% of traffic before the update above.
+Its image was `docker.io/gedmarc/guicedee-website@sha256:0f2aa357fd405c2ba514740686577260c59329b2dc49ec033c320aa585a6f3fe`.
+All 94 public HTML/JavaScript/CSS assets matched that production build, and
+six SPA routes returned the matching index. Release notes, catalog versions
+and application examples targeted 2.5.0. The separate backend was not redeployed.
 Evidence: `target/release-2.5.0-website-public-verification.json` in DevSuite.
 
 ## GuicedEE 2.4.2 website content
