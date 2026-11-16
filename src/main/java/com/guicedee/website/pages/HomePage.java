@@ -287,7 +287,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Peak container memory · MiB", "Native workload comparison · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
         carousel.add(benchmarkSlide(3, "04 / PERSISTENCE", "Real transactions. Real evidence.",
                 "A PostgreSQL workload across 15 related entities: committed writes, joined reads, updates and rollbacks.",
-                "Warm transaction cycle p50 · milliseconds", "Reactive stateless GuicedEE vs stateful Quarkus ORM / Narayana. Different persistence patterns; not a saturation-throughput comparison.", "postgresql-persistence"));
+                "Launch to committed graph · seconds", "0.25 CPU / 500 MiB per app. Startup includes the first committed 15-entity graph. CRUD cycles include three write transactions and one read. Reactive stateless GuicedEE vs Quarkus ORM / Narayana; different persistence patterns.", "postgresql-persistence"));
         carousel.add(buildCdiSlide());
         carousel.add(buildKotlinSlide());
         section.add(carousel);
@@ -453,17 +453,19 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         panel.add(copy);
         var visual = new WaStack<>();
         visual.addClass("benchmark-visual");
-        visual.add(headingText("h3", "m", index == 1 ? "{{ buildTitles[buildMode] }}" : metric));
-        if (index == 1) {
+        visual.add(headingText("h3", "m", index == 1 ? "{{ buildTitles[buildMode] }}"
+                : index == 3 ? "{{ persistenceTitles[persistenceMode] }}" : metric));
+        if (index == 1 || index == 3) {
             var modes = new WaCluster<>();
             modes.addClass("benchmark-modes");
-            String[] choices = {"Compile", "JVM package", "Native build"};
+            String[] choices = index == 1 ? new String[]{"Compile", "JVM package", "Native build"}
+                    : new String[]{"Startup", "Read", "CRUD cycle"};
             for (int i = 0; i < choices.length; i++) {
                 var choice = new WaButton<>(choices[i], Variant.Neutral);
                 choice.setSize(com.jwebmp.webawesome.components.Size.Small);
                 choice.setAppearance(Appearance.Plain);
-                choice.addAttribute("(click)", "selectBuildMode(" + i + ")");
-                choice.addAttribute("[attr.aria-pressed]", "buildMode === " + i);
+                choice.addAttribute("(click)", (index == 1 ? "selectBuildMode(" : "selectPersistenceMode(") + i + ")");
+                choice.addAttribute("[attr.aria-pressed]", (index == 1 ? "buildMode" : "persistenceMode") + " === " + i);
                 modes.add(choice);
             }
             visual.add(modes);
@@ -472,6 +474,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         chart.setConfig("benchmarkCharts[" + index + "]");
         chart.addAttribute("[hidden]", "!benchmarkValues[" + index + "]");
         chart.addAttribute("aria-label", metric + "; exact values below");
+        if (index == 3) chart.addAttribute("[attr.aria-label]", "persistenceTitles[persistenceMode] + '; exact values below'");
         chart.addClass("benchmark-chart");
         visual.add(chart);
         var table = new WaDataGrid<>();
@@ -483,6 +486,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         table.setCellPadding("0.25rem 0.4rem");
         table.bindColumns(index == 1 ? "buildGridColumns" : "benchmarkColumns");
         table.bindData(index == 1 ? "buildGridRows" : "benchmarkRows[" + index + "]");
+        if (index == 3) table.addAttribute("[label]", "persistenceTitles[persistenceMode] + ' comparison'");
         table.addAttribute("[hidden]", "!benchmarkValues[" + index + "]");
         table.addClass("benchmark-grid");
         if (index != 1) visual.add(table);

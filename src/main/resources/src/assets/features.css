@@ -186,7 +186,7 @@ wa-icon.icon-shrink {
 .performance-carousel wa-carousel-item { --aspect-ratio: auto; height: auto; align-self: stretch; border-radius: 1.5rem; }
 .performance-carousel .hero-banner { margin: 0; min-height: 31rem; justify-content: center; box-sizing: border-box; }
 .benchmark-panel {
-    display: grid; grid-template-columns: 1fr 1.05fr; align-items: center; gap: 2.5rem;
+    display: grid; grid-template-columns: 1fr 1.05fr; align-items: center; align-content: start; gap: 2.5rem;
     min-height: 31rem; height: 100%; padding: clamp(1.5rem, 4vw, 3rem); box-sizing: border-box;
     border: 1px solid var(--wa-color-neutral-border-quiet); border-radius: 1.5rem;
     background: radial-gradient(ellipse at 0% 0%, #10b98118, transparent 65%),
