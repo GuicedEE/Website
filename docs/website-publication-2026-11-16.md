@@ -239,8 +239,8 @@ The theme toggle and saved-theme override are removed. The shared app theme
 remains dark for diagrams. The header star uses `--wa-color-brand-on-quiet`
 (`#f88ab7`) with its secondary icon layer at full opacity.
 
-Revision `guicedee-website--v260-20261116-bf789b0` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bf789b0`.
+Revision `guicedee-website--v260-20261116-bf789b0` was verified healthy, ready and
+serving 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bf789b0`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:768731530f7107c0bd17ea1df1b2790af01e4a6ef6a7374fa6791e71120e606a`.
 
@@ -251,3 +251,32 @@ rendered color and opacity, and no theme toggle or browser errors. Desktop and
 mobile layouts were checked at 1440 and 390 pixels. All 298 public assets match
 the production build. Evidence and screenshots are retained under
 `target/website-dark-mode/` in DevSuite.
+
+## Carousel scrolling and section navigation response
+
+Source `8c1b26653595e7f7933c2d096eefff15b45a4431` lets vertical scrolling pass
+from carousel content to the page at its top and bottom, and when the slide has
+no internal overflow. Horizontal carousel scrolling remains available.
+
+Section links previously included fixed waits of 350 ms and 400 ms. They now
+wait for rendering, the measured header height, relevant disclosure animations,
+carousel accessibility state and mobile drawer closure only when required.
+Duplicate fragment reveals are removed. This preserves header clearance and
+focus while making ordinary section links respond without the 750 ms pause.
+
+Revision `guicedee-website--v260-20261116-8c1b266` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-8c1b266`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:0cb66d33b31d0ff65b9c86bdeffef4398376fecb34f5797c7b8acf5a068e82e8`.
+
+The production build and search regression checks passed. Local and public
+Chromium checks verified wheel scrolling through non-overflowing slides, inner
+scrolling, page scrolling at both boundaries, horizontal carousel movement and
+touch-swipe scrolling. Three public section selections took 28.0–28.9 ms from
+click to destination focus in this check. These are browser observations, not a
+performance guarantee. Local and public navigation checks passed for ten pages
+and all 135 section links, including search, disclosures, direct/repeat links,
+history, filters, legacy URLs and mobile drawer focus at 1440, 1024 and 390 pixels.
+All 298 public assets match the production build. Evidence is retained under
+`target/website-scroll-fix/` in DevSuite; the added regression check is
+`tools/verify-scroll-behavior.py`.
