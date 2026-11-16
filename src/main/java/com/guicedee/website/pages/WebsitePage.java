@@ -20,6 +20,8 @@ import com.jwebmp.webawesome.components.copybutton.WaCopyButton;
 import com.jwebmp.webawesome.components.details.WaDetails;
 import com.jwebmp.webawesome.components.divider.WaDivider;
 import com.jwebmp.webawesome.components.icon.WaIcon;
+import com.jwebmp.webawesome.components.input.WaInput;
+import com.jwebmp.webawesome.components.input.InputSize;
 import com.jwebmp.webawesome.components.tooltip.WaTooltip;
 import com.jwebmp.webawesome.components.tag.WaTag;
 import com.jwebmp.webawesome.components.text.WaText;
@@ -72,6 +74,41 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
             grid.setMinColumnSize("14rem");
         }
         return grid;
+    }
+
+    /** Keeps the former sidebar filters with the content they filter. */
+    protected WaInput<?> pageFilter(String label, String selector)
+    {
+        var filter = new WaInput<>();
+        filter.addClass("page-filter");
+        filter.setPlaceholder(label + "…");
+        filter.addAttribute("aria-label", label);
+        filter.setSize(InputSize.Small);
+        filter.setClearable(true);
+        filter.addAttribute("(wa-input)", "filterPageContent($event, '" + selector + "')");
+        filter.addAttribute("(wa-clear)", "filterPageContent($event, '" + selector + "')");
+        var icon = new WaIcon<>("magnifying-glass");
+        icon.addAttribute("slot", "start");
+        filter.add(icon);
+        return filter;
+    }
+
+    @Override
+    public java.util.List<String> methods()
+    {
+        var methods = new java.util.ArrayList<>(INgComponent.super.methods());
+        methods.add("""
+                filterPageContent(event: any, selector: string) {
+                    const query = event.type === 'wa-clear' ? '' : (event.target?.value || '').toLowerCase().trim();
+                    const content = (event.target as HTMLElement)?.closest('.website-content');
+                    content?.querySelectorAll<HTMLElement>(selector).forEach(element => {
+                        const matches = !query || (element.textContent || '').toLowerCase().includes(query);
+                        element.style.display = matches ? '' : 'none';
+                        element.toggleAttribute('data-page-filter-hidden', !matches);
+                    });
+                }
+                """);
+        return methods;
     }
 
     // ── Text helpers ──────────────────────────────────

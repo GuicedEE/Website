@@ -55,7 +55,8 @@ server.listen(0, '127.0.0.1', async () => {
         await search.locator('[data-search-destination="services#find-firebase-admin"]').click();
         await page.locator('#find-firebase-admin.site-search-target').waitFor();
         assert((await page.url()).includes('services'));
-        assert(await page.locator('guicedee-services-aside').count());
+        await page.waitForFunction(() => [...document.querySelectorAll('[slot="menu"] .page-navigation')].filter(el => el.expanded).map(el => el.dataset.navigationRoute).join(',') === 'services');
+        assert.equal(await page.locator('wa-page > [slot="aside"]').count(), 0);
         await page.reload();
         await page.locator('#find-firebase-admin.site-search-target').waitFor();
 

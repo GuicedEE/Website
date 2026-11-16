@@ -56,6 +56,7 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
         introCard.setAppearance(Appearance.Filled);
         introCard.add(introContent);
         layout.add(introCard);
+        layout.add(pageFilter("Filter services", "wa-card[appearance=outlined]"));
 
         // Group services by family
         Map<String, List<ServiceDefinition>> grouped = ApplicationBuilderService.getInstance()

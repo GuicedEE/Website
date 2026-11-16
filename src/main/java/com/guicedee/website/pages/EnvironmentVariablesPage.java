@@ -46,6 +46,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         introCard.setAppearance(Appearance.Filled);
         introCard.add(introContent);
         layout.add(introCard);
+        layout.add(pageFilter("Filter variables", ".content-section"));
 
         layout.add(configurationOrderSection());
         layout.add(moduleAnnotationTextSection());

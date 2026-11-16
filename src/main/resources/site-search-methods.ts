@@ -73,15 +73,9 @@ onSearchResultsKey(event: KeyboardEvent) {
     buttons[next].focus();
 }
 
-openHomeSection(event: MouseEvent, anchor: string) {
-    // Preserve normal link behavior for new tabs and modified clicks.
-    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    void this.openSearchResult({route: 'home', anchor});
-}
-
 async openSearchResult(result: {route: string; anchor: string}) {
     this.searchExpanded = false;
+    this.expandedNavigation.set(result.route);
     const page = this.document.querySelector('wa-page') as any;
     if (page) page.navOpen = false;
     const tree = this.router.createUrlTree(['/' + result.route], {fragment: result.anchor});
@@ -101,9 +95,9 @@ async revealSearchFragment(url: string) {
     const parsed = this.router.parseUrl(url);
     const route = (parsed.root.children['primary']?.segments || []).map(segment => segment.path).join('/');
     const entry = this.searchEntries.find(item => item.route === route && item.anchor === parsed.fragment);
-    const homeSection = route === 'home' && ['highlights', 'how-it-works', 'intellij-plugin', 'explore-platform'].includes(parsed.fragment || '');
+    const navigationSection = this.navigationAnchors[route]?.includes(parsed.fragment || '') ?? false;
     this.document.querySelectorAll('.site-search-target').forEach(element => element.classList.remove('site-search-target'));
-    if (!entry && !homeSection) return;
+    if (!entry && !navigationSection) return;
     await new Promise(resolve => setTimeout(resolve, 350));
     // NavigationEnd may precede the final DOM update or the aside synchronization.
     let target: HTMLElement | null = null;
@@ -114,8 +108,16 @@ async revealSearchFragment(url: string) {
         await new Promise(resolve => setTimeout(resolve, 16));
     }
     if (!target || token !== this.searchRevealToken) return;
+    // Section links and search results must remain reachable after filtering a page.
+    const content = target.closest('.website-content');
+    content?.querySelectorAll<HTMLElement>('[data-page-filter-hidden]').forEach(element => {
+        element.style.display = '';
+        element.removeAttribute('data-page-filter-hidden');
+    });
+    const pageFilter = content?.querySelector('.page-filter') as any;
+    if (pageFilter) pageFilter.value = '';
     const ancestors: HTMLElement[] = [];
-    if (homeSection && target.localName === 'wa-details') ancestors.push(target);
+    if (navigationSection && target.localName === 'wa-details') ancestors.push(target);
     for (let parent = target.parentElement; parent; parent = parent.parentElement) ancestors.unshift(parent);
     for (const ancestor of ancestors) {
         if (ancestor.localName === 'wa-details') {
@@ -140,9 +142,9 @@ async revealSearchFragment(url: string) {
     // Let disclosure animations and the carousel's content height settle before scrolling.
     await new Promise(resolve => setTimeout(resolve, 400));
     if (token !== this.searchRevealToken || !target.isConnected) return;
-    if (!homeSection) target.classList.add('site-search-target');
-    target.scrollIntoView({block: homeSection ? 'start' : 'center', behavior: 'auto'});
-    if (homeSection && !target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    if (!navigationSection) target.classList.add('site-search-target');
+    target.scrollIntoView({block: navigationSection ? 'start' : 'center', behavior: 'auto'});
+    if (navigationSection && !target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.focus({preventScroll: true});
     clearTimeout(this.searchHighlightTimer);
     this.searchHighlightTimer = setTimeout(() => target?.classList.remove('site-search-target'), 6500);

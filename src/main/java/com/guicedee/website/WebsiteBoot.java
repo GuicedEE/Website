@@ -81,7 +81,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         WaPage<?> page = new WaPage<>();
         page.addStyle("width:100%");
         page.addStyle("height:100%");
-        page.addAttribute("[class.no-aside]", "!asideActive()");
+        page.addClass("no-aside");
 
         // ── WaPage settings ──
         page.getMain().setPageSize(PageSize.ExtraSmall);
@@ -450,41 +450,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // ── Menu: WaTree navigation with sub-items ──
         var menu = page.getMenu();
         menu.add(new SiteSearch("desktop"));
-        WaTree<?> menuTree = new WaTree<>();
-        menuTree.setIndentSize("2px");
-        menuTree.setIndentGuideColor("var(--wa-color-neutral-300)");
-
-        // Home
-        menuTree.add(createHomeTreeItem());
-
-        // Releases
-        menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
-
-        // App Builder
-        menuTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
-
-        // Getting Started
-        menuTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
-
-        // End-to-End Guide
-        menuTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
-
-        // Capabilities
-        menuTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
-
-        // Modules
-        menuTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
-
-        // Services
-        menuTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
-
-        // Cloud
-        menuTree.add(createRouterTreeItem("/cloud", "Cloud", "cloud"));
-
-        // Environment Variables
-        menuTree.add(createRouterTreeItem("/environment-variables", "Env Variables", "sliders"));
-
-
+        var menuTree = SiteNavigation.tree();
 
         // Support (external)
         menuTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
@@ -584,20 +550,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         // ── Burger Menu Navigation (drawer contents, slot="navigation") ──
         var burgerMenuNavigation = page.getNavigation();
         burgerMenuNavigation.add(new SiteSearch("mobile"));
-        WaTree<?> navTree = new WaTree<>();
-        navTree.setIndentSize("2px");
-        navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
-
-        navTree.add(createHomeTreeItem());
-        navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
-        navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
-        navTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
-        navTree.add(createRouterTreeItem("/guides/end-to-end", "End-to-End Guide", "route"));
-        navTree.add(createRouterTreeItem("/capabilities", "Capabilities", "star"));
-        navTree.add(createRouterTreeItem("/modules", "Modules", "cubes"));
-        navTree.add(createRouterTreeItem("/services", "Services", "puzzle-piece"));
-        navTree.add(createRouterTreeItem("/environment-variables", "En Variables", "sliders"));
-/*        navTree.add(createExternalTreeItem("https://mcp.jwebmp.com", "Mermaid MCP", "diagram-project"));*/
+        var navTree = SiteNavigation.tree();
         navTree.add(createExternalTreeItem("https://www.patreon.com/GedMarc", "Support", "life-ring"));
         burgerMenuNavigation.add(navTree);
 
@@ -662,60 +615,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
 
         page.getMain().add(new RouterOutlet<>());
-        var asideOutlet = new RouterOutlet<>("aside");
-        asideOutlet.addAttribute("(activate)", "asideActive.set(true)");
-        asideOutlet.addAttribute("(deactivate)", "asideActive.set(false)");
-        asideOutlet.addAttribute("(attach)", "asideActive.set(true)");
-        asideOutlet.addAttribute("(detach)", "asideActive.set(false)");
-        page.getAside().add(asideOutlet);
-
         add(page);
-    }
-
-    private static WaTreeItem<?> createHomeTreeItem()
-    {
-        var home = createRouterTreeItem("/home", "Home", "house");
-        home.addClass("home-navigation");
-        home.setExpanded(true);
-        String[][] sections = {
-                {"highlights", "Highlights & benchmarks"},
-                {"how-it-works", "How it works"},
-                {"intellij-plugin", "IntelliJ plugin"},
-                {"explore-platform", "Explore the platform"}
-        };
-        for (var section : sections)
-        {
-            var item = new WaTreeItem<>();
-            item.addClass("home-section");
-            var link = new Link<>("/home#" + section[0]);
-            link.setText(section[1]);
-            link.addAttribute("(click)", "openHomeSection($event, '" + section[0] + "')");
-            item.add(link);
-            home.add(item);
-        }
-        return home;
-    }
-
-    private static WaTreeItem<?> createRouterTreeItem(String path, String text, String icon)
-    {
-        if (!path.startsWith("/"))
-        {
-            path = "/" + path;
-        }
-
-        WaTreeItem<?> item = new WaTreeItem<>();
-        Link<?> link = new Link<>("#");
-        item.add(link);
-        link.addAttribute("routerLink", path);
-        link.setRenderTextBeforeChildren(false);
-        if (icon != null)
-        {
-            WaIcon<?> waIcon = new WaIcon<>(icon).addClass("wa-gap-1").addStyle("color", "var(--wa-color-brand-on-normal)");
-            waIcon.setFamily("sharp-duotone");
-            link.add(waIcon);
-        }
-        link.setText("&nbsp;"+ text);
-        return item;
+        // Recognize old named-outlet URLs without reserving a sidebar or rendering content.
+        var legacyAside = new DivSimple<>();
+        legacyAside.addAttribute("hidden", "");
+        legacyAside.add(new RouterOutlet<>("aside"));
+        add(legacyAside);
     }
 
     private static WaTreeItem<?> createExternalTreeItem(String url, String text, String icon)
@@ -820,18 +725,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         f.add(SiteSearch.fields());
         //f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
-        f.add("asideActive = signal(false);");
+        f.add(SiteNavigation.fields());
         f.add("private document = inject(DOCUMENT);");
-        f.add("""
-                private asideRoutes: Record<string, string> = {
-                    'getting-started': 'getting-started',
-                    'capabilities': 'capabilities',
-                    'guides/end-to-end': 'guides/end-to-end',
-                    'modules': 'modules',
-                    'services': 'services',
-                    'cloud': 'cloud',
-                    'environment-variables': 'environment-variables'
-                };""");
         return f;
     }
 
@@ -839,6 +734,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     public List<String> methods() {
         var m = new ArrayList<>(INgComponent.super.methods());
         m.add(SiteSearch.methods());
+        m.add(SiteNavigation.methods());
         m.add(SiteDiscovery.metadataMethod());
         m.add("""
                 toggleDarkMode() {
@@ -875,32 +771,16 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                 this.siteNavigationSubscription = this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
                     this.updateSiteMetadata(e.urlAfterRedirects);
                     void this.revealSearchFragment(e.urlAfterRedirects);
-                    if (this._asideNavigating) return;
-                    const navEnd = e as NavigationEnd;
-                    const parsedUrl = this.router.parseUrl(navEnd.urlAfterRedirects);
-                    const primarySegments = parsedUrl.root.children['primary']?.segments || [];
-                    const primaryPath = primarySegments.map((s: any) => s.path).join('/');
-                    const asidePath = this.asideRoutes[primaryPath];
-                    const currentAside = parsedUrl.root.children['aside'];
-                    const currentAsidePath = currentAside?.segments?.map((s: any) => s.path).join('/') || null;
-                    
-                    if (asidePath && currentAsidePath !== asidePath) {
-                        this._asideNavigating = true;
-                        const asideSegments = asidePath.split('/');
-                        const tree = this.router.createUrlTree([{outlets: {aside: asideSegments}}], {relativeTo: null as any});
-                        tree.root.children['primary'] = parsedUrl.root.children['primary'];
-                        tree.queryParams = parsedUrl.queryParams;
-                        tree.fragment = parsedUrl.fragment;
-                        this.router.navigateByUrl(tree, {replaceUrl: true})
-                            .then(() => this._asideNavigating = false)
-                            .catch(() => this._asideNavigating = false);
-                    } else if (!asidePath && currentAside) {
-                        this._asideNavigating = true;
-                        delete parsedUrl.root.children['aside'];
-                        this.router.navigateByUrl(parsedUrl, {replaceUrl: true})
-                            .then(() => this._asideNavigating = false)
-                            .catch(() => this._asideNavigating = false);
-                    }
+                    const parsedUrl = this.router.parseUrl(e.urlAfterRedirects);
+                    const primaryPath = (parsedUrl.root.children['primary']?.segments || []).map(s => s.path).join('/') || 'home';
+                    this.activeNavigation.set(primaryPath);
+                    this.expandedNavigation.set(primaryPath);
+                    this.navigationFragment.set(parsedUrl.fragment || '');
+                    if (this._asideNavigating || !parsedUrl.root.children['aside']) return;
+                    this._asideNavigating = true;
+                    delete parsedUrl.root.children['aside'];
+                    this.router.navigateByUrl(parsedUrl, {replaceUrl: true})
+                        .finally(() => this._asideNavigating = false);
                 });""");
         return init;
     }

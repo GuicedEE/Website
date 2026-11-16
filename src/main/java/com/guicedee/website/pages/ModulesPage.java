@@ -38,6 +38,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
         getMain().add(layout);
 
         layout.add(buildIntro());
+        layout.add(pageFilter("Filter modules", "wa-card[appearance=outlined]"));
         layout.add(buildCoreModules());
         layout.add(buildWebModules());
         layout.add(buildDataModules());
