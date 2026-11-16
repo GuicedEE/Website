@@ -349,7 +349,7 @@ most were 128.95 px before the change at 1440 px. All original content across
 44 tables and 703 rows, including headers, was compared before publication and
 preserved. Complete text stays in the DOM for search and accessibility.
 
-Revision `guicedee-website--v260-20261116-35cfd61` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-35cfd61` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-35cfd61`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:3981e94bd6f85b74da4bf914f2fe9dcabf8bb19fb918946b1ee7ec0288a8aad6`.
@@ -360,3 +360,32 @@ heights, independent switches, keyboard activation, full-text titles, header
 fit, mobile table scrolling and no horizontal page overflow or JavaScript errors.
 All 298 public assets match the verified production build. Evidence and screenshots
 are retained under `target/website-environment-tables/` in DevSuite.
+
+## Representation formats in Data & persistence
+
+Source `b16dcc3314890034eb5e616b45cc54714ce63ce1` replaces the generic
+Representations card with individual JSON, Excel, XML and CSV entries beside
+Persistence. JSON, Excel and XML use their actual
+`com.guicedee.modules.representations` coordinates. CSV is provided by
+`com.guicedee.modules.services:commons-csv` and uses the upstream Apache Commons
+CSV API. The obsolete `com.guicedee:representations` coordinate is removed from
+this section.
+
+Descriptions were checked against the local interfaces, POMs and Commons CSV
+JAR. Excel documents the implemented XLSX worksheet-to-object reading helpers;
+it does not claim that the default `toExcel()` stub exports workbooks. Each new
+card opens its packaged component reference and links to its actual source
+repository. The section remains a responsive card grid with module filtering.
+
+Revision `guicedee-website--v260-20261116-b16dcc3` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-b16dcc3`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:5c9fbabcaf06fe4b0d0e13f2887cc5323012c4b311cbb8c2446d2a6064336971`.
+
+The production build and existing site-search checks passed. Local and public
+browser checks at 1440, 1024 and 390 pixels verified all five cards, copyable
+coordinates, CSV filtering and no horizontal page overflow or JavaScript errors.
+All four new documentation dialogs returned their matching reference documents
+and source-repository links. Generated module Markdown includes the four formats.
+All 298 public assets match the production build. Evidence and screenshots are
+retained under `target/website-representation-formats/` in DevSuite.
