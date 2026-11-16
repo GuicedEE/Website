@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-1d72c9c` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-785d533` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -60,14 +60,17 @@ CSV service module and its upstream API.
 The homepage carousel has pink previous and next arrows beside its eight dots.
 The controls preserve slide width and stay synchronized with the top selectors,
 including keyboard navigation and mobile layouts.
-The builder preview now sits beside configuration on wide screens; module groups
+The builder preview now occupies the page aside on wide screens; module groups
 start collapsed and clustering guidance appears when selected. Getting Started
 includes working next-step cards, a build-tool action and a readable lifecycle graph.
 The carousel also has slide-edge arrows and a native runtime results table.
 Java examples use a midnight-style syntax palette. A back-to-top button appears
-after scrolling, and the IntelliJ Marketplace card sits alongside its home section.
+after scrolling, and the IntelliJ Marketplace card sits in the home-page aside.
 Capabilities compares the JVM architecture with the experimental WASI probes and
 describes both ClassGraph and SPI discovery.
+Getting Started also uses the page aside for its Marketplace display. Introductory
+banners have a bottom-centred radial glow. Capabilities includes a REST client
+registry example, a darker configuration graph and responsive SDK cards.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.

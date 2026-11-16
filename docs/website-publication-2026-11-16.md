@@ -434,7 +434,7 @@ Public assets were compared with the production build; evidence is retained in
 ## Architecture, navigation and code presentation
 
 Website source `1d72c9c9c3a9cb45060b9165fc0aca6b06b8779d` is deployed in
-revision `guicedee-website--v260-20261116-1d72c9c`, healthy and serving 100%
+revision `guicedee-website--v260-20261116-1d72c9c`, verified healthy and serving 100%
 of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:8d285112cc316b558caf429e7958e341bd46588b22aacf0ae4e9bd483dfcbc87`.
 
 The capabilities page compares the JVM architecture with the experimental
@@ -447,3 +447,19 @@ Production generation and build passed. Public browser checks at 1440 and
 Java highlighting and back-to-top control. All 298 public assets match the
 production build. Evidence is retained in `target/website-publish-1d72c9c/`
 in DevSuite.
+
+## Page asides and capability styling
+
+Website source `785d533aa16ef80b78fe7ba127d888d4075b2587` is deployed in
+revision `guicedee-website--v260-20261116-785d533`, healthy and serving 100%
+of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:f1af75edeeea06e6e2896821065d8d8e858d91417d0249591b2ca4574fe34c93`.
+
+The home Marketplace display is beside the carousel; the builder preview and
+Getting Started Marketplace display use the page aside at desktop widths.
+Capabilities adds a REST client registry example, dark configuration diagram
+and responsive SDK cards. Documentation intro banners use a radial brand glow.
+The navigation tracks the visible section while scrolling.
+
+Production build passed. Public browser checks at 1440 and 390 pixels verified
+the asides, banner and capability content. All 298 live assets match the build;
+evidence is retained under `target/website-publish-785d533/` in DevSuite.
