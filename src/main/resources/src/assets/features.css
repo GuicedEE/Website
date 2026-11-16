@@ -204,7 +204,7 @@ wa-icon.icon-shrink {
 .builder-file-browser { display: grid; grid-template-columns: minmax(13rem, 20rem) minmax(0, 1fr); gap: 1rem; min-width: 0; }
 .builder-file-tree { min-width: 0; max-height: 65vh; overflow: auto; border-right: 1px solid var(--wa-color-neutral-border-quiet); }
 .builder-file-row { display: block; min-width: max-content; }
-.builder-file-row::part(base) { justify-content: start; }
+.builder-file-row::part(base) { justify-content: start; min-height: 1.75rem; padding: .1rem .4rem; line-height: 1.3; }
 .builder-file-row[aria-current='true']::part(base) { color: var(--wa-color-brand-on-quiet); background: var(--wa-color-brand-fill-quiet); }
 .builder-file-row[disabled]::part(base) { opacity: 1; color: var(--wa-color-text-quiet); }
 .builder-file-content { min-width: 0; }

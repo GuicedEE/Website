@@ -725,8 +725,9 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         var row = new WaButton<>();
         row.setVariant(Variant.Neutral);
         row.setAppearance(Appearance.Plain);
+        row.setSize(com.jwebmp.webawesome.components.Size.Small);
         row.addClass("builder-file-row");
-        row.addAttribute("[style.padding-inline-start.px]", "file.depth * 14");
+        row.addAttribute("[style.padding-inline-start.px]", "file.depth * 10");
         row.addAttribute("[attr.aria-current]", "previewSelected === file.path ? 'true' : null");
         row.addAttribute("[disabled]", "file.directory");
         row.addAttribute("(click)", "selectPreviewFile(file.path)");

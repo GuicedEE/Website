@@ -213,7 +213,12 @@ final class SiteNavigation {
             link.setText("&nbsp;" + page.label());
             link.setRenderTextBeforeChildren(false);
             item.add(link);
-            for (var section : page.sections()) item.add(sectionItem(page, section));
+            if (page.route().equals("releases") && page.sections().size() > 5) {
+                for (var section : page.sections().subList(0, 5)) item.add(sectionItem(page, section));
+                item.add(sectionItem(page, new Section(page.sections().get(5).anchor(), "…")));
+            } else {
+                for (var section : page.sections()) item.add(sectionItem(page, section));
+            }
             tree.add(item);
         }
         return tree;
@@ -238,6 +243,7 @@ final class SiteNavigation {
             item.addClass("navigation-section");
             var link = new Link<>("/" + page.route() + "#" + section.anchor());
             link.setText(section.label());
+            if (section.label().equals("…")) link.addAttribute("aria-label", "More releases");
             link.addAttribute("(click)", "openNavigationSection($event, '" + page.route() + "', '" + section.anchor() + "')");
             link.addAttribute("[attr.aria-current]", "activeNavigation() === '" + page.route() + "' && navigationFragment() === '" + section.anchor() + "' ? 'location' : null");
             item.add(link);
