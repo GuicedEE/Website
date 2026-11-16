@@ -275,7 +275,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
     private WaStack<?> buildDataModules() {
         var grid = new WaGrid<>();
-        grid.setMinColumnSize("16rem");
+        grid.setMinColumnSize("20rem");
         grid.setGap(PageSize.Medium);
 
         grid.add(moduleCard("Persistence",
@@ -284,14 +284,32 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 "com.guicedee:persistence",
                 "persistence", "Persistence/Basic"));
 
-        grid.add(moduleCard("Representations",
-                "IJsonRepresentation, DefaultObjectMapper, Jackson configuration. " +
-                        "Shared JSON serialization used by REST, WebSockets, and EventBus.",
-                "com.guicedee:representations",
-                "representations"));
+        grid.add(moduleCard("JSON Representation",
+                "IJsonRepresentation adds toJson() and fromJson() helpers to your objects. " +
+                        "Shared Jackson 3 ObjectMapper bindings keep JSON serialization consistent across DTOs and messages.",
+                "com.guicedee.modules.representations:json-representation",
+                "json-representation"));
+
+        grid.add(moduleCard("Excel Representation",
+                "Read XLSX worksheets into typed objects with IExcelRepresentation.fromExcel() and ExcelReader. " +
+                        "The first row supplies field names for mapping spreadsheet records.",
+                "com.guicedee.modules.representations:excel-representation",
+                "excel-representation"));
+
+        grid.add(moduleCard("XML Representation",
+                "IXmlRepresentation provides toXml() and fromXml() helpers through Jakarta XML Binding (JAXB). " +
+                        "Cached JAXB contexts support repeated object serialization and parsing.",
+                "com.guicedee.modules.representations:xml-representation",
+                "xml-representation"));
+
+        grid.add(moduleCard("CSV — Apache Commons",
+                "Read and write delimited records with CSVFormat, CSVParser and CSVPrinter. " +
+                        "CSV support comes from the modular Apache Commons CSV service library.",
+                "com.guicedee.modules.services:commons-csv",
+                "commons-csv"));
 
         return buildSection("Data & persistence", "Database access, serialization, and data formats",
-                "Hibernate Reactive, Jackson, and shared JSON representations.", true, grid);
+                "Reactive persistence and JSON, XML, Excel and CSV data formats.", true, grid);
     }
 
     private WaStack<?> buildObservabilityModules() {
@@ -517,7 +535,10 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                     'rest-client': 'https://raw.githubusercontent.com/GuicedEE/Rest-Client/refs/heads/master/README.md',
                     'websockets': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxSockets/refs/heads/master/README.md',
                     'persistence': 'https://raw.githubusercontent.com/GuicedEE/GuicedVertxPersistence/refs/heads/master/README.md',
-                    'representations': 'https://raw.githubusercontent.com/GuicedEE/Representations/refs/heads/master/README.md',
+                    'json-representation': '/reference/components/com.guicedee.modules.representations.json-representation.md',
+                    'excel-representation': '/reference/components/com.guicedee.modules.representations.excel-representation.md',
+                    'xml-representation': '/reference/components/com.guicedee.modules.representations.xml-representation.md',
+                    'commons-csv': '/reference/components/com.guicedee.modules.services.commons-csv.md',
                     'health': 'https://raw.githubusercontent.com/GuicedEE/Health/refs/heads/master/README.md',
                     'metrics': 'https://raw.githubusercontent.com/GuicedEE/Metrics/refs/heads/master/README.md',
                     'telemetry': 'https://raw.githubusercontent.com/GuicedEE/GuicedTelemetry/refs/heads/master/README.md',
@@ -539,6 +560,14 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                 'runtime-autoconfigure': 'https://raw.githubusercontent.com/GuicedEE/RuntimeAutoconfigure/refs/heads/master/README.md'
                 };
                 """);
+        f.add("""
+                referenceRepositories: Record<string, string> = {
+                    'json-representation': 'https://github.com/GuicedEE/JsonRepresentation',
+                    'excel-representation': 'https://github.com/GuicedEE/ExcelRepresentation',
+                    'xml-representation': 'https://github.com/GuicedEE/XMLRepresentation',
+                    'commons-csv': 'https://github.com/GuicedEE/Services'
+                };
+                """);
         return f;
     }
 
@@ -551,7 +580,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
                     this.readmeSrc = this.readmeUrls[moduleId] || '';
                     const raw = this.readmeUrls[moduleId] || '';
                     const match = raw.match(/raw\\.githubusercontent\\.com\\/([^\\/]+\\/[^\\/]+)/);
-                    this.currentRepoUrl = match ? 'https://github.com/' + match[1] : '';
+                    this.currentRepoUrl = this.referenceRepositories[moduleId] || (match ? 'https://github.com/' + match[1] : '');
                     this.readmeDialogOpen = true;
                 }
                 """);
