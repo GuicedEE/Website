@@ -17,9 +17,10 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-acab335` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-05a5063` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
-Language, and Service Discovery is grouped under Cloud SDKs. The site also serves
+Language, and Service Discovery is grouped under Cloud SDKs. The 2.6.0 release
+highlights use an aligned, responsive card grid. The site also serves
 the complete AI reference, robots and sitemap. See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.

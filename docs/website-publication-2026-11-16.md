@@ -1,8 +1,9 @@
 # Website publication — 16 November 2026
 
 The updated frontend is live at [guicedee.com](https://guicedee.com/home).
-Azure revision `guicedee-website--v260-20261116-acab335` is healthy, ready and
-receives 100% of traffic.
+The initial publication used Azure revision
+`guicedee-website--v260-20261116-acab335`, verified healthy and ready with 100%
+of traffic before the release-card follow-up recorded below.
 
 - Website source: `acab33534de103136f4be737d1ba5f04d07ed729`, pushed to `master`.
 - Image tag: `gedmarc/guicedee-website:2.6.0-20261116-acab335`.
@@ -48,3 +49,19 @@ the `target/website-publish-*` prefix. The local preview remains available at
 
 This publication updates the static frontend. It does not publish GuicedEE
 framework artifacts to Maven Central or redeploy the separate website backend.
+
+## Release-card layout follow-up
+
+Source `05a506347a9fd8e562f3dd54c51f027853f1f7ff` replaces the 2.6.0 highlights'
+vertical stack with a responsive grid. The five cards use matching row heights
+and aligned notes. Public browser checks passed at 1440, 1024 and 390 pixels:
+three, two and one column respectively, without horizontal page overflow.
+
+Revision `guicedee-website--v260-20261116-05a5063` is healthy, ready and now receives
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-05a5063`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:f439099483a9d6d5d733d657262e4d255313e6286ec512b24bb24364c4eff01d`.
+
+The production build passed and all 298 live assets match this build. Evidence,
+layout measurements and screenshots are retained in DevSuite under
+`target/website-release-cards/`.
