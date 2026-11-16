@@ -126,7 +126,9 @@ def main():
                     assert len(build_rows) == len(runtime_rows) == 9
                     assert any('Micronaut' in row['artifact'] for row in build_rows)
                     assert any('Micronaut' in row['artifact'] for row in runtime_rows)
-                    page.locator('.showcase-navigation wa-button').filter(has_text='Developer builds').click()
+                    developer = page.locator('.showcase-navigation wa-button').filter(has_text='Developer')
+                    assert developer.inner_text().strip() == 'Developer'
+                    developer.click()
                     for index, label in enumerate(['Compile', 'JVM package', 'Native build']):
                         build_panel.locator('.benchmark-modes wa-button').filter(has_text=label).click()
                         page.wait_for_function("""expected => {
@@ -146,6 +148,14 @@ def main():
                         config = chart_panel.locator('wa-chart').evaluate("e => typeof e.config === 'string' ? JSON.parse(e.config) : e.config")
                         assert config['data']['datasets'][0]['data'] == values, (mode, label, config)
                         assert config['data']['labels'] == ['GuicedEE native', 'Quarkus native', 'Micronaut native']
+                        table = chart_panel.locator('wa-data-grid').first
+                        rows = table.evaluate('e => e.data')
+                        unit = 'MiB' if label == 'Native-Image' else 'ms'
+                        assert [row['framework'] for row in rows] == config['data']['labels']
+                        assert [row['value'] for row in rows] == [f'{value:.2f} {unit}' for value in values]
+                        for row in rows:
+                            table.get_by_text(row['framework'], exact=True).wait_for(state='visible')
+                            table.get_by_text(row['value'], exact=True).wait_for(state='visible')
                     if not args.url and mode == 'published':
                         for width, height in [(1440, 1100), (390, 844)]:
                             page.set_viewport_size(dict(width=width, height=height))

@@ -224,7 +224,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var nav = new WaCluster<>();
         nav.addClass("showcase-navigation");
         nav.addAttribute("aria-label", "Homepage highlights");
-        String[] labels = {"Discover", "Performance", "Developer builds", "Native-Image", "Persistence", "CDI", "Kotlin", "WebAssembly"};
+        String[] labels = {"Discover", "Performance", "Developer", "Native-Image", "Persistence", "CDI", "Kotlin", "WebAssembly"};
         String[] icons = {"discover", "performance", "builds", "native", "persistence", "cdi", "kotlin", "wasm"};
         for (int i = 0; i < labels.length; i++) {
             var button = new WaButton<>(labels[i], Variant.Neutral);
@@ -257,7 +257,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Clean JVM compile · seconds", "Clean offline builds with dependencies cached.", "build-performance"));
         carousel.add(benchmarkSlide(2, "03 / NATIVE IMAGE", "Your Guice application. Ahead of time.",
                 "Opt-in native-image support keeps runtime injection, scopes and interceptors. SPI discovery and application reachability metadata prepare your application for a closed world.",
-                "Peak container memory · MiB", "Native workload comparison · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
+                "Peak container memory · MiB", "GuicedEE, Quarkus and Micronaut native · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
         carousel.add(benchmarkSlide(3, "04 / PERSISTENCE", "Real transactions. Real evidence.",
                 "A PostgreSQL workload across 15 related entities: committed writes, joined reads, updates and rollbacks.",
                 "Launch to committed graph · seconds", "0.25 CPU / 500 MiB per app. Startup includes the first committed 15-entity graph. CRUD cycles include three write transactions and one read. GuicedEE uses reactive stateless sessions; Quarkus and Micronaut use ORM transactions.", "postgresql-persistence"));
