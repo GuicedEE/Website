@@ -173,6 +173,25 @@ wa-icon.icon-shrink {
     font-size: round(0.875em, 1px);
 }
 
+/* Module groups share one selection tree across responsive columns. */
+.builder-selection { container: builder-selection / inline-size; }
+.builder-selection-layout { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.builder-modules, .builder-preview, .builder-module-tree { min-width: 0; }
+.builder-module-tree::part(base) {
+    display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: .75rem 1rem;
+}
+.builder-module-tree > wa-tree-item {
+    min-width: 0; padding: .35rem; border: 1px solid var(--wa-color-neutral-border-quiet);
+    border-radius: .75rem; background: var(--wa-color-surface-raised);
+}
+.builder-module-tree wa-tree-item::part(label) { white-space: normal; overflow-wrap: anywhere; }
+@container builder-selection (min-width: 42rem) {
+    .builder-module-tree::part(base) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container builder-selection (min-width: 64rem) {
+    .builder-selection-layout { grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr); }
+}
+
 /* Compact, manually navigated homepage performance stories. */
 .performance-showcase { min-width: 0; gap: 1rem; }
 .showcase-navigation { justify-content: center; gap: .35rem; flex-wrap: wrap; }

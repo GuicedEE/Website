@@ -506,18 +506,23 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
     private WaStack<?> buildModuleSelectionSection()
     {
         var content = new WaStack<>();
+        content.addClass("builder-selection");
         content.setGap(PageSize.Medium);
 
         var columns = new WaGrid<>();
+        columns.addClass("builder-selection-layout");
         columns.setMinColumnSize("22rem");
         columns.setGap(PageSize.Large);
 
         // ── Left column: Module tree ──
         var treeColumn = new WaStack<>();
+        treeColumn.addClass("builder-modules");
         treeColumn.setGap(PageSize.Small);
         treeColumn.add(headingText("h3", "m", "Modules"));
 
         var tree = new WaTree<>();
+        tree.addClass("builder-module-tree");
+        tree.addAttribute("aria-label", "Available modules");
         tree.setSelection(TreeSelectionMode.Multiple);
 
         var webReactive = parentItem("Web Reactive", true);
@@ -608,6 +613,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
         // ── Right column: Preview ──
         var previewColumn = new WaStack<>();
+        previewColumn.addClass("builder-preview");
         previewColumn.setGap(PageSize.Medium);
         previewColumn.add(headingText("h3", "m", "Preview"));
 
@@ -692,7 +698,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         content.add(columns);
 
         return buildSection("Select", "Modules & preview",
-                "Choose modules on the left — preview the generated files on the right.",
+                "Choose your modules and preview the generated project files.",
                 false, content);
     }
 
