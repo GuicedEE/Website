@@ -81,6 +81,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         WaPage<?> page = new WaPage<>();
         page.addStyle("width:100%");
         page.addStyle("height:100%");
+        page.addAttribute("[class.no-aside]", "!asideActive()");
 
         // ── WaPage settings ──
         page.getMain().setPageSize(PageSize.ExtraSmall);
@@ -454,7 +455,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         menuTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
         // Home
-        menuTree.add(createRouterTreeItem("/home", "Home", "house"));
+        menuTree.add(createHomeTreeItem());
 
         // Releases
         menuTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
@@ -587,7 +588,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         navTree.setIndentSize("2px");
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
 
-        navTree.add(createRouterTreeItem("/home", "Home", "house"));
+        navTree.add(createHomeTreeItem());
         navTree.add(createRouterTreeItem("/releases", "Releases", "tag"));
         navTree.add(createRouterTreeItem("/builder", "App Builder", "wand-magic-sparkles"));
         navTree.add(createRouterTreeItem("/getting-started", "Getting Started", "rocket"));
@@ -661,9 +662,38 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
 
         page.getMain().add(new RouterOutlet<>());
-        page.getAside().add(new RouterOutlet<>("aside"));
+        var asideOutlet = new RouterOutlet<>("aside");
+        asideOutlet.addAttribute("(activate)", "asideActive.set(true)");
+        asideOutlet.addAttribute("(deactivate)", "asideActive.set(false)");
+        asideOutlet.addAttribute("(attach)", "asideActive.set(true)");
+        asideOutlet.addAttribute("(detach)", "asideActive.set(false)");
+        page.getAside().add(asideOutlet);
 
         add(page);
+    }
+
+    private static WaTreeItem<?> createHomeTreeItem()
+    {
+        var home = createRouterTreeItem("/home", "Home", "house");
+        home.addClass("home-navigation");
+        home.setExpanded(true);
+        String[][] sections = {
+                {"highlights", "Highlights & benchmarks"},
+                {"how-it-works", "How it works"},
+                {"intellij-plugin", "IntelliJ plugin"},
+                {"explore-platform", "Explore the platform"}
+        };
+        for (var section : sections)
+        {
+            var item = new WaTreeItem<>();
+            item.addClass("home-section");
+            var link = new Link<>("/home#" + section[0]);
+            link.setText(section[1]);
+            link.addAttribute("(click)", "openHomeSection($event, '" + section[0] + "')");
+            item.add(link);
+            home.add(item);
+        }
+        return home;
     }
 
     private static WaTreeItem<?> createRouterTreeItem(String path, String text, String icon)
@@ -790,10 +820,10 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         f.add(SiteSearch.fields());
         //f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
+        f.add("asideActive = signal(false);");
         f.add("private document = inject(DOCUMENT);");
         f.add("""
                 private asideRoutes: Record<string, string> = {
-                    'home': 'home',
                     'getting-started': 'getting-started',
                     'capabilities': 'capabilities',
                     'guides/end-to-end': 'guides/end-to-end',

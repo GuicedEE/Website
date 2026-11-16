@@ -83,10 +83,9 @@ server.listen(0, '127.0.0.1', async () => {
         await input.fill('<img src=x onerror=alert(1)>');
         assert.equal(await search.locator('img').count(), 0);
         await input.press('Escape');
-        assert(await search.locator('.site-search-results').isHidden());
+        await search.locator('.site-search-results').waitFor({state:'hidden'});
         await input.fill('');
-        await page.waitForTimeout(100);
-        assert(await search.locator('.site-search-results').isHidden());
+        await search.locator('.site-search-results').waitFor({state:'hidden'});
 
         await page.setViewportSize({width:390,height:844});
         await page.locator('wa-page').evaluate(el => { el.navOpen = true; });

@@ -172,6 +172,14 @@ wa-page[view='mobile'] > [slot='aside'] {
     display: none;
 }
 
+/* Reclaim the column whenever the current route has no active aside. */
+wa-page.no-aside {
+    --aside-width: 0px;
+}
+wa-page.no-aside > [slot='aside'] {
+    display: none;
+}
+
 wa-page::part(drawer) {
     --size: auto;
 }
@@ -468,12 +476,27 @@ wa-page > [slot='menu'] wa-tree,
 wa-page > [slot='navigation'] wa-tree {
     --indent-size: 0;
     padding-inline-start: 0;
-    margin-inline-start: -40px;
+    margin-inline-start: -24px;
 }
 
 wa-page > [slot='menu'] wa-tree-item::part(item),
 wa-page > [slot='navigation'] wa-tree-item::part(item) {
     padding-inline-start: var(--wa-space-2xs);
+}
+
+.home-navigation > .home-section > a {
+    padding: .3rem .5rem .3rem 1.15rem;
+    font-size: .8rem;
+    line-height: 1.4;
+    white-space: normal;
+    color: var(--wa-color-text-quiet);
+}
+.home-navigation > .home-section > a:hover,
+.home-navigation > .home-section > a:focus-visible {
+    color: var(--wa-color-brand-on-quiet);
+}
+guicedee-home :is(#highlights, #how-it-works, #intellij-plugin, #explore-platform) {
+    scroll-margin-block-start: 5rem;
 }
 
 /* Aside search input: brand color on focus for icon and placeholder */
