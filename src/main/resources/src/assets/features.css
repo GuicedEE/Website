@@ -226,9 +226,22 @@ wa-icon.icon-shrink {
 
 .performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0;
     --showcase-height: clamp(30rem, calc(100svh - 14rem), 46rem); }
-.performance-carousel::part(scroll-container) {
-    height: var(--showcase-height); grid-template-rows: minmax(0, 1fr); overflow-y: hidden;
+.performance-carousel::part(base) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: "slides slides slides" "previous pagination next";
+    gap: .75rem .5rem; align-items: center;
 }
+.performance-carousel::part(scroll-container) {
+    grid-area: slides; height: var(--showcase-height); grid-template-rows: minmax(0, 1fr); overflow-y: hidden;
+}
+.performance-carousel::part(navigation-button) {
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    color: var(--wa-color-brand-on-quiet); background: var(--wa-color-brand-fill-quiet);
+    border: 1px solid var(--wa-color-brand-border-quiet);
+}
+.performance-carousel::part(navigation-button-previous) { grid-area: previous; justify-self: end; }
+.performance-carousel::part(navigation-button-next) { grid-area: next; justify-self: start; }
+.performance-carousel::part(pagination) { grid-area: pagination; padding: 0; justify-content: center; }
 .performance-carousel wa-carousel-item { --aspect-ratio: auto; height: 100%; min-height: 0;
     align-self: stretch; border-radius: 1.5rem; }
 .showcase-scroller { width: 100%; height: 100%; min-height: 0; border-radius: 1.5rem; --shadow-size: 1.25rem; }

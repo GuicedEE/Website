@@ -243,7 +243,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         carousel.addAttribute("#showcase", "");
         carousel.addAttribute("aria-label", "Discover GuicedEE performance and capabilities");
         carousel.addAttribute("(wa-slide-change)", "showcaseIndex = $any($event).detail.index");
-        carousel.setNavigation(false);
+        carousel.setNavigation(true);
         carousel.setPagination(true);
         carousel.addClass("performance-carousel");
         var intro = new WaCarouselItem<>();
