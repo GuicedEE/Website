@@ -27,8 +27,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `05a506347a9fd8e562f3dd54c51f027853f1f7ff` is now live in revision
-`guicedee-website--v260-20261116-05a5063`, with benchmark snapshot `c022ced`.
+Website source `2c64599537eaa946025af880feb187bc90e30ea0` is now live in revision
+`guicedee-website--v260-20261116-2c64599`, with benchmark snapshot `c022ced`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. All eight homepage slides use a stable-height
 scroller. See the [complete deployment record](website-publication-2026-11-16.md)

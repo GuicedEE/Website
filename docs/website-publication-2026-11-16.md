@@ -57,11 +57,29 @@ vertical stack with a responsive grid. The five cards use matching row heights
 and aligned notes. Public browser checks passed at 1440, 1024 and 390 pixels:
 three, two and one column respectively, without horizontal page overflow.
 
-Revision `guicedee-website--v260-20261116-05a5063` is healthy, ready and now receives
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-05a5063`.
+Revision `guicedee-website--v260-20261116-05a5063` was verified healthy and ready
+with 100% of traffic before the history-layout follow-up below.
+Image tag: `gedmarc/guicedee-website:2.6.0-20261116-05a5063`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:f439099483a9d6d5d733d657262e4d255313e6286ec512b24bb24364c4eff01d`.
 
 The production build passed and all 298 live assets match this build. Evidence,
 layout measurements and screenshots are retained in DevSuite under
 `target/website-release-cards/`.
+
+## Release history through 2.4.0
+
+Source `2c64599537eaa946025af880feb187bc90e30ea0` applies the same shared grid to
+2.5.1, 2.5.0, 2.4.2, 2.4.1 and all three 2.4.0 sections. Unique anchors restore
+the ClassGraph and clustering sections previously omitted during generation due
+to duplicate IDs. The ClassGraph guide link remains below its cards.
+
+Revision `guicedee-website--v260-20261116-2c64599` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-2c64599`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:b164286d1e24ff6fb39910dcef5738888db5719fc9026091e5debe1a59ff2c59`.
+
+Local and public browser checks passed all eight grids and 28 cards at 1440,
+1024 and 390 pixels, including equal row heights, aligned notes, unique anchors
+and no horizontal page overflow. All 298 live assets match the production build.
+Evidence is retained under `target/website-release-history/` in DevSuite.
