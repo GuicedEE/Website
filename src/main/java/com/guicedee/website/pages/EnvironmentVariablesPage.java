@@ -5,19 +5,46 @@ import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.webawesome.components.PageSize;
+import com.jwebmp.webawesome.components.Size;
 import com.jwebmp.webawesome.components.Variant;
 import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.card.WaCard;
+import com.jwebmp.webawesome.components.waswitch.WaSwitch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NgComponent("guicedee-environment-variables")
 @NgRoutable(path = "environment-variables")
 public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPage> implements INgComponent<EnvironmentVariablesPage>
 {
+    private int tableSequence;
+
     public EnvironmentVariablesPage()
     {
         renderContent();
+    }
+
+    @Override
+    public List<String> fields()
+    {
+        var fields = new ArrayList<>(super.fields());
+        fields.add("wrappedTables: Record<string, boolean> = {};");
+        return fields;
+    }
+
+    @Override
+    public List<String> methods()
+    {
+        var methods = new ArrayList<>(super.methods());
+        methods.add("""
+                setTableWrap(id: string, event: Event) {
+                    this.wrappedTables[id] = !!(event.target as HTMLElement & {checked: boolean}).checked;
+                }
+                """);
+        return methods;
     }
 
     private void renderContent()
@@ -764,23 +791,51 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
     // ── Table helper ────────────────────────────────────
 
     /**
-     * Builds an HTML table of environment variables with name, purpose, and default columns.
+     * Keeps reference content in semantic HTML, with compact rows and optional wrapping.
      */
     private DivSimple<?> envTable(String title, String[][] rows, String... headings)
     {
         var wrapper = new WaStack<>();
         wrapper.setGap(PageSize.Small);
-        if (title != null && !title.isBlank()) wrapper.add(headingText("h4", "s", title));
+        wrapper.addClass("environment-table");
+        String tableId = "environment-table-" + ++tableSequence;
+        String label = title == null || title.isBlank() ? "Configuration variables" : title;
+        wrapper.addAttribute("[class.table-wrapped]", "wrappedTables['" + tableId + "']");
+        var toolbar = new WaCluster<>();
+        toolbar.addClass("environment-table-toolbar");
+        if (title != null && !title.isBlank()) toolbar.add(headingText("h4", "s", title));
+        var wrap = new WaSwitch<>();
+        wrap.setSize(Size.Small);
+        wrap.setText("Wrap text");
+        wrap.addAttribute("aria-label", "Wrap text in " + label);
+        wrap.addAttribute("aria-controls", tableId);
+        wrap.addAttribute("title", "Show complete cell values on multiple lines");
+        wrap.addAttribute("[checked]", "!!wrappedTables['" + tableId + "']");
+        wrap.addAttribute("(wa-change)", "setTableWrap('" + tableId + "', $event)");
+        toolbar.add(wrap);
+        wrapper.add(toolbar);
         if (headings.length == 0) headings = new String[]{"Variable", "Purpose", "Default"};
         var tableDiv = new DivSimple<>();
-        tableDiv.addStyle("overflow-x", "auto");
-        var html = new StringBuilder("<table style=\"width:100%;border-collapse:collapse;\"><thead><tr>");
-        for (String heading : headings) html.append("<th style=\"text-align:left;padding:var(--wa-space-xs);\">").append(escapeAngular(heading)).append("</th>");
+        tableDiv.addClass("environment-table-scroll");
+        tableDiv.addAttribute("id", tableId);
+        tableDiv.addAttribute("role", "region");
+        tableDiv.addAttribute("aria-label", label);
+        tableDiv.addAttribute("tabindex", "0");
+        var html = new StringBuilder("<table aria-label=\"").append(escapeAngular(label)).append("\"");
+        if (headings.length == 6) html.append(" class=\"environment-contract-table\"");
+        html.append(">");
+        if (headings.length == 6) {
+            html.append("<colgroup>");
+            for (int width : new int[]{22, 25, 8, 11, 11, 23}) html.append("<col style=\"width:").append(width).append("%\">");
+            html.append("</colgroup>");
+        }
+        html.append("<thead><tr>");
+        for (String heading : headings) html.append("<th scope=\"col\">").append(escapeAngular(heading)).append("</th>");
         html.append("</tr></thead><tbody>");
         for (String[] row : rows) {
             html.append("<tr>");
-            for (String value : row) html.append("<td class=\"wa-body-s\" style=\"vertical-align:top;padding:var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid var(--wa-color-surface-border);\">")
-                    .append(escapeAngular(value)).append("</td>");
+            for (String value : row) html.append("<td><span title=\"").append(escapeAngular(value)).append("\">")
+                    .append(escapeAngular(value)).append("</span></td>");
             html.append("</tr>");
         }
         tableDiv.setText(html.append("</tbody></table>").toString());

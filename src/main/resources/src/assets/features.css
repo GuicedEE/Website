@@ -173,6 +173,23 @@ wa-icon.icon-shrink {
     font-size: round(0.875em, 1px);
 }
 
+/* Reference tables keep predictable columns and compact rows until wrapping is requested. */
+.environment-table { min-width: 0; }
+.environment-table-toolbar { justify-content: space-between; gap: .5rem 1rem; }
+.environment-table-toolbar h4 { margin: 0; }
+.environment-table-toolbar wa-switch { flex: none; }
+.environment-table-scroll { min-width: 0; max-width: 100%; overflow-x: auto; }
+.environment-table table { width: 100%; min-width: 44rem; table-layout: fixed; border-collapse: collapse; }
+.environment-table .environment-contract-table { min-width: 64rem; }
+.environment-table th, .environment-table td {
+    text-align: left; vertical-align: top; padding: .4rem .5rem; font-size: .8rem;
+    border-bottom: 1px solid var(--wa-color-neutral-border-quiet);
+}
+.environment-table th { line-height: 1.3; overflow-wrap: anywhere; }
+.environment-table td > span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.environment-table tbody tr:hover { background: var(--wa-color-neutral-fill-quiet); }
+.environment-table.table-wrapped td > span { white-space: normal; overflow-wrap: anywhere; }
+
 /* Module groups share one selection tree across responsive columns. */
 .builder-selection { container: builder-selection / inline-size; }
 .builder-selection-layout { grid-template-columns: minmax(0, 1fr); align-items: start; }
