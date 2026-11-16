@@ -377,7 +377,7 @@ it does not claim that the default `toExcel()` stub exports workbooks. Each new
 card opens its packaged component reference and links to its actual source
 repository. The section remains a responsive card grid with module filtering.
 
-Revision `guicedee-website--v260-20261116-b16dcc3` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-b16dcc3` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-b16dcc3`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:5c9fbabcaf06fe4b0d0e13f2887cc5323012c4b311cbb8c2446d2a6064336971`.
@@ -389,3 +389,25 @@ All four new documentation dialogs returned their matching reference documents
 and source-repository links. Generated module Markdown includes the four formats.
 All 298 public assets match the production build. Evidence and screenshots are
 retained under `target/website-representation-formats/` in DevSuite.
+
+## Carousel arrows alongside pagination dots
+
+Source `bb3ea745f3a2911f775317653bbf76a7d2faaa4b` enables the carousel's native
+previous and next buttons. The pink circular controls flank the existing eight
+dots below the slides, preserving the full width of the content at every checked
+viewport. Each arrow has a 44 px target and an accessible label. The first and
+last slides retain the native disabled states; dots and top selectors stay in sync.
+
+Revision `guicedee-website--v260-20261116-bb3ea74` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bb3ea74`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:35f92f3959dc115ac4c75b20f0ebf42c66baac14271a7d616f82723cd2082a24`.
+
+The Maven generation and Angular production build passed. Local and public
+browser checks at 1440, 1024, 390 and 320 pixels traversed all eight slides,
+verified arrow and dot clicks, keyboard activation, selected top buttons,
+boundary states, stable heights and full content width, with no JavaScript errors.
+The existing wheel/touch scroll chaining and immediate section-navigation checks
+also passed locally. All 298 public assets match the verified production build.
+Evidence and screenshots are retained under `target/website-carousel-arrows/`
+in DevSuite.
