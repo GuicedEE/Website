@@ -9,6 +9,7 @@ import com.jwebmp.webawesome.components.WaCluster;
 import com.jwebmp.webawesome.components.WaGrid;
 import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
+import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 
 @NgComponent("guicedee-releases")
@@ -51,6 +52,14 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         layout.add(introCard);
 
         var v260Content = releaseHighlights();
+        v260Content.add(featureCard("Keeping pace with the best",
+                "GuicedEE 2.6.0 brings a public benchmark suite covering SDK stack examples, startup, memory, developer builds and PostgreSQL persistence. Compare GuicedEE, Quarkus and Micronaut with reproducible scripts and retained samples.", "Open benchmarks"));
+        v260Content.add(featureCard("Developer experience",
+                "GuicedEE SPI records a 3.52 s clean compile and a 4.10 s complete runnable JVM package. The suite compares JVM builds with Quarkus fast-JAR and Micronaut JVM; full native packaging takes 67.86 s for GuicedEE.", "Clean offline build medians · 15 November 2026"));
+        v260Content.add(featureCard("Native runtime performance",
+                "655 ms median startup through the cold SDK stack example, 4.93 ms warm request p50 and 68.57 MiB median peak container memory. The native comparison includes GuicedEE, Quarkus and Micronaut, with 18 starts and 270 passing capability checks.", "0.25 CPU / 500 MiB per app · 15 November 2026"));
+        v260Content.add(featureCard("Reactive persistence benchmarks",
+                "A PostgreSQL workload across a 15-entity graph records 2.41 ms joined-read p50 and 80.31 ms CRUD-cycle p50 for GuicedEE reactive stateless sessions. The retained three-run batch includes 450 samples per operation and 42 passing correctness checks for GuicedEE.", "0.25 CPU / 500 MiB per app · 16 November 2026"));
         v260Content.add(featureCard("Modular Firebase and Commercetools SDKs",
                 "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "2.6.0"));
         v260Content.add(featureCard("Shared modular dependencies",
@@ -58,11 +67,29 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         v260Content.add(featureCard("SDK API documentation",
                 "Firebase Admin and Commercetools SDK Javadocs build against the current shaded binaries, clear stale generated sources and fail on documentation errors. Commercetools includes GraphQL, HTTP and RMF APIs.", "Javadoc"));
         v260Content.add(featureCard("Complete application jlink images",
-                "Oracle JDK builds link the application and its dependency graph with generated module launchers. SPI and scanner fixture checks pass after extraction. Historical JDK-only jlink measurements are excluded from application comparisons; fresh release measurements are still required.", "Packaging validation"));
+                "Builds link the application and its dependency graph with generated module launchers. Complete SPI and scanner jlink packages record medians of 18.25 s and 17.88 s. These images include a JVM runtime; native builds produce ahead-of-time executables.", "Clean offline build medians · 15 November 2026"));
         v260Content.add(featureCard("Kotlin project generation",
                 "Choose Java or Kotlin in the website Application Builder and IntelliJ wizard. Kotlin starters include Maven or Gradle builds, JUnit tests and JPMS descriptors; IntelliJ also includes Kotlin file templates for the framework integrations.", "Developer tools"));
-        layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
-                "Release target 2.6.0. Maven Central publication is pending.", true, v260Content));
+        var v260 = new WaStack<>();
+        v260.setGap(PageSize.Medium);
+        v260.add(v260Content);
+        var benchmarkContext = bodyText("Benchmark snapshot: 15–16 November 2026. Quarkus is our primary comparison because both frameworks build on Vert.x; Micronaut provides another comparison. " +
+                "Build figures are medians of three clean, offline builds with prepared dependencies and no runtime CPU/memory cap. Persistence uses default JVMs; a CRUD cycle covers three write transactions and one read across four HTTP requests. " +
+                "Full results retain ranges, sample details and the separate build/runtime cohorts.", "s");
+        benchmarkContext.setWaColorText("quiet");
+        v260.add(benchmarkContext);
+        var benchmarkLinks = new WaCluster<>();
+        benchmarkLinks.setGap(PageSize.Small);
+        var benchmarkResults = new WaButton<>("View the release benchmark results", Variant.Brand);
+        benchmarkResults.setAsLink("https://github.com/GuicedEE/benchmarks/blob/f5770f264815ca06b121599d327768bf43e7bb45/RESULTS.md", "_blank", null);
+        benchmarkLinks.add(benchmarkResults);
+        var benchmarkRepository = new WaButton<>("Explore the benchmark repository", Variant.Neutral);
+        benchmarkRepository.setAppearance(Appearance.Outlined);
+        benchmarkRepository.setAsLink("https://github.com/GuicedEE/benchmarks", "_blank", null);
+        benchmarkLinks.add(benchmarkRepository);
+        v260.add(benchmarkLinks);
+        layout.add(buildSection("v2.6.0", "Performance, native images and modular SDKs",
+                "Release target 2.6.0. Maven Central publication is pending.", true, v260));
 
         var v251Content = releaseHighlights();
         v251Content.add(featureCard("GuicedEE 2.5.1 on Maven Central",
