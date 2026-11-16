@@ -27,14 +27,15 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `af6b645552fe8219190ac93050e5beba849b4fe5` is now live in revision
-`guicedee-website--v260-20261116-af6b645`, with benchmark snapshot `f5770f2`.
+Website source `7f9b496dcb8b1251c58648b8304cf50bb58acfdd` is now live in revision
+`guicedee-website--v260-20261116-7f9b496`, with benchmark snapshot `f5770f2`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
 also verify each native chart's matching table rows and formatted values.
-All eight homepage slides use a stable-height scroller. The homepage has no
-right sidebar; its four section links are nested under Home in both menus.
+All eight homepage slides use a stable-height scroller. Section links across the
+site are nested under their page in both menus, with one expanded branch and no
+right sidebar. Navigation automatically opens the destination page's branch.
 See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 
