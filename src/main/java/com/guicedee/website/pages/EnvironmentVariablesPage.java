@@ -71,6 +71,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
         var introCard = new WaCard<>();
         introCard.setAppearance(Appearance.Filled);
+        introCard.addClass("page-intro-banner");
         introCard.add(introContent);
         layout.add(introCard);
         layout.add(pageFilter("Filter variables", ".content-section"));

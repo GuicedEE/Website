@@ -48,6 +48,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
 
         var introCard = new WaCard<>();
         introCard.setAppearance(Appearance.Filled);
+        introCard.addClass("page-intro-banner");
         introCard.add(introContent);
         layout.add(introCard);
 

@@ -1,3 +1,34 @@
+scheduleNavigationScroll() {
+    if (this.navigationScrollFrame) return;
+    this.navigationScrollFrame = requestAnimationFrame(() => {
+        this.navigationScrollFrame = 0;
+        const route = this.activeNavigation();
+        const main = this.document.querySelector('wa-page > main');
+        if (!main) return;
+        const sections = (this.navigationAnchors[route] || [])
+            .map(id => this.document.getElementById(id))
+            .filter((element): element is HTMLElement => !!element && main.contains(element) && element.getClientRects().length > 0);
+        if (!sections.length) return;
+        const header = this.document.querySelector('wa-page > [slot="header"]');
+        const threshold = Math.max(0, header?.getBoundingClientRect().bottom || 0) + 24;
+        const positioned = sections.map(element => ({element, top: element.getBoundingClientRect().top}))
+            .sort((a, b) => a.top - b.top);
+        let current = positioned[0].element;
+        for (const section of positioned) {
+            if (section.top <= threshold) current = section.element;
+        }
+        const scrolling = this.document.scrollingElement;
+        if (scrolling && scrolling.scrollTop + scrolling.clientHeight >= scrolling.scrollHeight - 2) {
+            current = positioned[positioned.length - 1].element;
+        }
+        if (this.navigationFragment() !== current.id) {
+            this.navigationFragment.set(current.id);
+            const group = this.navigationGroups[route]?.[current.id];
+            if (group) this.expandedNavigationGroup.set(group);
+        }
+    });
+}
+
 onNavigationExpanded(event: Event, route: string) {
     const item = event.target as HTMLElement & {expanded?: boolean};
     if (item?.getAttribute('data-navigation-route') === route && item.expanded) {

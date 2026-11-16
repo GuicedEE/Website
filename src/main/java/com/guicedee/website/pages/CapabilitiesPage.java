@@ -118,6 +118,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
+        card.addClass("page-intro-banner");
         card.add(content);
         return card;
     }
@@ -353,6 +354,26 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                                 .setMethod(HttpMethod.GET)
                                 .setURI("/api/data")
                                 .setServer(serviceAddress));"""));
+
+        content.add(headingText("h3", "m", "Resolve a REST client by service name"));
+        content.add(bodyText("For a typed GuicedEE REST client, add com.guicedee:rest-client and com.guicedee:service-registry. Register the service URL, then refer to its name from @Endpoint. This registry lookup is separate from the Vert.x address resolver shown above.", "m"));
+        content.add(codeBlockWithTitle("Register the service · package-info.java",
+                """
+                        @RegisteredService(name = "inventory-api",
+                                url = "http://inventory.default.svc.cluster.local/api/data")
+                        package com.example.app;
+
+                        import com.guicedee.service.registry.RegisteredService;"""));
+        content.add(codeBlockWithTitle("Call it with RestClient",
+                """
+                        @Endpoint(url = "registry:inventory-api", method = "GET")
+                        @Named("inventory")
+                        private RestClient<Void, InventoryResponse> inventory;
+
+                        public Uni<InventoryResponse> fetchInventory() {
+                            return inventory.send();
+                        }"""));
+        content.add(bodyText("The REST client resolves the named URL through the registry. Return or compose the Uni to execute the request. A bare registered name can also be used; full URLs pass through unchanged.", "s"));
 
         return buildSection("Service Discovery", "Client-side service resolution",
                 "com.guicedee:service-discovery — Vert.x Service Resolver with Kubernetes and DNS SRV backends, pluggable providers, and round-robin load balancing.", false, content);
@@ -1273,9 +1294,9 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         graph LR
                             A["1. Annotation defaults<br/>(in code)"] --> B["2. Environment variables<br/>(deploy-time override)"]
                             B --> C["3. SPI hooks<br/>(programmatic control)"]
-                            style A fill:#4a9eff,color:#fff
-                            style B fill:#f5a623,color:#fff
-                            style C fill:#7ed321,color:#fff"""));
+                            style A fill:#29202a,stroke:#a94f78,color:#f5edf2
+                            style B fill:#202434,stroke:#777bc1,color:#f1f1f8
+                            style C fill:#192b27,stroke:#459e85,color:#eaf7f2"""));
 
         content.add(codeBlockWithTitle("Example: Telemetry configuration tiers",
                 """
@@ -1349,14 +1370,18 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
     {
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
-        content.add(featureCard("Firebase Admin",
+        var sdkGrid = new WaGrid<>();
+        sdkGrid.setMinColumnSize("16rem");
+        sdkGrid.setGap(PageSize.Small);
+        sdkGrid.add(featureCard("Firebase Admin",
                 "com.guicedee.modules.services:firebase-admin exposes firebase.admin and groups the Google SDK dependency closure for Auth, Messaging and Firestore. Firebase can be used independently of Commercetools.", "2.6.0"));
-        content.add(featureCard("Commercetools API and GraphQL client",
+        sdkGrid.add(featureCard("Commercetools API and GraphQL client",
                 "com.guicedee.modules.services:commercetools exposes commercetools.sdk.java.api, including GraphQL request/response models, RMF and HTTP integration. This supplies the commerce SDK client, not a GraphQL server.", "2.6.0"));
-        content.add(featureCard("Shared dependencies and Jackson 3",
+        sdkGrid.add(featureCard("Shared dependencies and Jackson 3",
                 "Commercetools uses external modular Netty, SLF4J, Bouncy Castle, Javassist, Commons, Failsafe, Java Money and Reactive Streams. Jackson 3 core/databind and shared annotations are external; its resolved graph contains no Jackson 2 core/databind. Firebase's private dependency closure is separate.", "Modular libraries"));
-        content.add(featureCard("Zstd and Okio wrappers",
+        sdkGrid.add(featureCard("Zstd and Okio wrappers",
                 "The zstd-jni artifact preserves com.github.luben.zstd_jni and native resources while correcting its descriptor. The okio artifact supplies the explicit okio module needed by Moneta, OkHttp and Kotlin. Both use the com.guicedee.modules.services group.", "Linkable dependency graph"));
+        content.add(sdkGrid);
         content.add(bodyText("Use the GuicedEE BOM to align wrapper versions; Versioner and StandaloneBOM manage upstream versions. These additions are prepared for 2.6.0 and have passed local application-linking checks. Publication is pending.", "m"));
         return buildSection("Modular SDKs", "Firebase and commerce integrations",
                 "In 2.6.0: grouped vendor SDKs with shared modular support libraries and SDK-scoped API documentation.", true, content);

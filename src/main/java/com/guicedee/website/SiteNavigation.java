@@ -258,6 +258,8 @@ final class SiteNavigation {
                 .flatMap(group -> leaves(group.children()).map(section -> quote(section.anchor()) + ":" + quote(page.route() + ":" + group.anchor())))
                 .collect(Collectors.joining(",")) + "}").collect(Collectors.joining(","));
         return "activeNavigation = signal('home');\nexpandedNavigation = signal('home');\nnavigationFragment = signal('');\n"
+                + "private navigationScrollFrame = 0;\n"
+                + "private navigationScrollListener = () => this.scheduleNavigationScroll();\n"
                 + "expandedNavigationGroup = signal('');\n"
                 + "private navigationAnchors: Record<string, string[]> = {" + anchors + "};\n"
                 + "private navigationGroups: Record<string, Record<string, string>> = {" + groups + "};";

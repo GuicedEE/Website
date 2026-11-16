@@ -34,6 +34,14 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
     }
 
     @Override
+    public List<String> fields()
+    {
+        var fields = new ArrayList<>(super.fields());
+        fields.add("private marketplaceAsideCleanup?: () => void;");
+        return fields;
+    }
+
+    @Override
     public List<String> methods()
     {
         var methods = new ArrayList<>(super.methods());
@@ -51,6 +59,23 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
     {
         var a = new ArrayList<>(super.afterViewInit());
         a.add("""
+                (() => {
+                    this.marketplaceAsideCleanup?.();
+                    const home = document.querySelector('guicedee-getting-started .getting-started-widget-home');
+                    const widget = home?.querySelector('#jetbrains-plugin-widget');
+                    const aside = document.querySelector('wa-page > [slot="aside"]');
+                    if (home && widget && aside) {
+                        const place = () => (window.innerWidth >= 1100 ? aside : home).appendChild(widget);
+                        window.addEventListener('resize', place);
+                        place();
+                        this.marketplaceAsideCleanup = () => {
+                            window.removeEventListener('resize', place);
+                            home.appendChild(widget);
+                        };
+                    }
+                })();
+                """);
+        a.add("""
                 const script = document.createElement('script');
                 script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
                 script.onload = () => {
@@ -58,6 +83,14 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 };
                 document.body.appendChild(script);""");
         return a;
+    }
+
+    @Override
+    public List<String> onDestroy()
+    {
+        var lifecycle = new ArrayList<>(super.onDestroy());
+        lifecycle.add("this.marketplaceAsideCleanup?.();");
+        return lifecycle;
     }
 
     private void buildGettingStartedPage()
@@ -102,6 +135,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
+        card.addClass("page-intro-banner");
         card.add(content);
         return card;
     }
@@ -124,8 +158,12 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         // JetBrains Marketplace plugin widget
         var widgetWrapper = new DivSimple<>();
         widgetWrapper.setID("jetbrains-plugin-widget");
+        widgetWrapper.addClass("getting-started-marketplace-widget");
         widgetWrapper.addStyle("display:flex;justify-content:center");
-        content.add(widgetWrapper);
+        var widgetHome = new DivSimple<>();
+        widgetHome.addClass("getting-started-widget-home");
+        widgetHome.add(widgetWrapper);
+        content.add(widgetHome);
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("14rem");

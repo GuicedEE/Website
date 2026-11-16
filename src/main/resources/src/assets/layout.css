@@ -84,6 +84,11 @@
 }
 
 /* #region hero banner */
+.page-intro-banner {
+    background: radial-gradient(ellipse 90% 110% at 50% 100%,
+        color-mix(in oklab, var(--wa-color-brand-normal, var(--wa-color-brand)), transparent 68%),
+        transparent 75%), var(--wa-color-surface-default);
+}
 .hero-banner {
     text-align: center;
     align-items: center;

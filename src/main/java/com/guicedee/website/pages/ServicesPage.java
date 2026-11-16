@@ -54,6 +54,7 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
 
         var introCard = new WaCard<>();
         introCard.setAppearance(Appearance.Filled);
+        introCard.addClass("page-intro-banner");
         introCard.add(introContent);
         layout.add(introCard);
         layout.add(pageFilter("Filter services", "wa-card[appearance=outlined]"));

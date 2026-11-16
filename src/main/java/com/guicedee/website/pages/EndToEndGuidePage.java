@@ -153,6 +153,7 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
+        card.addClass("page-intro-banner");
         card.add(content);
         return card;
     }

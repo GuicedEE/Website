@@ -601,6 +601,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
 
         page.getMain().add(new RouterOutlet<>());
+        page.getAside().addClass("builder-page-aside");
         add(page);
         var backToTop = new WaButton<>("", Variant.Brand);
         backToTop.addClass("back-to-top");
@@ -752,6 +753,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> onInit() {
         var init = new ArrayList<>(INgComponent.super.onInit());
+        init.add("window.addEventListener('scroll', this.navigationScrollListener, {passive: true});");
         init.add("registerLocaleData(localeEnZa, 'en-ZA')");
         init.add("""
                 const savedBuildTool = localStorage.getItem('guicedee-build-tool');
@@ -780,6 +782,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> onDestroy() {
         var destroy = new ArrayList<>(INgComponent.super.onDestroy());
+        destroy.add("window.removeEventListener('scroll', this.navigationScrollListener); cancelAnimationFrame(this.navigationScrollFrame);");
         destroy.add("this.siteNavigationSubscription?.unsubscribe();");
         destroy.add("this.searchRevealToken++; clearTimeout(this.searchHighlightTimer);");
         return destroy;

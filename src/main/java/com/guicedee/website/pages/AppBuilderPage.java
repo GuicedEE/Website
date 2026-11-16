@@ -49,6 +49,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         f.add("version = '1.0.0-SNAPSHOT';");
         f.add("packageName = 'com.example.myservice';");
         f.add("selectedModules: string[] = [];");
+        f.add("private previewAsideCleanup?: () => void;");
         f.add("""
                 moduleMap: Record<string, {groupId: string, artifactId: string, moduleName: string}> = {
                     'Firebase Admin': {groupId: 'com.guicedee.modules.services', artifactId: 'firebase-admin', moduleName: 'firebase.admin'},
@@ -446,7 +447,46 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         configuration.add(buildMetadataSection());
         configuration.add(buildModuleSelectionSection());
         layout.add(configuration);
-        layout.add(buildPreview());
+        var previewHome = new WaStack<>();
+        previewHome.addClass("builder-preview-home");
+        previewHome.add(buildPreview());
+        layout.add(previewHome);
+    }
+
+    @Override
+    public List<String> afterViewInit()
+    {
+        var lifecycle = new ArrayList<>(super.afterViewInit());
+        lifecycle.add("""
+                (() => {
+                this.previewAsideCleanup?.();
+                const shell = document.querySelector('wa-page');
+                const home = document.querySelector('.builder-preview-home');
+                const preview = home?.querySelector('.builder-preview');
+                const aside = shell?.querySelector(':scope > [slot="aside"]');
+                if (shell && home && preview && aside) {
+                    const placePreview = () => {
+                        const useAside = window.innerWidth >= 1100;
+                        (useAside ? aside : home).appendChild(preview);
+                    };
+                    window.addEventListener('resize', placePreview);
+                    placePreview();
+                    this.previewAsideCleanup = () => {
+                        window.removeEventListener('resize', placePreview);
+                        home.appendChild(preview);
+                    };
+                }
+                })();
+                """);
+        return lifecycle;
+    }
+
+    @Override
+    public List<String> onDestroy()
+    {
+        var lifecycle = new ArrayList<>(super.onDestroy());
+        lifecycle.add("this.previewAsideCleanup?.();");
+        return lifecycle;
     }
 
     // ── Metadata ─────────────────────────────────────

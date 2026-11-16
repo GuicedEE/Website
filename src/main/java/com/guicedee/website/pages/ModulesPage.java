@@ -147,6 +147,7 @@ public class ModulesPage extends WebsitePage<ModulesPage> implements INgComponen
 
         var card = new WaCard<>();
         card.setAppearance(Appearance.Filled);
+        card.addClass("page-intro-banner");
         card.add(content);
         return card;
     }

@@ -59,6 +59,7 @@ public class CloudPage extends WebsitePage<CloudPage> implements INgComponent<Cl
 
         var heroCard = new WaCard<>();
         heroCard.setAppearance(Appearance.Filled);
+        heroCard.addClass("page-intro-banner");
         heroCard.add(heroContent);
         layout.add(heroCard);
 
