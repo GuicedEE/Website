@@ -143,8 +143,8 @@ clear a filter when needed to reveal their destination. Empty compatibility
 routes preserve old named-outlet bookmarks without rendering sidebars. Long
 configuration annotation names wrap on mobile.
 
-Revision `guicedee-website--v260-20261116-7f9b496` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-7f9b496`.
+Revision `guicedee-website--v260-20261116-7f9b496` was verified healthy, ready and
+serving 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-7f9b496`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:0259d64e6122fb06445665fff5092f011d840f88911f1c998c094366d7418c6d`.
 
@@ -155,3 +155,26 @@ tablet and mobile drawer interactions. Search checks, three benchmark scenarios
 and 186 packaged HTTP/crawler checks passed. All 298 public assets match the
 production build. Evidence is retained under `target/website-page-navigation/`
 in DevSuite; the navigation check is `tools/verify-page-navigation.py`.
+
+## Release versions and capability groups
+
+Source `0b7e65e6740419b6ee1617f3da9e7660ee0a6756` adds 15 release-version links,
+newest first, and groups the 23 Capabilities destinations into Core &
+configuration, Web & security, Data & messaging, Cloud & deployment, and
+Observability & resilience. The Firebase and Commercetools section is included.
+The shared desktop/mobile tree allows one open page and one open capability
+group. Direct links, search results, reload and browser history reveal the
+matching group, including on the Web Awesome kit's initial component upgrade.
+
+Revision `guicedee-website--v260-20261116-0b7e65e` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-0b7e65e`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:fae402d16d31a6e523615e9b070442b370c1e26cef7cf508363124afc3c0968a`.
+
+The production build and search regression checks passed. Local and public
+Chromium navigation checks passed across ten pages and 122 section links,
+including release ordering, exclusive group expansion, keyboard controls,
+direct links, search, reload/back, filters and legacy URLs. Desktop, tablet and
+mobile drawer checks passed at 1440, 1024 and 390 pixels. All 298 public assets
+match the production build. Evidence and screenshots are retained under
+`target/website-nested-navigation/` in DevSuite.

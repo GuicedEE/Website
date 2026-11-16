@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-7f9b496` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-0b7e65e` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -27,6 +27,10 @@ AI reference, robots and sitemap. Page section links sit beneath their page in
 the desktop menu and mobile drawer. Only one branch stays expanded, and page
 navigation opens the matching branch. The right sidebar has been removed;
 Modules, Services and Environment Variables retain their filters in the page.
+Releases lists 15 documented versions, newest first. Capabilities nests its 23
+section links within five groups: Core & configuration, Web & security, Data &
+messaging, Cloud & deployment, and Observability & resilience. Only one group
+stays open; section links, search and browser history reveal the matching group.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.
