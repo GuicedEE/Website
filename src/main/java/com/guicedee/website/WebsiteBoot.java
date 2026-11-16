@@ -743,13 +743,13 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         init.add("""
                 this.siteNavigationSubscription = this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
                     this.updateSiteMetadata(e.urlAfterRedirects);
-                    void this.revealSearchFragment(e.urlAfterRedirects);
                     const parsedUrl = this.router.parseUrl(e.urlAfterRedirects);
                     const primaryPath = (parsedUrl.root.children['primary']?.segments || []).map(s => s.path).join('/') || 'home';
                     this.activeNavigation.set(primaryPath);
                     this.expandedNavigation.set(primaryPath);
                     this.navigationFragment.set(parsedUrl.fragment || '');
                     this.expandedNavigationGroup.set(this.navigationGroups[primaryPath]?.[parsedUrl.fragment || ''] || '');
+                    void this.revealSearchFragment(e.urlAfterRedirects);
                     if (this._asideNavigating || !parsedUrl.root.children['aside']) return;
                     this._asideNavigating = true;
                     delete parsedUrl.root.children['aside'];

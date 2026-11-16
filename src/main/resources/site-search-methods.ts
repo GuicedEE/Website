@@ -86,7 +86,7 @@ async openSearchResult(result: {route: string; anchor: string}) {
         await this.revealSearchFragment(this.router.url);
     } else {
         await this.router.navigateByUrl(tree);
-        await this.revealSearchFragment(this.router.url);
+        // NavigationEnd reveals the destination after the routed view renders.
     }
 }
 
@@ -98,16 +98,20 @@ async revealSearchFragment(url: string) {
     const navigationSection = this.navigationAnchors[route]?.includes(parsed.fragment || '') ?? false;
     this.document.querySelectorAll('.site-search-target').forEach(element => element.classList.remove('site-search-target'));
     if (!entry && !navigationSection) return;
-    await new Promise(resolve => setTimeout(resolve, 350));
-    // NavigationEnd may precede the final DOM update or the aside synchronization.
+    // Wait for rendering, rather than delaying every link by a fixed interval.
+    const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    await nextFrame();
     let target: HTMLElement | null = null;
     for (let attempt = 0; attempt < 90; attempt++) {
         if (token !== this.searchRevealToken) return;
         target = this.document.getElementById(parsed.fragment!);
         if (target) break;
-        await new Promise(resolve => setTimeout(resolve, 16));
+        await nextFrame();
     }
     if (!target || token !== this.searchRevealToken) return;
+    await customElements.whenDefined('wa-page');
+    await (this.document.querySelector('wa-page') as any)?.updateComplete;
+    if (token !== this.searchRevealToken) return;
     await this.revealNavigationGroup(route, target);
     if (token !== this.searchRevealToken) return;
     // Section links and search results must remain reachable after filtering a page.
@@ -119,13 +123,18 @@ async revealSearchFragment(url: string) {
     const pageFilter = content?.querySelector('.page-filter') as any;
     if (pageFilter) pageFilter.value = '';
     const ancestors: HTMLElement[] = [];
+    const disclosures: HTMLElement[] = [];
     if (navigationSection && target.localName === 'wa-details') ancestors.push(target);
     for (let parent = target.parentElement; parent; parent = parent.parentElement) ancestors.unshift(parent);
     for (const ancestor of ancestors) {
         if (ancestor.localName === 'wa-details') {
             await customElements.whenDefined('wa-details');
+            await (ancestor as any).updateComplete;
             if (token !== this.searchRevealToken) return;
             (ancestor as any).open = true;
+            await (ancestor as any).updateComplete;
+            const details = ancestor.shadowRoot?.querySelector('details');
+            if (details) disclosures.push(details);
         }
         if (ancestor.localName === 'details') (ancestor as any).open = true;
         if (ancestor.localName === 'wa-tab-panel') {
@@ -135,14 +144,47 @@ async revealSearchFragment(url: string) {
             const carousel = ancestor.closest('wa-carousel') as any;
             if (carousel) {
                 await customElements.whenDefined('wa-carousel');
+                await carousel.updateComplete;
                 if (token !== this.searchRevealToken) return;
                 const slides = Array.from(carousel.querySelectorAll(':scope > wa-carousel-item'));
-                carousel.goToSlide(slides.indexOf(ancestor), 'auto');
+                carousel.goToSlide(slides.indexOf(ancestor), 'instant');
             }
         }
     }
-    // Let disclosure animations and the carousel's content height settle before scrolling.
-    await new Promise(resolve => setTimeout(resolve, 400));
+    // Only wait for disclosures that are actually animating. Plain section links
+    // can scroll on the next frame; interrupted animations must not strand a reveal.
+    await nextFrame();
+    // On first load WaPage's ResizeObserver may not have published the header
+    // height yet. Wait for that value, so direct links clear the fixed header.
+    const shell = this.document.querySelector('wa-page') as HTMLElement | null;
+    const header = shell?.querySelector(':scope > [slot="header"]');
+    for (let attempt = 0; shell && header && attempt < 90; attempt++) {
+        if (token !== this.searchRevealToken) return;
+        const measured = parseFloat(getComputedStyle(shell).getPropertyValue('--header-height')) || 0;
+        if (Math.abs(measured - header.getBoundingClientRect().height) < 2) break;
+        await nextFrame();
+    }
+    const animations = disclosures.flatMap(element => element.getAnimations({subtree: true}))
+        .filter(animation => animation.effect?.getTiming().iterations !== Infinity);
+    if (animations.length) {
+        await Promise.all(animations.map(animation => animation.finished.catch(() => undefined)));
+        await nextFrame();
+    }
+    const slide = target.closest('wa-carousel-item');
+    for (let attempt = 0; slide?.hasAttribute('inert') && attempt < 90; attempt++) {
+        if (token !== this.searchRevealToken) return;
+        // Carousel accessibility follows its intersection/scroll-end observers.
+        await nextFrame();
+    }
+    const drawer = shell?.shadowRoot?.querySelector('wa-drawer');
+    if (drawer?.shadowRoot?.querySelector('dialog')?.open) {
+        // A modal drawer blocks page focus while closing and restores its trigger
+        // afterwards. Focus the section after that restoration, only when needed.
+        await new Promise<void>(resolve => {
+            drawer.addEventListener('wa-after-hide', () => setTimeout(resolve, 0), {once: true});
+            (shell as any).navOpen = false;
+        });
+    }
     if (token !== this.searchRevealToken || !target.isConnected) return;
     if (!navigationSection) target.classList.add('site-search-target');
     target.scrollIntoView({block: navigationSection ? 'start' : 'center', behavior: 'auto'});
