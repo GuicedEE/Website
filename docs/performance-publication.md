@@ -27,8 +27,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `78978748a08d7eef799af74d75d7de7c2788548b` is now live in revision
-`guicedee-website--v260-20261116-7897874`, with benchmark snapshot `f5770f2`.
+Website source `447ca698576a78bd33917329558b7f76d9651202` is now live in revision
+`guicedee-website--v260-20261116-447ca69`, with benchmark snapshot `f5770f2`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
@@ -40,6 +40,10 @@ Releases includes version links, and Capabilities adds five exclusive nested
 groups that follow section links, search results and browser history.
 Home's Explore the platform branch also links to its 13 sections and overview,
 automatically opening the disclosure and revealing the requested section.
+The 2.6.0 release section presents the public benchmark suite and measured
+developer, native runtime, persistence and jlink results. It uses the same
+dated datasets, links to the immutable `f5770f2` report and keeps the runtime
+limits and clean-build timing boundaries explicit.
 See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 

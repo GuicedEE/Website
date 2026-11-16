@@ -190,8 +190,8 @@ developer resources. Selecting a section opens the disclosure, scrolls below
 the fixed header and focuses the destination. The same tree is used in the
 desktop menu and mobile drawer, with the existing exclusive expansion rules.
 
-Revision `guicedee-website--v260-20261116-7897874` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-7897874`.
+Revision `guicedee-website--v260-20261116-7897874` was verified healthy, ready and
+serving 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-7897874`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:03db02c34149d6e674f52e38127dc4cb6cfa362611f4fe6dab61818c7c1551c3`.
 
@@ -202,3 +202,31 @@ exclusive expansion, filters, legacy URLs and mobile drawer navigation at
 1440, 1024 and 390 pixels. All 298 public assets match the production build.
 Evidence and screenshots are retained under `target/website-explore-navigation/`
 in DevSuite.
+
+## Benchmark highlights for 2.6.0
+
+Source `447ca698576a78bd33917329558b7f76d9651202` adds four leading release
+cards covering the public benchmark suite, developer experience, native runtime
+and reactive persistence. The copy uses "Keeping pace with the best" and names
+Quarkus and Micronaut as comparisons. The application jlink card now includes
+the measured package times instead of the obsolete pending-measurement note.
+
+Figures come from benchmark revision `f5770f264815ca06b121599d327768bf43e7bb45`,
+verified against the public repository. The section links to that immutable
+report and the repository, with measurement dates, runtime resource limits and
+the separate clean-build timing boundary. It includes 655 ms native startup,
+4.93 ms warm p50, 68.57 MiB median peak memory, 3.52 s compilation, 4.10 s JVM
+packaging, 67.86 s native packaging, 18.25/17.88 s SPI/scanner jlink packaging,
+and 2.41/80.31 ms persistence read/CRUD-cycle p50.
+
+Revision `guicedee-website--v260-20261116-447ca69` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-447ca69`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:cdb715dd34fb74563a4efd9ce27acb0a66ca8ff657d933f2728526683524d46d`.
+
+The production build passed. Local and public Chromium checks verified all ten
+figures against the benchmark JSON/CSV, nine responsive cards, source links,
+the release anchor below the fixed header and no browser errors at 1440, 1024
+and 390 pixels. Generated and public release Markdown include the same figures.
+All 298 public assets match the production build. Evidence and screenshots are
+retained under `target/website-release-benchmarks/` in DevSuite.
