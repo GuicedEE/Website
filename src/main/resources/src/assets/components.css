@@ -511,6 +511,7 @@ wa-page > [slot='navigation'] wa-tree-item::part(item) {
 .page-filter { display: block; width: 100%; max-width: 28rem; }
 guicedee-environment-variables p { overflow-wrap: anywhere; }
 .website-content .content-section,
+guicedee-home .content-section,
 guicedee-home :is(#highlights, #how-it-works, #intellij-plugin, #explore-platform) {
     scroll-margin-block-start: calc(var(--header-height, 3.2rem) + 1rem);
 }

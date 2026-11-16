@@ -24,7 +24,22 @@ final class SiteNavigation {
                     new Section("highlights", "Highlights & benchmarks"),
                     new Section("how-it-works", "How it works"),
                     new Section("intellij-plugin", "IntelliJ plugin"),
-                    new Section("explore-platform", "Explore the platform")
+                    new Section("explore-platform", "Explore the platform", List.of(
+                            new Section("explore-platform", "Overview"),
+                            new Section("ai-skills", "AI skills"),
+                            new Section("foundations", "Foundations"),
+                            new Section("modular-by-design", "Modular design"),
+                            new Section("module-catalog", "Module catalog"),
+                            new Section("zero-file-based-config-philosophy", "Configuration"),
+                            new Section("see-the-code", "Code examples"),
+                            new Section("rest-services", "REST services"),
+                            new Section("security", "Security"),
+                            new Section("vert-x-deployment", "Vert.x deployment"),
+                            new Section("microprofile-native", "MicroProfile"),
+                            new Section("ship-as-jlink-artifacts", "JLink deployment"),
+                            new Section("cloud-aware-logging", "Cloud-aware logging"),
+                            new Section("for-developers", "For developers")
+                    ))
             )),
             new Page("releases", "Releases", "tag", List.of(
                     new Section("v2-6-0", "v2.6.0"),

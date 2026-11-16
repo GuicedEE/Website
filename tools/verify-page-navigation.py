@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-COUNTS = {'home': 4, 'releases': 15, 'builder': 0, 'getting-started': 8,
+COUNTS = {'home': 17, 'releases': 15, 'builder': 0, 'getting-started': 8,
           'guides/end-to-end': 15, 'capabilities': 23, 'modules': 6,
           'services': 15, 'cloud': 9, 'environment-variables': 27}
 
@@ -77,6 +77,55 @@ def main():
                     destination(route, anchor)
             evidence.append({'route': route, 'sectionLinks': count})
             print('Checked', route, count, flush=True)
+
+        # Home's nested destinations open the disclosure before scrolling/focusing.
+        def explore(slot='menu'):
+            return node('home', slot).locator('[data-navigation-group="home:explore-platform"]')
+
+        def expanded_explore():
+            expanded('home')
+            page.wait_for_function('''() => ['menu','navigation'].every(slot => {
+                const groups = [...document.querySelectorAll(`[slot="${slot}"] .navigation-group`)];
+                const opened = groups.filter(e => e.expanded);
+                return opened.length === 1 && opened[0].dataset.navigationGroup === 'home:explore-platform';
+            })''')
+
+        page.goto(base + '/home', wait_until='domcontentloaded')
+        active('home')
+        assert not explore().evaluate('e => e.expanded')
+        explore().locator(':scope > .navigation-group-label').click()
+        expanded_explore()
+        assert page.url == base + '/home'
+        links = explore().locator('.navigation-section > a')
+        assert links.count() == 14
+        for index in range(links.count()):
+            anchor = links.nth(index).get_attribute('href').split('#')[1]
+            links.nth(index).click()
+            destination('home', anchor)
+            expanded_explore()
+            assert page.locator('#explore-platform').evaluate('e => e.open')
+        page.goto(base + '/home#rest-services', wait_until='domcontentloaded')
+        destination('home', 'rest-services')
+        expanded_explore()
+        page.reload(wait_until='domcontentloaded')
+        destination('home', 'rest-services')
+        expanded_explore()
+        page.locator('#explore-platform').evaluate('e => e.open = false')
+        explore().locator('a[href="/home#rest-services"]').click()
+        destination('home', 'rest-services')
+        assert page.locator('#explore-platform').evaluate('e => e.open')
+        search = page.locator('[slot="menu"] .site-search')
+        search.locator('wa-input input').fill('One env var switches')
+        result = search.locator('[data-search-destination^="home#"]').first
+        result.wait_for(state='visible')
+        search_anchor = result.get_attribute('data-search-destination').split('#')[1]
+        result.click()
+        page.wait_for_function('id => document.activeElement.id === id', arg=search_anchor)
+        expanded_explore()
+        page.go_back()
+        destination('home', 'rest-services')
+        expanded_explore()
+        print('Checked all Explore links, disclosure, direct/repeat links, reload, search and history', flush=True)
 
         # Capability groups are exclusive, including keyboard and search navigation.
         page.goto(base + '/capabilities', wait_until='domcontentloaded')
@@ -212,6 +261,16 @@ def main():
                 page.wait_for_timeout(400)
             node('environment-variables', slot).locator('a[href="/environment-variables#mcp"]').click()
             destination('environment-variables', 'mcp')
+            page.goto(base + '/home#rest-services', wait_until='domcontentloaded')
+            destination('home', 'rest-services')
+            expanded_explore()
+            if mobile:
+                page.locator('[slot="navigation-toggle"] wa-button').click()
+                page.wait_for_timeout(400)
+            page.screenshot(path=str(args.output / f'explore-{width}.png'))
+            explore(slot).locator('a[href="/home#for-developers"]').click()
+            destination('home', 'for-developers')
+            assert not page.locator('wa-page').evaluate('e => e.navOpen')
             page.goto(base + '/capabilities#modular-sdks', wait_until='domcontentloaded')
             destination('capabilities', 'modular-sdks')
             expanded_group('data')
@@ -240,7 +299,7 @@ def main():
             print('Checked viewport', width, flush=True)
         assert errors == [], errors
         (args.output / 'verification.json').write_text(json.dumps(evidence, indent=2) + '\n')
-        print('PASS: 10 pages, 122 section links, exclusive expansion, direct/repeat/search-compatible navigation, filters, legacy URLs, keyboard, reload/back and mobile drawer')
+        print('PASS: 10 pages, 135 section links, exclusive expansion, direct/repeat/search-compatible navigation, filters, legacy URLs, keyboard, reload/back and mobile drawer')
 
 
 if __name__ == '__main__':
