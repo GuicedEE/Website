@@ -13,15 +13,16 @@ for 127 Maven components, Markdown versions of all documentation routes, robots
 and a sitemap. See [crawler discovery](docs/crawler-discovery.md) for coverage,
 source refresh, nginx behavior, verification commands and the live-site audit.
 
-## Current performance website deployment
+## Current website deployment
 
-The performance charts and complete runtime/build grids are live at
-[guicedee.com](https://guicedee.com/home), including persistence startup, read and
-CRUD views. Revision `guicedee-website--perf-20261116` serves 100% of traffic.
-All 153 public assets match the production build; browser checks also verified
-the current datasets and normal page refresh. See the
-[deployment record](docs/performance-publication.md#verified-deployment--16-november-2026)
-for the source revision, immutable image and validation details.
+The homepage, builder and crawler-documentation updates are live at
+[guicedee.com](https://guicedee.com/home). Revision
+`guicedee-website--v260-20261116-acab335` is healthy and serves 100% of traffic.
+All 298 public assets match the verified build. Runtime target sits beside
+Language, and Service Discovery is grouped under Cloud SDKs. The site also serves
+the complete AI reference, robots and sitemap. See the
+[deployment record](docs/website-publication-2026-11-16.md) for the source revision,
+immutable image and validation details.
 
 ## Historical GuicedEE 2.5.0 website deployment
 

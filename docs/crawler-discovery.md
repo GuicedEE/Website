@@ -96,8 +96,8 @@ favicon worked; `/favicon.ico` returned 404. The apex HTTP URL served content
 without redirecting; Azure ingress reported `allowInsecure: true`. HTTPS worked
 and `www` already redirected to the apex domain.
 
-These corrections are in the website source and verified production build.
-They have not been deployed as part of this documentation task. Publishing must
-be followed by public GET/HEAD and browser checks; a successful local build is
-not evidence that the live site's crawler resources have changed. No Maven
-Central publication or Azure configuration mutation is performed by these tools.
+These corrections were subsequently deployed and verified on 16 November 2026 in
+revision `guicedee-website--v260-20261116-acab335`. Public checks confirmed the
+documentation assets, MIME types, sitemap, canonical URLs, redirects and 404s.
+See the [deployment record](website-publication-2026-11-16.md). The verification
+tools themselves do not publish Maven artifacts or change Azure configuration.

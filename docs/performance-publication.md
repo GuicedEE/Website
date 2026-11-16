@@ -25,7 +25,16 @@ The generated Angular production build and public browser checks verify the char
 values, labels and source dates. Website deployment is independent of framework
 artifact publication and leaves the website backend unchanged.
 
-## Verified deployment — 16 November 2026
+## Current deployment — 16 November 2026
+
+Website source `acab33534de103136f4be737d1ba5f04d07ed729` is now live in revision
+`guicedee-website--v260-20261116-acab335`, with benchmark snapshot `c022ced`.
+Public checks verified the three-framework charts, build modes, complete grids
+and current published datasets. All eight homepage slides use a stable-height
+scroller. See the [complete deployment record](website-publication-2026-11-16.md)
+for the image, builder/documentation changes and public verification.
+
+## Earlier deployment — 16 November 2026
 
 The production front end at [guicedee.com](https://guicedee.com/home) serves the
 build from website commit `b63114d600519d5b303b3fcad5ee065f6772e032`, using benchmark
