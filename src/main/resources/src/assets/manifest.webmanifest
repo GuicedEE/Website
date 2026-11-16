@@ -1,0 +1,11 @@
+{
+  "name": "GuicedEE",
+  "short_name": "GuicedEE",
+  "description": "Modular Java and Kotlin services with Guice and Vert.x",
+  "id": "/home",
+  "start_url": "/home",
+  "scope": "/",
+  "display": "browser",
+  "lang": "en",
+  "icons": [{"src": "/guicedee-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}

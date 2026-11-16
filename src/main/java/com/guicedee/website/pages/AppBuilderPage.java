@@ -485,14 +485,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         language.add(new WaSelectOption<>().setValue("java").setText("Java"));
         language.add(new WaSelectOption<>().setValue("kotlin").setText("Kotlin"));
         metadataGrid.add(language);
-        content.add(metadataGrid);
         var runtime = new WaSelect<>();
         runtime.setLabel("Runtime target");
         runtime.bind("runtimeTarget");
         runtime.addAttribute("name", "runtimeTarget");
         runtime.add(new WaSelectOption<>().setValue("jvm").setText("JVM JAR"));
         runtime.add(new WaSelectOption<>().setValue("native").setText("Native image starter (SPI)"));
-        content.add(runtime);
+        metadataGrid.add(runtime);
+        content.add(metadataGrid);
         content.add(bodyText("Native image adds SPI discovery, reflection registration and a GraalVM build guide. " +
                 "JVM builds remain available; selected integrations may need additional native metadata.", "s"));
 
@@ -569,6 +569,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         var sdks = parentItem("Cloud SDKs", true);
         sdks.add(leafItem("Firebase Admin"));
         sdks.add(leafItem("Commercetools SDK"));
+
+        var serviceDiscovery = parentItem("Service Discovery", false);
+        serviceDiscovery.add(leafItem("Service Registry"));
+        serviceDiscovery.add(leafItem("Service Discovery"));
+        serviceDiscovery.add(leafItem("Consul"));
+        serviceDiscovery.add(leafItem("Consul Service Resolver"));
+        serviceDiscovery.add(leafItem("Runtime Autoconfigure"));
+        sdks.add(serviceDiscovery);
         tree.add(sdks);
 
         var microProfile = parentItem("MicroProfile", false);
@@ -578,14 +586,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         microProfile.add(leafItem("Telemetry"));
         microProfile.add(leafItem("Fault Tolerance"));
         tree.add(microProfile);
-
-        var serviceDiscovery = parentItem("Service Discovery", false);
-        serviceDiscovery.add(leafItem("Service Registry"));
-        serviceDiscovery.add(leafItem("Service Discovery"));
-        serviceDiscovery.add(leafItem("Consul"));
-        serviceDiscovery.add(leafItem("Consul Service Resolver"));
-        serviceDiscovery.add(leafItem("Runtime Autoconfigure"));
-        tree.add(serviceDiscovery);
 
         var mail = parentItem("Mail", false);
         mail.add(leafItem("Mail Client"));

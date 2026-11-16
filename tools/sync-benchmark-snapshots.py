@@ -19,19 +19,19 @@ def main():
     if persistence['profile'] != 'default':
         raise ValueError('The homepage requires the default persistence profile')
     native = runtime['groups']['native-standard']['variants']
-    g, q = native['guicedee-native'], native['quarkus-standard-native']
-    pg, pq = (persistence['variants'][name] for name in ['guicedee', 'quarkus'])
+    native_rows = [native[name] for name in ['guicedee-native', 'quarkus-standard-native', 'micronaut-native']]
+    persistence_rows = [persistence['variants'][name] for name in ['guicedee', 'quarkus', 'micronaut']]
     build_value = lambda variant, goal: float(next(row['median_seconds'] for row in builds
         if row['variant'] == variant and row['goal'] == goal))
-    build_values = [[build_value(gv, goal), build_value(qv, goal)] for gv, qv, goal in [
-        ('guicedee', 'quarkus-standard', 'compile'),
-        ('guicedee', 'quarkus-standard', 'package'),
-        ('guicedee-native', 'quarkus-standard-native', 'package')]]
-    persistence_values = [[row['launchToFirstTransactionMs']['median'] / 1000 for row in [pg, pq]],
-                          [row['read']['p50Ms'] for row in [pg, pq]],
-                          [row['cycle']['p50Ms'] for row in [pg, pq]]]
+    build_values = [[build_value(variant, goal) for variant in variants] for variants, goal in [
+        (['guicedee', 'quarkus-standard', 'micronaut'], 'compile'),
+        (['guicedee', 'quarkus-standard', 'micronaut'], 'package'),
+        (['guicedee-native', 'quarkus-standard-native', 'micronaut-native'], 'package')]]
+    persistence_values = [[row['launchToFirstTransactionMs']['median'] / 1000 for row in persistence_rows],
+                          [row['read']['p50Ms'] for row in persistence_rows],
+                          [row['cycle']['p50Ms'] for row in persistence_rows]]
     snapshot = f"Snapshot · {runtime['measuredOn']}"
-    native_source = f"{snapshot} · {g['starts']} / {q['starts']} starts (GuicedEE / Quarkus)"
+    native_source = f"{snapshot} · {' / '.join(str(row['starts']) for row in native_rows)} starts (GuicedEE / Quarkus / Micronaut)"
     build_source = f"{snapshot} · {runtime['builds']['runs']} clean builds per task"
     persistence_source = (f"Snapshot · {persistence['measuredAt'][:10]} · "
                           f"{persistence['runs']} starts per framework · default JVM")
@@ -56,8 +56,8 @@ def main():
                     difference='Baseline' if name == reference else f"{(startup['median']/baseline-1)*100:+.1f}%"))
         grids.append(grid)
     fields = dict(persistenceValues=persistence_values, persistenceSource=persistence_source,
-        benchmarkValues=[[g['launchToFirstBusinessMs']['median'], q['launchToFirstBusinessMs']['median']],
-                         build_values[0], [g['peakMiB']['median'], q['peakMiB']['median']], persistence_values[0]],
+        benchmarkValues=[[row['launchToFirstBusinessMs']['median'] for row in native_rows],
+                         build_values[0], [row['peakMiB']['median'] for row in native_rows], persistence_values[0]],
         benchmarkUnits=['ms', 's', 'MiB', 's'],
         benchmarkSources=[native_source, build_source, native_source, persistence_source],
         buildSnapshot=builds, buildValues=build_values, buildSource=build_source,

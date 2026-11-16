@@ -21,6 +21,7 @@ import com.jwebmp.plugins.markdown.Markdown;
 
 import com.jwebmp.webawesome.components.carousel.WaCarousel;
 import com.jwebmp.webawesome.components.carousel.WaCarouselItem;
+import com.jwebmp.webawesome.components.scroller.WaScroller;
 import com.jwebmp.webawesome.components.details.WaDetails;
 import com.jwebmp.webawesomepro.components.chart.WaChart;
 import com.jwebmp.webawesomepro.components.datagrid.WaDataGrid;
@@ -43,7 +44,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     {
         var a = new ArrayList<>(super.afterViewInit());
         a.add("void this.loadBenchmarks();");
-        a.add("this.observeIntroHeight();");
         a.add("""
                 const script = document.createElement('script');
                 script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
@@ -55,18 +55,9 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     }
 
     @Override
-    public List<String> onDestroy()
-    {
-        var cleanup = new ArrayList<>(super.onDestroy());
-        cleanup.add("this.introResizeObserver?.disconnect();");
-        return cleanup;
-    }
-
-    @Override
     public List<String> fields()
     {
         var f = new ArrayList<>(super.fields());
-        f.add("introResizeObserver?: ResizeObserver;");
         f.add("readmeDialogOpen = false;");
         f.add("readmeModuleTitle = '';");
         f.add("readmeSrc = '';");
@@ -112,22 +103,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         this.currentRepoUrl = `https://github.com/${match[1]}/${match[2]}`;
                     } else {
                         this.currentRepoUrl = 'https://github.com/GuicedEE';
-                    }
-                }
-                """);
-        m.add("""
-                observeIntroHeight() {
-                    this.introResizeObserver?.disconnect();
-                    const showcase = document.querySelector<HTMLElement>('guicedee-home .performance-carousel');
-                    const intro = showcase?.querySelector<HTMLElement>('.hero-banner');
-                    const kotlin = showcase?.querySelector<HTMLElement>('.kotlin-panel');
-                    if (showcase && intro && kotlin) {
-                        this.introResizeObserver = new ResizeObserver(() => {
-                            showcase.style.setProperty('--intro-height', `${Math.ceil(intro.getBoundingClientRect().height)}px`);
-                            showcase.style.setProperty('--kotlin-height', `${Math.ceil(kotlin.getBoundingClientRect().height)}px`);
-                        });
-                        this.introResizeObserver.observe(intro);
-                        this.introResizeObserver.observe(kotlin);
                     }
                 }
                 """);
@@ -249,8 +224,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var nav = new WaCluster<>();
         nav.addClass("showcase-navigation");
         nav.addAttribute("aria-label", "Homepage highlights");
-        String[] labels = {"Discover", "Performance", "Developer builds", "Native-Image", "Persistence", "CDI", "Kotlin"};
-        String[] icons = {"discover", "performance", "builds", "native", "persistence", "cdi", "kotlin"};
+        String[] labels = {"Discover", "Performance", "Developer builds", "Native-Image", "Persistence", "CDI", "Kotlin", "WebAssembly"};
+        String[] icons = {"discover", "performance", "builds", "native", "persistence", "cdi", "kotlin", "wasm"};
         for (int i = 0; i < labels.length; i++) {
             var button = new WaButton<>(labels[i], Variant.Neutral);
             button.setAppearance(Appearance.Plain);
@@ -271,14 +246,12 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         carousel.setNavigation(false);
         carousel.setPagination(true);
         carousel.addClass("performance-carousel");
-        carousel.addAttribute("[class.showcase-intro]", "showcaseIndex === 0");
-        carousel.addAttribute("[class.showcase-kotlin]", "showcaseIndex === 6");
         var intro = new WaCarouselItem<>();
-        intro.add(buildHero());
+        intro.add(showcaseScroller(buildHero(), "Discover GuicedEE"));
         carousel.add(intro);
         carousel.add(benchmarkSlide(0, "01 / MEASURED PERFORMANCE", "Keeping pace with the best.",
                 "Quarkus is our primary comparison because both frameworks build on Vert.x. Different application models, the same stack example: startup, OAuth, REST, GraphQL and a Firestore write/read. Explore the measurements and setup.",
-                "Stack example startup · milliseconds", "GuicedEE native and Quarkus native · median startup through the stack example · 0.25 CPU / 500 MiB.", "native-standard"));
+                "Stack example startup · milliseconds", "GuicedEE, Quarkus and Micronaut native · median startup through the stack example · 0.25 CPU / 500 MiB.", "native-standard"));
         carousel.add(benchmarkSlide(1, "02 / DEVELOPER EXPERIENCE", "Build. Run. Keep your flow.",
                 "Small build cycles leave more room for ideas. Compare clean JVM compilation with the same application workload.",
                 "Clean JVM compile · seconds", "Clean offline builds with dependencies cached.", "build-performance"));
@@ -287,11 +260,56 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Peak container memory · MiB", "Native workload comparison · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
         carousel.add(benchmarkSlide(3, "04 / PERSISTENCE", "Real transactions. Real evidence.",
                 "A PostgreSQL workload across 15 related entities: committed writes, joined reads, updates and rollbacks.",
-                "Launch to committed graph · seconds", "0.25 CPU / 500 MiB per app. Startup includes the first committed 15-entity graph. CRUD cycles include three write transactions and one read. Reactive stateless GuicedEE vs Quarkus ORM / Narayana; different persistence patterns.", "postgresql-persistence"));
+                "Launch to committed graph · seconds", "0.25 CPU / 500 MiB per app. Startup includes the first committed 15-entity graph. CRUD cycles include three write transactions and one read. GuicedEE uses reactive stateless sessions; Quarkus and Micronaut use ORM transactions.", "postgresql-persistence"));
         carousel.add(buildCdiSlide());
         carousel.add(buildKotlinSlide());
+        carousel.add(buildWebAssemblySlide());
         section.add(carousel);
         return section;
+    }
+
+    private WaScroller<?> showcaseScroller(DivSimple<?> content, String label)
+    {
+        var scroller = new WaScroller<>();
+        scroller.setOrientation("vertical");
+        scroller.addClass("showcase-scroller");
+        scroller.addAttribute("aria-label", label);
+        scroller.add(content);
+        return scroller;
+    }
+
+    private WaCarouselItem<?> buildWebAssemblySlide()
+    {
+        var slide = new WaCarouselItem<>();
+        slide.addClass("wasm-slide");
+        var panel = new DivSimple<>();
+        panel.addClass("benchmark-panel wasm-panel");
+        var copy = new WaStack<>();
+        copy.addClass("benchmark-copy");
+        copy.add(captionText("07 / WEBASSEMBLY").addClass("hero-eyebrow"));
+        var status = new WaCluster<>();
+        status.add(buildTag("Experimental", Variant.Neutral));
+        copy.add(status);
+        copy.add(headingText("h2", "xl", "Guice meets WebAssembly."));
+        copy.add(bodyText("Guice injection and outbound HTTP are running in standalone WASI probes. We're exploring portable Java workloads for server and edge runtimes.", "l"));
+        copy.add(bodyText("Next: typed REST clients and JWebMP rendering. A small, useful profile is taking shape.", "m"));
+        var explore = buildCta("Explore the WebAssembly preview →", "capabilities", Variant.Brand, Appearance.Outlined);
+        explore.addAttribute("fragment", "find-portable-java-one-proven-step-at-a-time");
+        copy.add(explore);
+        panel.add(copy);
+
+        var progress = new WaStack<>();
+        progress.addClass("benchmark-visual wasm-progress");
+        progress.add(captionText("RUNNING TODAY").addClass("hero-eyebrow"));
+        progress.add(headingText("h3", "m", "Two working foundations."));
+        progress.add(contentCard("Guice injection", "Providers, singletons and custom scopes — including cleanup and failure recovery.",
+                null, Appearance.Outlined, "m", "m"));
+        progress.add(contentCard("Outbound HTTP", "Real GET/POST requests, deadlines and resource cleanup through standard WASI HTTP.",
+                null, Appearance.Outlined, "m", "m"));
+        progress.add(captionText("Independent probes today. Connecting the application workflow is next."));
+        panel.add(progress);
+        slide.add(showcaseScroller(panel, "Experimental WebAssembly preview"));
+        return slide;
     }
 
     private WaCarouselItem<?> buildKotlinSlide()
@@ -336,7 +354,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """, "kotlin"));
         example.add(bodyText("Call a suspending service inside coroutines.future { … } and return a Vert.x Future through the normal REST pipeline.", "s"));
         panel.add(example);
-        slide.add(panel);
+        slide.add(showcaseScroller(panel, "Kotlin support"));
         return slide;
     }
 
@@ -379,20 +397,16 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         setup.addClass("build-comparison-grid cdi-setup");
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
-        content.add(bodyText("Both frameworks build on Vert.x, making Quarkus a useful comparison for the same stack example. Shared annotations include @ApplicationScoped, Jakarta @Inject, Jakarta REST endpoints, @Retry and @Timeout. The adapters differ: GuicedEE uses @Verticle and a Guice-backed CDI bridge; Quarkus uses its CDI runtime. This is not a full CDI-compliance claim.", "m"));
+        content.add(bodyText("Both frameworks build on Vert.x, making Quarkus a useful comparison for the same stack example. Shared annotations include @ApplicationScoped, Jakarta @Inject, Jakarta REST endpoints, @Retry and @Timeout. GuicedEE uses a Guice-backed CDI bridge; Quarkus uses its CDI runtime. In GuicedEE, @ConfigProperty injects the value directly, without an additional @Inject. This is not a full CDI-compliance claim.", "m"));
         content.add(codeBlockWithTitle("GuicedEE CDI service — excerpt", """
                 @ApplicationScoped
-                @Verticle("bench-guicedee-service")
                 public class Service {
-                    @Inject
                     @ConfigProperty(name = "bench.upstream")
                     private String upstream;
 
-                    @Inject
                     @ConfigProperty(name = "bench.phase.diagnostics")
                     private boolean diagnostics;
 
-                    @Inject
                     @ConfigProperty(name = "bench.config.marker")
                     private String configMarker;
 
@@ -431,7 +445,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         content.add(source);
         setup.add(content);
         panel.add(setup);
-        slide.add(panel);
+        slide.add(showcaseScroller(panel, "CDI annotations and setup"));
         return slide;
     }
 
@@ -474,6 +488,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         chart.setConfig("benchmarkCharts[" + index + "]");
         chart.addAttribute("[hidden]", "!benchmarkValues[" + index + "]");
         chart.addAttribute("aria-label", metric + "; exact values below");
+        if (index == 1) chart.addAttribute("[attr.aria-label]", "buildTitles[buildMode] + '; exact values below'");
         if (index == 3) chart.addAttribute("[attr.aria-label]", "persistenceTitles[persistenceMode] + '; exact values below'");
         chart.addClass("benchmark-chart");
         visual.add(chart);
@@ -543,8 +558,44 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
             runtime.add(captionText("{{ runtimeSources[runtimeProfile] }}"));
             panel.add(runtime);
         }
-        slide.add(panel);
+        if (index == 3) panel.add(buildPersistenceExample());
+        slide.add(showcaseScroller(panel, title));
         return slide;
+    }
+
+    private DivSimple<?> buildPersistenceExample()
+    {
+        var example = new DivSimple<>();
+        example.addClass("build-comparison-grid persistence-example");
+        var copy = new WaStack<>();
+        copy.setGap(PageSize.Medium);
+        copy.add(captionText("POSTGRESQL + HIBERNATE REACTIVE").addClass("hero-eyebrow"));
+        copy.add(headingText("h3", "l", "One transaction. An asynchronous result."));
+        copy.add(bodyText("Inject a session factory, compose your writes and return a Uni. Hibernate owns the session and completes the transaction before the result is delivered.", "m"));
+        copy.add(bodyText("Adapted from the benchmark store: Graph.create builds the 15 related entities, and Graph.PROJECTED_QUERY reads them back with joins. The stateless session uses explicit writes; a failed operation rolls the transaction back.", "s"));
+        var source = new WaButton<>("View the persistence example", Variant.Brand);
+        source.setAsLink("https://github.com/GuicedEE/benchmarks/blob/master/persistence/guicedee/src/main/java/bench/persistence/guicedee/Store.java", "_blank", null);
+        source.addAttribute("rel", "noopener noreferrer");
+        copy.add(source);
+        example.add(copy);
+        var code = new WaStack<>();
+        code.addClass("benchmark-visual persistence-code");
+        code.add(codeBlock("""
+                @Inject
+                private Mutiny.SessionFactory factory;
+
+                public Uni<List<Object[]>> create(long id) {
+                    return factory.withStatelessSession(session ->
+                        session.withTransaction(tx ->
+                            session.insertAll(0, Graph.create(id).toArray())
+                                .chain(() -> session.createQuery(
+                                    Graph.PROJECTED_QUERY, Object[].class)
+                                    .setParameter("id", id)
+                                    .getResultList())));
+                }
+                """));
+        example.add(code);
+        return example;
     }
 
     // ── Hero ──────────────────────────────────────────

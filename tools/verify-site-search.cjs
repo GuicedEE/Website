@@ -21,7 +21,8 @@ server.listen(0, '127.0.0.1', async () => {
         const errors = [];
         page.on('pageerror', error => { errors.push(error.message); console.error('Page error:', error.message); });
         await page.goto(`http://127.0.0.1:${server.address().port}/home`);
-        await page.waitForFunction(() => !!customElements.get('wa-input') && !!customElements.get('wa-carousel'));
+        await page.waitForFunction(() => !!customElements.get('wa-page') && !!customElements.get('wa-input') &&
+            !!customElements.get('wa-carousel') && !!customElements.get('wa-scroller'));
         await page.waitForTimeout(2500);
         const search = page.locator('[slot="menu"] .site-search');
         const input = search.locator('wa-input input');

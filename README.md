@@ -6,6 +6,13 @@
 
 This repository powers the **public GuicedEE website** hosted at `https://guicedee.com`, presenting the entire GuicedEE ecosystem with the documentation, samples, and builder tools consumers expect.
 
+## AI documentation and crawler discovery
+
+The build publishes `llms.txt`, a complete `llms-full.txt`, individual references
+for 127 Maven components, Markdown versions of all documentation routes, robots
+and a sitemap. See [crawler discovery](docs/crawler-discovery.md) for coverage,
+source refresh, nginx behavior, verification commands and the live-site audit.
+
 ## Current performance website deployment
 
 The performance charts and complete runtime/build grids are live at
@@ -215,6 +222,12 @@ Use subscription `aee3c089-49a8-472c-8d40-5bf568a1ff55` (Pay-As-You-Go), tenant 
 The Releases and Capabilities pages preview the modular Firebase/Commercetools SDKs, external modular dependencies, Jackson 3 policy for Commercetools, SDK Javadocs and full application jlink validation. See the [release notes](../RELEASE-2.6.0.md). Website examples and version badges target 2.6.0. Publication and deployment remain pending.
 
 ## Homepage benchmark carousel
+
+The final carousel item introduces **WebAssembly · Experimental** and links to
+the indexed WebAssembly heading on `/capabilities`. The detail section distinguishes the verified standalone
+Guice and outbound HTTP probes from the planned typed REST-client/Jackson 3 and JWebMP
+rendering work. It includes a dated validation snapshot and is indexed by site search.
+This content is prepared locally; it does not announce a supported Wasm release or a deployment.
 
 The App Builder offers independent Firebase Admin and Commercetools SDK selections with BOM-managed wrapper coordinates and their original JPMS names. Services lists both SDKs and the Zstd/Okio support modules. The runtime selector defaults to a JVM JAR; Native image starter adds explicit SPI discovery, reflection registration, dual service registration, `NativeBuild.java` and `NATIVE.md` to Maven and Gradle ZIPs. Build previews use the same content as downloads. GraalVM compilation and workload-specific metadata remain application validation steps; selecting an SDK does not assert native compatibility for all its products.
 

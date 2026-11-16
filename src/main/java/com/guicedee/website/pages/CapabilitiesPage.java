@@ -49,6 +49,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildRedisCapability());
         layout.add(buildRestCapability());
         layout.add(buildRestClientCapability());
+        layout.add(buildWebAssemblyPreview());
         layout.add(buildSecurityCapability());
         layout.add(buildVerticleCapability());
         layout.add(buildPersistenceCapability());
@@ -62,6 +63,38 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         layout.add(buildModularSdkPreview());
         layout.add(buildJLinkCapability());
         layout.add(buildModuleCatalogSection());
+    }
+
+    private WaStack<?> buildWebAssemblyPreview()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        var status = new WaCluster<>();
+        status.add(buildTag("Experimental", Variant.Neutral));
+        status.add(buildTag("WASI · server & edge", Variant.Neutral));
+        content.add(status);
+        content.add(bodyText("We're exploring a focused WebAssembly profile for Java services: inject your application logic, call an API, process the response and eventually render with JWebMP.", "l"));
+
+        var progress = grid(2);
+        progress.add(contentCard("Verified in standalone WASI", "Real Guice providers, singletons and custom scopes pass lifecycle and failure checks. A separate Java-compiled HTTP component makes real GET/POST requests and handles errors, deadlines and resource cleanup.",
+                "These are independent, locally verified probes.", Appearance.Outlined, "m", "m"));
+        progress.add(contentCard("The next application workflow", "Qualify Jackson 3 DTOs and an injected, typed REST client. Then validate Java processing and actual JWebMP HTML/CSS rendering against the same JVM workload.",
+                "Typed REST-client integration and JWebMP rendering in Wasm are still planned.", Appearance.Outlined, "m", "m"));
+        content.add(progress);
+        content.add(bodyText("The initial profile focuses on outbound APIs and Java application logic. GuicedEE's existing HTTP servers, WebSockets and other Vert.x integrations remain on the JVM.", "m"));
+        content.add(bodyText("This is an experimental research preview, not a production-supported GuicedEE WebAssembly runtime. Browser Wasm and full framework compatibility have not been qualified.", "m"));
+
+        var validation = new WaDetails<>();
+        validation.setSummary("Validation snapshot · 16 November 2026");
+        var evidence = new WaStack<>();
+        evidence.setGap(PageSize.Small);
+        evidence.add(bodyText("The HTTP probe completed 129 calls, including nine deliberate connection refusals. A local server independently verified 120 received requests. Checks cover UTF-8 POST bodies, empty responses, 404/500 errors, header/body deadlines, truncated and oversized responses, and successful requests after every handled failure.", "m"));
+        evidence.add(bodyText("Cleanup passed under a 64-resource limit. Two leak comparisons exhausted the runtime limit as expected. The Guice probe separately verifies providers, scoped identity, cleanup and failure recovery.", "m"));
+        evidence.add(bodyText("The HTTP transport is a bounded, synchronous probe. HTTPS, JSON parsing and reactive client integration remain separate validation steps.", "s"));
+        validation.add(evidence);
+        content.add(validation);
+        return buildSection("WebAssembly", "Portable Java, one proven step at a time.",
+                "A focused experiment for WASI server and edge runtimes.", false, content);
     }
 
     private WaCard<?> buildIntro()

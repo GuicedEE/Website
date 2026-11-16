@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 /** Builds search data from the same Java component trees as the displayed pages. */
 final class SiteSearchIndex {
-    private record Page(String route, String title, Supplier<WebsitePage<?>> create) {}
-    private static final List<Page> PAGES = List.of(
+    record Page(String route, String title, Supplier<WebsitePage<?>> create) {}
+    static final List<Page> PAGES = List.of(
             new Page("home", "Home", HomePage::new),
             new Page("releases", "Releases", ReleasesPage::new),
             new Page("builder", "App Builder", AppBuilderPage::new),
@@ -43,6 +43,33 @@ final class SiteSearchIndex {
             }
         }
         return "[" + String.join(",", json) + "]";
+    }
+
+    /** Static documentation keeps code blocks and both build-tool examples. */
+    static String markdown(Page page) {
+        var output = new StringBuilder("# " + page.title + "\n\nSource: https://guicedee.com/" + page.route + "\n\n");
+        markdown(page.create.get(), output);
+        return output.toString();
+    }
+
+    private static void markdown(ComponentHierarchyBase<?, ?, ?, ?, ?> node, StringBuilder output) {
+        if (List.of("wa-dialog", "wa-tooltip", "wa-popover", "wa-chart", "wa-data-grid").contains(node.getTag())) return;
+        String value = node instanceof Markdown<?> md ? md.getMarkdownContent() : node.getText();
+        if (value != null && !value.isBlank()) {
+            String text = node instanceof Markdown<?> ? value : StringEscapeUtils.unescapeHtml4(value.replaceAll("<[^>]*>", " "));
+            text = text.replaceAll("\\{\\{.*?}}", "").strip();
+            if (!text.isBlank()) {
+                String tag = node.getTag();
+                if (tag.matches("h[1-6]")) output.append("#".repeat(Integer.parseInt(tag.substring(1)))).append(' ');
+                boolean code = "code".equals(tag);
+                if (code) output.append("```\n");
+                output.append(text).append('\n');
+                if (code) output.append("```\n");
+                output.append('\n');
+            }
+        }
+        for (Object child : node.getChildren())
+            if (child instanceof ComponentHierarchyBase<?, ?, ?, ?, ?> component) markdown(component, output);
     }
 
     private static void collect(ComponentHierarchyBase<?, ?, ?, ?, ?> node, List<Entry> entries) {

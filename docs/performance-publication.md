@@ -11,10 +11,10 @@ python tools/verify-benchmarks.py /path/to/benchmarks
 python tools/verify-benchmarks.py /path/to/benchmarks --url https://guicedee.com/home
 ```
 
-The current snapshot uses benchmark revision `3d97924`: SDK runtime/build results
-from 15 November 2026 and persistence batch `20261116-093613` from 16 November 2026.
-Runtime and build grids include GuicedEE, Quarkus and Micronaut. The headline charts
-retain Quarkus as their primary comparison.
+The current snapshot uses benchmark revision `c022ced`: SDK runtime/build results
+from 15 November 2026 and persistence batch `20261116-112315` from 16 November 2026.
+Runtime, memory, build and persistence charts and grids include GuicedEE, Quarkus
+and Micronaut. Quarkus remains the baseline for the table percentages.
 
 Persistence offers startup, joined-read and CRUD-cycle views. Startup includes the
 first committed 15-entity graph; it is not HTTP-port readiness. CRUD cycles include

@@ -171,6 +171,7 @@
                     <dockerBaseImage>nginx:alpine</dockerBaseImage>
                     <nginxServerName>guicedee.com www.guicedee.com</nginxServerName>
                     <nginxLetsEncrypt>false</nginxLetsEncrypt>
+                    <nginxConfigFile>${project.basedir}/src/main/nginx/site.conf</nginxConfigFile>
                     <appClasses>
                         <appClass>com.guicedee.website.WebsiteApplication</appClass>
                     </appClasses>

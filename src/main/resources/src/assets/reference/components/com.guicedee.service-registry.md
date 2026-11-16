@@ -1,0 +1,531 @@
+# com.guicedee:service-registry
+
+Named service registry with health-aware resolution â€” register, discover, and resolve services by simple name
+
+- Version line: `2.6.0` (verify publication separately).
+- Packaging: `jar`.
+- JPMS module: `com.guicedee.service.registry`.
+- [Source POM](https://github.com/GuicedEE/ServiceRegistry/blob/master/pom.xml).
+- [Reference guide](https://guicedee.com/reference/overview.md).
+
+## Direct dependency declarations
+
+Versions may be supplied by the BOM or properties in the linked POM; this is not a flattened dependency lock.
+
+- `org.projectlombok:lombok`; scope `compile`.
+- `com.guicedee:client`; scope `compile`.
+- `com.guicedee:vertx`; scope `compile`.
+- `io.vertx:vertx-core`; scope `compile`.
+- `io.vertx:vertx-web-client`; scope `compile`.
+- `com.guicedee:runtime-autoconfigure`; scope `compile`; optional.
+- `com.guicedee:service-discovery`; scope `compile`; optional.
+- `com.guicedee:inject`; scope `test`.
+- `org.junit.jupiter:junit-jupiter`; scope `test`.
+
+## JPMS descriptor
+
+```java
+import com.guicedee.client.services.lifecycle.IGuicePreStartup;
+import com.guicedee.client.services.lifecycle.IGuicePostStartup;
+import com.guicedee.client.services.lifecycle.IGuicePreDestroy;
+import com.guicedee.service.registry.implementations.ServiceRegistryPreStartup;
+import com.guicedee.service.registry.implementations.ServiceRegistryPostStartup;
+import com.guicedee.service.registry.implementations.ServiceRegistryPreDestroy;
+import com.guicedee.service.registry.IServiceRegistryProvider;
+import com.guicedee.service.registry.IServiceStatusChangeListener;
+
+module com.guicedee.service.registry {
+    exports com.guicedee.service.registry;
+
+    requires transitive com.guicedee.client;
+    requires transitive com.guicedee.vertx;
+    requires io.vertx.web.client;
+    requires io.smallrye.mutiny;
+    requires org.apache.logging.log4j;
+    requires static lombok;
+
+    requires static com.guicedee.runtime.autoconfigure;
+    requires static com.guicedee.vertx.servicediscovery;
+
+    provides IGuicePreStartup with ServiceRegistryPreStartup;
+    provides IGuicePostStartup with ServiceRegistryPostStartup;
+    provides IGuicePreDestroy with ServiceRegistryPreDestroy;
+
+    uses IServiceRegistryProvider;
+    uses IServiceStatusChangeListener;
+
+    opens com.guicedee.service.registry to com.google.guice;
+    opens com.guicedee.service.registry.implementations to com.google.guice;
+
+    exports com.guicedee.service.registry.implementations to com.guicedee.service.registry.test;
+}
+```
+
+## Module guide
+
+Source: [README.md](https://github.com/GuicedEE/ServiceRegistry/blob/master/README.md). Historical version examples retain their original context.
+
+# GuicedEE Service Registry
+
+[![Build](https://github.com/GuicedEE/ServiceRegistry/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/ServiceRegistry/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/service-registry)](https://github.com/GuicedEE/ServiceRegistry)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
+
+![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
+![Guice 7](https://img.shields.io/badge/Guice-7%2B-green)
+![Vert.X 5](https://img.shields.io/badge/Vert.x-5%2B-green)
+
+Named service registry with health-aware resolution for GuicedEE. Register services by simple name, auto-construct URLs from cloud DNS suffix, monitor health status, and resolve services via `registry:name` prefix in rest-client `@Endpoint`.
+
+### Private health endpoints
+
+`@RegisteredService(healthUrl = "${CORE_HEALTH_URL}")` can direct polling to a
+separate operational listener without changing the service's application `url`.
+The resolved absolute HTTP(S) URL is stored in `ServiceEntry.metadata().get("healthUrl")`.
+Existing declarations without an override still use `url + healthPath`; existing
+record constructors remain available. Explicit empty, unresolved or malformed
+values fail registration, as do credentials, query strings and fragments.
+
+The polling client verifies TLS certificates and hostnames using the configured
+Java trust material. It neither follows redirects nor treats a 3xx response as
+healthy. Deployments using private CAs must configure trust; certificate bypass is
+no longer supported by the health poller. The override does not configure mTLS
+client keys or authorize access to management endpoints.
+
+Built on [Vert.x 5](https://vertx.io/) · [Google Guice](https://github.com/google/guice) · JPMS module `com.guicedee.service.registry` · Java 25+
+
+## 📦 Installation
+
+```xml
+<dependency>
+  <groupId>com.guicedee</groupId>
+  <artifactId>service-registry</artifactId>
+</dependency>
+```
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
+implementation("com.guicedee:service-registry:2.4.1")
+```
+</details>
+
+## ✨ Features
+
+- **Simple name resolution** — `ServiceRegistry.url("jwebmp-website")` returns the full URL
+- **Auto-URL construction** — builds URLs from cloud DNS suffix (Azure, K8s, etc.)
+- **Health monitoring** — periodic health checks via Vert.x WebClient
+- **Per-service health paths** — each service can specify its own health endpoint
+- **Annotation-driven** — `@RegisteredService(name = "...")` declares known services
+- **Aliases** — resolve services by alternative names (e.g. `url("jwebmp")` → jwebmp-website)
+- **External URLs** — multiple public/custom domain URLs per service
+- **Kubernetes URLs** — separate internal cluster URLs with fallback to primary
+- **Self-registration** — auto-registers this app using runtime-autoconfigure metadata
+- **rest-client integration** — `@Endpoint(url = "registry:service-name")` or bare name resolves from registry
+- **Pluggable sources** — `IServiceRegistryProvider` SPI for external catalogs (Consul, Azure API, etc.)
+- **Environment variable support** — `${VAR}` placeholders in URLs
+- **Status-aware** — UP, DOWN, DEGRADED, UNKNOWN states per service
+
+## 🚀 Quick Start
+
+**Step 1** — Declare your sibling services on `package-info.java`:
+
+```java
+@ServiceRegistryOptions(healthCheckInterval = 30)
+@RegisteredService(name = "jwebmp-website",
+    aliases = {"jwebmp", "jwebswing"},
+    externalUrls = {"https://jwebmp.com", "https://jwebswing.com"},
+    kubernetesUrl = "http://jwebmp-website.default.svc.cluster.local")
+@RegisteredService(name = "payment-api", url = "${PAYMENT_URL}", healthPath = "/status")
+@RegisteredService(name = "hello-service",
+    url = "http://hello-service.myns.svc.cluster.local",
+    healthPath = "/healthz")
+package com.myapp;
+
+import com.guicedee.service.registry.*;
+```
+
+**Step 2** — Use services by name:
+
+```java
+// Get URL (throws if not registered)
+String url = ServiceRegistry.url("jwebmp-website");
+
+// Alias resolution
+String url = ServiceRegistry.url("jwebmp"); // resolves to jwebmp-website
+
+// External/public URL (custom domain)
+String ext = ServiceRegistry.externalUrl("jwebmp-website");
+// → https://jwebmp.com
+
+// Multiple external URLs
+List<String> exts = ServiceRegistry.externalUrls("jwebmp-website");
+// → [https://jwebmp.com, https://jwebswing.com]
+
+// Kubernetes internal URL
+String k8s = ServiceRegistry.kubernetesUrl("jwebmp-website");
+// → http://jwebmp-website.default.svc.cluster.local
+
+// Get URL only if healthy
+Optional<String> url = ServiceRegistry.healthyUrl("jwebmp-website");
+
+// Check all healthy services
+Map<String, ServiceEntry> healthy = ServiceRegistry.healthy();
+```
+
+**Step 3** — With rest-client (three formats supported):
+
+```java
+// Explicit registry: prefix
+@Endpoint(url = "registry:jwebmp-website")
+@Named("jwebmp")
+private RestClient<Void, Response> jwebmpClient;
+
+// Bare service name (auto-detected from registry)
+@Endpoint(url = "jwebmp-website")
+@Named("jwebmp")
+private RestClient<Void, Response> jwebmpClient;
+
+// Full URL (passes through unchanged)
+@Endpoint(url = "https://api.example.com/v1")
+@Named("example")
+private RestClient<Void, Response> exampleClient;
+```
+
+## 📐 Architecture
+
+```mermaid
+flowchart TD
+    n1["Application Startup"]
+    n2["RuntimeAutoConfigurePreStartup<br/>MIN+50 — detects cloud platform"]
+    n3["ServiceRegistryPreStartup<br/>MIN+150 — scans annotations, registers services"]
+    n4["ServiceRegistryPostStartup<br/>MIN+700 — starts health check timer"]
+    n1 --> n2 --> n3 --> n4
+
+    n3 --> r1["@RegisteredService annotations"]
+    n3 --> r2["IServiceRegistryProvider SPIs"]
+    n3 --> r3["Self-registration via runtime-autoconfigure"]
+    n3 --> r4["URL auto-construction from DNS suffix"]
+
+    n4 --> h1["Periodic GET /health/ready"]
+    h1 --> h2["Update ServiceStatus: UP/DOWN/DEGRADED"]
+```
+
+## ⚙️ Configuration
+
+### @ServiceRegistryOptions
+
+| Property | Default | Purpose |
+|---|---|---|
+| `healthCheckInterval` | `30` | Seconds between health checks (0 = disabled) |
+| `healthPath` | `"/health/ready"` | Default health endpoint path |
+| `registerSelf` | `true` | Auto-register this app from runtime-autoconfigure |
+| `healthCheckTimeout` | `5000` | HTTP timeout in ms for health checks |
+| `useHttps` | `true` | Use HTTPS for auto-constructed URLs |
+| `defaultPort` | `0` | Port for auto-constructed URLs (0 = omit) |
+
+### @RegisteredService
+
+| Property | Default | Purpose |
+|---|---|---|
+| `name` | (required) | Simple logical service name |
+| `url` | `""` | Full URL (empty = auto-construct from DNS suffix). Supports `${ENV_VAR}` |
+| `healthPath` | `""` | Health path override (empty = uses registry default) |
+| `aliases` | `{}` | Alternative names that resolve to this service |
+| `externalUrls` | `{}` | External/public URLs (custom domains). Supports `${ENV_VAR}` |
+| `externalUrl` | `""` | Single external URL shorthand. Supports `${ENV_VAR}` |
+| `kubernetesUrl` | `""` | Kubernetes internal cluster URL. Supports `${ENV_VAR}` |
+
+### Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `SERVICE_REGISTRY_DNS_SUFFIX` | DNS suffix for URL construction (fallback) |
+| `CONTAINER_APP_ENV_DNS_SUFFIX` | Azure Container Apps DNS suffix (auto-detected) |
+
+## 🔌 SPI & Extension Points
+
+| SPI | When | Purpose |
+|---|---|---|
+| `IServiceRegistryProvider` | During pre-startup | Provide services from external catalogs |
+
+### Custom Provider
+
+```java
+public class AzureCatalogProvider implements IServiceRegistryProvider<AzureCatalogProvider> {
+    @Override
+    public List<ServiceEntry> discover() {
+        // Call Azure API, return all container apps
+    }
+
+    @Override
+    public String providerId() { return "azure-catalog"; }
+}
+```
+
+Register in `module-info.java`:
+```java
+provides IServiceRegistryProvider with AzureCatalogProvider;
+```
+
+## 🧩 Integration with rest-client
+
+When service-registry is on the classpath, `@Endpoint` URLs can use the `registry:` prefix:
+
+```java
+@Endpoint(url = "registry:jwebmp-website")
+@Named("jwebmp-api")
+private RestClient<Void, Response> client;
+```
+
+The rest-client resolves `registry:jwebmp-website` → `ServiceRegistry.url("jwebmp-website")`.
+
+## 🗺️ Module Graph
+
+```mermaid
+flowchart LR
+    sr["com.guicedee.service.registry"]
+    sr --> client["com.guicedee.client<br/>SPI contracts"]
+    sr --> vertx["com.guicedee.vertx<br/>Vert.x lifecycle"]
+    sr --> vertx_wc["io.vertx.web.client<br/>Health checks"]
+    sr -.-> ra["com.guicedee.runtime.autoconfigure<br/>(optional: self-registration)"]
+    sr -.-> sd["com.guicedee.vertx.servicediscovery<br/>(optional: K8s/SRV)"]
+```
+
+## 🧩 JPMS
+
+Module name: **`com.guicedee.service.registry`**
+
+```java
+module my.app {
+    requires com.guicedee.service.registry;
+}
+```
+
+## 🏗️ Key Classes
+
+| Class | Package | Role |
+|---|---|---|
+| `ServiceRegistry` | `registry` | Central static registry — get/register/resolve by name |
+| `ServiceEntry` | `registry` | Record: name, url, healthPath, status, metadata |
+| `ServiceStatus` | `registry` | Enum: UP, DOWN, UNKNOWN, DEGRADED |
+| `ServiceRegistryOptions` | `registry` | Annotation: health interval, HTTPS, self-register |
+| `RegisteredService` | `registry` | Annotation: declares a known service (repeatable) |
+| `IServiceRegistryProvider` | `registry` | SPI for external service catalogs |
+| `ServiceRegistryPreStartup` | `implementations` | Scans annotations, constructs URLs, registers services |
+| `ServiceRegistryPostStartup` | `implementations` | Starts Vert.x periodic health check timer |
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome — please add tests for new registry providers or health check strategies.
+
+## 📄 License
+
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Declared API reference
+
+Java public/protected declarations and public interface methods are parsed with the JDK compiler. This includes implementation types; package exports determine JPMS accessibility. Inherited and generated members are not expanded. Kotlin adapters retain their source and comments.
+
+## ServiceRegistryPostStartup
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/implementations/ServiceRegistryPostStartup.java)
+
+### ServiceRegistryPostStartup
+
+```java
+@Override public List<Uni<Boolean>> postLoad();
+public static void stop();
+@Override public Integer sortOrder();
+```
+
+## ServiceRegistryPreDestroy
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/implementations/ServiceRegistryPreDestroy.java)
+
+### ServiceRegistryPreDestroy
+
+```java
+@Override public void onDestroy();
+@Override public Integer sortOrder();
+```
+
+## ServiceRegistryPreStartup
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/implementations/ServiceRegistryPreStartup.java)
+
+### ServiceRegistryPreStartup
+
+```java
+@Override public List<Future<Boolean>> onStartup();
+@Override public Integer sortOrder();
+```
+
+## IServiceRegistryProvider
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/IServiceRegistryProvider.java)
+
+### IServiceRegistryProvider
+
+```java
+List<ServiceEntry> discover();
+String providerId();
+```
+
+## IServiceStatusChangeListener
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/IServiceStatusChangeListener.java)
+
+### IServiceStatusChangeListener
+
+```java
+void onStatusChange(String serviceName, ServiceStatus previousStatus, ServiceStatus newStatus, ServiceEntry entry);
+```
+
+## RegisteredService
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/RegisteredService.java)
+
+### RegisteredService
+
+```java
+String name();
+String url() default "";
+String healthPath() default "";
+String healthUrl() default "";
+int expectedStatusCode() default 200;
+String expectedContentType() default "application/json";
+String revision() default "";
+String[] aliases() default {};
+String[] externalUrls() default {};
+String externalUrl() default "";
+String kubernetesUrl() default "";
+String openApiPath() default "";
+String[] openApiEnvironments() default {};
+String authScheme() default "";
+String authTokenUrl() default "";
+String[] authScopes() default {};
+String graphqlPath() default "";
+String[] graphqlEnvironments() default {};
+```
+
+## RegisteredServices
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/RegisteredServices.java)
+
+### RegisteredServices
+
+```java
+RegisteredService[] value();
+```
+
+## ServiceEntry
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/ServiceEntry.java)
+
+### ServiceEntry
+
+```java
+public ServiceEntry(String name, String url, String healthPath, ServiceStatus status, Instant lastChecked, Map<String, String> metadata);
+public ServiceEntry(String name, String url, String externalUrl, String healthPath, ServiceStatus status, Instant lastChecked, Map<String, String> metadata);
+public ServiceEntry(String name, String url, List<String> externalUrls, String kubernetesUrl, String healthPath, ServiceStatus status, Instant lastChecked, Map<String, String> metadata);
+public ServiceEntry(String name, String url, List<String> externalUrls, String kubernetesUrl, String healthPath, ServiceStatus status, Instant lastChecked, Map<String, String> metadata, List<ServiceHealthDetail> healthDetails);
+public String healthUrl();
+public boolean isHealthy();
+public ServiceEntry withStatus(ServiceStatus newStatus);
+public ServiceEntry withStatusAndDetails(ServiceStatus newStatus, List<ServiceHealthDetail> details);
+public String externalUrl();
+public boolean hasExternalUrl();
+public boolean hasKubernetesUrl();
+public String revision();
+public boolean hasRevision();
+public String instanceId();
+```
+
+## ServiceHealthDetail
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/ServiceHealthDetail.java)
+
+### ServiceHealthDetail
+
+```java
+public ServiceHealthDetail(String name, ServiceStatus status);
+public boolean isUp();
+```
+
+## ServiceRegistry
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/ServiceRegistry.java)
+
+### ServiceRegistry
+
+```java
+public static void addStatusChangeListener(IServiceStatusChangeListener<?> listener);
+public static void removeStatusChangeListener(IServiceStatusChangeListener<?> listener);
+public static Optional<ServiceEntry> get(String name);
+public static String url(String name);
+public static String externalUrl(String name);
+public static List<String> externalUrls(String name);
+public static String kubernetesUrl(String name);
+public static Optional<String> healthyUrl(String name);
+public static Optional<String> healthyExternalUrl(String name);
+public static Optional<List<String>> healthyExternalUrls(String name);
+public static Optional<String> resolveHealthy(String urlOrRegistryName);
+public static Map<String, ServiceEntry> healthyWithExternalUrls();
+public static void registerInstance(ServiceEntry entry);
+public static void unregisterInstance(String name, String revision);
+public static void updateInstanceStatus(String name, String revision, ServiceStatus status);
+public static void updateInstanceStatus(String name, String revision, ServiceStatus status, List<ServiceHealthDetail> details);
+public static List<ServiceEntry> instances(String name);
+public static List<ServiceEntry> healthyInstances(String name);
+public static Optional<ServiceEntry> latestHealthyInstance(String name);
+public static Optional<String> openApiUrl(String name);
+public static Map<String, String> allOpenApiUrls(String environment);
+public static Map<String, String> allOpenApiUrls();
+public static Map<String, String> allGraphQLUrls(String environment);
+public static Map<String, String> allGraphQLUrls();
+public static void register(ServiceEntry entry);
+public static void register(String name, String url);
+public static void unregister(String name);
+public static void updateStatus(String name, ServiceStatus status);
+public static void updateStatus(String name, ServiceStatus status, List<ServiceHealthDetail> details);
+public static List<ServiceHealthDetail> healthDetails(String name);
+public static Map<String, ServiceEntry> all();
+public static Map<String, ServiceEntry> healthy();
+public static List<String> down();
+public static boolean contains(String name);
+public static void registerAlias(String alias, String canonicalName);
+public static String resolve(String urlOrRegistryName);
+public static String resolveEnvPlaceholders(String input);
+public static void clear();
+```
+
+## ServiceRegistryOptions
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/ServiceRegistryOptions.java)
+
+### ServiceRegistryOptions
+
+```java
+int healthCheckInterval() default 30;
+String healthPath() default "/health/ready";
+boolean registerSelf() default true;
+int healthCheckTimeout() default 5000;
+boolean useHttps() default true;
+int defaultPort() default 0;
+```
+
+## ServiceStatus
+
+[Java source](https://github.com/GuicedEE/ServiceRegistry/blob/master/src/main/java/com/guicedee/service/registry/ServiceStatus.java)
+
+### ServiceStatus
+
+```java
+public static final ServiceStatus UP;
+public static final ServiceStatus DOWN;
+public static final ServiceStatus UNKNOWN;
+public static final ServiceStatus DEGRADED;
+public static final ServiceStatus WARNING;
+```

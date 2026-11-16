@@ -809,6 +809,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     public List<String> methods() {
         var m = new ArrayList<>(INgComponent.super.methods());
         m.add(SiteSearch.methods());
+        m.add(SiteDiscovery.metadataMethod());
         m.add("""
                 toggleDarkMode() {
                     const isDark = !this.app.darkMode();
@@ -842,6 +843,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                 }""");
         init.add("""
                 this.siteNavigationSubscription = this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
+                    this.updateSiteMetadata(e.urlAfterRedirects);
                     void this.revealSearchFragment(e.urlAfterRedirects);
                     if (this._asideNavigating) return;
                     const navEnd = e as NavigationEnd;

@@ -46,6 +46,7 @@ public class WebsitePageConfigurator implements IPageConfigurator<WebsitePageCon
 
     @Override
     public IPage<?> configureAngular(IPage<?> page) {
+        SiteDiscovery.writeResources();
         return configure(page);
     }
 

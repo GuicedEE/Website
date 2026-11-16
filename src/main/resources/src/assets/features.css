@@ -182,12 +182,19 @@ wa-icon.icon-shrink {
     background: var(--wa-color-brand-fill-quiet); color: var(--wa-color-brand-on-quiet);
     box-shadow: inset 0 -2px var(--wa-color-brand-fill-loud);
 }
-.performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0; }
-.performance-carousel wa-carousel-item { --aspect-ratio: auto; height: auto; align-self: stretch; border-radius: 1.5rem; }
+.performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0;
+    --showcase-height: clamp(30rem, calc(100svh - 14rem), 46rem); }
+.performance-carousel::part(scroll-container) {
+    height: var(--showcase-height); grid-template-rows: minmax(0, 1fr); overflow-y: hidden;
+}
+.performance-carousel wa-carousel-item { --aspect-ratio: auto; height: 100%; min-height: 0;
+    align-self: stretch; border-radius: 1.5rem; }
+.showcase-scroller { width: 100%; height: 100%; min-height: 0; border-radius: 1.5rem; --shadow-size: 1.25rem; }
+.showcase-scroller::part(content) { overscroll-behavior-y: contain; scrollbar-gutter: stable; }
 .performance-carousel .hero-banner { margin: 0; min-height: 31rem; justify-content: center; box-sizing: border-box; }
 .benchmark-panel {
     display: grid; grid-template-columns: 1fr 1.05fr; align-items: center; align-content: start; gap: 2.5rem;
-    min-height: 31rem; height: 100%; padding: clamp(1.5rem, 4vw, 3rem); box-sizing: border-box;
+    min-height: var(--showcase-height); width: 100%; padding: clamp(1.5rem, 4vw, 3rem); box-sizing: border-box;
     border: 1px solid var(--wa-color-neutral-border-quiet); border-radius: 1.5rem;
     background: radial-gradient(ellipse at 0% 0%, #10b98118, transparent 65%),
                 radial-gradient(ellipse at 100% 100%, #818cf818, transparent 60%), var(--wa-color-surface-default);
@@ -202,6 +209,7 @@ wa-icon.icon-shrink {
 .benchmark-values { font-variant-numeric: tabular-nums; font-weight: 650; }
 .benchmark-visual p { margin: 0; }
 @media (max-width: 720px) {
+    .performance-carousel { --showcase-height: clamp(28rem, calc(100svh - 17rem), 38rem); }
     .benchmark-panel { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.25rem; }
     .benchmark-visual { padding: 1rem; }
     .showcase-navigation wa-button { font-size: .8rem; }
@@ -230,13 +238,7 @@ wa-icon.icon-shrink {
 .build-grid::part(cell), .build-grid::part(header-cell) { white-space: normal; line-height: 1.2; }
 .build-grid::part(cell) { font-size: .7rem; }
 
-/* The introduction fits its own content instead of the tallest comparison slide. */
-.performance-carousel.showcase-intro::part(scroll-container) {
-    height: var(--intro-height, 31rem);
-    grid-template-rows: minmax(0, 1fr);
-    overflow-y: hidden;
-}
-.performance-carousel wa-carousel-item:first-child { align-items: flex-start; }
+/* Every slide keeps the same viewport; longer stories scroll within it. */
 .performance-carousel .hero-banner {
     width: 100%; padding: clamp(1.5rem, 3vw, 2.5rem); gap: 1.5rem;
     border: 1px solid var(--wa-color-neutral-border-quiet); border-radius: 1.5rem;
@@ -245,7 +247,7 @@ wa-icon.icon-shrink {
     font-size: clamp(2.25rem, 4vw, 3.5rem); max-width: 22ch; margin: 0;
     letter-spacing: -.035em;
 }
-.performance-carousel .hero-banner { flex: none; height: max-content; }
+.performance-carousel .hero-banner { flex: none; height: auto; min-height: var(--showcase-height); }
 
 /* Kotlin keeps the showcase proportions, with a violet and coral accent. */
 .kotlin-panel {
@@ -253,14 +255,28 @@ wa-icon.icon-shrink {
     background: radial-gradient(ellipse at 0% 0%, #a855f720, transparent 60%),
                 radial-gradient(ellipse at 100% 100%, #f9731615, transparent 60%), var(--wa-color-surface-default);
 }
-.performance-carousel .kotlin-slide { align-items: flex-start; }
-.performance-carousel.showcase-kotlin::part(scroll-container) {
-    height: var(--kotlin-height, 31rem); grid-template-rows: minmax(0, 1fr); overflow-y: hidden;
-}
 .kotlin-example { border-top: 3px solid #a855f7; }
 .kotlin-code-label { color: var(--wa-color-text-normal); letter-spacing: .12em; font-weight: 650; }
 .kotlin-example .code-block { min-width: 0; max-width: 100%; }
+
+/* Experimental Wasm shares the manual showcase, with a quiet violet accent. */
+.wasm-panel {
+    background: radial-gradient(ellipse at 0% 0%, #654ff018, transparent 65%),
+                var(--wa-color-surface-default);
+}
+.wasm-progress { border-top: 3px solid #8274df; }
+.wasm-progress wa-card { width: 100%; min-width: 0; }
 .kotlin-example pre { margin-block: .25rem; font-size: clamp(.7rem, 1vw, .85rem); overflow-x: auto; }
+.persistence-example { display: grid; grid-template-columns: 1fr; gap: 1.25rem; align-items: center;
+    padding-block-start: 1.5rem; border-top: 1px solid var(--wa-color-neutral-border-quiet); }
+.persistence-example > * { min-width: 0; }
+.persistence-example wa-button { align-self: flex-start; max-width: 100%; }
+.persistence-example wa-button::part(label) { white-space: normal; }
+.persistence-code { border-top: 3px solid #10b981; }
+.persistence-code pre { margin-block: .25rem; font-size: clamp(.7rem, 1vw, .85rem); overflow-x: auto; }
+@media (max-width: 720px) {
+    .persistence-example { grid-template-columns: 1fr; gap: 1rem; }
+}
 
 /* Local documentation search, shared by the left menu and mobile navigation. */
 .site-search { display: block; min-width: 0; width: 11rem; max-width: calc(100% - 1.5rem); margin: 0 .75rem .75rem; }

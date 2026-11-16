@@ -1,0 +1,1591 @@
+# com.guicedee:persistence
+
+Integrates Vert.x Persistence
+
+- Version line: `2.6.0` (verify publication separately).
+- Packaging: `jar`.
+- JPMS module: `com.guicedee.persistence`.
+- [Source POM](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/pom.xml).
+- [Reference guide](https://guicedee.com/reference/overview.md).
+
+## Direct dependency declarations
+
+Versions may be supplied by the BOM or properties in the linked POM; this is not a flattened dependency lock.
+
+- `org.mockito:mockito-core`; scope `test`.
+- `com.guicedee.modules.services:mssql-jdbc`; scope `test`.
+- `com.ongres.scram:scram-client`; scope `compile`.
+- `io.vertx:vertx-pg-client`; scope `compile`; optional.
+- `com.ongres.scram:scram-common`; scope `compile`.
+- `io.vertx:vertx-mssql-client`; scope `compile`; optional.
+- `io.vertx:vertx-mongo-client`; scope `compile`; optional.
+- `com.guicedee.modules.services:mongodb-driver-reactivestreams`; scope `compile`; optional.
+- `io.vertx:vertx-mysql-client`; scope `compile`; optional.
+- `io.vertx:vertx-db2-client`; scope `compile`; optional.
+- `io.vertx:vertx-oracle-client`; scope `compile`; optional.
+- `com.guicedee.modules.services:vertx-cassandra`; scope `compile`; optional.
+- `com.guicedee:vertx`; scope `compile`.
+- `com.guicedee:client`; scope `compile`.
+- `com.guicedee.modules.representations:json-representation`; scope `compile`.
+- `tools.jackson.core:jackson-databind`; scope `compile`.
+- `com.guicedee.modules.services:hibernate-reactive`; scope `compile`.
+- `com.guicedee.modules.services:hibernate-core`; scope `compile`.
+- `com.guicedee:inject`; scope `compile`.
+- `com.guicedee:rest`; scope `compile`; optional.
+- `com.h2database:h2`; scope `test`.
+- `org.ehcache:ehcache`; scope `test`.
+- `com.guicedee.modules.services:testcontainers`; scope `test`.
+- `junit:junit`; scope `test`.
+- `org.junit.jupiter:junit-jupiter-api`; scope `test`.
+- `com.guicedee.modules.services:vertx-mutiny`; scope `test`.
+- `io.smallrye.reactive:mutiny`; scope `compile`.
+- `jakarta.transaction:jakarta.transaction-api`; scope `compile`.
+
+## JPMS descriptor
+
+```java
+import com.guicedee.client.services.lifecycle.IGuiceConfigurator;
+import com.guicedee.persistence.IPropertiesConnectionInfoReader;
+import com.guicedee.persistence.IPropertiesEntityManagerReader;
+import com.guicedee.persistence.implementations.GuicedConfigurator;
+import com.guicedee.persistence.implementations.db2.DB2HibernateProperties;
+import com.guicedee.persistence.implementations.hibernateproperties.HibernateEntityManagerProperties;
+import com.guicedee.persistence.implementations.mysql.MySqlHibernateProperties;
+import com.guicedee.persistence.implementations.oracle.OracleHibernateProperties;
+import com.guicedee.persistence.implementations.postgres.PostgresHibernateProperties;
+import com.guicedee.persistence.implementations.sqlserver.SqlServerHibernateProperties;
+import com.guicedee.persistence.implementations.systemproperties.SystemEnvironmentVariablesPropertiesReader;
+import org.hibernate.service.spi.ServiceContributor;
+
+module com.guicedee.persistence {
+    requires java.xml;
+    requires com.guicedee.jsonrepresentation;
+    provides com.guicedee.client.services.lifecycle.IGuicePreStartup with com.guicedee.persistence.PersistenceShutdown;
+    provides com.guicedee.client.services.lifecycle.IGuicePostStartup with com.guicedee.persistence.PersistenceStartup;
+    provides com.guicedee.client.services.lifecycle.IGuicePreDestroy with com.guicedee.persistence.PersistenceShutdown;
+
+    exports com.guicedee.persistence;
+    exports com.guicedee.persistence.annotations;
+    //exports com.guicedee.persistence.bind;
+    //exports com.guicedee.persistence.implementations;
+    exports com.guicedee.persistence.implementations.postgres;
+    exports com.guicedee.persistence.implementations.mysql;
+    exports com.guicedee.persistence.implementations.db2;
+    exports com.guicedee.persistence.implementations.sqlserver;
+    exports com.guicedee.persistence.implementations.oracle;
+    exports com.guicedee.persistence.implementations.vertxsql;
+    exports com.guicedee.persistence.implementations.mongodb;
+    exports com.guicedee.persistence.implementations.cassandra;
+
+    requires transitive org.hibernate.reactive;
+    requires transitive com.guicedee.vertx;
+    requires transitive com.guicedee.guicedinjection;
+
+    requires static com.guicedee.rest;
+
+    requires org.slf4j;
+
+    requires static lombok;
+    requires transitive jakarta.transaction;
+
+    requires transitive org.hibernate.orm.core;
+    requires static io.vertx.sql.client.pg;
+    requires static io.vertx.sql.client.mssql;
+    requires static io.vertx.sql.client.mysql;
+    requires static io.vertx.sql.client.db2;
+    requires static io.vertx.sql.client.oracle;
+    requires static io.vertx.mongo.client;
+    requires static io.vertx.cassandra.client;
+    requires transitive io.vertx.sql.client;
+
+    uses com.guicedee.persistence.IPropertiesConnectionInfoReader;
+    uses com.guicedee.persistence.IPropertiesEntityManagerReader;
+    uses org.hibernate.bytecode.spi.BytecodeProvider;
+
+    provides IGuiceConfigurator with GuicedConfigurator;
+    provides IPropertiesEntityManagerReader with SystemEnvironmentVariablesPropertiesReader, HibernateEntityManagerProperties,
+            DB2HibernateProperties,
+            MySqlHibernateProperties,
+            OracleHibernateProperties,
+            PostgresHibernateProperties,
+            SqlServerHibernateProperties;
+    provides IPropertiesConnectionInfoReader with com.guicedee.persistence.implementations.hibernateproperties.HibernateDefaultConnectionBaseBuilder
+            ;
+
+    provides ServiceContributor with com.guicedee.persistence.implementations.VertxServiceContributor;
+
+    opens com.guicedee.persistence to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.annotations to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.bind to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.implementations to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.implementations.postgres to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.implementations.mysql to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny,io.vertx.sql.client.mysql;
+    opens com.guicedee.persistence.implementations.db2 to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny,io.vertx.sql.client.db2;
+    opens com.guicedee.persistence.implementations.sqlserver to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.implementations.oracle to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny,io.vertx.sql.client.oracle;
+    opens com.guicedee.persistence.implementations.vertxsql to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,org.hibernate.orm.core,net.bytebuddy,io.smallrye.mutiny;
+    opens com.guicedee.persistence.implementations.mongodb to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,net.bytebuddy,tools.jackson.databind;
+    opens com.guicedee.persistence.implementations.cassandra to com.google.guice,com.guicedee.guicedinjection,io.vertx.core,io.vertx.codegen.api,net.bytebuddy,tools.jackson.databind;
+
+    exports com.guicedee.persistence.implementations;
+    exports com.guicedee.persistence.bind;
+    exports com.guicedee.persistence.implementations.systemproperties;
+}
+```
+
+## Module guide
+
+Source: [README.md](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/README.md). Historical version examples retain their original context.
+
+# GuicedEE Persistence
+
+Persistence supports explicit model discovery without ClassGraph through `IGuiceDiscovery`. See [SPI registration, XML mappings and persistence-unit boundaries](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/SPI_DISCOVERY.md).
+
+[![Build](https://github.com/GuicedEE/GuicedVertxPersistence/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/GuicedVertxPersistence/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/persistence)](https://central.sonatype.com/artifact/com.guicedee/persistence)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
+
+![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
+![Guice 7](https://img.shields.io/badge/Guice-7%2B-green)
+![Vert.X 5](https://img.shields.io/badge/Vert.x-5%2B-green)
+
+Reactive **JPA persistence** for [GuicedEE](https://github.com/GuicedEE) applications using **Hibernate Reactive 4**, **Hibernate ORM 7** and **Vert.x 5**.
+Extend `DatabaseModule`, point it at a `persistence.xml` unit, and the module wires a `Mutiny.SessionFactory` into Guice — fully reactive, annotation-driven, with built-in support for PostgreSQL, MySQL, SQL Server, Oracle, and DB2.
+
+Built on [Hibernate Reactive](https://hibernate.org/reactive/) · [Vert.x SQL Client](https://vertx.io/docs/vertx-sql-client/java/) · [Google Guice](https://github.com/google/guice) · [Mutiny](https://smallrye.io/smallrye-mutiny/) · JPMS module `com.guicedee.persistence` · Java 25+
+
+## 📦 Installation
+
+```xml
+<dependency>
+  <groupId>com.guicedee</groupId>
+  <artifactId>persistence</artifactId>
+</dependency>
+```
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
+implementation("com.guicedee:persistence:2.4.1")
+```
+</details>
+
+## ✨ Features
+
+- **Annotation-driven persistence units** — extend `DatabaseModule`, annotate with `@EntityManager`, and Guice wires everything from `persistence.xml`
+- **Hibernate Reactive + Mutiny** — `Mutiny.SessionFactory` is bound in Guice with full reactive session/transaction support
+- **Multi-database support** — built-in `ConnectionBaseInfo` implementations for PostgreSQL, MySQL, SQL Server, Oracle, and DB2
+- **Environment variable resolution** — `${VAR_NAME}` placeholders in `persistence.xml` properties are resolved from system properties or environment variables
+- **Vert.x SQL Client pooling** — Hibernate owns its configured pool; explicitly supplied pools retain their configured ownership, and named SQL clients initialize when requested
+- **Multiple persistence units** — bind multiple `DatabaseModule` subclasses with distinct `@Named` qualifiers; one is marked as the default
+- **`@EntityManager` scoping** — annotate packages or classes to associate entities with specific persistence units
+- **SPI-driven property processing** — `IPropertiesEntityManagerReader` and `IPropertiesConnectionInfoReader` contribute database-specific Hibernate settings
+- **Vert.x context-aware startup** — `EntityManagerFactory` creation runs on a proper Vert.x context to satisfy Hibernate Reactive's internal requirements
+- **Lifecycle management** — `PersistService.start()` / `stop()` integrated with `IGuicePostStartup` / `IGuicePreDestroy`
+
+## Bootstrap and enhanced entities
+
+`DatabaseModule` passes its parsed persistence-unit descriptor directly to Hibernate
+Reactive. This avoids repeating provider discovery and XML parsing during factory
+creation. Explicit custom persistence providers keep the normal JPA bootstrap path.
+Schema validation and the factory startup completion barrier remain in place.
+
+Common Jakarta Persistence 3.0–3.2 descriptors use a streaming XML parser to avoid
+JAXB initialization during discovery. It preserves descriptor values and environment
+placeholders. Descriptors with mapping files, additional JARs, data sources, legacy
+namespaces or unsupported descriptor grammar delegate to Hibernate's original parser. Set
+`GUICEDEE_PERSISTENCE_XML_PARSER=hibernate` to use the original parser for every
+descriptor.
+
+Both paths first reject DTDs, external entities, malformed XML and excessive XML
+depth/attributes. External DTD access and XML catalogs are disabled locally on the
+JDK parser; application-wide JAXP settings are unchanged. Hibernate fallback reads
+the validated byte snapshot, preserving the original persistence-unit location
+without reopening a file that could have changed after validation. Schema hints
+and XInclude do not fetch external resources. These checks also apply when the
+Hibernate parser override is selected. Descriptors are limited to 8 MiB each;
+`GUICEDEE_PERSISTENCE_XML_MAX_BYTES` can raise the limit for larger applications.
+This boundary covers `persistence.xml`; Hibernate processes referenced mapping
+files separately.
+
+With the standard application classloader, entities enhanced at build time use
+Hibernate's standard property access instead of generating another reflection
+optimizer at startup. The default Byte Buddy provider is initialized only when required.
+Unenhanced entities, runtime enhancement, inheritance proxies and custom bytecode
+providers retain their provider behavior. Custom classloader arrangements use
+Hibernate's aggregate service discovery and retain the provider it returns unchanged.
+
+To restore Hibernate's original accessor generation for a persistence unit, set:
+
+```xml
+<property name="guicedee.persistence.optimize_enhanced_entities" value="false"/>
+```
+
+An explicitly supplied [`hibernate.enhancer.bytecodeprovider.instance`](https://docs.hibernate.org/orm/7.4/javadocs/org/hibernate/cfg/BytecodeSettings.html#BYTECODE_PROVIDER_INSTANCE) takes precedence.
+The accessor tradeoff should be measured for applications that hydrate large entity
+graphs. `GUICEDEE_DIAGNOSTICS_DIR` enables separate XML, metadata bootstrap, mapping
+model and session-factory phase timings in the application log; these instrumented runs are separate from
+performance measurements.
+
+## 🚀 Quick Start
+
+**Step 1** — Add a `persistence.xml`:
+
+```xml
+<!-- src/main/resources/META-INF/persistence.xml -->
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+  <persistence-unit name="mydb">
+    <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
+    <class>com.example.entities.User</class>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url"
+                value="${DB_URL:jdbc:postgresql://localhost:5432/mydb}"/>
+      <property name="jakarta.persistence.jdbc.user" value="${DB_USER:postgres}"/>
+      <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD:secret}"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+    </properties>
+  </persistence-unit>
+</persistence>
+```
+
+**Step 2** — Create a `DatabaseModule` subclass:
+
+```java
+public class MyDatabaseModule extends DatabaseModule<MyDatabaseModule> {
+
+    @Override
+    protected String getPersistenceUnitName() {
+        return "mydb";
+    }
+
+    @Override
+    protected ConnectionBaseInfo getConnectionBaseInfo(
+            PersistenceUnitDescriptor unit, Properties properties) {
+        var connection = ConnectionBaseInfoFactory.createConnectionBaseInfo("postgresql");
+        connection.setReactive(true);
+        connection.setDefaultConnection(true);
+        return connection;
+    }
+}
+```
+
+**Step 3** — Register via JPMS:
+
+```java
+module my.app {
+    requires com.guicedee.persistence;
+
+    provides com.guicedee.client.services.lifecycle.IGuiceModule
+        with my.app.MyDatabaseModule;
+}
+```
+
+**Step 4** — Use the reactive session factory:
+
+The persistence library starts and stops the services installed by the module.
+The application only registers `IGuiceModule`; additional application
+`IGuicePostStartup` and `IGuicePreDestroy` providers are unnecessary. Connection
+properties remain in `persistence.xml`, with explicit Java overrides supported.
+
+```java
+public class UserService {
+
+    @Inject
+    private Mutiny.SessionFactory sessionFactory;
+
+    public Uni<User> createUser(String name) {
+        User user = new User();
+        user.setName(name);
+        return sessionFactory.withTransaction(session ->
+            session.persist(user).replaceWith(user)
+        );
+    }
+
+    public Uni<User> findUser(Long id) {
+        return sessionFactory.withSession(session ->
+            session.find(User.class, id)
+        );
+    }
+}
+```
+
+## 📐 Architecture
+
+```mermaid
+flowchart TD
+    n1["Startup"]
+    n2["IGuiceContext.instance()"]
+    n1 --> n2
+    n3["IGuiceConfigurator hooks"]
+    n2 --> n3
+    n4["GuicedConfigurator<br/>enables annotation, field, method scanning"]
+    n3 --> n4
+    n5["IGuiceModule hooks"]
+    n2 --> n5
+    n6["MyDatabaseModule<br/>extends DatabaseModule"]
+    n5 --> n6
+    n7["Parse persistence.xml<br/>PersistenceXmlParser"]
+    n6 --> n7
+    n8["IPropertiesEntityManagerReader SPIs"]
+    n6 --> n8
+    n9["SystemEnvironmentVariablesPropertiesReader<br/>${VAR} resolution"]
+    n6 --> n9
+    n10["HibernateEntityManagerProperties"]
+    n6 --> n10
+    n11["PostgresHibernateProperties / MySql... / Oracle... / SqlServer... / DB2..."]
+    n6 --> n11
+    n12["IPropertiesConnectionInfoReader SPIs"]
+    n6 --> n12
+    n13["HibernateDefaultConnectionBaseBuilder<br/>maps jakarta.persistence.jdbc.*"]
+    n6 --> n13
+    n14["ConnectionBaseInfo.populateFromProperties()"]
+    n6 --> n14
+    n15["ConnectionBaseInfo.toPooledDatasource()<br/>Vert.x SQL pool init"]
+    n6 --> n15
+    n16["JtaPersistModule"]
+    n6 --> n16
+    n17["bind PersistService @Named('mydb')"]
+    n16 --> n17
+    n18["bind Mutiny.SessionFactory @Named('mydb') + default"]
+    n16 --> n18
+    n19["VertxPersistenceModule"]
+    n5 --> n19
+    n20["Validate @EntityManager annotations"]
+    n19 --> n20
+    n21["Process package-level @EntityManager"]
+    n19 --> n21
+    n22["Bind default EntityManager / SessionFactory"]
+    n19 --> n22
+    n23["IGuicePostStartup hooks"]
+    n2 --> n23
+    n24["DatabaseModule.postLoad()"]
+    n23 --> n24
+    n25["PersistService.start()<br/>creates EntityManagerFactory on Vert.x context"]
+    n24 --> n25
+    n26["IGuicePreDestroy hooks"]
+    n2 --> n26
+    n27["DatabaseModule.onDestroy()"]
+    n26 --> n27
+    n28["PersistService.stop()<br/>closes SessionFactory + EntityManagerFactory"]
+    n27 --> n28
+```
+
+### Hibernate Reactive integration
+
+```
+Hibernate Reactive
+ └─ ServiceContributor SPI
+     └─ VertxServiceContributor
+         └─ Registers VertxInstance backed by VertXPreStartup.getVertx()
+             → Hibernate Reactive uses the shared Vert.x instance for all reactive IO
+```
+
+## 🗃️ Database Module
+
+### Extending `DatabaseModule`
+
+Every persistence unit is represented by a `DatabaseModule` subclass annotated with `@EntityManager`:
+
+```java
+public class OrdersDatabaseModule extends DatabaseModule<OrdersDatabaseModule> {
+
+    @Override
+    protected String getPersistenceUnitName() {
+        return "orders";
+    }
+
+    @Override
+    protected ConnectionBaseInfo getConnectionBaseInfo(
+            PersistenceUnitDescriptor unit, Properties properties) {
+        return ConnectionBaseInfoFactory.createConnectionBaseInfo("postgresql");
+    }
+
+    @Override
+    public Integer sortOrder() {
+        return 50; // controls startup ordering
+    }
+}
+```
+
+### `@EntityManager` annotation
+
+| Attribute | Default | Purpose |
+|---|---|---|
+| `value` | `""` | Persistence unit name (maps to `persistence.xml`) |
+| `allClasses` | `true` | Include all entity classes or only the annotated package |
+| `defaultEm` | `true` | Mark as the default `SessionFactory` binding |
+
+Apply at **class level** (on `DatabaseModule` subclasses) or **package level** (`package-info.java`) to scope entities to specific persistence units.
+
+## 🔌 Connection Configuration
+
+### `ConnectionBaseInfo`
+
+Abstract base class carrying all JDBC connection properties. Database-specific subclasses provide the `toPooledDatasource()` method that creates a Vert.x `SqlClient` pool.
+
+### `ConnectionBaseInfoFactory`
+
+Creates the correct `ConnectionBaseInfo` for a given database type:
+
+```java
+// By database name
+ConnectionBaseInfo cbi = ConnectionBaseInfoFactory.createConnectionBaseInfo("postgresql");
+
+// By JDBC URL (auto-detects database type)
+ConnectionBaseInfo cbi = ConnectionBaseInfoFactory.createConnectionBaseInfoFromJdbcUrl(
+    "jdbc:postgresql://localhost:5432/mydb");
+```
+
+### Supported databases
+
+| Database | Type string | `ConnectionBaseInfo` class | Hibernate properties |
+|---|---|---|---|
+| PostgreSQL | `postgresql`, `postgres` | `PostgresConnectionBaseInfo` | `PostgresHibernateProperties` |
+| MySQL / MariaDB | `mysql`, `mariadb` | `MySqlConnectionBaseInfo` | `MySqlHibernateProperties` |
+| SQL Server | `sqlserver`, `mssql` | `SqlServerConnectionBaseInfo` | `SqlServerHibernateProperties` |
+| Oracle | `oracle` | `OracleConnectionBaseInfo` | `OracleHibernateProperties` |
+| DB2 | `db2` | `DB2ConnectionBaseInfo` | `DB2HibernateProperties` |
+
+### Connection properties
+
+Persistence uses Hibernate Reactive and native Vert.x SQL clients. Hibernate's
+`jakarta.persistence.jdbc.*` configuration keys do not select a blocking JDBC pool.
+The native MSSQL pool uses `MSSQLConnectOptions`; direct Vert.x connection URIs use
+`sqlserver://host:1433/database`, without the `jdbc:` prefix.
+
+| Property | Default | Purpose |
+|---|---|---|
+| `serverName` | — | Database server hostname |
+| `port` | varies | Database server port |
+| `databaseName` | — | Database / schema name |
+| `username` | — | Authentication username |
+| `password` | — | Authentication password |
+| `minPoolSize` | `1` | Minimum connection pool size |
+| `maxPoolSize` | `5` | Maximum connection pool size |
+| `maxIdleTime` | — | Idle connection timeout (seconds) |
+| `maxLifeTime` | — | Maximum connection lifetime (seconds) |
+| `reactive` | `true` | Use Hibernate Reactive (vs. blocking) |
+| `defaultConnection` | `true` | Register as the default binding |
+
+## ⚙️ Configuration
+
+### `persistence.xml` properties
+
+Standard JPA/Jakarta persistence properties are supported:
+
+| Property | Purpose |
+|---|---|
+| `jakarta.persistence.jdbc.url` | Hibernate connection URL (JDBC-style configuration syntax is supported) |
+| `jakarta.persistence.jdbc.user` | Database username |
+| `jakarta.persistence.jdbc.password` | Database password |
+| `jakarta.persistence.jdbc.driver` | JDBC driver class |
+| `hibernate.hbm2ddl.auto` | Schema management (`update`, `validate`, `create`, `create-drop`) |
+| `hibernate.dialect` | Hibernate dialect (auto-set by database-specific readers) |
+
+### Environment variable resolution
+
+All `persistence.xml` property values support `${VAR_NAME}` and `${VAR_NAME:default}` syntax:
+
+```xml
+<property name="jakarta.persistence.jdbc.url"
+          value="${DB_URL:jdbc:postgresql://localhost:5432/mydb}"/>
+<property name="jakarta.persistence.jdbc.user"
+          value="${DB_USER:postgres}"/>
+<property name="jakarta.persistence.jdbc.password"
+          value="${DB_PASSWORD}"/>
+```
+
+`SystemEnvironmentVariablesPropertiesReader` delegates placeholder expansion to
+the shared client `Environment` resolver, using this precedence:
+
+1. System property (`-DDB_URL=...`)
+2. Environment variable (`export DB_URL=...`)
+3. `.env.local`
+4. `.env`
+5. Default value (after `:` or `:-`)
+
+The connection reader then maps the resolved Jakarta JDBC properties (and legacy
+JPA/Hibernate aliases) into the connection settings. PostgreSQL reads its URL using
+the driver's URI parser, preserving the specified database, port and SSL options.
+
+Kubernetes-friendly: dot-notation properties (e.g., `db.url`) are also tried as uppercase underscored (`DB_URL`).
+
+## 🔌 SPI Extension Points
+
+All SPIs are discovered via `ServiceLoader`. Register implementations with JPMS `provides...with` or `META-INF/services`.
+
+### `IPropertiesEntityManagerReader`
+
+Contributes database-specific Hibernate properties for a persistence unit:
+
+```java
+public class MyCustomProperties
+        implements IPropertiesEntityManagerReader<MyCustomProperties> {
+
+    @Override
+    public boolean applicable(PersistenceUnitDescriptor pu) {
+        return "mydb".equals(pu.getName());
+    }
+
+    @Override
+    public Map<String, String> processProperties(
+            PersistenceUnitDescriptor pu, Properties properties) {
+        return Map.of("hibernate.jdbc.batch_size", "100");
+    }
+}
+```
+
+### `IPropertiesConnectionInfoReader`
+
+Populates `ConnectionBaseInfo` from persistence unit properties:
+
+```java
+public class MyConnectionReader
+        implements IPropertiesConnectionInfoReader<MyConnectionReader> {
+
+    @Override
+    public ConnectionBaseInfo populateConnectionBaseInfo(
+            PersistenceUnitDescriptor unit, Properties props,
+            ConnectionBaseInfo cbi) {
+        cbi.setMaxPoolSize(20);
+        return cbi;
+    }
+}
+```
+
+### SPI summary
+
+| SPI | Purpose |
+|---|---|
+| `IPropertiesEntityManagerReader` | Contribute database-specific Hibernate properties |
+| `IPropertiesConnectionInfoReader` | Populate `ConnectionBaseInfo` from persistence properties |
+| `IGuiceConfigurator` | Configure classpath scanning (enabled by `GuicedConfigurator`) |
+| `ServiceContributor` (Hibernate) | Bridge the Vert.x instance into Hibernate Reactive |
+
+## 💉 Dependency Injection
+
+### Available bindings
+
+| Type | Qualifier | Scope | Purpose |
+|---|---|---|---|
+| `Mutiny.SessionFactory` | `@Named("puName")` | Singleton | Named session factory for a specific persistence unit |
+| `Mutiny.SessionFactory` | *(none)* | Singleton | Default session factory (from `defaultEm = true`) |
+| `PersistService` | `@Named("puName")` | Singleton | Lifecycle service (`start()` / `stop()`) |
+| `PersistService` | *(none)* | Singleton | Default persistence service |
+
+### Multiple persistence units
+
+```java
+public class MultiDbService {
+
+    @Inject
+    private Mutiny.SessionFactory defaultFactory;  // from defaultEm = true
+
+    @Inject
+    @Named("orders")
+    private Mutiny.SessionFactory ordersFactory;   // specific PU
+
+    @Inject
+    @Named("analytics")
+    private Mutiny.SessionFactory analyticsFactory; // another PU
+}
+```
+
+### Using sessions
+
+```java
+// Read with a session
+sessionFactory.withSession(session ->
+    session.find(User.class, userId)
+).subscribe().with(
+    user -> log.info("Found: {}", user),
+    err  -> log.error("Failed", err)
+);
+
+// Write inside a transaction
+sessionFactory.withTransaction(session ->
+    session.persist(newUser)
+           .chain(() -> session.persist(newOrder))
+).subscribe().with(
+    v    -> log.info("Committed"),
+    err  -> log.error("Rolled back", err)
+);
+```
+
+## 🔀 Multi-Database Setup
+
+### Step 1 — Define persistence units
+
+```xml
+<persistence>
+  <persistence-unit name="users">
+    <class>com.example.entities.User</class>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url" value="${USERS_DB_URL}"/>
+      ...
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="orders">
+    <class>com.example.entities.Order</class>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url" value="${ORDERS_DB_URL}"/>
+      ...
+    </properties>
+  </persistence-unit>
+</persistence>
+```
+
+### Step 2 — Create modules
+
+```java
+@EntityManager(value = "users", defaultEm = true)
+public class UsersDatabaseModule extends DatabaseModule<UsersDatabaseModule> {
+    @Override protected String getPersistenceUnitName() { return "users"; }
+    @Override protected ConnectionBaseInfo getConnectionBaseInfo(
+            PersistenceUnitDescriptor unit, Properties props) {
+        return ConnectionBaseInfoFactory.createConnectionBaseInfo("postgresql");
+    }
+}
+
+@EntityManager(value = "orders", defaultEm = false)
+public class OrdersDatabaseModule extends DatabaseModule<OrdersDatabaseModule> {
+    @Override protected String getPersistenceUnitName() { return "orders"; }
+    @Override protected ConnectionBaseInfo getConnectionBaseInfo(
+            PersistenceUnitDescriptor unit, Properties props) {
+        return ConnectionBaseInfoFactory.createConnectionBaseInfo("mysql");
+    }
+}
+```
+
+### Step 3 — Scope entities via package annotation
+
+```java
+@EntityManager(value = "orders")
+package com.example.entities.orders;
+
+import com.guicedee.persistence.annotations.EntityManager;
+```
+
+## 🔄 Startup Flow
+
+```mermaid
+flowchart TD
+    n1["IGuiceContext.instance()"]
+    n2["IGuiceConfigurator hooks"]
+    n1 --> n2
+    n3["GuicedConfigurator<br/>enables rich classpath scanning"]
+    n2 --> n3
+    n4["IGuiceModule hooks"]
+    n1 --> n4
+    n5["DatabaseModule subclasses<br/>parse persistence.xml, build ConnectionBaseInfo"]
+    n4 --> n5
+    n6["JtaPersistModule<br/>bind PersistService + Mutiny.SessionFactory"]
+    n5 --> n6
+    n7["VertxPersistenceModule<br/>validate, bind defaults, process @EntityManager"]
+    n4 --> n7
+    n8["Hibernate ServiceContributor SPI"]
+    n1 --> n8
+    n9["VertxServiceContributor<br/>registers shared Vertx instance"]
+    n8 --> n9
+    n10["IGuicePostStartup hooks"]
+    n1 --> n10
+    n11["DatabaseModule.postLoad()<br/>PersistService.start() → EntityManagerFactory"]
+    n10 --> n11
+    n12["IGuicePreDestroy hooks"]
+    n1 --> n12
+    n13["DatabaseModule.onDestroy()<br/>PersistService.stop() → close factory"]
+    n12 --> n13
+```
+
+## 🗺️ Module Graph
+
+```mermaid
+flowchart LR
+    com_guicedee_persistence["com.guicedee.persistence"]
+    com_guicedee_persistence --> org_hibernate_reactive["org.hibernate.reactive<br/>Hibernate Reactive — Mutiny.SessionFactory"]
+    com_guicedee_persistence --> org_hibernate_orm_core["org.hibernate.orm.core<br/>Hibernate ORM — persistence.xml parsing, entity management"]
+    com_guicedee_persistence --> com_guicedee_vertx["com.guicedee.vertx<br/>Vert.x lifecycle, VertXPreStartup"]
+    com_guicedee_persistence --> com_guicedee_guicedinjection["com.guicedee.guicedinjection<br/>GuicedEE — scanning, DI, lifecycle"]
+    com_guicedee_persistence --> com_guicedee_microprofile_config["com.guicedee.microprofile.config<br/>MicroProfile Config — @ConfigProperty injection, SmallRye Config"]
+    com_guicedee_persistence --> io_vertx_sql_client["io.vertx.sql.client<br/>Vert.x SQL Client — pooled connections"]
+    com_guicedee_persistence --> io_vertx_sql_client_pg["io.vertx.sql.client.pg<br/>Vert.x PostgreSQL client — optional"]
+    com_guicedee_persistence --> io_vertx_sql_client_mssql["io.vertx.sql.client.mssql<br/>Vert.x MSSQL client — optional"]
+    com_guicedee_persistence --> jakarta_transaction["jakarta.transaction<br/>JTA transactions"]
+    com_guicedee_persistence --> com_guicedee_rest["com.guicedee.rest<br/>REST integration — optional"]
+```
+
+## 🧩 JPMS
+
+Module name: **`com.guicedee.persistence`**
+
+The module:
+- **exports** `com.guicedee.persistence`, `com.guicedee.persistence.annotations`, `com.guicedee.persistence.bind`, `com.guicedee.persistence.implementations`, and database-specific packages
+- **provides** `IGuiceConfigurator` with `GuicedConfigurator`
+- **provides** `IPropertiesEntityManagerReader` with `SystemEnvironmentVariablesPropertiesReader`, `HibernateEntityManagerProperties`, `PostgresHibernateProperties`, `MySqlHibernateProperties`, `OracleHibernateProperties`, `SqlServerHibernateProperties`, `DB2HibernateProperties`
+- **provides** `IPropertiesConnectionInfoReader` with `HibernateDefaultConnectionBaseBuilder`
+- **provides** `ServiceContributor` with `VertxServiceContributor`
+- **uses** `IPropertiesConnectionInfoReader`, `IPropertiesEntityManagerReader`
+
+In non-JPMS environments, `META-INF/services` discovery still works.
+
+## 🏗️ Key Classes
+
+| Class | Package | Role |
+|---|---|---|
+| `DatabaseModule` | `vertxpersistence` | Abstract Guice module — extend per persistence unit; lifecycle, config, and binding |
+| `ConnectionBaseInfo` | `vertxpersistence` | Abstract connection configuration — host, port, credentials, pool settings |
+| `ConnectionBaseInfoFactory` | `vertxpersistence` | Factory — creates database-specific `ConnectionBaseInfo` by type or JDBC URL |
+| `ConnectionBaseInfoBuilder` | `vertxpersistence` | Maps `jakarta.persistence.jdbc.*` properties into `ConnectionBaseInfo` |
+| `PersistService` | `vertxpersistence` | Interface — `start()` / `stop()` lifecycle for `EntityManagerFactory` |
+| `@EntityManager` | `annotations` | Binding annotation — names persistence units, controls default binding |
+| `JtaPersistModule` | `bind` | Internal Guice module — binds `PersistService`, `Mutiny.SessionFactory`, properties |
+| `JtaPersistService` | `bind` | Manages `EntityManagerFactory` creation and shutdown via Mutiny `Uni` |
+| `VertxPersistenceModule` | `implementations` | Guice module — validates `@EntityManager` annotations, binds defaults |
+| `VertxServiceContributor` | `implementations` | Hibernate `ServiceContributor` — bridges shared Vert.x instance |
+| `GuicedConfigurator` | `implementations` | `IGuiceConfigurator` — enables classpath scanning for persistence |
+| `SystemEnvironmentVariablesPropertiesReader` | `implementations` | Resolves `${VAR:default}` placeholders in persistence properties |
+| `PostgresConnectionBaseInfo` | `implementations.postgres` | PostgreSQL-specific Vert.x SQL pool creation |
+| `MySqlConnectionBaseInfo` | `implementations.mysql` | MySQL-specific Vert.x SQL pool creation |
+| `SqlServerConnectionBaseInfo` | `implementations.sqlserver` | SQL Server-specific Vert.x SQL pool creation |
+| `OracleConnectionBaseInfo` | `implementations.oracle` | Oracle-specific Vert.x SQL pool creation |
+| `DB2ConnectionBaseInfo` | `implementations.db2` | DB2-specific Vert.x SQL pool creation |
+
+## 🗄️ Cassandra Support
+
+The persistence module also includes a **Cassandra** integration via the Vert.x Cassandra Client — a wide-column NoSQL store that does **not** use JPA/Hibernate.
+
+### Quick Start (Cassandra)
+
+**Step 1** — Create a `CassandraModule` subclass:
+
+```java
+public class MyCassandraModule extends CassandraModule<MyCassandraModule> {
+
+    @Override
+    protected CassandraConnectionInfo getCassandraConnectionInfo() {
+        return new CassandraConnectionInfo()
+                .setName("my-cassandra")
+                .addContactPoint("localhost", 9042)
+                .setKeyspace("my_keyspace")
+                .setDefaultConnection(true);
+    }
+}
+```
+
+**Step 2** — Register via SPI (`META-INF/services/com.guicedee.client.services.lifecycle.IGuiceModule`) or JPMS `provides`.
+
+**Step 3** — Inject and use:
+
+```java
+public class MyService {
+
+    @Inject
+    private CassandraClient cassandraClient;
+
+    public void query() {
+        cassandraClient.executeWithFullFetch("SELECT * FROM my_keyspace.my_table")
+            .onComplete(result -> {
+                if (result.succeeded()) {
+                    result.result().forEach(row ->
+                        System.out.println(row.getString("name")));
+                }
+            });
+    }
+}
+```
+
+### `CassandraConnectionInfo` properties
+
+| Property | Default | Purpose |
+|---|---|---|
+| `name` | `"default"` | Logical name — used as `@Named` qualifier and shared client name |
+| `contactPoints` | empty (falls back to `localhost:9042`) | List of `host:port` contact points |
+| `keyspace` | `null` | Default keyspace (optional) |
+| `username` | `null` | Authentication username (optional) |
+| `password` | `null` | Authentication password (optional) |
+| `defaultConnection` | `true` | Bind without `@Named` as the default `CassandraClient` |
+
+### Environment variable pattern
+
+```java
+String host = System.getProperty("CASSANDRA_HOST",
+        System.getenv().getOrDefault("CASSANDRA_HOST", "localhost"));
+int port = Integer.parseInt(System.getProperty("CASSANDRA_PORT",
+        System.getenv().getOrDefault("CASSANDRA_PORT", "9042")));
+```
+
+### Key classes (Cassandra)
+
+| Class | Role |
+|---|---|
+| `CassandraModule` | Abstract Guice module — extend per Cassandra cluster; lifecycle and binding |
+| `CassandraConnectionInfo` | Configuration POJO — contact points, keyspace, credentials |
+
+## 🧪 Testing
+
+Use Testcontainers for integration tests with real databases:
+
+```java
+@Testcontainers
+public class UserRepositoryTest {
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+
+    @BeforeAll
+    static void setup() {
+        System.setProperty("DB_URL", postgres.getJdbcUrl());
+        System.setProperty("DB_USER", postgres.getUsername());
+        System.setProperty("DB_PASSWORD", postgres.getPassword());
+
+        IGuiceContext.registerModuleForScanning.add("com.example");
+        IGuiceContext.instance();
+    }
+}
+```
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome — please add tests for new database adapters, connection options, or SPI implementations.
+
+## 📄 License
+
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Declared API reference
+
+Java public/protected declarations and public interface methods are parsed with the JDK compiler. This includes implementation types; package exports determine JPMS accessibility. Inherited and generated members are not expanded. Kotlin adapters retain their source and comments.
+
+## EntityManager
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/annotations/EntityManager.java)
+
+### EntityManager
+
+```java
+String value() default "";
+boolean allClasses() default true;
+boolean defaultEm() default true;
+```
+
+## InvalidConnectionInfoException
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/annotations/InvalidConnectionInfoException.java)
+
+### InvalidConnectionInfoException
+
+```java
+public InvalidConnectionInfoException();
+public InvalidConnectionInfoException(String message);
+public InvalidConnectionInfoException(String message, Throwable cause);
+public InvalidConnectionInfoException(Throwable cause);
+public InvalidConnectionInfoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace);
+```
+
+## NoConnectionInfoException
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/annotations/NoConnectionInfoException.java)
+
+### NoConnectionInfoException
+
+```java
+public NoConnectionInfoException();
+public NoConnectionInfoException(String message);
+public NoConnectionInfoException(String message, Throwable cause);
+public NoConnectionInfoException(Throwable cause);
+public NoConnectionInfoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace);
+```
+
+## JtaPersistModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/bind/JtaPersistModule.java)
+
+### JtaPersistModule
+
+```java
+public static void reset();
+public JtaPersistModule(String jpaUnit, ConnectionBaseInfo connectionBaseInfo, com.guicedee.persistence.annotations.EntityManager annotation);
+public JtaPersistModule persistenceUnit(org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor descriptor);
+@Override protected void configurePersistence();
+public JtaPersistModule properties(Map<?, ?> properties);
+public <T> JtaPersistModule addFinder(Class<T> iface);
+```
+
+## JtaPersistService
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/bind/JtaPersistService.java)
+
+### JtaPersistService
+
+```java
+public JtaPersistService(String persistenceUnitName, Map<?, ?> persistenceProperties);
+public JtaPersistService(String persistenceUnitName, Map<?, ?> persistenceProperties, PersistenceUnitDescriptor descriptor);
+@Override public Uni<Void> start();
+protected EntityManagerFactory createFactory();
+@Override public synchronized Uni<Void> stop();
+```
+
+### EntityManagerFactoryProvider
+
+```java
+public EntityManagerFactoryProvider(JtaPersistService emProvider);
+@Override public EntityManagerFactory get();
+```
+
+### SessionFactoryProvider
+
+```java
+public SessionFactoryProvider(JtaPersistService emProvider);
+@Override public Mutiny.SessionFactory get();
+```
+
+## PersistModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/bind/PersistModule.java)
+
+### PersistModule
+
+```java
+@Override protected final void configure();
+protected abstract void configurePersistence();
+```
+
+## CleanConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/CleanConnectionBaseInfo.java)
+
+### CleanConnectionBaseInfo
+
+```java
+public CleanConnectionBaseInfo();
+@Override public String getPersistenceUnitName();
+@Override public ConnectionBaseInfo setPersistenceUnitName(String persistenceUnitName);
+@Override public String getUrl();
+@Override public ConnectionBaseInfo setUrl(String url);
+@Override public String getServerName();
+@Override public ConnectionBaseInfo setServerName(String serverName);
+@Override public String getPort();
+@Override public ConnectionBaseInfo setPort(String port);
+@Override public String getDriver();
+@Override public ConnectionBaseInfo setDriver(String driver);
+@Override public String getDriverClass();
+@Override public ConnectionBaseInfo setDriverClass(String driverClass);
+@Override public String getClassName();
+@Override public ConnectionBaseInfo setClassName(String className);
+@Override public String getUsername();
+@Override public ConnectionBaseInfo setUsername(String username);
+@Override @JsonIgnore public String getPassword();
+@Override public ConnectionBaseInfo setPassword(String password);
+@Override public String getTransactionIsolation();
+@Override public ConnectionBaseInfo setTransactionIsolation(String transactionIsolation);
+@Override public String getDatabaseName();
+@Override public ConnectionBaseInfo setDatabaseName(String databaseName);
+@Override public String getJndiName();
+@Override public ConnectionBaseInfo setJndiName(String jndiName);
+@Override public Integer getMinPoolSize();
+@Override public ConnectionBaseInfo setMinPoolSize(Integer minPoolSize);
+@Override public Integer getMaxPoolSize();
+@Override public ConnectionBaseInfo setMaxPoolSize(Integer maxPoolSize);
+@Override public Integer getMaxIdleTime();
+@Override public ConnectionBaseInfo setMaxIdleTime(Integer maxIdleTime);
+@Override public Integer getMaxLifeTime();
+@Override public ConnectionBaseInfo setMaxLifeTime(Integer maxLifeTime);
+@Override public Integer getAcquireIncrement();
+@Override public ConnectionBaseInfo setAcquireIncrement(Integer acquireIncrement);
+@Override public Integer getAcquisitionTimeout();
+@Override public ConnectionBaseInfo setAcquisitionTimeout(Integer acquisitionTimeout);
+@Override public String getTestQuery();
+@Override public ConnectionBaseInfo setTestQuery(String testQuery);
+@Override public Map<String, String> getCustomProperties();
+@Override public boolean isDefaultConnection();
+@Override public ConnectionBaseInfo setDefaultConnection(boolean defaultConnection);
+@Override public boolean isXa();
+@Override public ConnectionBaseInfo setXa(boolean xa);
+@Override public String getServerInstanceNameProperty();
+@Override public ConnectionBaseInfo setServerInstanceNameProperty(String serverInstanceNameProperty);
+```
+
+## CleanVertxConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/CleanVertxConnectionBaseInfo.java)
+
+### CleanVertxConnectionBaseInfo
+
+```java
+public CleanVertxConnectionBaseInfo();
+public CleanVertxConnectionBaseInfo(boolean xa);
+@Override public SqlClient toPooledDatasource();
+```
+
+## ConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/ConnectionBaseInfo.java)
+
+### ConnectionBaseInfo
+
+```java
+public ConnectionBaseInfo();
+@SuppressWarnings("unchecked") public ConnectionBaseInfo populateFromProperties(PersistenceUnitDescriptor unit, Properties filteredProperties);
+public abstract SqlClient toPooledDatasource();
+public String getTransactionIsolation();
+public ConnectionBaseInfo setTransactionIsolation(String transactionIsolation);
+public Integer getMinPoolSize();
+public ConnectionBaseInfo setMinPoolSize(Integer minPoolSize);
+public Integer getMaxPoolSize();
+public ConnectionBaseInfo setMaxPoolSize(Integer maxPoolSize);
+public Integer getMaxIdleTime();
+public ConnectionBaseInfo setMaxIdleTime(Integer maxIdleTime);
+public Integer getPreparedStatementCacheSize();
+public ConnectionBaseInfo setPreparedStatementCacheSize(Integer preparedStatementCacheSize);
+public Integer getAcquireIncrement();
+public ConnectionBaseInfo setAcquireIncrement(Integer acquireIncrement);
+public Integer getAcquisitionInterval();
+public ConnectionBaseInfo setAcquisitionInterval(Integer acquisitionInterval);
+public Integer getAcquisitionTimeout();
+public ConnectionBaseInfo setAcquisitionTimeout(Integer acquisitionTimeout);
+public Boolean getAllowLocalTransactions();
+public ConnectionBaseInfo setAllowLocalTransactions(Boolean allowLocalTransactions);
+public Boolean getApplyTransactionTimeout();
+public ConnectionBaseInfo setApplyTransactionTimeout(Boolean applyTransactionTimeout);
+public Boolean getAutomaticEnlistingEnabled();
+public ConnectionBaseInfo setAutomaticEnlistingEnabled(Boolean automaticEnlistingEnabled);
+public Boolean getEnableJdbc4ConnectionTest();
+public ConnectionBaseInfo setEnableJdbc4ConnectionTest(Boolean enableJdbc4ConnectionTest);
+public Boolean getIgnoreRecoveryFailures();
+public ConnectionBaseInfo setIgnoreRecoveryFailures(Boolean ignoreRecoveryFailures);
+public Boolean getShareTransactionConnections();
+public ConnectionBaseInfo setShareTransactionConnections(Boolean shareTransactionConnections);
+public String getTestQuery();
+public ConnectionBaseInfo setTestQuery(String testQuery);
+public String getJndiName();
+public ConnectionBaseInfo setJndiName(String jndiName);
+public String getDriverClass();
+public ConnectionBaseInfo setDriverClass(String driverClass);
+public boolean isXa();
+public ConnectionBaseInfo setXa(boolean xa);
+public String getUrl();
+public ConnectionBaseInfo setUrl(String url);
+public String getServerName();
+public ConnectionBaseInfo setServerName(String serverName);
+public String getPort();
+public ConnectionBaseInfo setPort(String port);
+public String getInstanceName();
+public ConnectionBaseInfo setInstanceName(String instanceName);
+public String getDriver();
+public ConnectionBaseInfo setDriver(String driver);
+public String getUsername();
+public ConnectionBaseInfo setUsername(String username);
+public String getPassword();
+public ConnectionBaseInfo setPassword(String password);
+public String getDatabaseName();
+public ConnectionBaseInfo setDatabaseName(String databaseName);
+public String getJdbcIdentifier();
+public ConnectionBaseInfo setJdbcIdentifier(String jdbcIdentifier);
+public String getServerInstanceNameProperty();
+public ConnectionBaseInfo setServerInstanceNameProperty(String serverInstanceNameProperty);
+public Boolean getPrefill();
+public ConnectionBaseInfo setPrefill(Boolean prefill);
+public Boolean getUseStrictMin();
+public ConnectionBaseInfo setUseStrictMin(Boolean useStrictMin);
+public Integer getMaxLifeTime();
+public ConnectionBaseInfo setMaxLifeTime(Integer maxLifeTime);
+public String getPersistenceUnitName();
+public ConnectionBaseInfo setPersistenceUnitName(String persistenceUnitName);
+public Map<String, String> getCustomProperties();
+public String getClassName();
+public ConnectionBaseInfo setClassName(String className);
+public boolean isDefaultConnection();
+public ConnectionBaseInfo setDefaultConnection(boolean defaultConnection);
+public boolean isReactive();
+public ConnectionBaseInfo setReactive(boolean reactive);
+public String getJdbcUrl();
+```
+
+## ConnectionBaseInfoBuilder
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/ConnectionBaseInfoBuilder.java)
+
+### ConnectionBaseInfoBuilder
+
+```java
+@Override public ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
+@Override public Integer sortOrder();
+```
+
+## ConnectionBaseInfoFactory
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/ConnectionBaseInfoFactory.java)
+
+### ConnectionBaseInfoFactory
+
+```java
+public static ConnectionBaseInfo createConnectionBaseInfo(String databaseType);
+public static ConnectionBaseInfo createConnectionBaseInfo(String databaseType, boolean xa);
+public static ConnectionBaseInfo createConnectionBaseInfoFromJdbcUrl(String jdbcUrl);
+public static ConnectionBaseInfo createConnectionBaseInfoFromJdbcUrl(String jdbcUrl, boolean xa);
+```
+
+## DatabaseModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/DatabaseModule.java)
+
+### DatabaseModule
+
+```java
+public static void resetDescriptors();
+public DatabaseModule();
+@Override public List<Uni<Boolean>> postLoad();
+@Override public void onDestroy();
+@Override public Integer shutdownSortOrder();
+@Override protected void configure();
+@NotNull protected abstract String getPersistenceUnitName();
+@NotNull protected abstract ConnectionBaseInfo getConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties);
+protected String getJndiMapping();
+protected void configurePersistenceUnitProperties(PersistenceUnitDescriptor pu, Properties jdbcProperties);
+@Override public Integer sortOrder();
+```
+
+## CassandraConnectionInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/cassandra/CassandraConnectionInfo.java)
+
+### CassandraConnectionInfo
+
+```java
+public CassandraConnectionInfo addContactPoint(String host, int port);
+```
+
+### ContactPoint
+
+```java
+public ContactPoint();
+public ContactPoint(String host, int port);
+```
+
+## CassandraModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/cassandra/CassandraModule.java)
+
+### CassandraModule
+
+```java
+protected abstract CassandraConnectionInfo getCassandraConnectionInfo();
+@Override protected void configure();
+@Override public void onDestroy();
+@Override public Integer sortOrder();
+```
+
+## DB2ConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/db2/DB2ConnectionBaseInfo.java)
+
+### DB2ConnectionBaseInfo
+
+```java
+public DB2ConnectionBaseInfo();
+public DB2ConnectionBaseInfo(boolean xa);
+@Override public SqlClient toPooledDatasource();
+```
+
+## DB2HibernateProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/db2/DB2HibernateProperties.java)
+
+### DB2HibernateProperties
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## EnhancedEntityBytecodeProvider
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/EnhancedEntityBytecodeProvider.java)
+
+### EnhancedEntityBytecodeProvider
+
+```java
+public EnhancedEntityBytecodeProvider(Supplier<BytecodeProvider> factory);
+@Override public ReflectionOptimizer getReflectionOptimizer(Class type, String[] getters, String[] setters, Class[] types);
+@Override public ReflectionOptimizer getReflectionOptimizer(Class<?> type, Map<String, PropertyAccess> access);
+@Override public ProxyFactoryFactory getProxyFactoryFactory();
+@Override public Enhancer getEnhancer(EnhancementContext context);
+@Override public void resetCaches();
+```
+
+## GuicedConfigurator
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/GuicedConfigurator.java)
+
+### GuicedConfigurator
+
+```java
+@Override public IGuiceConfig<?> configure(IGuiceConfig<?> iGuiceConfig);
+```
+
+## HibernateDefaultConnectionBaseBuilder
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/hibernateproperties/HibernateDefaultConnectionBaseBuilder.java)
+
+### HibernateDefaultConnectionBaseBuilder
+
+```java
+@Override public ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
+@Override public Integer sortOrder();
+```
+
+## HibernateEntityManagerProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/hibernateproperties/HibernateEntityManagerProperties.java)
+
+### HibernateEntityManagerProperties
+
+```java
+public int getMaxFetchDepth();
+public void setMaxFetchDepth(Integer maxFetchDepth);
+public boolean isEnableFetchOutsizeLadyLoad();
+public boolean isShowSql();
+public boolean isFormatSql();
+public boolean isUseSqlComments();
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+public Map<String, String> process(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+public static HibernateEntityManagerProperties getDefaultProperties();
+public static Map<String, HibernateEntityManagerProperties> getPersistenceUnitSpecificMappings();
+public void enableQuickestBoot();
+public Boolean getShowSql();
+public void setShowSql(Boolean showSql);
+public Boolean getFormatSql();
+public void setFormatSql(Boolean formatSql);
+public Boolean getUseSqlComments();
+public void setUseSqlComments(Boolean useSqlComments);
+public Boolean getEnableFetchOutsizeLadyLoad();
+public void setEnableFetchOutsizeLadyLoad(Boolean enableFetchOutsizeLadyLoad);
+public Boolean getUseJdbcMetadataDefaults();
+public void setUseJdbcMetadataDefaults(Boolean useJdbcMetadataDefaults);
+public Boolean getUseLobNonContextualCreation();
+public void setUseLobNonContextualCreation(Boolean useLobNonContextualCreation);
+public Boolean getUseGetGeneratedKeys();
+public void setUseGetGeneratedKeys(Boolean useGetGeneratedKeys);
+public Boolean getUseEnvers();
+public void setUseEnvers(Boolean useEnvers);
+public Boolean getUseQueryStartupCheck();
+public void setUseQueryStartupCheck(Boolean useQueryStartupCheck);
+public HibernatePersistenceValidationMode getPersistenceValidationMode();
+public void setPersistenceValidationMode(HibernatePersistenceValidationMode persistenceValidationMode);
+public Boolean getUseValidatorAutoRegisterListeners();
+public void setUseValidatorAutoRegisterListeners(Boolean useValidatorAutoRegisterListeners);
+public Boolean getUseValidatorApplyToDDL();
+public void setUseValidatorApplyToDDL(Boolean useValidatorApplyToDDL);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+public Integer getBatchSize();
+public HibernateEntityManagerProperties setBatchSize(Integer batchSize);
+@Override public Integer sortOrder();
+```
+
+## HibernatePersistenceValidationMode
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/hibernateproperties/HibernatePersistenceValidationMode.java)
+
+### HibernatePersistenceValidationMode
+
+```java
+public static final HibernatePersistenceValidationMode Auto;
+public static final HibernatePersistenceValidationMode Callback;
+public static final HibernatePersistenceValidationMode Ddl;
+public static final HibernatePersistenceValidationMode None;
+@Override public String toString();
+```
+
+## MongoConnectionInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/mongodb/MongoConnectionInfo.java)
+
+### MongoConnectionInfo
+
+```java
+public JsonObject toJsonConfig();
+```
+
+## MongoModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/mongodb/MongoModule.java)
+
+### MongoModule
+
+```java
+protected abstract MongoConnectionInfo getMongoConnectionInfo();
+@Override protected void configure();
+@Override public void onDestroy();
+@Override public Integer sortOrder();
+```
+
+## MySqlConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/mysql/MySqlConnectionBaseInfo.java)
+
+### MySqlConnectionBaseInfo
+
+```java
+public MySqlConnectionBaseInfo();
+public MySqlConnectionBaseInfo(boolean xa);
+@Override public SqlClient toPooledDatasource();
+```
+
+## MySqlHibernateProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/mysql/MySqlHibernateProperties.java)
+
+### MySqlHibernateProperties
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## OracleConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/oracle/OracleConnectionBaseInfo.java)
+
+### OracleConnectionBaseInfo
+
+```java
+public OracleConnectionBaseInfo();
+public OracleConnectionBaseInfo(boolean xa);
+@Override public SqlClient toPooledDatasource();
+```
+
+## OracleHibernateProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/oracle/OracleHibernateProperties.java)
+
+### OracleHibernateProperties
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## PersistenceDescriptorParser
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/PersistenceDescriptorParser.java)
+
+### PersistenceDescriptorParser
+
+```java
+public static Map<String, PersistenceUnitDescriptor> parse(List<URL> urls, Function<List<URL>, Map<String, PersistenceUnitDescriptor>> original);
+```
+
+## PersistenceDiagnostics
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/PersistenceDiagnostics.java)
+
+### PersistenceDiagnostics
+
+```java
+public static <T> T measure(String phase, String unit, Supplier<T> work);
+```
+
+## PostgresConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/postgres/PostgresConnectionBaseInfo.java)
+
+### PostgresConnectionBaseInfo
+
+```java
+public PostgresConnectionBaseInfo();
+public PostgresConnectionBaseInfo(boolean xa);
+protected PgConnectOptions createConnectOptions();
+@Override public SqlClient toPooledDatasource();
+```
+
+## PostgresHibernateProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/postgres/PostgresHibernateProperties.java)
+
+### PostgresHibernateProperties
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## SharedReactiveConnectionPool
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/SharedReactiveConnectionPool.java)
+
+### SharedReactiveConnectionPool
+
+```java
+@Override public void configure(Map<String, Object> settings);
+@Override public void injectServices(ServiceRegistryImplementor registry);
+@Override protected Pool getPool();
+@Override protected SqlStatementLogger getSqlStatementLogger();
+@Override protected SqlExceptionHelper getSqlExceptionHelper();
+@Override public CompletionStage<Void> getCloseFuture();
+@Override public CompletionStage<ResultSet> selectJdbcOutsideTransaction(String sql, Object[] parameters);
+```
+
+## SqlServerConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/sqlserver/SqlServerConnectionBaseInfo.java)
+
+### SqlServerConnectionBaseInfo
+
+```java
+public boolean isTrustServerCertificate();
+public SqlServerConnectionBaseInfo setTrustServerCertificate(boolean trustServerCertificate);
+public SqlServerConnectionBaseInfo();
+@Override public SqlClient toPooledDatasource();
+```
+
+## SqlServerHibernateProperties
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/sqlserver/SqlServerHibernateProperties.java)
+
+### SqlServerHibernateProperties
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## SystemEnvironmentVariablesPropertiesReader
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/systemproperties/SystemEnvironmentVariablesPropertiesReader.java)
+
+### SystemEnvironmentVariablesPropertiesReader
+
+```java
+@Override public Map<String, String> processProperties(PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+@Override public boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+@Override public Integer sortOrder();
+```
+
+## VertxPersistenceModule
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/VertxPersistenceModule.java)
+
+### VertxPersistenceModule
+
+```java
+public static void reset();
+@Override protected void configure();
+protected static Map<String, EntityManager> discoverPackageEntityManagers();
+public static ConnectionBaseInfo getConnectionInfoByEntityManager(String entityManagerName);
+public static ConnectionBaseInfo getDefaultConnectionInfo();
+public static JtaPersistModule getPersistModuleByEntityManager(String entityManagerName);
+public static JtaPersistModule getDefaultPersistModule();
+public static synchronized SqlClient getSqlClientByEntityManager(String entityManagerName);
+public static SqlClient getDefaultSqlClient();
+@Override public Integer sortOrder();
+```
+
+## VertxServiceContributor
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/VertxServiceContributor.java)
+
+### VertxServiceContributor
+
+```java
+@Override public void contribute(StandardServiceRegistryBuilder serviceRegistryBuilder);
+```
+
+## VertxSqlClientConnectionBaseBuilder
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/implementations/vertxsql/VertxSqlClientConnectionBaseBuilder.java)
+
+### VertxSqlClientConnectionBaseBuilder
+
+```java
+@Override public ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
+public CleanVertxConnectionBaseInfo toCleanVertxConnectionBaseInfo(ConnectionBaseInfo cbi);
+@Override public Integer sortOrder();
+```
+
+## IPropertiesConnectionInfoReader
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/IPropertiesConnectionInfoReader.java)
+
+### IPropertiesConnectionInfoReader
+
+```java
+ConnectionBaseInfo populateConnectionBaseInfo(PersistenceUnitDescriptor unit, Properties filteredProperties, ConnectionBaseInfo cbi);
+```
+
+## IPropertiesEntityManagerReader
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/IPropertiesEntityManagerReader.java)
+
+### IPropertiesEntityManagerReader
+
+```java
+Map<String, String> processProperties(org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor persistenceUnit, Properties incomingProperties);
+boolean applicable(PersistenceUnitDescriptor persistenceUnit);
+```
+
+## PersistenceShutdown
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/PersistenceShutdown.java)
+
+### PersistenceShutdown
+
+```java
+public static final String OWNED_POOL;
+public static synchronized void register(PersistService service);
+public static synchronized void registerOwnedPool(Map<?, ?> properties);
+@Override public List<Future<Boolean>> onStartup();
+@Override public Integer sortOrder();
+@Override public Integer shutdownSortOrder();
+public static synchronized CompletableFuture<Void> close();
+@Override public void onDestroy();
+```
+
+## PersistenceStartup
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/PersistenceStartup.java)
+
+### PersistenceStartup
+
+```java
+@Override public List<Uni<Boolean>> postLoad();
+@Override public Integer sortOrder();
+```
+
+## PersistService
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/PersistService.java)
+
+### PersistService
+
+```java
+Uni<Void> start();
+Uni<Void> stop();
+```
+
+## VertxConnectionBaseInfo
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/VertxConnectionBaseInfo.java)
+
+### VertxConnectionBaseInfo
+
+```java
+public VertxConnectionBaseInfo();
+@Override public SqlClient toPooledDatasource();
+public VertxConnectionBaseInfo(boolean xa);
+```
+
+## VertxVerticalPersistenceConfiguration
+
+[Java source](https://github.com/GuicedEE/GuicedVertxPersistence/blob/master/src/main/java/com/guicedee/persistence/VertxVerticalPersistenceConfiguration.java)
+
+### VertxVerticalPersistenceConfiguration
+
+```java
+@Override public VertxBuilder builder(VertxBuilder builder);
+```

@@ -4,6 +4,7 @@ Requires Python Playwright and Chromium. Without --url, serve the production bui
 locally and test published, unavailable and invalid dataset responses.
 """
 import argparse
+import csv
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -34,9 +35,18 @@ def main():
     root = Path(__file__).resolve().parents[1]
     docs = args.benchmarks / 'docs'
     persistence = json.loads((docs / 'persistence-performance.json').read_text())
-    g, q = (persistence['variants'][name] for name in ['guicedee', 'quarkus'])
-    expected = [[row['launchToFirstTransactionMs']['median'] / 1000 for row in [g, q]],
-                [row['read']['p50Ms'] for row in [g, q]], [row['cycle']['p50Ms'] for row in [g, q]]]
+    variants = [persistence['variants'][name] for name in ['guicedee', 'quarkus', 'micronaut']]
+    expected = [[row['launchToFirstTransactionMs']['median'] / 1000 for row in variants],
+                [row['read']['p50Ms'] for row in variants], [row['cycle']['p50Ms'] for row in variants]]
+    runtime = json.loads((docs / 'current-performance.json').read_text())
+    native = [runtime['groups']['native-standard']['variants'][name]
+              for name in ['guicedee-native', 'quarkus-standard-native', 'micronaut-native']]
+    builds = list(csv.DictReader((docs / 'build-performance.csv').read_text().splitlines()))
+    build_values = [[float(next(row['median_seconds'] for row in builds
+                    if row['variant'] == name and row['goal'] == goal)) for name in names]
+                    for names, goal in [(['guicedee', 'quarkus-standard', 'micronaut'], 'compile'),
+                                        (['guicedee', 'quarkus-standard', 'micronaut'], 'package'),
+                                        (['guicedee-native', 'quarkus-standard-native', 'micronaut-native'], 'package')]]
     server = None
     if not args.url:
         server = ThreadingHTTPServer(('127.0.0.1', 0), partial(Handler,
@@ -65,8 +75,21 @@ def main():
                             body = (docs / file).read_text(encoding='utf-8')
                             if mode == 'invalid' and file == 'persistence-performance.json':
                                 value = json.loads(body)
-                                value['variants']['guicedee']['read']['p50Ms'] = -1
+                                value['variants']['micronaut']['read']['p50Ms'] = -1
                                 body = json.dumps(value)
+                            elif mode == 'invalid' and file == 'current-performance.json':
+                                value = json.loads(body)
+                                value['groups']['native-standard']['variants']['micronaut-native']['launchToFirstBusinessMs']['median'] = -1
+                                body = json.dumps(value)
+                            elif mode == 'invalid' and file == 'build-performance.csv':
+                                lines = body.splitlines()
+                                columns = lines[0].split(',')
+                                for i, line in enumerate(lines[1:], 1):
+                                    values = line.split(',')
+                                    if values[0] == 'micronaut':
+                                        values[columns.index('median_seconds')] = '-1'
+                                        lines[i] = ','.join(values)
+                                body = '\n'.join(lines)
                             route.fulfill(status=200, body=body,
                                           content_type='text/csv' if file.endswith('.csv') else 'application/json')
                         page.route('https://raw.githubusercontent.com/GuicedEE/benchmarks/master/docs/*', dataset)
@@ -103,6 +126,61 @@ def main():
                     assert len(build_rows) == len(runtime_rows) == 9
                     assert any('Micronaut' in row['artifact'] for row in build_rows)
                     assert any('Micronaut' in row['artifact'] for row in runtime_rows)
+                    page.locator('.showcase-navigation wa-button').filter(has_text='Developer builds').click()
+                    for index, label in enumerate(['Compile', 'JVM package', 'Native build']):
+                        build_panel.locator('.benchmark-modes wa-button').filter(has_text=label).click()
+                        page.wait_for_function("""expected => {
+                            const panel = [...document.querySelectorAll('.benchmark-panel')].find(p => p.textContent.includes('Build. Run. Keep your flow.'));
+                            let config = panel?.querySelector('wa-chart')?.config;
+                            if (typeof config === 'string') config = JSON.parse(config);
+                            return JSON.stringify(config?.data?.datasets?.[0]?.data) === JSON.stringify(expected);
+                        }""", arg=build_values[index])
+                        config = build_panel.locator('wa-chart').evaluate("e => typeof e.config === 'string' ? JSON.parse(e.config) : e.config")
+                        assert config['data']['datasets'][0]['data'] == build_values[index], (mode, label, config)
+                        assert len(config['data']['labels']) == 3 and 'Micronaut' in config['data']['labels'][2]
+                    for label, title, values in [
+                        ('Performance', 'Keeping pace with the best.', [v['launchToFirstBusinessMs']['median'] for v in native]),
+                        ('Native-Image', 'Your Guice application.', [v['peakMiB']['median'] for v in native])]:
+                        page.locator('.showcase-navigation wa-button').filter(has_text=label).click()
+                        chart_panel = page.locator('.benchmark-panel').filter(has_text=title)
+                        config = chart_panel.locator('wa-chart').evaluate("e => typeof e.config === 'string' ? JSON.parse(e.config) : e.config")
+                        assert config['data']['datasets'][0]['data'] == values, (mode, label, config)
+                        assert config['data']['labels'] == ['GuicedEE native', 'Quarkus native', 'Micronaut native']
+                    if not args.url and mode == 'published':
+                        for width, height in [(1440, 1100), (390, 844)]:
+                            page.set_viewport_size(dict(width=width, height=height))
+                            page.wait_for_timeout(200)
+                            heights = []
+                            for i in range(8):
+                                page.locator('.showcase-navigation wa-button').nth(i).click()
+                                page.wait_for_function('i => document.querySelector(".performance-carousel").activeSlide === i', arg=i)
+                                box = page.locator('.performance-carousel').bounding_box()
+                                heights.append(box['height'])
+                            assert max(heights) - min(heights) < 2, (width, heights)
+                            assert page.locator('.showcase-scroller[orientation="vertical"]').count() == 8
+                            page.locator('.showcase-navigation wa-button').filter(has_text='CDI').click()
+                            cdi = page.locator('.cdi-setup')
+                            cdi.locator('[part="header"]').first.click()
+                            service = cdi.locator('.code-details').filter(has_text='GuicedEE CDI service')
+                            if not service.evaluate('e => e.open'):
+                                service.locator('[part="header"]').click()
+                            service.locator('pre').wait_for(state='visible')
+                            excerpt = service.locator('pre').inner_text()
+                            assert '@Verticle' not in excerpt and '@Inject' not in excerpt
+                            assert '@ConfigProperty(name = "bench.upstream")' in excerpt
+                            assert abs(page.locator('.performance-carousel').bounding_box()['height'] - heights[0]) < 2
+                            # Collapse details before repeating at another viewport size.
+                            cdi.locator('[part="header"]').first.click()
+                            page.locator('.showcase-navigation wa-button').filter(has_text='Persistence').click()
+                            example = page.locator('.persistence-example')
+                            example.scroll_into_view_if_needed()
+                            assert 'withStatelessSession' in example.inner_text() and 'withTransaction' in example.inner_text()
+                            scrolled = example.locator('xpath=ancestor::wa-scroller').evaluate("e => e.shadowRoot.querySelector('[part=content]').scrollTop")
+                            assert scrolled > 0, (width, scrolled)
+                            assert abs(page.locator('.performance-carousel').bounding_box()['height'] - heights[0]) < 2
+                            page.screenshot(path=str(args.output / f'persistence-example-{width}.png'))
+                            assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
+                        page.set_viewport_size(dict(width=1440, height=1100))
                     if args.url:
                         page.reload(wait_until='domcontentloaded', timeout=60000)
                         page.wait_for_function("""([expected, date]) => {
@@ -123,7 +201,7 @@ def main():
         if server:
             server.shutdown()
     (args.output / 'verification.json').write_text(json.dumps(evidence, indent=2), encoding='utf-8')
-    print(f'Passed {len(evidence)} browser scenarios: startup/read/CRUD charts, units, sources and nine-row grids')
+    print(f'Passed {len(evidence)} browser scenarios: three-framework charts, build modes, snapshots, grids and carousel examples')
 
 
 if __name__ == '__main__':

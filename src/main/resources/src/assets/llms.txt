@@ -1,0 +1,169 @@
+# GuicedEE
+
+> Guice-first, JPMS modular Java and Kotlin services on Vert.x, with reactive persistence, HTTP APIs, messaging, cloud SDKs, MicroProfile integrations, jlink and Native-Image support.
+
+This index covers the 2.6.0 source line. Verify artifact publication before choosing a dependency version. Each component document supplies actual Maven coordinates, direct dependencies, JPMS metadata, available usage guides and declared APIs. Library wrappers expose upstream APIs.
+
+## Start here
+
+- [Developer reference](https://guicedee.com/reference/overview.md): architecture, bootstrap, integration choices, Kotlin, packaging and API usage.
+- [Complete reference](https://guicedee.com/llms-full.txt): all component documents in one Markdown file.
+- [Machine-readable inventory](https://guicedee.com/reference/inventory.json): all 127 reactor components, coordinates, modules and source provenance.
+
+## Website documentation
+
+- [Overview and benchmarks](https://guicedee.com/home.md): text from the website documentation.
+- [Getting started](https://guicedee.com/getting-started.md): text from the website documentation.
+- [End-to-end guide](https://guicedee.com/guides/end-to-end.md): text from the website documentation.
+- [Capabilities and annotations](https://guicedee.com/capabilities.md): text from the website documentation.
+- [Module catalog](https://guicedee.com/modules.md): text from the website documentation.
+- [Library services](https://guicedee.com/services.md): text from the website documentation.
+- [Environment variables](https://guicedee.com/environment-variables.md): text from the website documentation.
+- [Cloud deployment](https://guicedee.com/cloud.md): text from the website documentation.
+- [Application builder](https://guicedee.com/builder.md): text from the website documentation.
+- [Release notes](https://guicedee.com/releases.md): text from the website documentation.
+
+## Application modules and Kotlin
+
+- [com.guicedee.microprofile:config](https://guicedee.com/reference/components/com.guicedee.microprofile.config.md): MicroProfile Config implementation for GuicedEE
+- [com.guicedee.microprofile:jwt](https://guicedee.com/reference/components/com.guicedee.microprofile.jwt.md): MicroProfile JWT Auth bridge for GuicedEE â€” maps MP JWT claims and JsonWebToken to Vert.x JWT Auth
+- [com.guicedee.modules.representations:excel-representation](https://guicedee.com/reference/components/com.guicedee.modules.representations.excel-representation.md): Excel Representation
+- [com.guicedee.modules.representations:json-representation](https://guicedee.com/reference/components/com.guicedee.modules.representations.json-representation.md): JSON Representation
+- [com.guicedee.modules.representations:xml-representation](https://guicedee.com/reference/components/com.guicedee.modules.representations.xml-representation.md): XML Representation
+- [com.guicedee.modules.services:mutiny-kotlin](https://guicedee.com/reference/components/com.guicedee.modules.services.mutiny-kotlin.md): Unrelocated upstream coroutine adapters, excluding split-package convenience functions and their dependent builder.
+- [com.guicedee.modules.services:vertx-lang-kotlin-coroutines](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-lang-kotlin-coroutines.md): Unrelocated Vert.x Kotlin coroutine classes with an explicit JPMS descriptor.
+- [com.guicedee:cdi](https://guicedee.com/reference/components/com.guicedee.cdi.md): GuicedEE CDI provides a lightweight bridge that integrates Google Guice modules with Jakarta CDI runtimes.
+- [com.guicedee:cerial](https://guicedee.com/reference/components/com.guicedee.cerial.md): GuicedEE serial-port utility exposing CRTP-fluent CerialPortConnection APIs on top of jSerialComm.
+- [com.guicedee:client](https://guicedee.com/reference/components/com.guicedee.client.md): GuicedEE Client
+- [com.guicedee:consul-service-resolver](https://guicedee.com/reference/components/com.guicedee.consul-service-resolver.md): Consul health/catalog-based AddressResolver for Vert.x service discovery
+- [com.guicedee:consul](https://guicedee.com/reference/components/com.guicedee.consul.md): Integrates Vert.x Consul Client for service registration, health checks, and KV access
+- [com.guicedee:fault-tolerance](https://guicedee.com/reference/components/com.guicedee.fault-tolerance.md): MicroProfile Fault Tolerance for GuicedEE
+- [com.guicedee:graphql](https://guicedee.com/reference/components/com.guicedee.graphql.md): GraphQL integration for GuicedEE using Vert.x Web GraphQL
+- [com.guicedee:guiced-telemetry](https://guicedee.com/reference/components/com.guicedee.guiced-telemetry.md): Provides a convenient means to use Telemetry
+- [com.guicedee:hazelcast](https://guicedee.com/reference/components/com.guicedee.hazelcast.md): Provides Hazelcast integration for GuicedEE with Vert.x cluster manager support, JCache, and distributed data structures
+- [com.guicedee:health](https://guicedee.com/reference/components/com.guicedee.health.md): MicroProfile Health for GuicedEE
+- [com.guicedee:ibmmq](https://guicedee.com/reference/components/com.guicedee.ibmmq.md): Provides annotation-driven IBM MQ integration for GuicedEE
+- [com.guicedee:inject](https://guicedee.com/reference/components/com.guicedee.inject.md): GuicedEE Inject is an open-source Guice integration library that discovers binders/modules across JARs via SPI and classpath scanning, bootstraps logging, job services, and JRT URL handling, and keeps optional adapters (e.g., Vert.x) isolated. Requires Java 25 LTS.
+- [com.guicedee:kafka](https://guicedee.com/reference/components/com.guicedee.kafka.md): Provides annotation-driven Kafka consumer and producer integration for GuicedEE
+- [com.guicedee:kotlin-mutiny](https://guicedee.com/reference/components/com.guicedee.kotlin-mutiny.md): Optional module combining the managed coroutine runtime with upstream Mutiny coroutine adapters.
+- [com.guicedee:kotlin](https://guicedee.com/reference/components/com.guicedee.kotlin.md): GuicedEE Kotlin runtime
+- [com.guicedee:mail-client](https://guicedee.com/reference/components/com.guicedee.mail-client.md): Provides annotation-driven SMTP mail client integration for GuicedEE using Vert.x Mail Client
+- [com.guicedee:metrics](https://guicedee.com/reference/components/com.guicedee.metrics.md): MicroProfile Metrics for GuicedEE
+- [com.guicedee:native-image](https://guicedee.com/reference/components/com.guicedee.native-image.md): Optional build-time Guice interception and reflection registration for native images.
+- [com.guicedee:openapi](https://guicedee.com/reference/components/com.guicedee.openapi.md): Loads OpenAPI
+- [com.guicedee:persistence](https://guicedee.com/reference/components/com.guicedee.persistence.md): Integrates Vert.x Persistence
+- [com.guicedee:rabbitmq](https://guicedee.com/reference/components/com.guicedee.rabbitmq.md): Provides a convenient means to use RabbitMQ
+- [com.guicedee:rest-client](https://guicedee.com/reference/components/com.guicedee.rest-client.md): An integration library for Rest Clients
+- [com.guicedee:rest](https://guicedee.com/reference/components/com.guicedee.rest.md): An integration library for Rest services on vertx
+- [com.guicedee:runtime-autoconfigure](https://guicedee.com/reference/components/com.guicedee.runtime-autoconfigure.md): Cloud runtime detection SPI â€” detects the platform and provides environment defaults
+- [com.guicedee:service-discovery](https://guicedee.com/reference/components/com.guicedee.service-discovery.md): Integrates Vert.x Service Resolver for service discovery via Kubernetes or DNS SRV
+- [com.guicedee:service-registry](https://guicedee.com/reference/components/com.guicedee.service-registry.md): Named service registry with health-aware resolution â€” register, discover, and resolve services by simple name
+- [com.guicedee:swagger-ui](https://guicedee.com/reference/components/com.guicedee.swagger-ui.md): Installs a Swagger-UI endpoint into GuicedEE
+- [com.guicedee:vertx](https://guicedee.com/reference/components/com.guicedee.vertx.md): Guice-first integration layer for Vert.x 5: bootstraps Vert.x from GuicedEE, wires verticles and event bus publishers/consumers, and supplies codecs plus Mutiny helpers.
+- [com.guicedee:web-services](https://guicedee.com/reference/components/com.guicedee.web-services.md): An integration library for Apache CXF SOAP web services on Vert.x inside the GuicedEE framework
+- [com.guicedee:web](https://guicedee.com/reference/components/com.guicedee.web.md): Integrates Vert.x Web
+- [com.guicedee:websockets](https://guicedee.com/reference/components/com.guicedee.websockets.md): An integration library for Reactive Websockets in Guice
+
+## Modular library services
+
+- [com.guicedee.modules.services:amqp-client](https://guicedee.com/reference/components/com.guicedee.modules.services.amqp-client.md): RabbitMQ AMQP Client
+- [com.guicedee.modules.services:aopalliance-core](https://guicedee.com/reference/components/com.guicedee.modules.services.aopalliance-core.md): AOP Alliance
+- [com.guicedee.modules.services:apache-cxf-rt-security](https://guicedee.com/reference/components/com.guicedee.modules.services.apache-cxf-rt-security.md): Apache CXF Runtime Security functionality
+- [com.guicedee.modules.services:apache-cxf-rt-transports-http](https://guicedee.com/reference/components/com.guicedee.modules.services.apache-cxf-rt-transports-http.md): Apache CXF Runtime HTTP Transport
+- [com.guicedee.modules.services:apache-poi-ooxml](https://guicedee.com/reference/components/com.guicedee.modules.services.apache-poi-ooxml.md): Apache POI OOXML
+- [com.guicedee.modules.services:apache-poi](https://guicedee.com/reference/components/com.guicedee.modules.services.apache-poi.md): SparseBitSet, Math, Codec and Collections still need module-info files. Can't use POI Modularity as it is right now
+- [com.guicedee.modules.services:azure-identity](https://guicedee.com/reference/components/com.guicedee.modules.services.azure-identity.md): azure-identity
+- [com.guicedee.modules.services:bson-record-codec](https://guicedee.com/reference/components/com.guicedee.modules.services.bson-record-codec.md): JPMS modularized shade of org.mongodb:bson-record-codec exposing the org.mongodb.bson.record.codec module. This is the artifact jlink reported first: "automatic module cannot be used with jlink: org.mongodb.bson.record.codec".
+- [com.guicedee.modules.services:bson](https://guicedee.com/reference/components/com.guicedee.modules.services.bson.md): JPMS modularized shade of org.mongodb:bson exposing the org.mongodb.bson module. Upstream ships only an Automatic-Module-Name, which jlink refuses: "automatic module cannot be used with jlink". The whole MongoDB driver chain (bson -> bson-record-codec -> mongodb-driver-core -> mongodb-driver-reactivestreams) arrives transitively through io.vertx:vertx-mongo-client, so each link needs a real module descriptor for a clean runtime image.
+- [com.guicedee.modules.services:cache-annotations-ri-common](https://guicedee.com/reference/components/com.guicedee.modules.services.cache-annotations-ri-common.md): javax.cache.commons
+- [com.guicedee.modules.services:cache-annotations-ri-guice](https://guicedee.com/reference/components/com.guicedee.modules.services.cache-annotations-ri-guice.md): javax.cache.guice
+- [com.guicedee.modules.services:cache-api](https://guicedee.com/reference/components/com.guicedee.modules.services.cache-api.md): https://github.com/jsr107/jsr107spec
+- [com.guicedee.modules.services:cloudevents](https://guicedee.com/reference/components/com.guicedee.modules.services.cloudevents.md): A modularized test containers implementation
+- [com.guicedee.modules.services:com.ibm.mq.jakarta.client](https://guicedee.com/reference/components/com.guicedee.modules.services.com.ibm.mq.jakarta.client.md): com.ibm.mq.jakarta.client
+- [com.guicedee.modules.services:commercetools](https://guicedee.com/reference/components/com.guicedee.modules.services.commercetools.md): Grouped Commercetools Java SDK, GraphQL models and HTTP client JPMS module.
+- [com.guicedee.modules.services:commons-beanutils](https://guicedee.com/reference/components/com.guicedee.modules.services.commons-beanutils.md): Apache Commons BeanUtils provides an easy-to-use but flexible wrapper around reflection and introspection.
+- [com.guicedee.modules.services:commons-collections4](https://guicedee.com/reference/components/com.guicedee.modules.services.commons-collections4.md): Types that extend and augment the Java Collections Framework.
+- [com.guicedee.modules.services:commons-csv](https://guicedee.com/reference/components/com.guicedee.modules.services.commons-csv.md): The Apache Commons CSV library provides a simple interface for reading and writing CSV files of various types.
+- [com.guicedee.modules.services:commons-fileupload](https://guicedee.com/reference/components/com.guicedee.modules.services.commons-fileupload.md): The Apache Commons FileUpload component provides a simple yet flexible means of adding support for multipart file upload functionality to servlets and web applications.
+- [com.guicedee.modules.services:commons-math3](https://guicedee.com/reference/components/com.guicedee.modules.services.commons-math3.md): The Apache Commons Math project is a library of lightweight, self-contained mathematics and statistics components addressing the most common practical problems not immediately available in the Java programming language or commons-lang.
+- [com.guicedee.modules.services:config-core](https://guicedee.com/reference/components/com.guicedee.modules.services.config-core.md): config-core
+- [com.guicedee.modules.services:cxf-rt-frontend-jaxrs](https://guicedee.com/reference/components/com.guicedee.modules.services.cxf-rt-frontend-jaxrs.md): Apache CXF Runtime JAX-RS Frontend
+- [com.guicedee.modules.services:cxf-rt-rs-service-description-openapi-v3](https://guicedee.com/reference/components/com.guicedee.modules.services.cxf-rt-rs-service-description-openapi-v3.md): Apache CXF JAX-RS Service Description OpenAPI v3
+- [com.guicedee.modules.services:ehcache](https://guicedee.com/reference/components/com.guicedee.modules.services.ehcache.md): Kubernetes Service Discovery for Hazelcast Discovery SPI
+- [com.guicedee.modules.services:fault-tolerance-core](https://guicedee.com/reference/components/com.guicedee.modules.services.fault-tolerance-core.md): fault-tolerance
+- [com.guicedee.modules.services:firebase-admin](https://guicedee.com/reference/components/com.guicedee.modules.services.firebase-admin.md): Grouped Firebase Admin and Google SDK JPMS module.
+- [com.guicedee.modules.services:graphql-java](https://guicedee.com/reference/components/com.guicedee.modules.services.graphql-java.md): A JPMS modularized shade of GraphQL-Java (com.graphql-java:graphql-java) exposing the com.graphqljava module for a clean GuicedEE / jlink pipeline. ANTLR remains relocated internally by GraphQL-Java under the graphql.org.antlr.* namespace. The stale Guava copy that GraphQL-Java bundles under graphql.com.google.common.* is stripped out of this shade and its references are rewritten back to com.google.common.* so the module reuses the canonical com.google.guava:guava (module com.google.common) already shipped by GuicedEE. This avoids duplicating Guava and removes the security risk of an out-of-date, embedded copy.
+- [com.guicedee.modules.services:guice-assistedinject](https://guicedee.com/reference/components/com.guicedee.modules.services.guice-assistedinject.md): Guice Assisted Inject
+- [com.guicedee.modules.services:guice-grapher](https://guicedee.com/reference/components/com.guicedee.modules.services.guice-grapher.md): Guice Grapher
+- [com.guicedee.modules.services:guice-jmx](https://guicedee.com/reference/components/com.guicedee.modules.services.guice-jmx.md): Guice JMX
+- [com.guicedee.modules.services:guice-jndi](https://guicedee.com/reference/components/com.guicedee.modules.services.guice-jndi.md): Guice JNDI
+- [com.guicedee.modules.services:guice](https://guicedee.com/reference/components/com.guicedee.modules.services.guice.md): Guice is a lightweight dependency injection framework for Java 11 and above
+- [com.guicedee.modules.services:hazelcast-all](https://guicedee.com/reference/components/com.guicedee.modules.services.hazelcast-all.md): JPMS Hazelcast with shared Jackson 3 and no bundled Jackson 2 runtime
+- [com.guicedee.modules.services:hazelcast-hibernate](https://guicedee.com/reference/components/com.guicedee.modules.services.hazelcast-hibernate.md): Kubernetes Service Discovery for Hazelcast Discovery SPI
+- [com.guicedee.modules.services:health-core](https://guicedee.com/reference/components/com.guicedee.modules.services.health-core.md): health
+- [com.guicedee.modules.services:hibernate-core](https://guicedee.com/reference/components/com.guicedee.modules.services.hibernate-core.md): JPMS Module-Info's for a few of the Jakarta Libraries just until they add them in themselves
+- [com.guicedee.modules.services:hibernate-jcache](https://guicedee.com/reference/components/com.guicedee.modules.services.hibernate-jcache.md): JPMS Module-Info's for a few of the Jakarta Libraries. These will be removed as time goes by
+- [com.guicedee.modules.services:hibernate-reactive](https://guicedee.com/reference/components/com.guicedee.modules.services.hibernate-reactive.md): JPMS Module-Info's for Hibernate Reactive
+- [com.guicedee.modules.services:hibernate-validator](https://guicedee.com/reference/components/com.guicedee.modules.services.hibernate-validator.md): JPMS Module-Info's for a few of the Jakarta Libraries. These will be removed as time goes by
+- [com.guicedee.modules.services:jandex](https://guicedee.com/reference/components/com.guicedee.modules.services.jandex.md): jandex
+- [com.guicedee.modules.services:java-dataloader](https://guicedee.com/reference/components/com.guicedee.modules.services.java-dataloader.md): A JPMS modularized shade of java-dataloader (com.graphql-java:java-dataloader) exposing the org.dataloader module for a clean GuicedEE / jlink pipeline.
+- [com.guicedee.modules.services:javassist](https://guicedee.com/reference/components/com.guicedee.modules.services.javassist.md): Javassist (JAVA programming ASSISTant) makes Java bytecode manipulation simple. It is a class library for editing bytecodes in Java.
+- [com.guicedee.modules.services:javax.security.jacc](https://guicedee.com/reference/components/com.guicedee.modules.services.javax.security.jacc.md): JSR-000115 Java(TM) Authorization Contract for Containers API
+- [com.guicedee.modules.services:jna-platform-bridge](https://guicedee.com/reference/components/com.guicedee.modules.services.jna-platform-bridge.md): Provides the JPMS name required by Azure Identity while using GuicedEE's shaded JNA implementation.
+- [com.guicedee.modules.services:jna-platform](https://guicedee.com/reference/components/com.guicedee.modules.services.jna-platform.md): jna-platform
+- [com.guicedee.modules.services:json](https://guicedee.com/reference/components/com.guicedee.modules.services.json.md): JSON is a light-weight, language independent, data interchange format. See http://www.JSON.org/ The files in this package implement JSON encoders/decoders in Java. It also includes the capability to convert between JSON and XML, HTTP headers, Cookies, and CDL. This is a reference implementation. There is a large number of JSON packages in Java. Perhaps someday the Java community will standardize on one. Until then, choose carefully. The license includes this restriction: "The software shall be used for good, not evil." If your conscience cannot live with that, then choose a different package.
+- [com.guicedee.modules.services:kafka-client](https://guicedee.com/reference/components/com.guicedee.modules.services.kafka-client.md): kafka-client
+- [com.guicedee.modules.services:keycloak-api](https://guicedee.com/reference/components/com.guicedee.modules.services.keycloak-api.md): Keycloak compile-only JPMS API
+- [com.guicedee.modules.services:mapstruct](https://guicedee.com/reference/components/com.guicedee.modules.services.mapstruct.md): mapstruct
+- [com.guicedee.modules.services:metrics-core](https://guicedee.com/reference/components/com.guicedee.modules.services.metrics-core.md): metrics-core
+- [com.guicedee.modules.services:microprofile-jwt-auth-api](https://guicedee.com/reference/components/com.guicedee.modules.services.microprofile-jwt-auth-api.md): A modularized MicroProfile JWT Auth API for JPMS. Wraps org.eclipse.microprofile.jwt:microprofile-jwt-auth-api with a proper module-info.
+- [com.guicedee.modules.services:mongodb-driver-core](https://guicedee.com/reference/components/com.guicedee.modules.services.mongodb-driver-core.md): JPMS modularized shade of org.mongodb:mongodb-driver-core exposing the org.mongodb.driver.core module.
+- [com.guicedee.modules.services:mongodb-driver-reactivestreams](https://guicedee.com/reference/components/com.guicedee.modules.services.mongodb-driver-reactivestreams.md): JPMS modularized shade of org.mongodb:mongodb-driver-reactivestreams exposing the org.mongodb.driver.reactivestreams module. This is the driver io.vertx:vertx-mongo-client depends on, which is how the whole MongoDB chain reaches GuicedEE consumers.
+- [com.guicedee.modules.services:mssql-jdbc](https://guicedee.com/reference/components/com.guicedee.modules.services.mssql-jdbc.md): Microsoft JDBC Driver for SQL Server.
+- [com.guicedee.modules.services:nrjavaserial](https://guicedee.com/reference/components/com.guicedee.modules.services.nrjavaserial.md): nrjavaserial
+- [com.guicedee.modules.services:oauth2-oidc-sdk](https://guicedee.com/reference/components/com.guicedee.modules.services.oauth2-oidc-sdk.md): A JPMS modularized shade of oauth2-oidc-sdk (com.nimbusds:oauth2-oidc-sdk) exposing the oauth2.oidc.sdk module for GuicedEE and jlink. Includes content-type, lang-tag, JSON Smart and Accessors Smart; reuses the native Nimbus JOSE/JWT and ASM modules.
+- [com.guicedee.modules.services:okio](https://guicedee.com/reference/components/com.guicedee.modules.services.okio.md): Explicit JPMS wrapper for Okio JVM.
+- [com.guicedee.modules.services:openpdf](https://guicedee.com/reference/components/com.guicedee.modules.services.openpdf.md): OpenPDF
+- [com.guicedee.modules.services:org.apache.cxf](https://guicedee.com/reference/components/com.guicedee.modules.services.org.apache.cxf.md): Apache CXF is an open-source services framework that aids in the development of services using front-end programming APIs, like JAX-WS and JAX-RS.
+- [com.guicedee.modules.services:postgresql](https://guicedee.com/reference/components/com.guicedee.modules.services.postgresql.md): The Postgres SQL Driver
+- [com.guicedee.modules.services:reactive-streams](https://guicedee.com/reference/components/com.guicedee.modules.services.reactive-streams.md): A JPMS modularized shade of Reactive Streams (org.reactivestreams:reactive-streams) exposing the org.reactivestreams module for a clean GuicedEE / jlink pipeline. The upstream artifact ships only an Automatic-Module-Name which cannot be used with jlink; this shade adds an explicit module-info.
+- [com.guicedee.modules.services:reactor-core](https://guicedee.com/reference/components/com.guicedee.modules.services.reactor-core.md): JPMS modularized shade of io.projectreactor:reactor-core exposing the reactor.core module. Reactor ships no module descriptor at all (not even an Automatic-Module-Name - the name reactor.core is derived from the file name), so jlink rejects it. It is a non-optional runtime dependency of org.mongodb:mongodb-driver-reactivestreams, which io.vertx:vertx-mongo-client depends on, so it cannot be avoided while the Mongo client is in use.
+- [com.guicedee.modules.services:swagger](https://guicedee.com/reference/components/com.guicedee.modules.services.swagger.md): swagger
+- [com.guicedee.modules.services:telemetry-core](https://guicedee.com/reference/components/com.guicedee.modules.services.telemetry-core.md): telemetry-core
+- [com.guicedee.modules.services:testcontainers](https://guicedee.com/reference/components/com.guicedee.modules.services.testcontainers.md): A modularized test containers implementation
+- [com.guicedee.modules.services:uadetector-core](https://guicedee.com/reference/components/com.guicedee.modules.services.uadetector-core.md): The UADetector core library includes the API and implementation to read the detection information and the functions to identify User-Agents, but not the database (also known as UAS data). The UAS data can be found in the resources module.
+- [com.guicedee.modules.services:uadetector-resources](https://guicedee.com/reference/components/com.guicedee.modules.services.uadetector-resources.md): This package contains a verified version of the data file from http://user-agent-string.info. During the verification process the data are checked for ability to run against the current implementation. The goal is to provide frequently updated resources for detection of user agents without having to release a new implementation.
+- [com.guicedee.modules.services:vertx-cassandra](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-cassandra.md): Vert.x Cassandra
+- [com.guicedee.modules.services:vertx-hazelcast](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-hazelcast.md): Vert.x Hazelcast
+- [com.guicedee.modules.services:vertx-kafka](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-kafka.md): Vert.x Kafka
+- [com.guicedee.modules.services:vertx-mutiny](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-mutiny.md): Vert.x Mutiny
+- [com.guicedee.modules.services:vertx-rabbitmq](https://guicedee.com/reference/components/com.guicedee.modules.services.vertx-rabbitmq.md): Vert.x RabbitMQ
+- [com.guicedee.modules.services:zstd-jni](https://guicedee.com/reference/components/com.guicedee.modules.services.zstd-jni.md): Zstd JNI with a corrected JPMS descriptor; native names and binaries are preserved.
+
+## BOMs and build parents
+
+- [com.guicedee:apache-bom](https://guicedee.com/reference/components/com.guicedee.apache-bom.md): The BOM for Apache
+- [com.guicedee:apache-cxf-bom](https://guicedee.com/reference/components/com.guicedee.apache-cxf-bom.md): The BOM for CXF
+- [com.guicedee:fasterxml-bom](https://guicedee.com/reference/components/com.guicedee.fasterxml-bom.md): The BOM for FasterXML Artefacts
+- [com.guicedee:google-bom](https://guicedee.com/reference/components/com.guicedee.google-bom.md): The BOM for Google Libraries
+- [com.guicedee:guicedee-bom](https://guicedee.com/reference/components/com.guicedee.guicedee-bom.md): The BOM for Guiced EE
+- [com.guicedee:hibernate-bom](https://guicedee.com/reference/components/com.guicedee.hibernate-bom.md): The BOM for Hibernate
+- [com.guicedee:jakarta-bom](https://guicedee.com/reference/components/com.guicedee.jakarta-bom.md): The BOM for Jakarta EE
+- [com.guicedee:jboss-bom](https://guicedee.com/reference/components/com.guicedee.jboss-bom.md): The BOM for JBoss Artefacts
+- [com.guicedee:kotlin-parent](https://guicedee.com/reference/components/com.guicedee.kotlin-parent.md): Kotlin integration over Vert.x coroutines using GuicedEE Future boundaries.
+- [com.guicedee:parent](https://guicedee.com/reference/components/com.guicedee.parent.md): The parent POM file for Guiced EE Builds
+- [com.guicedee:smallrye-bom](https://guicedee.com/reference/components/com.guicedee.smallrye-bom.md): The BOM for SmallRye Artefacts
+- [com.guicedee:standalone-bom](https://guicedee.com/reference/components/com.guicedee.standalone-bom.md): The BOM for Standalone Artefacts
+- [com.guicedee:swagger-bom](https://guicedee.com/reference/components/com.guicedee.swagger-bom.md): The BOM for Swagger
+- [com.guicedee:tests-bom](https://guicedee.com/reference/components/com.guicedee.tests-bom.md): The BOM for Tests
+- [com.guicedee:versioner](https://guicedee.com/reference/components/com.guicedee.versioner.md): Supplies the version numbers for all the dependencies in a single location
+- [com.guicedee:vertx-bom](https://guicedee.com/reference/components/com.guicedee.vertx-bom.md): The BOM for Vert.x and Mutiny Artefacts
+
+## Tools and related projects
+
+- [IntelliJ plugin](https://github.com/GuicedEE/GuicedEEIntelliJPlugin): project generation, Java/Kotlin templates and build configuration.
+- [MCP server](https://github.com/GuicedEE/mcp): GuicedEE integration with Model Context Protocol tooling; see its own version and setup requirements.
+- [Benchmarks](https://github.com/GuicedEE/benchmarks): reproducible methodology, runtime, build, CDI and persistence results.
+- [GuicedEE organization](https://github.com/GuicedEE): source repositories and issue trackers.
+- [JWebMP](https://jwebmp.com): Java-authored web interfaces and Angular generation.
+- [EntityAssist](https://entityassist.com): related persistence entity and query utilities.

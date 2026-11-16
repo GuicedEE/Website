@@ -1,0 +1,496 @@
+# com.guicedee:web
+
+Integrates Vert.x Web
+
+- Version line: `2.6.0` (verify publication separately).
+- Packaging: `jar`.
+- JPMS module: `com.guicedee.vertx.web`.
+- [Source POM](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/pom.xml).
+- [Reference guide](https://guicedee.com/reference/overview.md).
+
+## Direct dependency declarations
+
+Versions may be supplied by the BOM or properties in the linked POM; this is not a flattened dependency lock.
+
+- `org.projectlombok:lombok`; scope `compile`.
+- `com.guicedee:vertx`; scope `compile`.
+- `com.guicedee:client`; scope `compile`.
+- `io.vertx:vertx-core`; scope `compile`.
+- `io.vertx:vertx-web`; scope `compile`.
+- `org.junit.jupiter:junit-jupiter-api`; scope `test`.
+
+## JPMS descriptor
+
+```java
+import com.guicedee.client.services.lifecycle.IGuicePostStartup;
+import com.guicedee.vertx.web.VertxWebServerPostStartup;
+
+module com.guicedee.vertx.web {
+    uses com.guicedee.vertx.web.spi.VertxRouterConfigurator;
+    uses com.guicedee.vertx.web.spi.VertxHttpServerConfigurator;
+    uses com.guicedee.vertx.web.spi.VertxHttpServerOptionsConfigurator;
+    uses com.guicedee.vertx.web.spi.ManagedHttpListenerProvider;
+
+    exports com.guicedee.vertx.web.spi;
+
+    requires transitive com.guicedee.vertx;
+    requires transitive io.vertx.web;
+    requires transitive io.vertx.core;
+    requires static lombok;
+
+    provides IGuicePostStartup with VertxWebServerPostStartup, com.guicedee.vertx.web.ManagedHttpListenersLifecycle;
+    provides com.guicedee.client.services.lifecycle.IGuicePreDestroy with com.guicedee.vertx.web.ManagedHttpListenersLifecycle;
+
+    opens com.guicedee.vertx.web to com.google.guice;
+}
+```
+
+## Module guide
+
+Source: [README.md](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/README.md). Historical version examples retain their original context.
+
+# GuicedEE Vert.x Web
+
+[![Build](https://github.com/GuicedEE/GuicedVertxWeb/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/GuicedVertxWeb/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/web)](https://central.sonatype.com/artifact/com.guicedee/web)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
+
+![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
+![Guice 7](https://img.shields.io/badge/Guice-7%2B-green)
+![Vert.X 5](https://img.shields.io/badge/Vert.x-5%2B-green)
+
+Reactive **HTTP/HTTPS server bootstrap** for [GuicedEE](https://github.com/GuicedEE) applications using **Vert.x 5**.
+Provides the `RouterConfig`, `HttpServer`, and `BodyHandler` plumbing that higher-level modules ([rest](https://github.com/GuicedEE/GuicedVertxWeb/blob/rest), [websockets](https://github.com/GuicedEE/GuicedVertxWeb/blob/websockets), etc.) build on top of. Configuration is environment-driven; extension is SPI-driven.
+
+JSON support is opt-in: add `com.guicedee.modules.representations:json-representation` to activate the shared mapper and Vert.x JSON codec through SPI. Web itself has no Jackson runtime dependency. See [activation and migration](https://github.com/GuicedEE/GuicedVertxWeb/blob/client/JSON_OPT_IN.md).
+
+Built on [Vert.x Web](https://vertx.io/docs/vertx-web/java/) · [GuicedEE](https://github.com/GuicedEE) · JPMS module `com.guicedee.vertx.web` · Java 25+
+
+## 📦 Installation
+
+```xml
+<dependency>
+  <groupId>com.guicedee</groupId>
+  <artifactId>web</artifactId>
+</dependency>
+```
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
+implementation("com.guicedee:web:2.4.1")
+```
+</details>
+
+## ✨ Features
+
+- **Auto-start HTTP/HTTPS servers** — `VertxWebServerPostStartup` runs as an `IGuicePostStartup` hook and creates servers from environment config
+- **Three SPI extension points** — `VertxHttpServerOptionsConfigurator`, `VertxHttpServerConfigurator`, `VertxRouterConfigurator`
+- **TLS/HTTPS** — JKS and PKCS#12 keystores auto-detected by file extension
+- **Body handling** — `BodyHandler` pre-configured with file uploads, form merging, and configurable size limits
+- **Per-verticle sub-routers** — `VertxWebVerticleStartup` creates isolated routers for `@Verticle`-annotated packages
+- **Jackson integration** — `DatabindCodec` mapper configured via `IJsonRepresentation` at startup
+- **Environment-driven** — HTTP/HTTPS ports, TLS, body limits all controlled via system properties or environment variables
+
+## 🚀 Quick Start
+
+Bootstrap GuicedEE — the web server starts automatically via the post-startup hook:
+
+```java
+IGuiceContext.registerModuleForScanning.add("my.app");
+IGuiceContext.instance();
+// HTTP server is now listening on port 8080 (default)
+```
+
+Add routes by implementing `VertxRouterConfigurator`:
+
+```java
+public class MyRoutes implements VertxRouterConfigurator<MyRoutes> {
+
+    @Override
+    public Router builder(Router router) {
+        router.get("/health").handler(ctx ->
+            ctx.response().end("OK"));
+        return router;
+    }
+
+    @Override
+    public Integer sortOrder() {
+        return 500;  // higher = later
+    }
+}
+```
+
+Register via JPMS:
+
+```java
+module my.app {
+    requires com.guicedee.vertx.web;
+
+    provides com.guicedee.vertx.web.spi.VertxRouterConfigurator
+        with my.app.MyRoutes;
+}
+```
+
+## 📐 Startup Flow
+
+```mermaid
+flowchart TD
+    n1["IGuiceContext.instance()"]
+    n2["IGuicePostStartup hooks"]
+    n1 --> n2
+    n3["VertxWebServerPostStartup<br/>sortOrder = MIN_VALUE + 500"]
+    n2 --> n3
+    n4["Build HttpServerOptions<br/>compression, keepalive, header limits"]
+    n3 --> n4
+    n5["Apply VertxHttpServerOptionsConfigurator SPIs"]
+    n3 --> n5
+    n6["Create HTTP server<br/>if HTTP_ENABLED=true"]
+    n3 --> n6
+    n7["Create HTTPS server<br/>if HTTPS_ENABLED=true, with TLS keystore"]
+    n3 --> n7
+    n8["Apply VertxHttpServerConfigurator SPIs"]
+    n3 --> n8
+    n9["Create Router + BodyHandler"]
+    n3 --> n9
+    n10["Apply VertxRouterConfigurator SPIs<br/>sorted, excluding per-verticle"]
+    n3 --> n10
+    n11["Mount per-verticle sub-routers from VertxWebRouterRegistry"]
+    n3 --> n11
+    n12["Configure Jackson ObjectMapper via IJsonRepresentation"]
+    n3 --> n12
+    n13["Attach router to all servers"]
+    n3 --> n13
+    n14["server.listen() for each server"]
+    n3 --> n14
+```
+
+## 🔌 SPI Extension Points
+
+All SPIs are discovered via `ServiceLoader`. Register implementations with JPMS `provides...with` or `META-INF/services`.
+
+### `VertxHttpServerOptionsConfigurator`
+
+Customize `HttpServerOptions` **before** servers are created — ports, TLS, compression, buffer sizes:
+
+```java
+public class MyServerOptions implements VertxHttpServerOptionsConfigurator {
+    @Override
+    public HttpServerOptions builder(HttpServerOptions options) {
+        options.setIdleTimeout(60);
+        return options;
+    }
+}
+```
+
+### `VertxHttpServerConfigurator`
+
+Configure the `HttpServer` instance **after** creation — WebSocket upgrade handlers, connection hooks:
+
+```java
+public class MyServerConfig implements VertxHttpServerConfigurator {
+    @Override
+    public HttpServer builder(HttpServer server) {
+        server.connectionHandler(conn ->
+            log.info("New connection from {}", conn.remoteAddress()));
+        return server;
+    }
+}
+```
+
+### `VertxRouterConfigurator`
+
+Add routes, middleware, and handlers to the `RouterConfig`. Implements `IDefaultService` so `sortOrder()` controls execution order:
+
+```java
+public class StaticFiles implements VertxRouterConfigurator<StaticFiles> {
+    @Override
+    public Router builder(Router router) {
+        router.route("/static/*").handler(StaticHandler.create("webroot"));
+        return router;
+    }
+
+    @Override
+    public Integer sortOrder() {
+        return 900;  // run after REST routes
+    }
+}
+```
+
+## ⚙️ Configuration
+
+All configuration is driven by system properties or environment variables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `HTTP_ENABLED` | `true` | Enable HTTP server |
+| `HTTP_PORT` | `8080` | HTTP listen port |
+| `HTTPS_ENABLED` | `false` | Enable HTTPS server |
+| `HTTPS_PORT` | `443` | HTTPS listen port |
+| `HTTPS_KEYSTORE` | — | Path to JKS or PKCS#12 keystore |
+| `HTTPS_KEYSTORE_PASSWORD` | — | Keystore password (`changeit` default for JKS) |
+| `VERTX_MAX_BODY_SIZE` | `524288000` (500 MB) | Maximum request body size in bytes |
+
+### HTTPS / TLS
+
+Keystore format is auto-detected by file extension:
+
+| Extension | Format |
+|---|---|
+| `.jks` | JKS |
+| `.pfx`, `.p12`, `.p8` | PKCS#12 |
+
+```bash
+# Generate a self-signed JKS keystore for development
+keytool -genkey -alias dev -keyalg RSA -keysize 2048 \
+  -validity 365 -keystore keystore.jks -storepass changeit
+```
+
+### Default server options
+
+`VertxWebServerPostStartup` applies these defaults before any SPI configurator runs:
+
+| Option | Value |
+|---|---|
+| Compression | enabled, level 9 |
+| TCP keep-alive | `true` |
+| Max header size | 65 536 bytes |
+| Max chunk size | 65 536 bytes |
+| Max form attribute size | 65 536 bytes |
+| Max form fields | unlimited (`-1`) |
+| Max initial line length | 65 536 bytes |
+
+### Body handler defaults
+
+A `BodyHandler` is installed on all routes with:
+
+| Setting | Value |
+|---|---|
+| Uploads directory | `uploads` |
+| Delete uploaded files on end | `true` |
+| Handle file uploads | `true` |
+| Merge form attributes | `true` |
+| Body limit | `VERTX_MAX_BODY_SIZE` (default 500 MB) |
+
+## 🔀 Per-Verticle Sub-Routers
+
+When a package is annotated with `@Verticle`, `VertxWebVerticleStartup` creates a dedicated `RouterConfig` for that package's `VertxRouterConfigurator` implementations. These sub-routers are mounted onto the main router automatically.
+
+This means route configurators in `@Verticle` packages are **excluded** from the global router and instead run inside their verticle's isolated context.
+
+```java
+@Verticle(workerPoolName = "api-pool", workerPoolSize = 8)
+package com.example.api;
+```
+
+Any `VertxRouterConfigurator` in `com.example.api` (or sub-packages) will be applied to a dedicated sub-router mounted by `VertxWebVerticleStartup`.
+
+## 🗺️ Module Graph
+
+```mermaid
+flowchart LR
+    com_guicedee_vertx_web["com.guicedee.vertx.web"]
+    com_guicedee_vertx_web --> com_guicedee_vertx["com.guicedee.vertx<br/>Vert.x lifecycle, event bus, verticles"]
+    com_guicedee_vertx_web --> io_vertx_web["io.vertx.web<br/>Vert.x Web — Router, BodyHandler, etc."]
+    com_guicedee_vertx_web --> io_vertx_core["io.vertx.core<br/>Vert.x core — HttpServer, HttpServerOptions"]
+    com_guicedee_vertx_web --> com_guicedee_client["com.guicedee.client<br/>GuicedEE SPI contracts"]
+```
+
+## 🧩 JPMS
+
+Module name: **`com.guicedee.vertx.web`**
+
+The module:
+- **exports** `com.guicedee.vertx.web.spi`
+- **provides** `IGuicePostStartup` with `VertxWebServerPostStartup`
+- **uses** `VertxRouterConfigurator`, `VertxHttpServerConfigurator`, `VertxHttpServerOptionsConfigurator`
+
+## 🏗️ Key Classes
+
+| Class | Role |
+|---|---|
+| `VertxWebServerPostStartup` | `IGuicePostStartup` — builds servers, router, and starts listening |
+| `VertxWebVerticleStartup` | `VerticleStartup` — creates per-verticle sub-routers |
+| `VertxWebRouterRegistry` | Thread-safe registry for sub-routers contributed by verticles |
+| `VertxRouterConfigurator` | SPI — add routes and handlers to the `RouterConfig` |
+| `VertxHttpServerConfigurator` | SPI — customize `HttpServer` instances |
+| `VertxHttpServerOptionsConfigurator` | SPI — customize `HttpServerOptions` before server creation |
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome — please add tests for new SPI implementations or server configurations.
+
+## 📄 License
+
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Additional isolated HTTP listeners
+
+Implement `com.guicedee.vertx.web.spi.ManagedHttpListenerProvider` and return
+`ManagedHttpListener` definitions (name, defensive-copy `HttpServerOptions`, and
+`Function<Vertx, Router>`). Register the provider in both `module-info.java`
+(`provides ... with ...`) and the matching `META-INF/services` file. Return an empty
+list to disable the feature without allocating another runtime.
+
+The lifecycle loads providers through Guice after normal web initialization,
+awaits every bind, rolls back this group's listeners on failure and closes them
+on shutdown, including a bind still in progress. Applications must propagate
+startup-hook failure to their launcher; this hook does not stop unrelated servers.
+
+Build each router using the supplied Vert.x instance. The group owns a separate
+non-clustered runtime with one event-loop thread, one worker and one internal
+blocking worker. It does not install the application's router/server configurators,
+body parser, routes, authentication, metrics instrumentation or event-bus bridge.
+Existing thread-safe application health/metrics services can be used by handlers;
+providers are responsible for access policy, bounded non-blocking work and TLS.
+The runtime closes with the group and is not created when there are no listeners.
+
+This separation prevents Vert.x from silently sharing a public socket on address
+collision. Socket reuse is forced off; names and positive ports must be unique
+within the group. Port zero requests distinct ephemeral bindings; negative shared
+ports are rejected. All direct WebSocket upgrades are denied. An occupied socket
+fails startup instead of dispatching a private router on another server's port.
+
+`ManagedHttpListenerTest` exercises real loopback HTTP, bind failure and rollback,
+public socket collision, duplicate ports, shutdown races and copied options.
+
+## Declared API reference
+
+Java public/protected declarations and public interface methods are parsed with the JDK compiler. This includes implementation types; package exports determine JPMS accessibility. Inherited and generated members are not expanded. Kotlin adapters retain their source and comments.
+
+## ManagedHttpListenersLifecycle
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/ManagedHttpListenersLifecycle.java)
+
+### ManagedHttpListenersLifecycle
+
+```java
+@Override public List<Uni<Boolean>> postLoad();
+@Override public void onDestroy();
+@Override public Integer sortOrder();
+```
+
+## HttpServerOptions
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/HttpServerOptions.java)
+
+### HttpServerOptions
+
+```java
+boolean httpEnabled() default true;
+String host() default "";
+int port() default 8080;
+boolean httpsEnabled() default false;
+int httpsPort() default 443;
+boolean http2Enabled() default false;
+boolean http2ClearTextEnabled() default true;
+boolean compressionEnabled() default true;
+int compressionLevel() default 9;
+boolean decompressionEnabled() default false;
+boolean tcpKeepAlive() default true;
+int idleTimeout() default 0;
+int maxHeaderSize() default 65536;
+int maxChunkSize() default 65536;
+int maxFormAttributeSize() default 65536;
+int maxFormFields() default -1;
+int maxInitialLineLength() default 65536;
+long maxBodySize() default 524288000L;
+String uploadsDirectory() default "uploads";
+boolean deleteUploadsOnEnd() default true;
+boolean handleFileUploads() default true;
+```
+
+## ManagedHttpListener
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/ManagedHttpListener.java)
+
+### ManagedHttpListener
+
+```java
+public ManagedHttpListener(String name, HttpServerOptions options, Function<Vertx, Router> router);
+@Override public HttpServerOptions options();
+```
+
+## ManagedHttpListenerGroup
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/ManagedHttpListenerGroup.java)
+
+### ManagedHttpListenerGroup
+
+```java
+public synchronized Future<Map<String, Integer>> start(List<ManagedHttpListener> listeners);
+public synchronized Future<Void> close();
+```
+
+## ManagedHttpListenerProvider
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/ManagedHttpListenerProvider.java)
+
+### ManagedHttpListenerProvider
+
+```java
+List<ManagedHttpListener> listeners();
+```
+
+## VertxHttpServerConfigurator
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/VertxHttpServerConfigurator.java)
+
+### VertxHttpServerConfigurator
+
+```java
+HttpServer builder(HttpServer builder);
+```
+
+## VertxHttpServerOptionsConfigurator
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/VertxHttpServerOptionsConfigurator.java)
+
+### VertxHttpServerOptionsConfigurator
+
+```java
+HttpServerOptions builder(HttpServerOptions builder);
+```
+
+## VertxRouterConfigurator
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/spi/VertxRouterConfigurator.java)
+
+### VertxRouterConfigurator
+
+```java
+Router builder(Router builder);
+```
+
+## VertxWebRouterRegistry
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/VertxWebRouterRegistry.java)
+
+### VertxWebRouterRegistry
+
+```java
+public static void addRouter(Router router);
+public static List<Router> getSubRouters();
+```
+
+## VertxWebServerPostStartup
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java)
+
+### VertxWebServerPostStartup
+
+```java
+@Override public List<Uni<Boolean>> postLoad();
+@Override public Integer sortOrder();
+```
+
+## VertxWebVerticleStartup
+
+[Java source](https://github.com/GuicedEE/GuicedVertxWeb/blob/master/src/main/java/com/guicedee/vertx/web/VertxWebVerticleStartup.java)
+
+### VertxWebVerticleStartup
+
+```java
+@Override public void start(Promise<Void> startPromise, Vertx vertx, AbstractVerticle verticle, String assignedPackage);
+```

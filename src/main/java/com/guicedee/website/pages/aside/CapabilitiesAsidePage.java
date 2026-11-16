@@ -50,6 +50,7 @@ public class CapabilitiesAsidePage extends DivSimple<CapabilitiesAsidePage> impl
         list.add(asideLink("redis", "Redis"));
         list.add(asideLink("rest-jax-rs", "REST (JAX-RS)"));
         list.add(asideLink("rest-client", "REST Client"));
+        list.add(asideLink("webassembly", "WebAssembly · Experimental"));
         list.add(asideLink("security-authentication", "Security"));
         list.add(asideLink("verticles-deployment", "Verticles"));
         list.add(asideLink("persistence", "Persistence"));
