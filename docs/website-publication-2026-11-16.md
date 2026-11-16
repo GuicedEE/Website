@@ -74,8 +74,9 @@ Source `2c64599537eaa946025af880feb187bc90e30ea0` applies the same shared grid t
 the ClassGraph and clustering sections previously omitted during generation due
 to duplicate IDs. The ClassGraph guide link remains below its cards.
 
-Revision `guicedee-website--v260-20261116-2c64599` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-2c64599`.
+Revision `guicedee-website--v260-20261116-2c64599` was verified healthy and ready
+with 100% of traffic before the homepage follow-up below.
+Image tag: `gedmarc/guicedee-website:2.6.0-20261116-2c64599`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:b164286d1e24ff6fb39910dcef5738888db5719fc9026091e5debe1a59ff2c59`.
 
@@ -83,3 +84,23 @@ Local and public browser checks passed all eight grids and 28 cards at 1440,
 1024 and 390 pixels, including equal row heights, aligned notes, unique anchors
 and no horizontal page overflow. All 298 live assets match the production build.
 Evidence is retained under `target/website-release-history/` in DevSuite.
+
+## Developer selector and native comparison
+
+Source `4ed17e874feed77071244f32d04df8146b0c2471` shortens the homepage selector
+to Developer and explicitly names GuicedEE, Quarkus and Micronaut in the
+Native-Image caption. Micronaut was already included in the published chart and
+table; the comparison data and its measurement date remain unchanged.
+
+Revision `guicedee-website--v260-20261116-4ed17e8` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-4ed17e8`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:df28ba06a83a34d1f90cc34fae6e39a80b64510b64951e70bfcc74c0ab2fa293`.
+
+The production build and three local browser scenarios passed, including
+unavailable and invalid benchmark responses. Public checks verified the label,
+all three framework values in both native charts and their visible table rows,
+build modes and complete grids. Native peak container memory is 68.57 MiB for
+GuicedEE, 55.30 MiB for Quarkus and 85.26 MiB for Micronaut. All 298 live assets
+match the production build. Evidence is retained under
+`target/website-native-comparison/` in DevSuite.

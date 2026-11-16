@@ -27,11 +27,14 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `2c64599537eaa946025af880feb187bc90e30ea0` is now live in revision
-`guicedee-website--v260-20261116-2c64599`, with benchmark snapshot `c022ced`.
+Website source `4ed17e874feed77071244f32d04df8146b0c2471` is now live in revision
+`guicedee-website--v260-20261116-4ed17e8`, with benchmark snapshot `c022ced`.
 Public checks verified the three-framework charts, build modes, complete grids
-and current published datasets. All eight homepage slides use a stable-height
-scroller. See the [complete deployment record](website-publication-2026-11-16.md)
+and current published datasets. The Developer selector uses its shorter label;
+the Native-Image caption explicitly names all three frameworks. Browser checks
+also verify each native chart's matching table rows and formatted values.
+All eight homepage slides use a stable-height scroller.
+See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 
 ## Earlier deployment — 16 November 2026
