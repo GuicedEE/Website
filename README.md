@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-8c1b266` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-b9e8f80` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -43,6 +43,9 @@ removed and the header star uses the lighter brand pink at full opacity.
 Carousel scrolling continues onto the page at either end of a slide, including
 slides that need no internal scrolling. Section links no longer include a fixed
 750 ms pause; they wait only for the required rendering or component transitions.
+Compile and JVM package now show both GuicedEE modular JAR discovery modes,
+SPI and scanner, labelled `java -m`, alongside Quarkus and Micronaut. The chart
+labels fit on mobile and match the complete build grid.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.

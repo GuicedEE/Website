@@ -34,8 +34,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `8c1b26653595e7f7933c2d096eefff15b45a4431` is now live in revision
-`guicedee-website--v260-20261116-8c1b266`, with benchmark snapshot `f5770f2`.
+Website source `b9e8f807c5d4085c6fcecbd820973af2b59c4e0e` is now live in revision
+`guicedee-website--v260-20261116-b9e8f80`, with benchmark snapshot `db61c9a`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
@@ -54,6 +54,8 @@ limits and clean-build timing boundaries explicit.
 The website now always uses dark mode and the header star uses the lighter pink.
 Carousel slides pass vertical scrolling to the page at their boundaries, and
 section navigation waits for rendering instead of fixed delays.
+Compile and JVM package include the SPI and scanner modular JAR variants, with
+explicit `java -m` labels, matching grid values and readable mobile chart labels.
 See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 

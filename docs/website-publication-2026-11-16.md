@@ -264,7 +264,7 @@ carousel accessibility state and mobile drawer closure only when required.
 Duplicate fragment reveals are removed. This preserves header clearance and
 focus while making ordinary section links respond without the 750 ms pause.
 
-Revision `guicedee-website--v260-20261116-8c1b266` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-8c1b266` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-8c1b266`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:0cb66d33b31d0ff65b9c86bdeffef4398376fecb34f5797c7b8acf5a068e82e8`.
@@ -280,3 +280,33 @@ history, filters, legacy URLs and mobile drawer focus at 1440, 1024 and 390 pixe
 All 298 public assets match the production build. Evidence is retained under
 `target/website-scroll-fix/` in DevSuite; the added regression check is
 `tools/verify-scroll-behavior.py`.
+
+## Modular JAR developer comparisons
+
+Source `b9e8f807c5d4085c6fcecbd820973af2b59c4e0e` shows both GuicedEE modular
+JAR variants in the Compile and JVM package charts: SPI discovery and scanner
+discovery. The chart and build grid explicitly label their `java -m` launch mode.
+The existing benchmark Dockerfile runs both on the full JDK with `--module-path`
+and `-m`. Native and application jlink retain their distinct packaging categories.
+
+Clean compilation medians are 3.52 s (SPI) and 3.72 s (scanner); complete JVM
+package medians are 4.10 s and 3.88 s. Values come from the published build CSV,
+including the unavailable/invalid-data fallback snapshots. The snapshot matches
+benchmark revision `db61c9af550449db854d53803b0bcde2df0a0778`, including the prior
+persistence snapshot refresh in website commit `059ea0f`.
+
+Two-line chart labels and a wider mobile carousel keep all four build series
+readable. The carousel retains a stable viewport and page scroll chaining.
+
+Revision `guicedee-website--v260-20261116-b9e8f80` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-b9e8f80`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:abd679b3207cefb7504d72fdb994e24be7a01f474fb72ee1f214a4c6f51e7598`.
+
+The production build passed. Browser checks passed for published, unavailable
+and invalid datasets, exact chart values and grid agreement, switching from
+native back to compile, all four visible labels at 1440 and 390 pixels, stable
+slide heights and no horizontal page overflow. Existing wheel, touch and
+section-navigation checks passed. Public chart checks passed, and all 298 public
+assets match the verified production build. Evidence and screenshots are retained
+under `target/website-compile-module-mode/` in DevSuite.
