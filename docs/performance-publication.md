@@ -11,10 +11,17 @@ python tools/verify-benchmarks.py /path/to/benchmarks
 python tools/verify-benchmarks.py /path/to/benchmarks --url https://guicedee.com/home
 ```
 
-The current snapshot uses benchmark revision `f5770f2`: SDK runtime/build results
-from 15 November 2026 and persistence batch `20261116-133334` from 16 November 2026.
+The current snapshot uses benchmark revision `db61c9a`: SDK runtime/build results
+from 15 November 2026 and persistence batch `20261116-165501` from 16 November 2026.
 Runtime, memory, build and persistence charts and grids include GuicedEE, Quarkus
 and Micronaut. Quarkus remains the baseline for the table percentages.
+
+Compile and JVM package show both GuicedEE modular JAR variants, labelled
+`java -m`: SPI discovery and scanner discovery. Their clean compile medians are
+3.52 s and 3.72 s; complete JVM package medians are 4.10 s and 3.88 s. These are
+the existing full-JDK benchmark artifacts, launched with `--module-path` and `-m`
+in the benchmark Dockerfile. Native builds retain their separate three-framework
+comparison, and application jlink packages remain in the complete build grid.
 
 Persistence offers startup, joined-read and CRUD-cycle views. Startup includes the
 first committed 15-entity graph; it is not HTTP-port readiness. CRUD cycles include

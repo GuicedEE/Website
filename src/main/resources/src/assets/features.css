@@ -239,6 +239,11 @@ wa-icon.icon-shrink {
 .benchmark-copy wa-button::part(label) { white-space: normal; }
 .benchmark-visual { gap: .75rem; padding: 1.25rem; }
 .benchmark-chart { height: 10rem; }
+.benchmark-build-chart { height: 12rem; }
+@media (max-width: 720px) {
+    .performance-showcase { margin-inline: -2rem; }
+    .benchmark-panel, .benchmark-visual { padding: 1rem; }
+}
 .build-comparison-grid { grid-column: 1 / -1; min-width: 0; gap: .75rem; }
 .build-grid { max-width: 100%; --max-height: none; font-size: .75rem; }
 .build-grid::part(cell), .build-grid::part(header-cell) { white-space: normal; line-height: 1.2; }

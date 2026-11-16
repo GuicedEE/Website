@@ -44,8 +44,8 @@ def main():
     builds = list(csv.DictReader((docs / 'build-performance.csv').read_text().splitlines()))
     build_values = [[float(next(row['median_seconds'] for row in builds
                     if row['variant'] == name and row['goal'] == goal)) for name in names]
-                    for names, goal in [(['guicedee', 'quarkus-standard', 'micronaut'], 'compile'),
-                                        (['guicedee', 'quarkus-standard', 'micronaut'], 'package'),
+                    for names, goal in [(['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'], 'compile'),
+                                        (['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'], 'package'),
                                         (['guicedee-native', 'quarkus-standard-native', 'micronaut-native'], 'package')]]
     server = None
     if not args.url:
@@ -129,7 +129,7 @@ def main():
                     developer = page.locator('.showcase-navigation wa-button').filter(has_text='Developer')
                     assert developer.inner_text().strip() == 'Developer'
                     developer.click()
-                    for index, label in enumerate(['Compile', 'JVM package', 'Native build']):
+                    for index, label in [(0, 'Compile'), (1, 'JVM package'), (2, 'Native build'), (0, 'Compile')]:
                         build_panel.locator('.benchmark-modes wa-button').filter(has_text=label).click()
                         page.wait_for_function("""expected => {
                             const panel = [...document.querySelectorAll('.benchmark-panel')].find(p => p.textContent.includes('Build. Run. Keep your flow.'));
@@ -139,7 +139,15 @@ def main():
                         }""", arg=build_values[index])
                         config = build_panel.locator('wa-chart').evaluate("e => typeof e.config === 'string' ? JSON.parse(e.config) : e.config")
                         assert config['data']['datasets'][0]['data'] == build_values[index], (mode, label, config)
-                        assert len(config['data']['labels']) == 3 and 'Micronaut' in config['data']['labels'][2]
+                        labels = (['GuicedEE native', 'Quarkus native', 'Micronaut native'] if index == 2 else
+                                  [['GuicedEE SPI', 'JAR · java -m'], ['GuicedEE scanner', 'JAR · java -m'], 'Quarkus fast-JAR', 'Micronaut JVM'])
+                        assert config['data']['labels'] == labels, (mode, label, config)
+                        if index != 2:
+                            column = 'compile' if index == 0 else 'package'
+                            assert [row[column] for row in build_rows[:4]] == [f'{value:.2f}' for value in build_values[index]]
+                            assert all('JAR (java -m)' in row['artifact'] for row in build_rows[:2])
+                        build_panel.locator('wa-chart canvas').wait_for(state='visible')
+                        page.screenshot(path=str(args.output / f'{mode}-build-{index}.png'))
                     for label, title, values in [
                         ('Performance', 'Keeping pace with the best.', [v['launchToFirstBusinessMs']['median'] for v in native]),
                         ('Native-Image', 'Your Guice application.', [v['peakMiB']['median'] for v in native])]:
@@ -168,6 +176,20 @@ def main():
                                 heights.append(box['height'])
                             assert max(heights) - min(heights) < 2, (width, heights)
                             assert page.locator('.showcase-scroller[orientation="vertical"]').count() == 8
+                            developer.click()
+                            build_panel.locator('wa-chart').evaluate("e => e.scrollIntoView({block: 'center', behavior: 'instant'})")
+                            build_panel.locator('wa-chart').screenshot(path=str(args.output / f'compile-chart-{width}.png'))
+                            label_bounds = build_panel.locator('wa-chart').evaluate('''e => {
+                                const chart = e.chart, axis = chart.scales.y;
+                                const labels = axis.ticks.flatMap(tick => tick.label);
+                                chart.ctx.save();
+                                const font = chart.options.font;
+                                chart.ctx.font = `${font.size}px ${font.family}`;
+                                const widest = Math.max(...labels.map(label => chart.ctx.measureText(label).width));
+                                chart.ctx.restore();
+                                return {ticks: axis.ticks.length, widest, available: axis.width - 10};
+                            }''')
+                            assert label_bounds['ticks'] == 4 and label_bounds['widest'] <= label_bounds['available'], (width, label_bounds)
                             page.locator('.showcase-navigation wa-button').filter(has_text='CDI').click()
                             cdi = page.locator('.cdi-setup')
                             cdi.locator('[part="header"]').first.click()

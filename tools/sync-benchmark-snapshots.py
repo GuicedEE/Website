@@ -24,8 +24,8 @@ def main():
     build_value = lambda variant, goal: float(next(row['median_seconds'] for row in builds
         if row['variant'] == variant and row['goal'] == goal))
     build_values = [[build_value(variant, goal) for variant in variants] for variants, goal in [
-        (['guicedee', 'quarkus-standard', 'micronaut'], 'compile'),
-        (['guicedee', 'quarkus-standard', 'micronaut'], 'package'),
+        (['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'], 'compile'),
+        (['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'], 'package'),
         (['guicedee-native', 'quarkus-standard-native', 'micronaut-native'], 'package')]]
     persistence_values = [[row['launchToFirstTransactionMs']['median'] / 1000 for row in persistence_rows],
                           [row['read']['p50Ms'] for row in persistence_rows],

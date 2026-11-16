@@ -24,10 +24,11 @@ final class BenchmarkShowcase {
                     {key: 'linux-spi', runtime: 'Linux jlink', discovery: 'SPI', checks: '16/16'},
                     {key: 'linux-native', runtime: 'Linux native', discovery: 'SPI', checks: '16/16'}
                 ];
-                benchmarkValues: (number[] | null)[] = [[654.6762000000399,681.3458999997692,626.8338999998377],[3.517444553000132,4.01462643900004,5.684916422000242],[68.56640625,55.302734375,85.2578125],[14.84229989999585,12.246459799993318,16.819033300002047]];
+                benchmarkValues: (number[] | null)[] = [[654.6762000000399,681.3458999997692,626.8338999998377],[3.517444553000132,3.722911505999946,4.01462643900004,5.684916422000242],[68.56640625,55.302734375,85.2578125],[14.84229989999585,12.246459799993318,16.819033300002047]];
                 benchmarkUnits = ["ms","s","MiB","s"];
                 benchmarkSources = ["Snapshot · 2026-11-15 · 6 / 6 / 6 starts (GuicedEE / Quarkus / Micronaut)","Snapshot · 2026-11-15 · 3 clean builds per task","Snapshot · 2026-11-15 · 6 / 6 / 6 starts (GuicedEE / Quarkus / Micronaut)","Snapshot · 2026-11-16 · 3 starts per framework · default JVM"];
-                benchmarkLabels = [['GuicedEE native', 'Quarkus native', 'Micronaut native'], ['GuicedEE SPI', 'Quarkus fast-JAR', 'Micronaut JVM'], ['GuicedEE native', 'Quarkus native', 'Micronaut native'], ['GuicedEE', 'Quarkus', 'Micronaut']];
+                jvmBuildLabels = ['GuicedEE SPI (java -m)', 'GuicedEE scanner (java -m)', 'Quarkus fast-JAR', 'Micronaut JVM'];
+                benchmarkLabels = [['GuicedEE native', 'Quarkus native', 'Micronaut native'], this.jvmBuildLabels, ['GuicedEE native', 'Quarkus native', 'Micronaut native'], ['GuicedEE', 'Quarkus', 'Micronaut']];
                 benchmarkColumns = [{field: 'framework', label: 'Application', width: 128, minWidth: 128}, {field: 'value', label: 'Median', align: 'end'}];
                 buildGridColumns = [{"field": "artifact", "label": "Artifact", "width": 230, "minWidth": 230, "sortable": false, "align": "start", formatter: (value: unknown, row: any) => this.artifactCell(value, row, 'Package')}, {"field": "compile", "label": "Compile (s)", "width": 80, "minWidth": 80, "sortable": false, "align": "end"}, {"field": "compileRange", "label": "Min–max (s)", "width": 80, "minWidth": 80, "sortable": false, "align": "end"}, {"field": "package", "label": "Package (s)", "width": 80, "minWidth": 80, "sortable": false, "align": "end"}, {"field": "packageRange", "label": "Min–max (s)", "width": 80, "minWidth": 80, "sortable": false, "align": "end"}, {"field": "baseline", "label": "Baseline", "width": 110, "minWidth": 110, "sortable": false, "align": "start"}, {"field": "difference", "label": "Difference", "width": 80, "minWidth": 80, "sortable": false, "align": "end"}];
                 buildSnapshot = [{"variant":"guicedee","goal":"compile","samples":"3","median_seconds":"3.517444553000132","minimum_seconds":"3.4693496999998388","maximum_seconds":"3.9054237410000496","baseline":"quarkus-standard","difference_percent":"-12.384262734137351"},{"variant":"guicedee","goal":"package","samples":"3","median_seconds":"4.097233871999833","minimum_seconds":"3.915044496000064","maximum_seconds":"4.189725716000339","baseline":"quarkus-standard","difference_percent":"-39.704721519537586"},{"variant":"guicedee-scan","goal":"compile","samples":"3","median_seconds":"3.722911505999946","minimum_seconds":"3.3272784890000366","maximum_seconds":"3.8096864780000033","baseline":"quarkus-standard","difference_percent":"-7.26630328954726"},{"variant":"guicedee-scan","goal":"package","samples":"3","median_seconds":"3.8845480259997203","minimum_seconds":"3.76343395899994","maximum_seconds":"4.470477734999804","baseline":"quarkus-standard","difference_percent":"-42.834626405140384"},{"variant":"quarkus-standard","goal":"compile","samples":"3","median_seconds":"4.01462643900004","minimum_seconds":"3.8710077129999263","maximum_seconds":"4.46697576600036","baseline":"quarkus-standard","difference_percent":"0.0"},{"variant":"quarkus-standard","goal":"package","samples":"3","median_seconds":"6.795281446999979","minimum_seconds":"6.657370422999975","maximum_seconds":"6.891672325999934","baseline":"quarkus-standard","difference_percent":"0.0"},{"variant":"guicedee-jlink","goal":"package","samples":"3","median_seconds":"18.24622751700008","minimum_seconds":"18.139327116000004","maximum_seconds":"19.4553061900001","baseline":"quarkus-standard-native","difference_percent":"-74.26737501375922"},{"variant":"guicedee-scan-jlink","goal":"package","samples":"3","median_seconds":"17.877413955000065","minimum_seconds":"17.413830298999983","maximum_seconds":"18.44327150199979","baseline":"quarkus-standard-native","difference_percent":"-74.78751218030193"},{"variant":"guicedee-native","goal":"package","samples":"3","median_seconds":"67.85807544100044","minimum_seconds":"66.24609463600018","maximum_seconds":"86.94487847899973","baseline":"quarkus-standard-native","difference_percent":"-4.299866589716183"},{"variant":"quarkus-standard-native","goal":"package","samples":"3","median_seconds":"70.90698102799979","minimum_seconds":"68.84245245300008","maximum_seconds":"85.87814577400013","baseline":"quarkus-standard-native","difference_percent":"0.0"},{"variant":"micronaut","goal":"compile","samples":"3","median_seconds":"5.684916422000242","minimum_seconds":"5.119923835000009","maximum_seconds":"5.815816701000131","baseline":"quarkus-standard","difference_percent":"41.60511590254552"},{"variant":"micronaut","goal":"package","samples":"3","median_seconds":"5.85218265200001","minimum_seconds":"5.5883897690000595","maximum_seconds":"6.479035076999935","baseline":"quarkus-standard","difference_percent":"-13.87873044487854"},{"variant":"micronaut-native","goal":"package","samples":"3","median_seconds":"92.23726224699976","minimum_seconds":"84.90550196699996","maximum_seconds":"95.62608343200009","baseline":"quarkus-standard-native","difference_percent":"30.08206090536707"}];
@@ -38,7 +39,7 @@ final class BenchmarkShowcase {
                 runtimeGrids = [[{"key":"jvm-defaultguicedee","artifact":"GuicedEE SPI / full JDK","starts":3,"startup":"22.367","range":"22.231–23.777","warm":"76.74","peak":"313.46","baseline":"Quarkus fast-JAR","difference":"-4.1%"},{"key":"jvm-defaultguicedee-scan","artifact":"GuicedEE scanner / full JDK","starts":3,"startup":"23.862","range":"22.853–24.538","warm":"82.87","peak":"309.30","baseline":"Quarkus fast-JAR","difference":"+2.3%"},{"key":"jvm-defaultquarkus-standard","artifact":"Quarkus upstream SDKs / fast-JAR","starts":3,"startup":"23.320","range":"21.960–23.388","warm":"38.33","peak":"278.00","baseline":"Quarkus fast-JAR","difference":"Baseline"},{"key":"jvm-defaultmicronaut","artifact":"Micronaut upstream SDKs / JVM","starts":3,"startup":"26.573","range":"26.089–26.938","warm":"75.39","peak":"305.62","baseline":"Quarkus fast-JAR","difference":"+13.9%"},{"key":"jvm-defaultguicedee-jlink","artifact":"GuicedEE SPI / application jlink","starts":3,"startup":"13.005","range":"12.027–13.165","warm":"76.32","peak":"231.16","baseline":"Quarkus fast-JAR","difference":"-44.2%"},{"key":"jvm-defaultguicedee-scan-jlink","artifact":"GuicedEE scanner / application jlink","starts":3,"startup":"13.195","range":"12.827–13.280","warm":"74.42","peak":"229.09","baseline":"Quarkus fast-JAR","difference":"-43.4%"},{"key":"native-standardguicedee-native","artifact":"GuicedEE SPI / native","starts":6,"startup":"0.655","range":"0.620–0.980","warm":"4.93","peak":"68.57","baseline":"Quarkus native","difference":"-3.9%"},{"key":"native-standardquarkus-standard-native","artifact":"Quarkus upstream SDKs / native","starts":6,"startup":"0.681","range":"0.661–0.725","warm":"5.19","peak":"55.30","baseline":"Quarkus native","difference":"Baseline"},{"key":"native-standardmicronaut-native","artifact":"Micronaut upstream SDKs / native","starts":6,"startup":"0.627","range":"0.607–0.665","warm":"5.25","peak":"85.26","baseline":"Quarkus native","difference":"-8.0%"}],[{"key":"jvm-c1guicedee","artifact":"GuicedEE SPI / full JDK","starts":3,"startup":"13.290","range":"13.051–13.315","warm":"11.70","peak":"261.80","baseline":"Quarkus fast-JAR","difference":"-6.3%"},{"key":"jvm-c1guicedee-scan","artifact":"GuicedEE scanner / full JDK","starts":3,"startup":"13.480","range":"12.923–13.852","warm":"10.42","peak":"264.52","baseline":"Quarkus fast-JAR","difference":"-4.9%"},{"key":"jvm-c1quarkus-standard","artifact":"Quarkus upstream SDKs / fast-JAR","starts":3,"startup":"14.177","range":"13.869–14.787","warm":"10.21","peak":"242.61","baseline":"Quarkus fast-JAR","difference":"Baseline"},{"key":"jvm-c1micronaut","artifact":"Micronaut upstream SDKs / JVM","starts":3,"startup":"15.658","range":"15.651–16.115","warm":"9.30","peak":"258.56","baseline":"Quarkus fast-JAR","difference":"+10.4%"},{"key":"jvm-c1guicedee-jlink","artifact":"GuicedEE SPI / application jlink","starts":3,"startup":"8.300","range":"7.263–8.401","warm":"10.42","peak":"190.82","baseline":"Quarkus fast-JAR","difference":"-41.5%"},{"key":"jvm-c1guicedee-scan-jlink","artifact":"GuicedEE scanner / application jlink","starts":3,"startup":"7.777","range":"7.504–7.928","warm":"9.60","peak":"194.20","baseline":"Quarkus fast-JAR","difference":"-45.1%"},{"key":"native-standardguicedee-native","artifact":"GuicedEE SPI / native","starts":6,"startup":"0.655","range":"0.620–0.980","warm":"4.93","peak":"68.57","baseline":"Quarkus native","difference":"-3.9%"},{"key":"native-standardquarkus-standard-native","artifact":"Quarkus upstream SDKs / native","starts":6,"startup":"0.681","range":"0.661–0.725","warm":"5.19","peak":"55.30","baseline":"Quarkus native","difference":"Baseline"},{"key":"native-standardmicronaut-native","artifact":"Micronaut upstream SDKs / native","starts":6,"startup":"0.627","range":"0.607–0.665","warm":"5.25","peak":"85.26","baseline":"Quarkus native","difference":"-8.0%"}]];
                 buildMode = 0;
                 buildTitles = ['Clean JVM compile · seconds', 'JVM packaging · seconds', 'Native build · seconds'];
-                buildValues = [[3.517444553000132,4.01462643900004,5.684916422000242],[4.097233871999833,6.795281446999979,5.85218265200001],[67.85807544100044,70.90698102799979,92.23726224699976]];
+                buildValues = [[3.517444553000132,3.722911505999946,4.01462643900004,5.684916422000242],[4.097233871999833,3.8845480259997203,6.795281446999979,5.85218265200001],[67.85807544100044,70.90698102799979,92.23726224699976]];
                 buildSource = "Snapshot · 2026-11-15 · 3 clean builds per task";
                 benchmarkRows = this.benchmarkValues.map((values, i) => this.makeBenchmarkRows(values, i));
                 benchmarkSummaries = this.benchmarkValues.map((values, i) => this.benchmarkSummary(values, i));
@@ -75,8 +76,8 @@ final class BenchmarkShowcase {
                 }
                 makeBuildGrid(rows: Record<string, string>[]): any[] {
                     const variants = [
-                        ['guicedee', 'GuicedEE SPI / full JDK'],
-                        ['guicedee-scan', 'GuicedEE scanner / full JDK'],
+                        ['guicedee', 'GuicedEE SPI / JAR (java -m)'],
+                        ['guicedee-scan', 'GuicedEE scanner / JAR (java -m)'],
                         ['quarkus-standard', 'Quarkus upstream SDKs / fast-JAR'],
                         ['micronaut', 'Micronaut upstream SDKs / JVM'],
                         ['guicedee-jlink', 'GuicedEE SPI / application jlink'],
@@ -139,7 +140,7 @@ final class BenchmarkShowcase {
                 }
                 selectBuildMode(mode: number) {
                     this.buildMode = mode;
-                    this.benchmarkLabels[1] = mode === 2 ? ['GuicedEE native', 'Quarkus native', 'Micronaut native'] : ['GuicedEE SPI', 'Quarkus fast-JAR', 'Micronaut JVM'];
+                    this.benchmarkLabels[1] = mode === 2 ? ['GuicedEE native', 'Quarkus native', 'Micronaut native'] : this.jvmBuildLabels;
                     this.updateBenchmark(1, this.buildValues[mode], this.buildSource);
                 }
                 selectPersistenceMode(mode: number) {
@@ -152,13 +153,18 @@ final class BenchmarkShowcase {
                     return values.map((value, i) => `${this.benchmarkLabels[index][i]} ${value.toFixed(2)} ${this.benchmarkUnits[index]}`).join(' · ');
                 }
                 benchmarkConfig(values: number[] | null, index: number): any {
-                    return { type: 'bar', data: { labels: this.benchmarkLabels[index], datasets: [{
+                    const modularJarBuild = index === 1 && this.buildMode !== 2;
+                    const labels = this.benchmarkLabels[index].map(label => modularJarBuild && label.endsWith(' (java -m)')
+                        ? [label.replace(' (java -m)', ''), 'JAR · java -m'] : label);
+                    return { type: 'bar', data: { labels, datasets: [{
                         label: this.benchmarkUnits[index], data: values || [],
-                        backgroundColor: ['#10b981', '#818cf8', '#f59e0b'], borderRadius: 8, maxBarThickness: 42
+                        backgroundColor: modularJarBuild
+                            ? ['#10b981', '#5eead4', '#818cf8', '#f59e0b'] : ['#10b981', '#818cf8', '#f59e0b'],
+                        borderRadius: 8, maxBarThickness: 42
                     }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                         animation: false, plugins: { legend: { display: false } },
                         scales: { x: { beginAtZero: true, ticks: { color: '#64748b' }, grid: { color: '#94a3b822' } },
-                                  y: { ticks: { color: '#64748b' }, grid: { display: false } } }
+                                  y: { ticks: { color: '#64748b', autoSkip: false }, grid: { display: false } } }
                     } };
                 }
                 updateBenchmark(index: number, values: number[], source: string) {
@@ -203,8 +209,8 @@ final class BenchmarkShowcase {
                                 const row = (variant: string, goal: string) => rows.find(item => item['variant'] === variant && item['goal'] === goal)!;
                                 const gridRows = this.makeBuildGrid(rows);
                                 const measured = [
-                                    ['guicedee', 'quarkus-standard', 'micronaut'].map(id => row(id, 'compile')),
-                                    ['guicedee', 'quarkus-standard', 'micronaut'].map(id => row(id, 'package')),
+                                    ['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'].map(id => row(id, 'compile')),
+                                    ['guicedee', 'guicedee-scan', 'quarkus-standard', 'micronaut'].map(id => row(id, 'package')),
                                     ['guicedee-native', 'quarkus-standard-native', 'micronaut-native'].map(id => row(id, 'package'))
                                 ];
                                 const numbers = measured.map(group => group.map(item => Number(item['median_seconds'])));

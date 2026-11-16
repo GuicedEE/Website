@@ -254,7 +254,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "Stack example startup · milliseconds", "GuicedEE, Quarkus and Micronaut native · median startup through the stack example · 0.25 CPU / 500 MiB.", "native-standard"));
         carousel.add(benchmarkSlide(1, "02 / DEVELOPER EXPERIENCE", "Build. Run. Keep your flow.",
                 "Small build cycles leave more room for ideas. Compare clean JVM compilation with the same application workload.",
-                "Clean JVM compile · seconds", "Clean offline builds with dependencies cached.", "build-performance"));
+                "Clean JVM compile · seconds", "GuicedEE modular JARs run with java -m on the full JDK, using SPI or scanner discovery. Clean offline builds with dependencies cached.", "build-performance"));
         carousel.add(benchmarkSlide(2, "03 / NATIVE IMAGE", "Your Guice application. Ahead of time.",
                 "Opt-in native-image support keeps runtime injection, scopes and interceptors. SPI discovery and application reachability metadata prepare your application for a closed world.",
                 "Peak container memory · MiB", "GuicedEE, Quarkus and Micronaut native · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
@@ -491,6 +491,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         if (index == 1) chart.addAttribute("[attr.aria-label]", "buildTitles[buildMode] + '; exact values below'");
         if (index == 3) chart.addAttribute("[attr.aria-label]", "persistenceTitles[persistenceMode] + '; exact values below'");
         chart.addClass("benchmark-chart");
+        if (index == 1) chart.addClass("benchmark-build-chart");
         visual.add(chart);
         var table = new WaDataGrid<>();
         table.setLabel(index == 1 ? "Complete build comparison: compilation, packaging, ranges and baselines" : metric + " comparison");
