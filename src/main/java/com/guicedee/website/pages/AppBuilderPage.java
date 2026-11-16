@@ -2,6 +2,7 @@ package com.guicedee.website.pages;
 
 import com.guicedee.website.App;
 import com.guicedee.website.builder.NativeBuilderSupport;
+import com.guicedee.website.builder.KotlinBuilderSupport;
 import com.jwebmp.webawesome.components.select.WaSelect;
 import com.jwebmp.webawesome.components.select.WaSelectOption;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
@@ -101,6 +102,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 
                 """);
         f.addAll(NativeBuilderSupport.fields());
+        f.addAll(KotlinBuilderSupport.fields());
         return f;
     }
 
@@ -109,6 +111,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
     {
         var m = new ArrayList<>(super.methods());
         m.add(NativeBuilderSupport.methods());
+        m.add(KotlinBuilderSupport.methods());
         m.add("""
                 onTreeSelectionChange(event: any) {
                     const items = event?.detail?.selection || [];
@@ -150,7 +153,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 """);
         m.add("""
                 getBootPreview(): string {
-                    return '```java\\n' + this.getRawBoot() + '\\n```';
+                    return '```' + this.language + '\\n' + this.getRawBoot() + '\\n```';
                 }
                 """);
         m.add("""
@@ -187,10 +190,11 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     </dependencyManagement>
 
                     <dependencies>
-                ${depXml}${this.getNativePomDeps()}
+                ${depXml}${this.getNativePomDeps()}${this.getKotlinPomDeps()}
                     </dependencies>
                     <build>
                         <plugins>
+                            ${this.isKotlin() ? this.kotlinMavenPlugins : ''}
                             <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-compiler-plugin</artifactId>
@@ -209,6 +213,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                         : deps.map(d => `    implementation("${d.groupId}:${d.artifactId}")`).join('\\n');
                     return `plugins {
                     java
+                    ${this.isKotlin() ? 'kotlin("jvm") version "2.4.21"' : ''}
                 }
 
                 group = "${this.groupId}"
@@ -226,8 +231,9 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                 dependencies {
                     implementation(platform("com.guicedee:guicedee-bom:2.6.0"))
-                ${depLines}${this.getNativeGradleDeps()}
-                }${this.getNativeGradleTask()}`;
+                ${depLines}${this.getNativeGradleDeps()}${this.getKotlinGradleDeps()}
+                }${this.getNativeGradleTask()}
+                ${this.isKotlin() ? this.kotlinGradleTasks.replaceAll('@MODULE@', this.artifactId.replace(/-/g, '.')) : ''}`;
                 }
                 """);
         m.add("""
@@ -256,6 +262,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     }
                     return `module ${modName} {
                 ${requires}${extras}${this.getNativeModuleInfo()}
+                ${this.isKotlin() ? '    requires com.guicedee.kotlin;\\n    exports ' + this.packageName + ';' : ''}
 
                     opens ${this.packageName} to com.google.guice;
 
@@ -266,6 +273,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 """);
         m.add("""
                 getRawBoot(): string {
+                    if (this.isKotlin()) return this.getKotlinBoot();
                     return `package ${this.packageName};
 
                 import com.guicedee.client.IGuiceContext;
@@ -284,6 +292,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 """);
         m.add("""
                 getRawAppModule(): string {
+                    if (this.isKotlin()) return this.getKotlinAppModule();
                     return `package ${this.packageName};
 
                 import com.google.inject.AbstractModule;
@@ -394,8 +403,11 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     }
 
                     zip.file(base + '/src/main/java/module-info.java', this.getRawModuleInfo());
-                    zip.file(base + '/src/main/java/' + pkgPath + '/Boot.java', this.getRawBoot());
-                    zip.file(base + '/src/main/java/' + pkgPath + '/AppModule.java', this.getRawAppModule());
+                    const sourceRoot = this.isKotlin() ? '/src/main/kotlin/' : '/src/main/java/';
+                    const extension = this.isKotlin() ? '.kt' : '.java';
+                    zip.file(base + sourceRoot + pkgPath + '/Boot' + extension, this.getRawBoot());
+                    zip.file(base + sourceRoot + pkgPath + '/AppModule' + extension, this.getRawAppModule());
+                    this.addKotlinFiles(zip, base, pkgPath);
                     zip.file(base + '/src/main/resources/META-INF/services/com.guicedee.client.services.lifecycle.IGuiceModule',
                         this.packageName + '.AppModule\\n');
                     if (this.hasHazelcast()) {
@@ -409,7 +421,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     }
 
                     this.addNativeFiles(zip, base, pkgPath);
-                    const blob = await zip.generateAsync({type: 'blob'});
+                    const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
@@ -466,10 +478,18 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         packageInput.bind("packageName");
         metadataGrid.add(packageInput);
 
+        var language = new WaSelect<>();
+        language.setLabel("Language");
+        language.bind("language");
+        language.addAttribute("name", "language");
+        language.add(new WaSelectOption<>().setValue("java").setText("Java"));
+        language.add(new WaSelectOption<>().setValue("kotlin").setText("Kotlin"));
+        metadataGrid.add(language);
         content.add(metadataGrid);
         var runtime = new WaSelect<>();
         runtime.setLabel("Runtime target");
         runtime.bind("runtimeTarget");
+        runtime.addAttribute("name", "runtimeTarget");
         runtime.add(new WaSelectOption<>().setValue("jvm").setText("JVM JAR"));
         runtime.add(new WaSelectOption<>().setValue("native").setText("Native image starter (SPI)"));
         content.add(runtime);
@@ -627,7 +647,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         previewColumn.add(moduleInfoDetails);
 
         var bootDetails = new WaDetails<>();
-        bootDetails.setSummary("Boot.java");
+        bootDetails.addAttribute("[summary]", "isKotlin() ? 'Boot.kt' : 'Boot.java'");
         bootDetails.addClass("code-details");
 
         var bootMd = Markdown.fromData("getBootPreview()");

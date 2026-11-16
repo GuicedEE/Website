@@ -51,6 +51,8 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
                 "Firebase Admin and Commercetools SDK Javadocs build against the current shaded binaries, clear stale generated sources and fail on documentation errors. Commercetools includes GraphQL, HTTP and RMF APIs.", "Javadoc"));
         v260Content.add(featureCard("Complete application jlink images",
                 "Oracle JDK builds link the application and its dependency graph with generated module launchers. SPI and scanner fixture checks pass after extraction. Historical JDK-only jlink measurements are excluded from application comparisons; fresh release measurements are still required.", "Packaging validation"));
+        v260Content.add(featureCard("Kotlin project generation",
+                "Choose Java or Kotlin in the website Application Builder and IntelliJ wizard. Kotlin starters include Maven or Gradle builds, JUnit tests and JPMS descriptors; IntelliJ also includes Kotlin file templates for the framework integrations.", "Developer tools"));
         layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
                 "Release target 2.6.0. Maven Central publication and website deployment are pending.", true, v260Content));
 

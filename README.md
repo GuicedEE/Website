@@ -239,3 +239,17 @@ After building, run `node tools/verify-site-search.cjs` with Playwright availabl
 The CDI panel records the local `benchmarks/docs/CDI-CONFIG-VALIDATION.md` evidence from 15 November 2026 (five CDI variants, 16/16 checks each). It explicitly distinguishes capability validation from performance rankings; public performance JSON currently contains no CDI rows. Expandable excerpts show the actual Jakarta annotations, packaged application.properties, environment overrides, bootstrap and JPMS setup, including the different Quarkus configuration/initialization pattern. Native is SPI-only.
 
 Artifact cells in the build/runtime grids use decorative `wa-progress-bar` backgrounds via the [Web Awesome cell formatter API](https://webawesome.com/docs/components/data-grid/). Bar length is the absolute package/startup percentage difference, capped at 100%; the signed value remains in its own column. Baselines use a neutral background. The progress component is preloaded for the grid shadow DOM, and artifact labels are inserted as text rather than HTML.
+
+## Kotlin application downloads
+
+The Application Builder includes a **Java / Kotlin** language selector. Kotlin downloads contain `Boot.kt`,
+`AppModule.kt`, a JUnit test, Kotlin 2.4.21 Maven/Gradle configuration, and the GuicedEE Kotlin runtime.
+Previews and ZIP downloads use the same language selection. JPMS descriptors, package annotations and
+native-image registration/build helpers remain Java in the mixed-source project.
+
+Local validation covers the production Angular builder, browser-downloaded Maven and Gradle ZIPs, and
+real JVM builds/tests, including Firebase and Commercetools with native starter selected. It does not
+claim a Kotlin native-image executable or live cloud-service calls. Nothing is deployed by these checks.
+Run `tools/verify-kotlin-builder.cjs` with `PLAYWRIGHT_MODULE` pointing to your Playwright installation,
+then Maven 4 `verify` / Gradle 9.4.1 `build` in `target/kotlin-generated` using JDK 25.
+Unpublished 2.6.0 artifacts must be installed locally; Gradle validation uses a local-repository init script.
