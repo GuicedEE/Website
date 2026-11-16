@@ -387,7 +387,12 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         starBtn.addClass("pseudo-product");
         starBtn.addClass("product-star");
         starBtn.setID("product-star");
-        starBtn.add(new WaIcon<>("star").addAttribute("family", "sharp-duotone").addAttribute("label", "Star this Repository"));
+        var starIcon = new WaIcon<>("star");
+        starIcon.addAttribute("family", "sharp-duotone");
+        starIcon.setLabel("Star this Repository");
+        starIcon.setColor("var(--wa-color-brand-on-quiet)");
+        starIcon.setSecondaryOpacity(1d);
+        starBtn.add(starIcon);
         secondary.add(starBtn);
         WaTooltip<?> starTip = new WaTooltip<>();
         starTip.setForId("product-star");
@@ -422,25 +427,6 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         patreonTip.setForId("product-patreon");
         patreonTip.setText("Support me on Patreon");
         secondary.add(patreonTip);
-
-        // Theme toggle (dark ↔ light)
-        WaButton<?> themeBtn = new WaButton<>();
-        themeBtn.setAppearance(Appearance.Plain);
-        themeBtn.setVariant(Variant.Brand);
-        themeBtn.addAttribute("(click)", "toggleDarkMode()");
-        themeBtn.addClass("pseudo-product");
-        themeBtn.addClass("product-theme");
-        themeBtn.setID("product-theme");
-        var themeIcon = new WaIcon<>();
-        themeIcon.addAttribute("[name]", "app.darkMode() ? 'moon' : 'sun-bright'");
-        themeIcon.addAttribute("family", "sharp-duotone");
-        themeIcon.addAttribute("label", "Toggle Theme");
-        themeBtn.add(themeIcon);
-        secondary.add(themeBtn);
-        WaTooltip<?> themeTip = new WaTooltip<>();
-        themeTip.setForId("product-theme");
-        themeTip.setText("Toggle Theme");
-        secondary.add(themeTip);
 
         primary.add(secondary);
         nav.add(primary);
@@ -737,14 +723,6 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         m.add(SiteNavigation.methods());
         m.add(SiteDiscovery.metadataMethod());
         m.add("""
-                toggleDarkMode() {
-                    const isDark = !this.app.darkMode();
-                    this.app.darkMode.set(isDark);
-                    this.document.body.classList.toggle('wa-dark', isDark);
-                    localStorage.setItem('guicedee-theme', isDark ? 'dark' : 'light');
-                }""");
-
-        m.add("""
                 onBuildToolChange(event: any) {
                     const value = event.target.checked;
                     this.app.useGradle.set(value);
@@ -757,11 +735,6 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     public List<String> onInit() {
         var init = new ArrayList<>(INgComponent.super.onInit());
         init.add("registerLocaleData(localeEnZa, 'en-ZA')");
-        init.add("""
-                const savedTheme = localStorage.getItem('guicedee-theme');
-                const prefersDark = savedTheme ? savedTheme === 'dark' : true;
-                this.app.darkMode.set(prefersDark);
-                this.document.body.classList.toggle('wa-dark', prefersDark);""");
         init.add("""
                 const savedBuildTool = localStorage.getItem('guicedee-build-tool');
                 if (savedBuildTool) {

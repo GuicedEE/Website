@@ -16,6 +16,9 @@ public class WebsiteApplication extends NGApplication<WebsiteApplication>
     {
         getOptions().setTitle("GuicedEE — E2E Modular Java, Reactive by Nature");
         addAttribute("lang", "en");
+        addAttribute("class", "wa-dark");
+        getBody().addClass("wa-dark");
+        getHead().add(new Meta().addAttribute("name", "color-scheme").addAttribute("content", "dark"));
         String description = "Build modular Java and Kotlin services with Guice, Vert.x, reactive persistence, cloud SDKs, MicroProfile, jlink and Native-Image support.";
         getHead().add(new Meta(Meta.MetadataFields.Description, description));
         getHead().add(new Meta().addAttribute("name", "robots").addAttribute("content", "index, follow"));
