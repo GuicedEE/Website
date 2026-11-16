@@ -776,6 +776,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     this.activeNavigation.set(primaryPath);
                     this.expandedNavigation.set(primaryPath);
                     this.navigationFragment.set(parsedUrl.fragment || '');
+                    this.expandedNavigationGroup.set(this.navigationGroups[primaryPath]?.[parsedUrl.fragment || ''] || '');
                     if (this._asideNavigating || !parsedUrl.root.children['aside']) return;
                     this._asideNavigating = true;
                     delete parsedUrl.root.children['aside'];

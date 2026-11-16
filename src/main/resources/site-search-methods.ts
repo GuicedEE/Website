@@ -108,6 +108,8 @@ async revealSearchFragment(url: string) {
         await new Promise(resolve => setTimeout(resolve, 16));
     }
     if (!target || token !== this.searchRevealToken) return;
+    await this.revealNavigationGroup(route, target);
+    if (token !== this.searchRevealToken) return;
     // Section links and search results must remain reachable after filtering a page.
     const content = target.closest('.website-content');
     content?.querySelectorAll<HTMLElement>('[data-page-filter-hidden]').forEach(element => {

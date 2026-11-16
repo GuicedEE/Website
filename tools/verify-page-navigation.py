@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-COUNTS = {'home': 4, 'releases': 0, 'builder': 0, 'getting-started': 8,
-          'guides/end-to-end': 15, 'capabilities': 22, 'modules': 6,
+COUNTS = {'home': 4, 'releases': 15, 'builder': 0, 'getting-started': 8,
+          'guides/end-to-end': 15, 'capabilities': 23, 'modules': 6,
           'services': 15, 'cloud': 9, 'environment-variables': 27}
 
 
@@ -59,20 +59,78 @@ def main():
         for route, count in COUNTS.items():
             page.goto(base + '/' + route, wait_until='domcontentloaded')
             active(route)
-            links = node(route).locator(':scope > .navigation-section > a')
+            links = node(route).locator('.navigation-section > a')
             assert links.count() == count
             hrefs = links.evaluate_all('es => es.map(e => e.getAttribute("href"))')
-            assert node(route, 'navigation').locator(':scope > .navigation-section > a').evaluate_all('es => es.map(e => e.getAttribute("href"))') == hrefs
+            assert node(route, 'navigation').locator('.navigation-section > a').evaluate_all('es => es.map(e => e.getAttribute("href"))') == hrefs
             for href in hrefs:
                 anchor = href.split('#')[1]
                 assert page.locator(f'wa-page > main [id="{anchor}"]').count() == 1, (route, anchor)
             if count:
                 for index in sorted({0, count // 2, count - 1}):
                     anchor = hrefs[index].split('#')[1]
-                    links.nth(index).click()
+                    link = links.nth(index)
+                    group = link.locator('xpath=ancestor::wa-tree-item[contains(@class, "navigation-group")]')
+                    if group.count() and not group.evaluate('e => e.expanded'):
+                        group.locator(':scope > .navigation-group-label').click()
+                    link.click()
                     destination(route, anchor)
             evidence.append({'route': route, 'sectionLinks': count})
             print('Checked', route, count, flush=True)
+
+        # Capability groups are exclusive, including keyboard and search navigation.
+        page.goto(base + '/capabilities', wait_until='domcontentloaded')
+        active('capabilities')
+        def group(key, slot='menu'):
+            return node('capabilities', slot).locator(f'[data-navigation-group="capabilities:{key}"]')
+
+        def expanded_group(key):
+            expected = ['capabilities:' + key] if key else []
+            page.wait_for_function('''expected => ['menu','navigation'].every(slot => JSON.stringify(
+                [...document.querySelectorAll(`[slot="${slot}"] .navigation-group`)].filter(e => e.expanded)
+                .map(e => e.dataset.navigationGroup)) === JSON.stringify(expected))''', arg=expected)
+            expanded('capabilities')
+
+        assert node('capabilities').locator(':scope > .navigation-group').count() == 5
+        assert node('capabilities').locator('.navigation-group-label').all_text_contents() == [
+            'Core & configuration', 'Web & security', 'Data & messaging', 'Cloud & deployment', 'Observability & resilience']
+        expanded_group('')
+        for key in ['core', 'web', 'data', 'cloud', 'operations']:
+            group(key).locator(':scope > .navigation-group-label').click()
+            expanded_group(key)
+        group('operations').focus()
+        group('operations').press('Enter')
+        expanded_group('')
+        group('operations').press(' ')
+        expanded_group('operations')
+        group('web').locator('[part="expand-button"]').first.click()
+        expanded_group('web')
+        group('web').locator('a[href="/capabilities#http-server"]').click()
+        destination('capabilities', 'http-server')
+        expanded_group('web')
+        page.goto(base + '/capabilities#modular-sdks', wait_until='domcontentloaded')
+        destination('capabilities', 'modular-sdks')
+        expanded_group('data')
+        page.reload(wait_until='domcontentloaded')
+        destination('capabilities', 'modular-sdks')
+        expanded_group('data')
+        search = page.locator('[slot="menu"] .site-search')
+        search.locator('wa-input input').fill('Production resilience')
+        result = search.locator('[data-search-destination^="capabilities#"]').first
+        result.wait_for(state='visible')
+        search_anchor = result.get_attribute('data-search-destination').split('#')[1]
+        result.click()
+        page.wait_for_function('id => document.activeElement.id === id', arg=search_anchor)
+        expanded_group('operations')
+        page.go_back()
+        destination('capabilities', 'modular-sdks')
+        expanded_group('data')
+        page.goto(base + '/releases', wait_until='domcontentloaded')
+        active('releases')
+        assert node('releases').locator('.navigation-section > a').all_text_contents() == [
+            'v2.6.0', 'v2.5.1', 'v2.5.0', 'v2.4.2', 'v2.4.1', 'v2.4.0', 'v2.3.0',
+            'v2.2.3', 'v2.2.2', 'v2.2.1', 'v2.2.0', 'v2.1.0', 'v2.0.2', 'v2.0.1', 'v2.0']
+        print('Checked release versions, nested groups, keyboard, deep links and search expansion', flush=True)
 
         # Opening a different branch collapses its sibling without changing pages.
         page.goto(base + '/home', wait_until='domcontentloaded')
@@ -154,11 +212,35 @@ def main():
                 page.wait_for_timeout(400)
             node('environment-variables', slot).locator('a[href="/environment-variables#mcp"]').click()
             destination('environment-variables', 'mcp')
+            page.goto(base + '/capabilities#modular-sdks', wait_until='domcontentloaded')
+            destination('capabilities', 'modular-sdks')
+            expanded_group('data')
+            if mobile:
+                page.locator('[slot="navigation-toggle"] wa-button').click()
+                page.wait_for_timeout(400)
+            page.screenshot(path=str(args.output / f'capabilities-{width}.png'))
+            group('cloud', slot).locator(':scope > .navigation-group-label').click()
+            expanded_group('cloud')
+            group('cloud', slot).locator('a[href="/capabilities#webassembly"]').click()
+            destination('capabilities', 'webassembly')
+            assert not page.locator('wa-page').evaluate('e => e.navOpen')
+            if mobile:
+                page.locator('[slot="navigation-toggle"] wa-button').click()
+                page.wait_for_timeout(400)
+            node('releases', slot).locator(':scope > a').click()
+            active('releases')
+            page.wait_for_timeout(400)
+            if mobile:
+                page.locator('[slot="navigation-toggle"] wa-button').click()
+                page.wait_for_timeout(400)
+            page.screenshot(path=str(args.output / f'releases-{width}.png'))
+            node('releases', slot).locator('a[href="/releases#v2-4-0"]').click()
+            destination('releases', 'v2-4-0')
             evidence.append({'width':width, 'slot':slot, 'singleOpenBranch':True})
             print('Checked viewport', width, flush=True)
         assert errors == [], errors
         (args.output / 'verification.json').write_text(json.dumps(evidence, indent=2) + '\n')
-        print('PASS: 10 pages, 106 section links, exclusive expansion, direct/repeat/search-compatible navigation, filters, legacy URLs, keyboard, reload/back and mobile drawer')
+        print('PASS: 10 pages, 122 section links, exclusive expansion, direct/repeat/search-compatible navigation, filters, legacy URLs, keyboard, reload/back and mobile drawer')
 
 
 if __name__ == '__main__':

@@ -4,16 +4,20 @@ import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.icon.WaIcon;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
+import com.jwebmp.webawesome.components.text.WaText;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /** Shared page and section navigation for the desktop menu and mobile drawer. */
 final class SiteNavigation {
-    private record Section(String anchor, String label) {}
+    private record Section(String anchor, String label, List<Section> children) {
+        Section(String anchor, String label) { this(anchor, label, List.of()); }
+    }
     private record Page(String route, String label, String icon, List<Section> sections) {}
     private static final List<Page> PAGES = List.of(
             new Page("home", "Home", "house", List.of(
@@ -22,7 +26,23 @@ final class SiteNavigation {
                     new Section("intellij-plugin", "IntelliJ plugin"),
                     new Section("explore-platform", "Explore the platform")
             )),
-            new Page("releases", "Releases", "tag", List.of()),
+            new Page("releases", "Releases", "tag", List.of(
+                    new Section("v2-6-0", "v2.6.0"),
+                    new Section("v2-5-1", "v2.5.1"),
+                    new Section("v2-5-0", "v2.5.0"),
+                    new Section("v2-4-2", "v2.4.2"),
+                    new Section("v2-4-1", "v2.4.1"),
+                    new Section("v2-4-0", "v2.4.0"),
+                    new Section("v2-3-0", "v2.3.0"),
+                    new Section("v2-2-3", "v2.2.3"),
+                    new Section("v2-2-2", "v2.2.2"),
+                    new Section("v2-2-1", "v2.2.1"),
+                    new Section("v2-2-0", "v2.2.0"),
+                    new Section("v2-1-0", "v2.1.0"),
+                    new Section("v2-0-2", "v2.0.2"),
+                    new Section("v2-0-1", "v2.0.1"),
+                    new Section("what-s-new", "v2.0")
+            )),
             new Page("builder", "App Builder", "wand-magic-sparkles", List.of()),
             new Page("getting-started", "Getting Started", "rocket", List.of(
                     new Section("prerequisites", "Prerequisites"),
@@ -52,28 +72,39 @@ final class SiteNavigation {
                     new Section("module-deep-dives", "Module deep-dives")
             )),
             new Page("capabilities", "Capabilities", "star", List.of(
-                    new Section("architecture", "Architecture"),
-                    new Section("injection-lifecycle", "Injection & Lifecycle"),
-                    new Section("http-server", "HTTP Server"),
-                    new Section("http-proxy", "HTTP Proxy"),
-                    new Section("service-discovery", "Service Discovery"),
-                    new Section("runtime-autoconfigure", "Runtime Autoconfigure"),
-                    new Section("redis", "Redis"),
-                    new Section("rest-jax-rs", "REST (JAX-RS)"),
-                    new Section("rest-client", "REST Client"),
-                    new Section("webassembly", "WebAssembly · Experimental"),
-                    new Section("security-authentication", "Security"),
-                    new Section("verticles-deployment", "Verticles"),
-                    new Section("persistence", "Persistence"),
-                    new Section("websockets", "WebSockets"),
-                    new Section("clustering-websocket-continuity", "Clustering & Continuity"),
-                    new Section("messaging", "Messaging"),
-                    new Section("observability", "Observability"),
-                    new Section("logging", "Logging"),
-                    new Section("configuration", "Configuration"),
-                    new Section("fault-tolerance", "Fault Tolerance"),
-                    new Section("jlink-deployment", "JLink & Deployment"),
-                    new Section("full-module-catalog", "Full catalog")
+                    new Section("core", "Core & configuration", List.of(
+                            new Section("architecture", "Architecture"),
+                            new Section("injection-lifecycle", "Injection & Lifecycle"),
+                            new Section("configuration", "Configuration"),
+                            new Section("full-module-catalog", "Full catalog")
+                    )),
+                    new Section("web", "Web & security", List.of(
+                            new Section("http-server", "HTTP Server"),
+                            new Section("http-proxy", "HTTP Proxy"),
+                            new Section("rest-jax-rs", "REST (JAX-RS)"),
+                            new Section("rest-client", "REST Client"),
+                            new Section("security-authentication", "Security"),
+                            new Section("websockets", "WebSockets")
+                    )),
+                    new Section("data", "Data & messaging", List.of(
+                            new Section("persistence", "Persistence"),
+                            new Section("redis", "Redis"),
+                            new Section("messaging", "Messaging"),
+                            new Section("modular-sdks", "Firebase & Commercetools")
+                    )),
+                    new Section("cloud", "Cloud & deployment", List.of(
+                            new Section("service-discovery", "Service Discovery"),
+                            new Section("runtime-autoconfigure", "Runtime Autoconfigure"),
+                            new Section("verticles-deployment", "Verticles"),
+                            new Section("clustering-websocket-continuity", "Clustering & Continuity"),
+                            new Section("jlink-deployment", "JLink & Deployment"),
+                            new Section("webassembly", "WebAssembly · Experimental")
+                    )),
+                    new Section("operations", "Observability & resilience", List.of(
+                            new Section("observability", "Observability"),
+                            new Section("logging", "Logging"),
+                            new Section("fault-tolerance", "Fault Tolerance")
+                    ))
             )),
             new Page("modules", "Modules", "cubes", List.of(
                     new Section("core-modules", "Core modules"),
@@ -167,27 +198,54 @@ final class SiteNavigation {
             link.setText("&nbsp;" + page.label());
             link.setRenderTextBeforeChildren(false);
             item.add(link);
-            for (var section : page.sections()) {
-                var child = new WaTreeItem<>();
-                child.addClass("navigation-section");
-                var sectionLink = new Link<>("/" + page.route() + "#" + section.anchor());
-                sectionLink.setText(section.label());
-                sectionLink.addAttribute("(click)", "openNavigationSection($event, '" + page.route() + "', '" + section.anchor() + "')");
-                sectionLink.addAttribute("[attr.aria-current]", "activeNavigation() === '" + page.route() + "' && navigationFragment() === '" + section.anchor() + "' ? 'location' : null");
-                child.add(sectionLink);
-                item.add(child);
-            }
+            for (var section : page.sections()) item.add(sectionItem(page, section));
             tree.add(item);
         }
         return tree;
     }
 
+    private static WaTreeItem<?> sectionItem(Page page, Section section) {
+        var item = new WaTreeItem<>();
+        if (!section.children().isEmpty()) {
+            String key = page.route() + ":" + section.anchor();
+            item.addClass("navigation-group");
+            item.addAttribute("data-navigation-group", key);
+            item.bindExpanded("expandedNavigation() === '" + page.route() + "' && expandedNavigationGroup() === '" + key + "'");
+            item.addAttribute("(wa-expand)", "onNavigationGroupExpanded($event, '" + key + "')");
+            item.addAttribute("(wa-collapse)", "onNavigationGroupCollapsed($event, '" + key + "')");
+            item.addAttribute("(keydown)", "onNavigationGroupKey($event, '" + key + "')");
+            var label = new WaText<>().setTag("span").setWaBody("s").setText(section.label());
+            label.addClass("navigation-group-label");
+            label.addAttribute("(click)", "toggleNavigationGroup($event, '" + key + "')");
+            item.add(label);
+            for (var child : section.children()) item.add(sectionItem(page, child));
+        } else {
+            item.addClass("navigation-section");
+            var link = new Link<>("/" + page.route() + "#" + section.anchor());
+            link.setText(section.label());
+            link.addAttribute("(click)", "openNavigationSection($event, '" + page.route() + "', '" + section.anchor() + "')");
+            link.addAttribute("[attr.aria-current]", "activeNavigation() === '" + page.route() + "' && navigationFragment() === '" + section.anchor() + "' ? 'location' : null");
+            item.add(link);
+        }
+        return item;
+    }
+
+    private static Stream<Section> leaves(List<Section> sections) {
+        return sections.stream().flatMap(section -> section.children().isEmpty() ? Stream.of(section) : leaves(section.children()));
+    }
+
     static String fields() {
-        String anchors = PAGES.stream().map(page -> quote(page.route()) + ":[" + page.sections().stream()
+        String anchors = PAGES.stream().map(page -> quote(page.route()) + ":[" + leaves(page.sections())
                 .map(section -> quote(section.anchor())).collect(Collectors.joining(",")) + "]")
                 .collect(Collectors.joining(","));
+        String groups = PAGES.stream().map(page -> quote(page.route()) + ":{" + page.sections().stream()
+                .filter(section -> !section.children().isEmpty())
+                .flatMap(group -> leaves(group.children()).map(section -> quote(section.anchor()) + ":" + quote(page.route() + ":" + group.anchor())))
+                .collect(Collectors.joining(",")) + "}").collect(Collectors.joining(","));
         return "activeNavigation = signal('home');\nexpandedNavigation = signal('home');\nnavigationFragment = signal('');\n"
-                + "private navigationAnchors: Record<string, string[]> = {" + anchors + "};";
+                + "expandedNavigationGroup = signal('');\n"
+                + "private navigationAnchors: Record<string, string[]> = {" + anchors + "};\n"
+                + "private navigationGroups: Record<string, Record<string, string>> = {" + groups + "};";
     }
 
     static String methods() {
