@@ -41,8 +41,10 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         introCard.add(introContent);
         layout.add(introCard);
 
-        var v260Content = new WaStack<>();
+        var v260Content = new WaGrid<>();
+        v260Content.setMinColumnSize("18rem");
         v260Content.setGap(PageSize.Medium);
+        v260Content.addClass("release-highlights");
         v260Content.add(featureCard("Modular Firebase and Commercetools SDKs",
                 "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "2.6.0"));
         v260Content.add(featureCard("Shared modular dependencies",
@@ -54,7 +56,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         v260Content.add(featureCard("Kotlin project generation",
                 "Choose Java or Kotlin in the website Application Builder and IntelliJ wizard. Kotlin starters include Maven or Gradle builds, JUnit tests and JPMS descriptors; IntelliJ also includes Kotlin file templates for the framework integrations.", "Developer tools"));
         layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
-                "Release target 2.6.0. Maven Central publication and website deployment are pending.", true, v260Content));
+                "Release target 2.6.0. Maven Central publication is pending.", true, v260Content));
 
         var v251Content = new WaStack<>();
         v251Content.setGap(PageSize.Medium);

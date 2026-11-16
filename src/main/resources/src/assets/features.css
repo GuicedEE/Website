@@ -182,6 +182,12 @@ wa-icon.icon-shrink {
     background: var(--wa-color-brand-fill-quiet); color: var(--wa-color-brand-on-quiet);
     box-shadow: inset 0 -2px var(--wa-color-brand-fill-loud);
 }
+.release-highlights { align-items: stretch; }
+.release-highlights > wa-card { height: 100%; min-width: 0; }
+.release-highlights > wa-card::part(body) { display: flex; }
+.release-highlights > wa-card > .wa-stack { flex: 1; min-width: 0; }
+.release-highlights .feature-card-note { margin-block-start: auto; }
+
 .performance-carousel { --aspect-ratio: auto; --scroll-hint: 0; min-width: 0;
     --showcase-height: clamp(30rem, calc(100svh - 14rem), 46rem); }
 .performance-carousel::part(scroll-container) {
