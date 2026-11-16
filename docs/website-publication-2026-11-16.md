@@ -298,7 +298,7 @@ persistence snapshot refresh in website commit `059ea0f`.
 Two-line chart labels and a wider mobile carousel keep all four build series
 readable. The carousel retains a stable viewport and page scroll chaining.
 
-Revision `guicedee-website--v260-20261116-b9e8f80` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-b9e8f80` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-b9e8f80`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:abd679b3207cefb7504d72fdb994e24be7a01f474fb72ee1f214a4c6f51e7598`.
@@ -310,3 +310,27 @@ slide heights and no horizontal page overflow. Existing wheel, touch and
 section-navigation checks passed. Public chart checks passed, and all 298 public
 assets match the verified production build. Evidence and screenshots are retained
 under `target/website-compile-module-mode/` in DevSuite.
+
+## App Builder option columns
+
+Source `bf98bac2d827999c22868abf144f0ed375ac867c` lays out the ten module groups
+in two columns when the builder has enough space. The preview stays alongside
+on large screens and moves below on smaller screens; phones use one option
+column. Group cards and wrapping labels keep the expanded options readable.
+One Web Awesome selection tree retains all module selections, including the
+Service Discovery group nested under Cloud SDKs.
+
+Revision `guicedee-website--v260-20261116-bf98bac` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bf98bac`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:451e2be104ffa8bde75fae56ed67621d7ea4ce8efd25832faea76a91fb5c1e16`.
+
+The production build passed. Local and public browser checks expanded every
+group at 1440, 1024 and 390 pixels, verified the column count and preview position,
+and found no horizontal page overflow or JavaScript errors. Selections from
+both columns and the nested group appeared in the downloaded Maven ZIP. The
+existing Kotlin builder checks passed for Maven and Gradle downloads, including
+native starters with Firebase and Commercetools. This layout change did not rerun
+compilation of the generated projects. All 298 public assets match the production
+build. Evidence and screenshots are retained under
+`target/website-builder-columns/` in DevSuite.
