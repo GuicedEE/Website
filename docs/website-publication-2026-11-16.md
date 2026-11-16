@@ -480,7 +480,7 @@ retained under `target/website-publish-83391ea/` in DevSuite.
 ## Compact file tree and release navigation
 
 Website source `628d798b9ed061c724ac10d5bcd1c9e1cbe9616b` is deployed in
-revision `guicedee-website--v260-20261116-628d798`, healthy and serving 100%
+revision `guicedee-website--v260-20261116-628d798`, verified healthy and serving 100%
 of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:f2d039e76d738e005d496de9d53b385e9bb3be93ba0f9ee5392d3012021730d2`.
 
 The generated file tree has tighter rows and indentation. Releases navigation
@@ -488,3 +488,24 @@ shows the five newest versions followed by a link to the next release. The
 production build passed; public desktop and mobile checks verified file selection
 and the Releases link. All 298 live assets match the build. Evidence is retained
 under `target/website-publish-628d798/` in DevSuite.
+
+## Project previews and modular Hello World
+
+Website source `eb67f07e038ddd07972af00328f3502c33ea582f` is deployed in
+revision `guicedee-website--v260-20261116-eb67f07`, healthy and serving 100%
+of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:4b7610d4485d8aca39783dd46da78f8a0349f54632aabf72bfe30f73d4320593`.
+
+The file browser compacts single-folder paths and lists build files first.
+Generated starters omit the empty application module and service registration;
+native SPI registration remains. Getting Started offers a Hello World file
+browser and module-path launch instructions. Home code examples precede feature
+cards, and the lifecycle diagram and CallScope description have been updated.
+
+Production build passed. Live desktop and mobile checks verified project file
+selection, the greeting example and modular commands. All 298 assets match the
+build. Local Maven and Gradle modular examples returned the greeting; Gradle
+used locally installed artifacts. Eight generated project combinations were
+checked structurally and four representative projects built locally. A native
+image was not built in this change; the existing Kotlin builder script timed out
+at language selection. Evidence is retained under `target/website-publish-eb67f07/`
+and `target/builder-compact-matrix/` in DevSuite.

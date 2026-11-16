@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-628d798` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-eb67f07` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -76,6 +76,12 @@ contents as the download; native-image setup has its own information dialog.
 Selecting a page in navigation returns to the top.
 The project file tree uses compact rows. The Releases menu shows five recent
 versions and a link to the next older release.
+Project previews compact single-folder paths and show the selected build file.
+Generated projects omit the empty application module and its service entry.
+Getting Started includes a Hello World file browser and modular launch commands;
+its Maven and Gradle examples returned the greeting in local runtime checks.
+Home examples precede their feature cards, and lifecycle and scope descriptions
+have been refined.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.
