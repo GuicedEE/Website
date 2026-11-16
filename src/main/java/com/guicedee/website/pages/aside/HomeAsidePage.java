@@ -41,22 +41,10 @@ public class HomeAsidePage extends DivSimple<HomeAsidePage> implements INgCompon
         list.addStyle("flex-direction:column");
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
-        list.add(asideLink("hero", "Overview"));
-        list.add(asideLink("intellij-plugin", "IntelliJ plugin"));
-        list.add(asideLink("ai-skills", "AI skills & APM"));
+        list.add(asideLink("highlights", "Highlights & benchmarks"));
         list.add(asideLink("how-it-works", "How it works"));
-        list.add(asideLink("foundations", "Foundations"));
-        list.add(asideLink("modular-by-design", "Modular build"));
-        list.add(asideLink("module-catalog", "Module catalog"));
-        list.add(asideLink("zero-file-based-config-philosophy", "Zero config"));
-        list.add(asideLink("see-the-code", "Code examples"));
-        list.add(asideLink("rest-services", "REST services"));
-        list.add(asideLink("security", "Security"));
-        list.add(asideLink("vert-x-deployment", "Vert.x deployment"));
-        list.add(asideLink("microprofile-native", "MicroProfile"));
-        list.add(asideLink("ship-as-jlink-artifacts", "JLink & Docker"));
-        list.add(asideLink("cloud-aware-logging", "Logging"));
-        list.add(asideLink("for-developers", "For developers"));
+        list.add(asideLink("intellij-plugin", "IntelliJ plugin"));
+        list.add(asideLink("explore-platform", "Explore the platform"));
 
         add(list);
     }

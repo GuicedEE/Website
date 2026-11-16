@@ -19,6 +19,11 @@ import com.jwebmp.webawesome.components.dialog.WaDialog;
 import com.jwebmp.webawesome.components.text.WaText;
 import com.jwebmp.plugins.markdown.Markdown;
 
+import com.jwebmp.webawesome.components.carousel.WaCarousel;
+import com.jwebmp.webawesome.components.carousel.WaCarouselItem;
+import com.jwebmp.webawesome.components.details.WaDetails;
+import com.jwebmp.webawesomepro.components.chart.WaChart;
+import com.jwebmp.webawesomepro.components.datagrid.WaDataGrid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     public HomePage()
     {
         removeClass("website-content");
+        addClass("home-page");
         buildLandingPage();
     }
 
@@ -36,6 +42,8 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     public List<String> afterViewInit()
     {
         var a = new ArrayList<>(super.afterViewInit());
+        a.add("void this.loadBenchmarks();");
+        a.add("this.observeIntroHeight();");
         a.add("""
                 const script = document.createElement('script');
                 script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
@@ -47,9 +55,18 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
     }
 
     @Override
+    public List<String> onDestroy()
+    {
+        var cleanup = new ArrayList<>(super.onDestroy());
+        cleanup.add("this.introResizeObserver?.disconnect();");
+        return cleanup;
+    }
+
+    @Override
     public List<String> fields()
     {
         var f = new ArrayList<>(super.fields());
+        f.add("introResizeObserver?: ResizeObserver;");
         f.add("readmeDialogOpen = false;");
         f.add("readmeModuleTitle = '';");
         f.add("readmeSrc = '';");
@@ -76,6 +93,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                     'graphql': 'https://raw.githubusercontent.com/GuicedEE/GraphQL/refs/heads/master/README.md'
                 };
                 """);
+        f.add(BenchmarkShowcase.fields());
         return f;
     }
 
@@ -97,6 +115,23 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                     }
                 }
                 """);
+        m.add("""
+                observeIntroHeight() {
+                    this.introResizeObserver?.disconnect();
+                    const showcase = document.querySelector<HTMLElement>('guicedee-home .performance-carousel');
+                    const intro = showcase?.querySelector<HTMLElement>('.hero-banner');
+                    const kotlin = showcase?.querySelector<HTMLElement>('.kotlin-panel');
+                    if (showcase && intro && kotlin) {
+                        this.introResizeObserver = new ResizeObserver(() => {
+                            showcase.style.setProperty('--intro-height', `${Math.ceil(intro.getBoundingClientRect().height)}px`);
+                            showcase.style.setProperty('--kotlin-height', `${Math.ceil(kotlin.getBoundingClientRect().height)}px`);
+                        });
+                        this.introResizeObserver.observe(intro);
+                        this.introResizeObserver.observe(kotlin);
+                    }
+                }
+                """);
+        m.add(BenchmarkShowcase.methods());
         return m;
     }
 
@@ -108,22 +143,29 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         layout.setGap(PageSize.ExtraLarge);
         getMain().add(layout);
 
-        layout.add(buildHero());
-        layout.add(buildIntelliJPluginSection());
-        layout.add(buildAiSkillsSection());
+        layout.add(buildPerformanceCarousel());
         layout.add(buildThreeLinesPitch());
-        layout.add(buildFoundationSection());
-        layout.add(buildModularBuildSection());
-        layout.add(buildPluginSection());
-        layout.add(buildZeroConfigSection());
-        layout.add(buildCodeShowcaseSection());
-        layout.add(buildRestServicesSection());
-        layout.add(buildSecuritySection());
-        layout.add(buildVertxDeploymentSection());
-        layout.add(buildMicroProfileSection());
-        layout.add(buildJLinkShippingSection());
-        layout.add(buildCloudAwareLoggingSection());
-        layout.add(buildDeveloperSection());
+        layout.add(buildIntelliJPluginSection());
+        var explore = new WaDetails<>();
+        explore.setID("explore-platform");
+        explore.setSummary("Explore the platform — modules, integrations, tooling and deployment");
+        var more = new WaStack<>();
+        more.setGap(PageSize.ExtraLarge);
+        more.add(buildAiSkillsSection());
+        more.add(buildFoundationSection());
+        more.add(buildModularBuildSection());
+        more.add(buildPluginSection());
+        more.add(buildZeroConfigSection());
+        more.add(buildCodeShowcaseSection());
+        more.add(buildRestServicesSection());
+        more.add(buildSecuritySection());
+        more.add(buildVertxDeploymentSection());
+        more.add(buildMicroProfileSection());
+        more.add(buildJLinkShippingSection());
+        more.add(buildCloudAwareLoggingSection());
+        more.add(buildDeveloperSection());
+        explore.add(more);
+        layout.add(explore);
         layout.add(buildCallToActionSection());
 
         // Module README dialog
@@ -197,6 +239,308 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         dialog.add(md);
 
         add(dialog);
+    }
+
+    private WaStack<?> buildPerformanceCarousel()
+    {
+        var section = new WaStack<>();
+        section.addClass("performance-showcase");
+        section.setID("highlights");
+        var nav = new WaCluster<>();
+        nav.addClass("showcase-navigation");
+        nav.addAttribute("aria-label", "Homepage highlights");
+        String[] labels = {"Discover", "Performance", "Developer builds", "Native-Image", "Persistence", "CDI", "Kotlin"};
+        String[] icons = {"discover", "performance", "builds", "native", "persistence", "cdi", "kotlin"};
+        for (int i = 0; i < labels.length; i++) {
+            var button = new WaButton<>(labels[i], Variant.Neutral);
+            button.setAppearance(Appearance.Plain);
+            var icon = new WaIcon<>();
+            icon.setSrc("/showcase-" + icons[i] + ".svg");
+            icon.addClass("showcase-icon");
+            icon.addAttribute("aria-hidden", "true");
+            button.setPrefix(icon);
+            button.addAttribute("(click)", "$any(showcase).goToSlide(" + i + ")");
+            button.addAttribute("[attr.aria-current]", "showcaseIndex === " + i + " ? 'true' : null");
+            nav.add(button);
+        }
+        section.add(nav);
+        var carousel = new WaCarousel<>();
+        carousel.addAttribute("#showcase", "");
+        carousel.addAttribute("aria-label", "Discover GuicedEE performance and capabilities");
+        carousel.addAttribute("(wa-slide-change)", "showcaseIndex = $any($event).detail.index");
+        carousel.setNavigation(false);
+        carousel.setPagination(true);
+        carousel.addClass("performance-carousel");
+        carousel.addAttribute("[class.showcase-intro]", "showcaseIndex === 0");
+        carousel.addAttribute("[class.showcase-kotlin]", "showcaseIndex === 6");
+        var intro = new WaCarouselItem<>();
+        intro.add(buildHero());
+        carousel.add(intro);
+        carousel.add(benchmarkSlide(0, "01 / MEASURED PERFORMANCE", "Keeping pace with the best.",
+                "Quarkus is our primary comparison because both frameworks build on Vert.x. Different application models, the same stack example: startup, OAuth, REST, GraphQL and a Firestore write/read. Explore the measurements and setup.",
+                "Stack example startup · milliseconds", "GuicedEE native and Quarkus native · median startup through the stack example · 0.25 CPU / 500 MiB.", "native-standard"));
+        carousel.add(benchmarkSlide(1, "02 / DEVELOPER EXPERIENCE", "Build. Run. Keep your flow.",
+                "Small build cycles leave more room for ideas. Compare clean JVM compilation with the same application workload.",
+                "Clean JVM compile · seconds", "Clean offline builds with dependencies cached.", "build-performance"));
+        carousel.add(benchmarkSlide(2, "03 / NATIVE IMAGE", "Your Guice application. Ahead of time.",
+                "Opt-in native-image support keeps runtime injection, scopes and interceptors. SPI discovery and application reachability metadata prepare your application for a closed world.",
+                "Peak container memory · MiB", "Native workload comparison · whole-container charged memory, not heap. Support is workload-specific; JVM and application jlink remain options.", "native-standard"));
+        carousel.add(benchmarkSlide(3, "04 / PERSISTENCE", "Real transactions. Real evidence.",
+                "A PostgreSQL workload across 15 related entities: committed writes, joined reads, updates and rollbacks.",
+                "Warm transaction cycle p50 · milliseconds", "Reactive stateless GuicedEE vs stateful Quarkus ORM / Narayana. Different persistence patterns; not a saturation-throughput comparison.", "postgresql-persistence"));
+        carousel.add(buildCdiSlide());
+        carousel.add(buildKotlinSlide());
+        section.add(carousel);
+        return section;
+    }
+
+    private WaCarouselItem<?> buildKotlinSlide()
+    {
+        var slide = new WaCarouselItem<>();
+        slide.addClass("kotlin-slide");
+        var panel = new DivSimple<>();
+        panel.addClass("benchmark-panel kotlin-panel");
+        var copy = new WaStack<>();
+        copy.addClass("benchmark-copy");
+        copy.add(captionText("06 / KOTLIN SUPPORT").addClass("hero-eyebrow"));
+        copy.add(headingText("h2", "xl", "Your stack. Now in Kotlin."));
+        copy.add(bodyText("Kotlin across your GuicedEE stack — from REST and persistence to messaging and integrations. Keep the modules you know, with concise Kotlin code and coroutines for asynchronous work.", "l"));
+        var features = new WaCluster<>();
+        features.setGap(PageSize.ExtraSmall);
+        for (String feature : new String[]{"Constructor injection", "Coroutines", "Kotlin data classes"}) {
+            features.add(buildTag(feature, Variant.Neutral));
+        }
+        copy.add(features);
+        copy.add(bodyText("Guice handles injection. Vert.x runs your asynchronous work. GuicedEE manages coroutine scope and shutdown.", "m"));
+        var examples = exampleButton("Kotlin");
+        examples.setText("Explore Kotlin examples →");
+        copy.add(examples);
+        panel.add(copy);
+
+        var example = new WaStack<>();
+        example.addClass("benchmark-visual kotlin-example");
+        example.add(captionText("KOTLIN + GUICEDEE").addClass("kotlin-code-label"));
+        example.add(headingText("h3", "m", "Familiar endpoints. Suspending services."));
+        example.add(codeBlock("""
+                @Path("/hello")
+                class HelloResource @Inject constructor(
+                    private val coroutines: GuicedCoroutines,
+                    private val service: GreetingService
+                ) {
+                    @GET
+                    fun hello(): Future<Greeting> =
+                        coroutines.future {
+                            service.greet("Kotlin")
+                        }
+                }
+                """, "kotlin"));
+        example.add(bodyText("Call a suspending service inside coroutines.future { … } and return a Vert.x Future through the normal REST pipeline.", "s"));
+        panel.add(example);
+        slide.add(panel);
+        return slide;
+    }
+
+    private WaCarouselItem<?> buildCdiSlide()
+    {
+        var slide = new WaCarouselItem<>();
+        var panel = new DivSimple<>();
+        panel.addClass("benchmark-panel");
+        var copy = new WaStack<>();
+        copy.addClass("benchmark-copy");
+        copy.add(captionText("05 / JAKARTA CDI & CONFIGURATION").addClass("hero-eyebrow"));
+        copy.add(headingText("h2", "xl", "Familiar annotations. A Guice runtime."));
+        copy.add(bodyText("Application scope, injection, REST and fault tolerance use familiar Jakarta and MicroProfile annotations. The CDI bridge runs them on Guice, with the same SDK and Firestore stack example.", "l"));
+        var annotations = new WaCluster<>();
+        annotations.setGap(PageSize.ExtraSmall);
+        for (String name : new String[]{"@ApplicationScoped", "@Inject", "@PostConstruct", "@ConfigProperty"}) {
+            annotations.add(buildTag(name, Variant.Neutral));
+        }
+        copy.add(annotations);
+        panel.add(copy);
+        var evidence = new WaStack<>();
+        evidence.addClass("benchmark-visual");
+        evidence.add(headingText("h3", "m", "CDI/config capability checks"));
+        var results = new WaDataGrid<>();
+        results.setLabel("CDI and configuration capability validation");
+        results.setRowKey("key");
+        results.setSize(com.jwebmp.webawesome.components.Size.Small);
+        results.setRowHeight("2rem");
+        results.setHeaderRowHeight("2rem");
+        results.setCellPadding("0.25rem 0.4rem");
+        results.bindColumns("cdiColumns");
+        results.bindData("cdiValidation");
+        results.addClass("benchmark-grid cdi-validation-grid");
+        evidence.add(results);
+        evidence.add(bodyText("Each CDI variant passed all 16 checks, including injected properties, environment override and Jakarta initialization.", "s"));
+        evidence.add(captionText("Local validation · 15 November 2026 · one start per variant, one warmup, three measured requests. Capability evidence, not a performance ranking."));
+        panel.add(evidence);
+        var setup = new WaDetails<>();
+        setup.setSummary("Annotations, configuration and benchmark setup");
+        setup.addClass("build-comparison-grid cdi-setup");
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(bodyText("Both frameworks build on Vert.x, making Quarkus a useful comparison for the same stack example. Shared annotations include @ApplicationScoped, Jakarta @Inject, Jakarta REST endpoints, @Retry and @Timeout. The adapters differ: GuicedEE uses @Verticle and a Guice-backed CDI bridge; Quarkus uses its CDI runtime. This is not a full CDI-compliance claim.", "m"));
+        content.add(codeBlockWithTitle("GuicedEE CDI service — excerpt", """
+                @ApplicationScoped
+                @Verticle("bench-guicedee-service")
+                public class Service {
+                    @Inject
+                    @ConfigProperty(name = "bench.upstream")
+                    private String upstream;
+
+                    @Inject
+                    @ConfigProperty(name = "bench.phase.diagnostics")
+                    private boolean diagnostics;
+
+                    @Inject
+                    @ConfigProperty(name = "bench.config.marker")
+                    private String configMarker;
+
+                    private Workload workload;
+
+                    @PostConstruct
+                    public void initialize() {
+                        if (!"application-properties".equals(configMarker))
+                            throw new IllegalStateException("application.properties was not injected");
+                        workload = new Workload(upstream, diagnostics);
+                    }
+                }
+                """));
+        content.add(codeBlockWithTitle("Packaged application.properties", """
+                bench.upstream=http://127.0.0.1:18089
+                bench.phase.diagnostics=false
+                bench.config.marker=application-properties
+                """));
+        content.add(bodyText("BENCH_UPSTREAM and BENCH_PHASE_DIAGNOSTICS override the dotted property keys. The /configuration endpoint verifies the file-only marker, effective upstream and completed initialization. HTTP, Vert.x and observability bootstrap settings still use the benchmark .env. Quarkus currently reads its workload settings with ConfigProvider and initializes Workload in a field initializer, rather than using this @ConfigProperty/@PostConstruct pattern.", "m"));
+        content.add(codeBlockWithTitle("GuicedEE bootstrap", """
+                GuiceApplication.run(() -> {
+                    IGuiceContext.registerModule(Main.class);
+                });
+                """));
+        content.add(codeBlockWithTitle("module-info.java — relevant requirements", """
+                requires com.guicedee.cdi;
+                requires com.guicedee.microprofile.config;
+                requires com.guicedee.rest;
+                opens bench.guicedee.service to com.google.guice, com.guicedee.vertx;
+                """));
+        content.add(bodyText("Scanner and SPI cases have separate application modules. The SPI variant registers BenchmarkDiscovery through JPMS and META-INF/services. Linked images contain the complete application module graph. Native uses SPI discovery; requesting runtime scanning is explicitly rejected.", "m"));
+        content.add(bodyText("Linux validation uses 0.25 CPU / 500 MiB. Shared capability checks cover vendor SDK requests, Firestore, retries/timeouts, metrics, OpenAPI and Swagger UI. These short validation runs were performed alongside other workspace jobs; timed comparison cohorts remain separate.", "m"));
+        var source = new WaButton<>("Explore the benchmark repository", Variant.Brand);
+        source.setAsLink("https://github.com/GuicedEE/benchmarks", "_blank", null);
+        source.addAttribute("rel", "noopener noreferrer");
+        content.add(source);
+        setup.add(content);
+        panel.add(setup);
+        slide.add(panel);
+        return slide;
+    }
+
+    private WaCarouselItem<?> benchmarkSlide(int index, String eyebrow, String title, String description,
+                                             String metric, String context, String anchor)
+    {
+        var slide = new WaCarouselItem<>();
+        var panel = new DivSimple<>();
+        panel.addClass("benchmark-panel");
+        var copy = new WaStack<>();
+        copy.addClass("benchmark-copy");
+        copy.add(captionText(eyebrow).addClass("hero-eyebrow"));
+        copy.add(headingText("h2", "xl", title));
+        copy.add(bodyText(description, "l"));
+        var link = new WaButton<>("Explore the measurements", Variant.Brand);
+        link.setAsLink("https://github.com/GuicedEE/benchmarks/blob/master/RESULTS.md#" + anchor, "_blank", null);
+        link.addAttribute("rel", "noopener noreferrer");
+        copy.add(link);
+        panel.add(copy);
+        var visual = new WaStack<>();
+        visual.addClass("benchmark-visual");
+        visual.add(headingText("h3", "m", index == 1 ? "{{ buildTitles[buildMode] }}" : metric));
+        if (index == 1) {
+            var modes = new WaCluster<>();
+            modes.addClass("benchmark-modes");
+            String[] choices = {"Compile", "JVM package", "Native build"};
+            for (int i = 0; i < choices.length; i++) {
+                var choice = new WaButton<>(choices[i], Variant.Neutral);
+                choice.setSize(com.jwebmp.webawesome.components.Size.Small);
+                choice.setAppearance(Appearance.Plain);
+                choice.addAttribute("(click)", "selectBuildMode(" + i + ")");
+                choice.addAttribute("[attr.aria-pressed]", "buildMode === " + i);
+                modes.add(choice);
+            }
+            visual.add(modes);
+        }
+        var chart = new WaChart<>();
+        chart.setConfig("benchmarkCharts[" + index + "]");
+        chart.addAttribute("[hidden]", "!benchmarkValues[" + index + "]");
+        chart.addAttribute("aria-label", metric + "; exact values below");
+        chart.addClass("benchmark-chart");
+        visual.add(chart);
+        var table = new WaDataGrid<>();
+        table.setLabel(index == 1 ? "Complete build comparison: compilation, packaging, ranges and baselines" : metric + " comparison");
+        table.setSize(com.jwebmp.webawesome.components.Size.Small);
+        table.setRowKey("key");
+        table.setRowHeight("1.85rem");
+        table.setHeaderRowHeight("1.85rem");
+        table.setCellPadding("0.25rem 0.4rem");
+        table.bindColumns(index == 1 ? "buildGridColumns" : "benchmarkColumns");
+        table.bindData(index == 1 ? "buildGridRows" : "benchmarkRows[" + index + "]");
+        table.addAttribute("[hidden]", "!benchmarkValues[" + index + "]");
+        table.addClass("benchmark-grid");
+        if (index != 1) visual.add(table);
+        var pending = bodyText("{{ benchmarkSummaries[" + index + "] }}", "m");
+        pending.addAttribute("[hidden]", "!!benchmarkValues[" + index + "]");
+        visual.add(pending);
+        visual.add(bodyText(context, "s"));
+        var source = captionText("{{ benchmarkSources[" + index + "] }}");
+        source.addAttribute("aria-live", "polite");
+        visual.add(source);
+        panel.add(visual);
+        if (index == 1) {
+            var gridSection = new WaStack<>();
+            gridSection.addClass("build-comparison-grid");
+            gridSection.add(headingText("h3", "m", "Every build. The full picture."));
+            table.addClass("build-grid");
+            table.addAttribute("data-wa-preload", "wa-progress-bar");
+            table.setHeaderRowHeight("3.5rem");
+            table.setRowHeight("2.5rem");
+            gridSection.add(table);
+            gridSection.add(captionText("Artifact shading shows the size of the package difference; full width is 100%. Signed percentages remain in the Difference column."));
+            panel.add(gridSection);
+        }
+        if (index == 0) {
+            var runtime = new WaStack<>();
+            runtime.addClass("build-comparison-grid");
+            runtime.add(headingText("h3", "m", "Every runtime. The full picture."));
+            var profiles = new WaCluster<>();
+            profiles.addClass("benchmark-modes");
+            String[] names = {"Default JVM", "C1 JVM"};
+            for (int i = 0; i < names.length; i++) {
+                var profile = new WaButton<>(names[i], Variant.Neutral);
+                profile.setSize(com.jwebmp.webawesome.components.Size.Small);
+                profile.setAppearance(Appearance.Plain);
+                profile.addAttribute("(click)", "runtimeProfile = " + i);
+                profile.addAttribute("[attr.aria-pressed]", "runtimeProfile === " + i);
+                profiles.add(profile);
+            }
+            runtime.add(profiles);
+            var runtimeTable = new WaDataGrid<>();
+            runtimeTable.setLabel("Runtime comparison: stack example startup, range, latency, memory and cohort baseline");
+            runtimeTable.setSize(com.jwebmp.webawesome.components.Size.Small);
+            runtimeTable.setRowKey("key");
+            runtimeTable.addAttribute("data-wa-preload", "wa-progress-bar");
+            runtimeTable.setRowHeight("2.5rem");
+            runtimeTable.setHeaderRowHeight("2.5rem");
+            runtimeTable.setCellPadding("0.25rem 0.4rem");
+            runtimeTable.bindColumns("runtimeColumns");
+            runtimeTable.bindData("runtimeGrids[runtimeProfile]");
+            runtimeTable.addClass("benchmark-grid build-grid runtime-grid");
+            runtime.add(runtimeTable);
+            runtime.add(captionText("Artifact shading shows the size of the startup difference; full width is 100%. Signed percentages remain in the Startup Δ column."));
+            runtime.add(bodyText("Startup includes the first complete response from the stack example. Warm p50 is per-start request latency; peak memory covers the whole container. 0.25 CPU / 500 MiB. Native results use their separate cohort and remain unchanged when switching JVM profiles.", "s"));
+            runtime.add(captionText("{{ runtimeSources[runtimeProfile] }}"));
+            panel.add(runtime);
+        }
+        slide.add(panel);
+        return slide;
     }
 
     // ── Hero ──────────────────────────────────────────
@@ -1151,7 +1495,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 <dependency>
                                     <groupId>com.guicedee</groupId>
                                     <artifactId>guicedee-bom</artifactId>
-                                    <version>2.5.1</version>
+                                    <version>2.6.0</version>
                                     <type>pom</type>
                                     <scope>import</scope>
                                 </dependency>
@@ -1172,7 +1516,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 """
                         // Import the BOM — all versions aligned
                         dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.5.1')
+                            implementation platform('com.guicedee:guicedee-bom:2.6.0')
                         
                             // Then just add what you need — no versions required
                             implementation 'com.guicedee:rest'
@@ -1220,7 +1564,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         grid.add(featureCardHtml("Incredible startup time on JRT",
                 "JLink custom runtimes utilize the module path, and the JRT filesystem. " +
                         "Combined with " + brandCode("Vert.x") + "'s non-blocking boot and " + brandCode("ClassGraph") + "'s fast scanning, " +
-                        "REST services are ready in amazing speed.",
+                        "REST services run on a reactive, application-linked runtime.",
                 "Cold-start friendly for serverless."));
 
         grid.add(featureCard("CI/CD pipeline integration",

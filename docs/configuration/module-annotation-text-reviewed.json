@@ -1,0 +1,406 @@
+{
+  "client/EnvironmentProperty": [
+    "name",
+    "value"
+  ],
+  "client/GuiceOptions": [
+    "logLevel"
+  ],
+  "consul/ConsulOptions": [
+    "value",
+    "host",
+    "token",
+    "datacenter",
+    "configPrefix",
+    "serviceName",
+    "serviceId",
+    "serviceAddress",
+    "healthPath",
+    "healthInterval",
+    "deregisterAfter"
+  ],
+  "hazelcast/HazelcastClientOptions": [
+    "clusterName",
+    "instanceName",
+    "addresses",
+    "labels"
+  ],
+  "hazelcast/HazelcastServerOptions": [
+    "clusterName",
+    "instanceName",
+    "publicAddress",
+    "interfaces",
+    "multicastGroup",
+    "tcpMembers",
+    "kubernetesServiceDns",
+    "kubernetesNamespace"
+  ],
+  "health/HealthOptions": [
+    "path",
+    "livenessPath",
+    "readinessPath",
+    "startupPath"
+  ],
+  "ibmmq/IBMMQConnectionOptions": [
+    "value",
+    "host",
+    "queueManager",
+    "channel",
+    "user",
+    "password",
+    "applicationName",
+    "transportType",
+    "sslCipherSuite",
+    "sslPeerName",
+    "clientId"
+  ],
+  "ibmmq/IBMMQQueueDefinition": [
+    "value",
+    "connection"
+  ],
+  "ibmmq/IBMMQQueueOptions": [
+    "durableSubscription",
+    "messageSelector"
+  ],
+  "inject/InjectLogger": [
+    "value",
+    "level",
+    "rollingFileName",
+    "fileName"
+  ],
+  "kafka/KafkaConnectionOptions": [
+    "value",
+    "bootstrapServers",
+    "groupId",
+    "keyDeserializer",
+    "valueDeserializer",
+    "keySerializer",
+    "valueSerializer",
+    "autoOffsetReset",
+    "acks",
+    "clientId"
+  ],
+  "kafka/KafkaTopicCreate": [
+    "value"
+  ],
+  "kafka/KafkaTopicDefinition": [
+    "value"
+  ],
+  "mailclient/MailConnectionOptions": [
+    "value",
+    "hostname",
+    "username",
+    "password",
+    "ehloHostname",
+    "authMethods",
+    "userAgent",
+    "defaultFrom"
+  ],
+  "metrics/Match": [
+    "value",
+    "alias"
+  ],
+  "metrics/MetricMethod": [
+    "name",
+    "tags[]"
+  ],
+  "metrics/MetricsOptions": [
+    "registryName",
+    "jmxDomain",
+    "baseName",
+    "host",
+    "prefix",
+    "endpoint"
+  ],
+  "persistence/EntityManager": [
+    "value"
+  ],
+  "rabbitmq/QueueDefinition": [
+    "value",
+    "exchange"
+  ],
+  "rabbitmq/QueueExchange": [
+    "value"
+  ],
+  "rabbitmq/RabbitConnectionOptions": [
+    "value",
+    "uri",
+    "addresses[]",
+    "user",
+    "password",
+    "host",
+    "virtualHost",
+    "hostnameVerificationAlgorithm",
+    "applicationLayerProtocols[]"
+  ],
+  "rest/Cors": [
+    "allowedOrigins[]",
+    "allowedMethods[]",
+    "allowedHeaders[]"
+  ],
+  "rest-client/Endpoint": [
+    "url",
+    "method"
+  ],
+  "rest-client/EndpointOptions": [
+    "defaultContentType",
+    "defaultAccept",
+    "userAgent"
+  ],
+  "rest-client/EndpointSecurity": [
+    "token",
+    "username",
+    "password",
+    "apiKey",
+    "apiKeyHeader",
+    "oauth2TokenUrl",
+    "oauth2ClientId",
+    "oauth2ClientSecret",
+    "oauth2Scopes",
+    "oauth2GrantType",
+    "clientCertPath",
+    "clientCertPassword",
+    "clientCertType"
+  ],
+  "runtime-autoconfigure/AwsAppRunner": [
+    "serviceName",
+    "region"
+  ],
+  "runtime-autoconfigure/AwsEcs": [
+    "serviceName",
+    "cluster",
+    "region"
+  ],
+  "runtime-autoconfigure/AwsElasticBeanstalk": [
+    "environmentName",
+    "region"
+  ],
+  "runtime-autoconfigure/AwsLambda": [
+    "functionName",
+    "region",
+    "handler"
+  ],
+  "runtime-autoconfigure/AzureAppService": [
+    "siteName",
+    "slotName",
+    "region"
+  ],
+  "runtime-autoconfigure/AzureContainerApps": [
+    "appName",
+    "dnsSuffix",
+    "region"
+  ],
+  "runtime-autoconfigure/CloudRuntimeOptions": [
+    "value",
+    "healthPath",
+    "serviceName",
+    "hostname",
+    "region"
+  ],
+  "runtime-autoconfigure/DigitalOceanApp": [
+    "componentName",
+    "region",
+    "instanceSize"
+  ],
+  "runtime-autoconfigure/FlyIo": [
+    "appName",
+    "primaryRegion"
+  ],
+  "runtime-autoconfigure/GcpAppEngine": [
+    "serviceName",
+    "projectId",
+    "region"
+  ],
+  "runtime-autoconfigure/GcpCloudRun": [
+    "serviceName",
+    "region",
+    "projectId"
+  ],
+  "runtime-autoconfigure/Heroku": [
+    "appName"
+  ],
+  "runtime-autoconfigure/Kubernetes": [
+    "serviceName",
+    "namespace",
+    "cluster"
+  ],
+  "runtime-autoconfigure/Railway": [
+    "serviceName",
+    "region"
+  ],
+  "runtime-autoconfigure/Render": [
+    "serviceName",
+    "region"
+  ],
+  "service-discovery/ServiceResolverOptions": [
+    "value",
+    "type",
+    "consulHost",
+    "consulToken",
+    "consulDatacenter",
+    "kubeHost",
+    "kubeNamespace",
+    "kubeBearerToken",
+    "srvHost",
+    "loadBalancer"
+  ],
+  "service-registry/RegisteredService": [
+    "name",
+    "url",
+    "healthPath",
+    "healthUrl",
+    "expectedContentType",
+    "revision",
+    "aliases[]",
+    "externalUrls[]",
+    "externalUrl",
+    "kubernetesUrl",
+    "openApiPath",
+    "openApiEnvironments[]",
+    "authScheme",
+    "authTokenUrl",
+    "authScopes[]",
+    "graphqlPath",
+    "graphqlEnvironments[]"
+  ],
+  "service-registry/ServiceRegistryOptions": [
+    "healthPath"
+  ],
+  "telemetry/SpanAttribute": [
+    "value"
+  ],
+  "telemetry/Telemetry": [
+    "serviceName",
+    "otlpEndpoint",
+    "tracesEndpoint",
+    "logsEndpoint"
+  ],
+  "telemetry/Trace": [
+    "value"
+  ],
+  "telemetry/TelemetryOptions": [
+    "serviceName",
+    "otlpEndpoint",
+    "tracesEndpoint",
+    "logsEndpoint",
+    "serviceVersion",
+    "deploymentEnvironment"
+  ],
+  "vertx/AbacOptions": [
+    "policies[]",
+    "policyFiles[]"
+  ],
+  "vertx/AuthKeyStore": [
+    "path",
+    "type",
+    "password",
+    "alias",
+    "aliasPassword"
+  ],
+  "vertx/AuthOptions": [
+    "prngAlgorithm"
+  ],
+  "vertx/AuthPubSecKey": [
+    "algorithm",
+    "buffer",
+    "path"
+  ],
+  "vertx/HtdigestAuthOptions": [
+    "path"
+  ],
+  "vertx/HtpasswdAuthOptions": [
+    "path"
+  ],
+  "vertx/JwtAuthOptions": [
+    "keystorePath",
+    "keystoreType",
+    "keystorePassword",
+    "jwks[]",
+    "algorithm",
+    "audience[]",
+    "issuer",
+    "subject",
+    "permissionsClaimKey"
+  ],
+  "vertx/JwtPubSecKey": [
+    "algorithm",
+    "buffer",
+    "path",
+    "id"
+  ],
+  "vertx/LdapAuthOptions": [
+    "url",
+    "authenticationQuery",
+    "authenticationMechanism",
+    "referral"
+  ],
+  "vertx/OAuth2JwtOptions": [
+    "audience",
+    "issuer"
+  ],
+  "vertx/OAuth2Options": [
+    "clientId",
+    "clientSecret",
+    "tenant",
+    "site",
+    "authorizationPath",
+    "tokenPath",
+    "revocationPath",
+    "introspectionPath",
+    "jwkPath",
+    "userInfoPath",
+    "logoutPath",
+    "scopes",
+    "scopeDelimiter",
+    "extraParameters",
+    "redirectUri"
+  ],
+  "vertx/PropertyFileAuthOptions": [
+    "path"
+  ],
+  "vertx/GrpcOptions": [
+    "name",
+    "host",
+    "tlsCertPath",
+    "tlsKeyPath"
+  ],
+  "vertx/RedisOptions": [
+    "name",
+    "connectionString",
+    "endpoints[]",
+    "password",
+    "tlsCertPath",
+    "tlsVerifyHost",
+    "masterName"
+  ],
+  "vertx/AddressResolverOptions": [
+    "hostsPath",
+    "servers[]",
+    "searchDomains[]"
+  ],
+  "vertx/EventBusOptions": [
+    "clusterPublicHost",
+    "host",
+    "clientAuth"
+  ],
+  "vertx/FileSystemOptions": [
+    "fileCacheDir"
+  ],
+  "vertx/Verticle": [
+    "value"
+  ],
+  "vertx/VertX": [
+    "haGroup"
+  ],
+  "vertx/VertxEventDefinition": [
+    "value"
+  ],
+  "vertx/VertxEventOptions": [
+    "workerPool",
+    "orderedByHeader"
+  ],
+  "web/HttpServerOptions": [
+    "host",
+    "uploadsDirectory"
+  ]
+}

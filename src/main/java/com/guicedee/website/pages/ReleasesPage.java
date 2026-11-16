@@ -44,7 +44,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var v260Content = new WaStack<>();
         v260Content.setGap(PageSize.Medium);
         v260Content.add(featureCard("Modular Firebase and Commercetools SDKs",
-                "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "Upcoming 2.6.0"));
+                "Firebase Admin 9.12.0 and Commercetools SDK 20.4.0 are grouped behind their existing module names. Use Firebase independently or add the Commercetools API and GraphQL client for commerce integrations.", "2.6.0"));
         v260Content.add(featureCard("Shared modular dependencies",
                 "Commercetools now uses external Netty, Bouncy Castle, Javassist, Zstd, logging and other modular libraries. Its resolved graph uses Jackson 3 core/databind only, with shared Jackson annotations. New Zstd and Okio wrappers complete the linkable graph.", "JPMS"));
         v260Content.add(featureCard("SDK API documentation",
@@ -52,7 +52,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         v260Content.add(featureCard("Complete application jlink images",
                 "Oracle JDK builds link the application and its dependency graph with generated module launchers. SPI and scanner fixture checks pass after extraction. Historical JDK-only jlink measurements are excluded from application comparisons; fresh release measurements are still required.", "Packaging validation"));
         layout.add(buildSection("v2.6.0", "Modular SDKs and application-linked benchmarks",
-                "Upcoming — prepared changes, not yet a published release. Current published examples remain on 2.5.1.", true, v260Content));
+                "Release target 2.6.0. Maven Central publication and website deployment are pending.", true, v260Content));
 
         var v251Content = new WaStack<>();
         v251Content.setGap(PageSize.Medium);
@@ -154,7 +154,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         var currentGrid = new WaGrid<>();
         currentGrid.setMinColumnSize("14rem");
         currentGrid.setGap(PageSize.Small);
-        currentGrid.add(featureCard("Version", "2.5.1", "Production release"));
+        currentGrid.add(featureCard("Version", "2.6.0", "Publication pending"));
         currentGrid.add(featureCard("Java baseline", "JDK 25+", "Latest LTS target"));
         currentGrid.add(featureCard("MicroProfile Config", "3.1.2", "Actionable source diagnostics"));
         currentGrid.add(featureCard("Vert.x", "5.2.3", "Mutiny 3.3.1"));
@@ -165,7 +165,7 @@ public class ReleasesPage extends WebsitePage<ReleasesPage> implements INgCompon
         currentGrid.add(featureCard("ClassGraph", "6.0.2", "Java 25+ scanner"));
         currentContent.add(currentGrid);
 
-        layout.add(buildSection("Current release", "v2.5.1",
+        layout.add(buildSection("Current release target", "v2.6.0",
                 "Updated reactive dependencies, official Swagger Core 3 integration and Maven 4 on the Java 25 platform.",
                 true, currentContent));
 

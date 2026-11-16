@@ -617,7 +617,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
 
         content.add(codeBlockWithTitle("Nimbus for modular OAuth2/OIDC and DPoP applications",
                 """
-                        <!-- Import com.guicedee:guicedee-bom:2.5.1 in dependencyManagement -->
+                        <!-- Import com.guicedee:guicedee-bom:2.6.0 in dependencyManagement -->
                         <dependency>
                             <groupId>com.guicedee.modules.services</groupId>
                             <artifactId>oauth2-oidc-sdk</artifactId>
@@ -652,7 +652,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
                         module my.keycloak.provider {
                             requires static org.keycloak.api;
                         }"""));
-        content.add(bodyText("keycloak-api 2.5.1 is built from Keycloak 26.8.2 and is a compile-only boundary. " +
+        content.add(bodyText("keycloak-api 2.6.0 is built from Keycloak 26.8.2 and is a compile-only boundary. " +
                 "Do not copy the GuicedEE bundle into a Keycloak server; deploy only your provider JAR and let the server supply " +
                 "its own Keycloak runtime classes.", "m"));
 
@@ -1288,16 +1288,16 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
         content.add(featureCard("Firebase Admin",
-                "com.guicedee.modules.services:firebase-admin exposes firebase.admin and groups the Google SDK dependency closure for Auth, Messaging and Firestore. Firebase can be used independently of Commercetools.", "Upcoming 2.6.0"));
+                "com.guicedee.modules.services:firebase-admin exposes firebase.admin and groups the Google SDK dependency closure for Auth, Messaging and Firestore. Firebase can be used independently of Commercetools.", "2.6.0"));
         content.add(featureCard("Commercetools API and GraphQL client",
-                "com.guicedee.modules.services:commercetools exposes commercetools.sdk.java.api, including GraphQL request/response models, RMF and HTTP integration. This supplies the commerce SDK client, not a GraphQL server.", "Upcoming 2.6.0"));
+                "com.guicedee.modules.services:commercetools exposes commercetools.sdk.java.api, including GraphQL request/response models, RMF and HTTP integration. This supplies the commerce SDK client, not a GraphQL server.", "2.6.0"));
         content.add(featureCard("Shared dependencies and Jackson 3",
                 "Commercetools uses external modular Netty, SLF4J, Bouncy Castle, Javassist, Commons, Failsafe, Java Money and Reactive Streams. Jackson 3 core/databind and shared annotations are external; its resolved graph contains no Jackson 2 core/databind. Firebase's private dependency closure is separate.", "Modular libraries"));
         content.add(featureCard("Zstd and Okio wrappers",
                 "The zstd-jni artifact preserves com.github.luben.zstd_jni and native resources while correcting its descriptor. The okio artifact supplies the explicit okio module needed by Moneta, OkHttp and Kotlin. Both use the com.guicedee.modules.services group.", "Linkable dependency graph"));
         content.add(bodyText("Use the GuicedEE BOM to align wrapper versions; Versioner and StandaloneBOM manage upstream versions. These additions are prepared for 2.6.0 and have passed local application-linking checks. Publication is pending.", "m"));
         return buildSection("Modular SDKs", "Firebase and commerce integrations",
-                "Upcoming in 2.6.0: grouped vendor SDKs with shared modular support libraries and SDK-scoped API documentation.", true, content);
+                "In 2.6.0: grouped vendor SDKs with shared modular support libraries and SDK-scoped API documentation.", true, content);
     }
 
     private WaStack<?> buildJLinkCapability()

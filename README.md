@@ -200,6 +200,42 @@ Use subscription `aee3c089-49a8-472c-8d40-5bf568a1ff55` (Pay-As-You-Go), tenant 
 ## 📝 License
 - Apache 2.0 — see `LICENSE`.
 
-## Upcoming 2.6.0 content
+## 2.6.0 content
 
-The Releases and Capabilities pages preview the modular Firebase/Commercetools SDKs, external modular dependencies, Jackson 3 policy for Commercetools, SDK Javadocs and full application jlink validation. See the [release notes](../RELEASE-2.6.0.md). The preview does not change the published 2.5.1 examples or announce deployment.
+The Releases and Capabilities pages preview the modular Firebase/Commercetools SDKs, external modular dependencies, Jackson 3 policy for Commercetools, SDK Javadocs and full application jlink validation. See the [release notes](../RELEASE-2.6.0.md). Website examples and version badges target 2.6.0. Publication and deployment remain pending.
+
+## Homepage benchmark carousel
+
+The App Builder offers independent Firebase Admin and Commercetools SDK selections with BOM-managed wrapper coordinates and their original JPMS names. Services lists both SDKs and the Zstd/Okio support modules. The runtime selector defaults to a JVM JAR; Native image starter adds explicit SPI discovery, reflection registration, dual service registration, `NativeBuild.java` and `NATIVE.md` to Maven and Gradle ZIPs. Build previews use the same content as downloads. GraalVM compilation and workload-specific metadata remain application validation steps; selecting an SDK does not assert native compatibility for all its products.
+
+The generated Maven starter with both SDKs selected passed a Linux native build and startup check after adding baseline Guice reflection metadata to both generators. See [the native starter validation report](docs/native-starter-validation.md) for the exact scope, environment and evidence. A separate copy with the benchmark workload and its native compatibility setup also passed actual Commercetools OAuth/REST/GraphQL and Firebase Firestore write/read calls on JVM and native, using the benchmark's local fixtures. See [the SDK operation validation report](docs/native-sdk-validation.md) for assertions, fresh metadata, reproduction commands and results.
+
+Quarkus is the primary comparison because both frameworks build on Vert.x, as described in [Quarkus's reactive architecture](https://quarkus.io/guides/quarkus-reactive-architecture/). The shared reactive foundation and stack example make the comparison useful; injection, configuration and application models still differ. The Performance slide explains this choice, with implementation details in the CDI slide.
+
+The homepage uses a manual Web Awesome carousel and Pro `wa-chart` bar charts. The long platform tour is retained in an expandable section. Numeric summaries accompany each chart for accessibility; axes start at zero and animation is disabled.
+
+`BenchmarkShowcase` fetches these public files once per page visit (8-second timeout, independent failure handling):
+
+- `https://raw.githubusercontent.com/GuicedEE/benchmarks/master/docs/current-performance.json`: `native-standard` startup and peak container memory, with measurement date and sample counts.
+- `https://raw.githubusercontent.com/GuicedEE/benchmarks/master/docs/build-performance.csv`: clean JVM compilation for `guicedee` and `quarkus-standard`.
+- `https://raw.githubusercontent.com/GuicedEE/benchmarks/master/docs/persistence-performance.json`: default-profile transaction-cycle p50 when published.
+
+Startup, memory and compile charts retain a labelled 15 November 2026 public snapshot if fetching or validation fails. Persistence has no invented fallback: it stays pending until valid public measurements arrive. Finite positive numeric values are required. Source text is Angular-interpolated, never injected as HTML. The full report links retain methodology and raw evidence. These are separate benchmark cohorts, not universal framework performance claims.
+
+The comparison cards use compact `wa-data-grid` rows beneath each chart. Developer builds default to clean compile versus clean compile, with separate JVM packaging and native-build views. Each chart shows its matching pair: GuicedEE SPI and Quarkus fast-JAR for compile/JVM package; GuicedEE native and Quarkus native for native build. Methodology stays in the linked benchmark report. Native runtime panels compare GuicedEE native with Quarkus native. Application jlink remains covered by the detailed benchmark report, outside the homepage comparisons.
+
+The native build comparison validates the published CSV baseline (`quarkus-standard-native`) before accepting refreshed data. All homepage comparisons retain the public-data and dated-fallback policy above.
+
+The developer-build panel also retains the complete seven-artifact build grid from `RESULTS.md`: compile/package medians, both min–max ranges, explicit baseline and package difference. It spans the panel below the chart and stays visible across chart modes. All seven rows refresh atomically from the published CSV; incomplete rows, invalid ranges or unexpected baselines retain the dated snapshot.
+
+The startup panel also includes a seven-row runtime grid: stack-example startup median/range, starts, warm p50, peak charged container memory, matching baseline and startup percentage difference. Default/C1 switches the five JVM rows, while the separately measured native pair remains unchanged. The table uses the same public summary JSON as the native chart, with validated complete cohorts and dated snapshots.
+
+The Kotlin carousel slide presents the planned launch support across GuicedEE modules, with constructor injection, coroutine work and Kotlin data classes. Its example follows the current `GuicedCoroutines.future` boundary and links to the Kotlin examples. The module-wide Kotlin work is still in progress; this website copy is staged for its completion before launch.
+
+Search sits above Home in the left menu, aligned with the homepage carousel selectors, and also appears in the mobile drawer. A theme-colored magnifying glass prefixes the field; results float in an anchored WebAwesome popup without moving the navigation. Its local index is generated from the page component trees, including module/service descriptions, static examples and environment-variable tables. Results show their page, section and an excerpt around the match. Opening a result navigates to a stable heading fragment, expands enclosing details or selects its carousel slide, then scrolls to and highlights the heading. Result URLs also work on reload and browser back/forward, with the matching aside preserved. Remote README dialogs and builder options that require changing selections are excluded. Keyboard users can press Enter for the first result, use arrow keys through results, or Escape to dismiss them; clicking outside also closes the popup.
+
+After building, run `node tools/verify-site-search.cjs` with Playwright available (or set `PLAYWRIGHT_MODULE` to its installed module path). It checks cross-page results, carousel/disclosure reveal, fragments, snippets, keyboard controls, no-match/clear states and the mobile drawer. Search does not send queries to an external service.
+
+The CDI panel records the local `benchmarks/docs/CDI-CONFIG-VALIDATION.md` evidence from 15 November 2026 (five CDI variants, 16/16 checks each). It explicitly distinguishes capability validation from performance rankings; public performance JSON currently contains no CDI rows. Expandable excerpts show the actual Jakarta annotations, packaged application.properties, environment overrides, bootstrap and JPMS setup, including the different Quarkus configuration/initialization pattern. Native is SPI-only.
+
+Artifact cells in the build/runtime grids use decorative `wa-progress-bar` backgrounds via the [Web Awesome cell formatter API](https://webawesome.com/docs/components/data-grid/). Bar length is the absolute package/startup percentage difference, capped at 100%; the signed value remains in its own column. Baselines use a neutral background. The progress component is preloaded for the grid shadow DOM, and artifact labels are inserted as text rather than HTML.

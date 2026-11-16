@@ -1,6 +1,9 @@
 package com.guicedee.website.pages;
 
 import com.guicedee.website.App;
+import com.guicedee.website.builder.NativeBuilderSupport;
+import com.jwebmp.webawesome.components.select.WaSelect;
+import com.jwebmp.webawesome.components.select.WaSelectOption;
 import com.jwebmp.core.base.angular.client.annotations.angular.NgComponent;
 import com.jwebmp.core.base.angular.client.annotations.references.NgComponentReference;
 import com.jwebmp.core.base.angular.client.annotations.references.NgImportReference;
@@ -47,6 +50,8 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         f.add("selectedModules: string[] = [];");
         f.add("""
                 moduleMap: Record<string, {groupId: string, artifactId: string, moduleName: string}> = {
+                    'Firebase Admin': {groupId: 'com.guicedee.modules.services', artifactId: 'firebase-admin', moduleName: 'firebase.admin'},
+                    'Commercetools SDK': {groupId: 'com.guicedee.modules.services', artifactId: 'commercetools', moduleName: 'commercetools.sdk.java.api'},
                     'REST Services': {groupId: 'com.guicedee', artifactId: 'rest', moduleName: 'com.guicedee.rest'},
                     'REST Client': {groupId: 'com.guicedee', artifactId: 'rest-client', moduleName: 'com.guicedee.rest.client'},
                     'WebSockets': {groupId: 'com.guicedee', artifactId: 'websockets', moduleName: 'com.guicedee.vertx.sockets'},
@@ -95,6 +100,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 };
                 
                 """);
+        f.addAll(NativeBuilderSupport.fields());
         return f;
     }
 
@@ -102,6 +108,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
     public List<String> methods()
     {
         var m = new ArrayList<>(super.methods());
+        m.add(NativeBuilderSupport.methods());
         m.add("""
                 onTreeSelectionChange(event: any) {
                     const items = event?.detail?.selection || [];
@@ -128,128 +135,22 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 """);
         m.add("""
                 getPomPreview(): string {
-                    const deps = this.getSelectedDeps();
-                    const depXml = deps.length === 0
-                        ? '        <!-- Select modules from the tree -->'
-                        : deps.map(d => `        <dependency>\\n            <groupId>${d.groupId}</groupId>\\n            <artifactId>${d.artifactId}</artifactId>\\n        </dependency>`).join('\\n');
-                    return '```xml\\n' + `<?xml version="1.0" encoding="UTF-8"?>
-                <project xmlns="http://maven.apache.org/POM/4.0.0">
-                    <modelVersion>4.0.0</modelVersion>
-
-                    <groupId>${this.groupId}</groupId>
-                    <artifactId>${this.artifactId}</artifactId>
-                    <version>${this.version}</version>
-
-                    <properties>
-                        <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.5.1</guicedee.version>
-                    </properties>
-
-                    <dependencyManagement>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.guicedee</groupId>
-                                <artifactId>guicedee-bom</artifactId>
-                                <version>\\${guicedee.version}</version>
-                                <type>pom</type>
-                                <scope>import</scope>
-                            </dependency>
-                        </dependencies>
-                    </dependencyManagement>
-
-                    <dependencies>
-                ${depXml}
-                    </dependencies>
-                    <build>
-                        <plugins>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                                <version>3.15.0</version>
-                            </plugin>
-                        </plugins>
-                    </build>
-                </project>` + '\\n```';
+                    return '```xml\\n' + this.getRawPom() + '\\n```';
                 }
                 """);
         m.add("""
                 getGradlePreview(): string {
-                    const deps = this.getSelectedDeps();
-                    const depLines = deps.length === 0
-                        ? '    // Select modules from the tree'
-                        : deps.map(d => `    implementation("${d.groupId}:${d.artifactId}")`).join('\\n');
-                    return '```kotlin\\n' + `plugins {
-                    java
-                }
-
-                group = "${this.groupId}"
-                version = "${this.version}"
-
-                repositories {
-                    mavenCentral()
-                }
-
-                java {
-                    toolchain {
-                        languageVersion.set(JavaLanguageVersion.of(25))
-                    }
-                }
-
-                dependencies {
-                    implementation(platform("com.guicedee:guicedee-bom:2.5.1"))
-                ${depLines}
-                }` + '\\n```';
+                    return '```kotlin\\n' + this.getRawGradle() + '\\n```';
                 }
                 """);
         m.add("""
                 getModuleInfoPreview(): string {
-                    const deps = this.getSelectedDeps();
-                    const modName = this.artifactId.replace(/-/g, '.');
-                    const requires = deps.length === 0
-                        ? '    // requires for each selected module'
-                        : deps.map(d => `    requires transitive ${d.moduleName};`).join('\\n');
-                    let extras = '';
-                    if (this.selectedModules.includes('MongoDB')) {
-                        extras += '\\n    requires io.vertx.client.mongo;';
-                    }
-                    if (this.selectedModules.includes('Cassandra')) {
-                        extras += '\\n    requires io.vertx.cassandra.client;';
-                    }
-                    if (this.selectedModules.includes('HTTP Proxy')) {
-                        extras += '\\n    requires io.vertx.httpproxy;';
-                    }
-                    if (this.selectedModules.includes('Redis')) {
-                        extras += '\\n    requires io.vertx.redis.client;';
-                    }
-                    if (this.selectedModules.includes('gRPC')) {
-                        extras += '\\n    requires io.vertx.grpc.server;';
-                        extras += '\\n    requires io.vertx.grpc.client;';
-                    }
-                    return '```java\\n' + `module ${modName} {
-                ${requires}${extras}
-
-                    opens ${this.packageName} to com.google.guice;
-
-                    provides com.guicedee.client.services.lifecycle.IGuiceModule
-                        with ${this.packageName}.AppModule;
-                }` + '\\n```';
+                    return '```java\\n' + this.getRawModuleInfo() + '\\n```';
                 }
                 """);
         m.add("""
                 getBootPreview(): string {
-                    return '```java\\n' + `package ${this.packageName};
-
-                import com.guicedee.client.IGuiceContext;
-                import com.guicedee.guicedinjection.GuiceApplication;
-
-                public class Boot {
-                    public static void main(String[] args) {
-                        GuiceApplication.run(() -> {
-                            IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}");
-                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(true);
-                        });
-                    }
-                }` + '\\n```';
+                    return '```java\\n' + this.getRawBoot() + '\\n```';
                 }
                 """);
         m.add("""
@@ -270,7 +171,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     <properties>
                         <maven.compiler.release>25</maven.compiler.release>
-                        <guicedee.version>2.5.1</guicedee.version>
+                        <guicedee.version>2.6.0</guicedee.version>
                     </properties>
 
                     <dependencyManagement>
@@ -286,7 +187,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     </dependencyManagement>
 
                     <dependencies>
-                ${depXml}
+                ${depXml}${this.getNativePomDeps()}
                     </dependencies>
                     <build>
                         <plugins>
@@ -324,9 +225,9 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
 
                 dependencies {
-                    implementation(platform("com.guicedee:guicedee-bom:2.5.1"))
-                ${depLines}
-                }`;
+                    implementation(platform("com.guicedee:guicedee-bom:2.6.0"))
+                ${depLines}${this.getNativeGradleDeps()}
+                }${this.getNativeGradleTask()}`;
                 }
                 """);
         m.add("""
@@ -354,7 +255,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                         extras += '\\n    requires io.vertx.grpc.client;';
                     }
                     return `module ${modName} {
-                ${requires}${extras}
+                ${requires}${extras}${this.getNativeModuleInfo()}
 
                     opens ${this.packageName} to com.google.guice;
 
@@ -372,9 +273,10 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                 public class Boot {
                     public static void main(String[] args) {
+                        ${this.isNative() ? 'System.setProperty("GUICEDEE_DISCOVERY_MODE", "spi");' : ''}
                         GuiceApplication.run(() -> {
                             IGuiceContext.registerModule("${this.artifactId.replace(/-/g, '.')}");
-                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(true);
+                            IGuiceContext.getContext().getConfig().setServiceLoadWithClassPath(${!this.isNative()});
                         });
                     }
                 }`;
@@ -506,6 +408,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                         zip.file(base + '/CLUSTERING.md', this.getClusteringGuide());
                     }
 
+                    this.addNativeFiles(zip, base, pkgPath);
                     const blob = await zip.generateAsync({type: 'blob'});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -564,6 +467,14 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         metadataGrid.add(packageInput);
 
         content.add(metadataGrid);
+        var runtime = new WaSelect<>();
+        runtime.setLabel("Runtime target");
+        runtime.bind("runtimeTarget");
+        runtime.add(new WaSelectOption<>().setValue("jvm").setText("JVM JAR"));
+        runtime.add(new WaSelectOption<>().setValue("native").setText("Native image starter (SPI)"));
+        content.add(runtime);
+        content.add(bodyText("Native image adds SPI discovery, reflection registration and a GraalVM build guide. " +
+                "JVM builds remain available; selected integrations may need additional native metadata.", "s"));
 
         return buildSection("Configure", "Project metadata",
                 "Maven/Gradle coordinates and base package for your generated project.",
@@ -634,6 +545,11 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         auth.add(leafItem("htpasswd"));
         auth.add(leafItem("htdigest"));
         tree.add(auth);
+
+        var sdks = parentItem("Cloud SDKs", true);
+        sdks.add(leafItem("Firebase Admin"));
+        sdks.add(leafItem("Commercetools SDK"));
+        tree.add(sdks);
 
         var microProfile = parentItem("MicroProfile", false);
         microProfile.add(leafItem("Health"));
@@ -738,6 +654,13 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         clusteredIf.add(bodyText("The ZIP includes CLUSTERING.md. Load the example environment files explicitly into separate " +
                 "processes; they are not read automatically. Choose reachable addresses for deployment.", "s"));
         previewColumn.add(clusteredIf);
+
+        var nativeIf = new NgIf("isNative()");
+        var nativeDetails = new WaDetails<>();
+        nativeDetails.setSummary("Native image setup");
+        nativeDetails.add(Markdown.fromData("getNativeGuide()"));
+        nativeIf.add(nativeDetails);
+        previewColumn.add(nativeIf);
 
         // Download button
         var buildBtn = new WaButton<>("Download ZIP", Variant.Brand);

@@ -62,6 +62,7 @@ public class ServicesAsidePage extends DivSimple<ServicesAsidePage> implements I
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
         list.add(asideLink("how-to-use", "How to use"));
+        list.add(asideLink("cloud-sdks", "Firebase / Commercetools"));
         list.add(asideLink("apache-commons", "Apache Commons"));
         list.add(asideLink("apache-cxf-web-services", "Apache CXF"));
         list.add(asideLink("apache-poi", "Apache POI"));

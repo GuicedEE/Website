@@ -29,9 +29,9 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         // Intro
         var introContent = new WaStack<>();
         introContent.setGap(PageSize.Medium);
-        introContent.add(headingText("h1", "xl", "Environment Variables"));
+        introContent.add(headingText("h1", "xl", "Annotations & Environment Variables"));
         var intro = bodyText("Every GuicedEE module supports environment variable overrides for deploy-time configuration. "
-                + "This page is a comprehensive reference of all available environment variables across the GuicedEE ecosystem.", "l");
+                + "The Vert.x configuration tables below are generated from the GuicedEE annotation and runtime lookup inventory for Vert.x 5.2.3.", "l");
         intro.setWaColorText("quiet");
         introContent.add(intro);
 
@@ -47,11 +47,16 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         introCard.add(introContent);
         layout.add(introCard);
 
+        layout.add(configurationOrderSection());
+        layout.add(moduleAnnotationTextSection());
         layout.add(buildInjectSection());
         layout.add(buildJsonSection());
         layout.add(buildWebSection());
         layout.add(buildVertxSection());
         layout.add(buildVertxEventBusSection());
+        layout.add(configurationSection("Verticle Deployment", "Deployment options apply to default and annotated verticles. Named worker limits require a worker pool name. Capability prefixes select startup hooks."));
+        layout.add(configurationSection("Redis", "RedisOptions discovers connection definitions. Register a concrete RedisModule to create clients. Database -1 preserves the URI; explicit database selection applies to all endpoints. Connection keys are global overrides across repeated definitions."));
+        layout.add(configurationSection("gRPC", "GrpcOptions discovers connection definitions. Register a concrete GrpcModule and service providers to create listeners. Message size, gRPC-Web and transcoding controls configure the actual server options. Connection keys are global overrides across repeated definitions."));
         layout.add(buildHazelcastSection());
         layout.add(buildVertxFileSystemSection());
         layout.add(buildVertxAddressResolverSection());
@@ -61,6 +66,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         layout.add(buildHealthSection());
         layout.add(buildMetricsSection());
         layout.add(buildTelemetrySection());
+        layout.add(configurationSection("Programmatic Options", "Complete declared setter inventory for the six reviewed Vert.x 5.2.3 core option classes. Entries without an annotation remain programmatic; they have no implied environment key. Nested option objects are available through VertxConfigurator.options. Inherited and integration-specific APIs are outside this declared-method inventory."));
         layout.add(buildRabbitMQSection());
         layout.add(buildGraphQLSection());
         layout.add(buildKafkaSection());
@@ -73,6 +79,38 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         layout.add(buildMcpSection());
     }
 
+    private WaStack<?> configurationOrderSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(bodyText("For each key: JVM system property > OS environment > .env.local > .env > registered application defaults > option annotation or runtime default. Resolution does not copy values into JVM properties, so defaults from one lookup cannot mask another declaration.", "m"));
+        content.add(bodyText("Dot-env lookup starts in the working directory, walks up at most five parents independently for each file, then falls back to a file resource at the classpath root. An empty nearest file stops the search. OS and dot-env lookup accept the exact name, then its uppercase form with dots/hyphens replaced by underscores. Explicit empty strings remain values; options documented as empty/inherit retain their native default.", "m"));
+        content.add(bodyText("GuiceApplication.run(Main.class) registers @GuiceOptions and repeatable @EnvironmentProperty defaults before bootstrap. Class defaults override package defaults. Both ${NAME:default} and ${NAME:-default} placeholders are supported, including nested values. Missing placeholders without a fallback remain unresolved.", "m"));
+        content.add(bodyText("Text annotation entries also accept bare property names: @HttpServerOptions(host = \"APP_BIND_HOST\") first checks HTTP_HOST across its normal sources, then looks up APP_BIND_HOST in JVM properties, OS environment, .env.local, .env and application defaults. If neither exists, the annotation text remains literal. Each string-array entry resolves separately. Found values can contain placeholders, but are not followed recursively as bare names; explicit external overrides and placeholder results remain values.", "m"));
+        content.add(bodyText("Module option annotations work on classes and packages. SPI mode requires their declaring class or package in IGuiceDiscovery; scanner mode requires the application module/package to be scanned. Singleton configurations reject duplicates. VertxConfigurator.options and HTTP server configurators run after declarative options and can deliberately override them.", "m"));
+        content.add(bodyText("The tables separate annotation defaults from behavior without an annotation. GuicedEE orchestration controls and intentional defaults are distinguished from raw Vert.x 5.2.3 options. Reserved event metadata has no built-in runtime effect. Complex options, callbacks, classloaders and transport objects remain programmatic SPI settings.", "m"));
+        return section("Configuration Search Order", "Vert.x 5.2.3 configuration contract", "Annotations, sources, activation and extension points", content);
+    }
+
+    private WaStack<?> moduleAnnotationTextSection()
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(bodyText("The shared text lookup applies across GuicedEE configuration annotations: normal scoped key, normal global key, then the annotation text as a property name, then its literal value. Each key uses the source order above. Scope selectors use the declared name; registries store the resolved name. Arrays resolve entry by entry, and explicit overrides are not interpreted again as bare names.", "m"));
+        content.add(bodyText("The inventory covers 266 text members in 69 owned annotations across 31 runtime modules. EnvironmentProperty.name identifies a literal configuration key. InjectLogger level/file hints have no built-in consumer; its logger name resolves normally. Standard and third-party annotations such as Named qualifiers and Jakarta REST paths retain their defined semantics. Cloud metadata defaults do not create or reconfigure cloud resources.", "m"));
+        content.add(envTable("Module annotation text coverage", AnnotationTextCatalog.rows(), "Module", "Text members", "Resolution / scope"));
+        return section("Annotation Text Across Modules", "Shared property lookup", "Bare names, placeholders, arrays and scope", content);
+    }
+
+    private WaStack<?> configurationSection(String group, String description)
+    {
+        var content = new WaStack<>();
+        content.setGap(PageSize.Medium);
+        content.add(envTable("Annotation and environment contract", VertxConfigurationCatalog.rows(group),
+                "Annotation / attribute", "Environment key", "Type / unit", "Annotation default", "Without annotation", "Application / status"));
+        return section(group, "Vert.x 5.2.3", description, content);
+    }
+
     // ── Inject ──────────────────────────────────────────
 
     private WaStack<?> buildInjectSection()
@@ -83,8 +121,9 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
         content.add(envTable(
                 "Logging & Runtime",
                 new String[][]{
-                        {"GUICEDEE_LOG_LEVEL", "Log level for GuicedEE internals (also: guicedee.log.level)", "INFO"},
-                        {"GUICEDEE_STARTUP_TIMEOUT_SECONDS", "Pre-startup wait timeout; failure aborts startup and rolls back owned resources", "60"},
+                        {"GUICEDEE_LOG_LEVEL", "@GuiceOptions.logLevel; log level for GuicedEE internals", "INFO"},
+                        {"GUICEDEE_DISCOVERY_MODE", "@GuiceOptions.discoveryMode; scan or spi. Register the application before bootstrap", "scan"},
+                        {"GUICEDEE_STARTUP_TIMEOUT_SECONDS", "Startup wait timeout; GuiceApplication.run supplies 300 seconds, lower-level context startup uses 60", "300 / 60"},
                         {"LOG_LEVEL", "Global application log level", "INFO"},
                         {"DEBUG", "Enable debug logging (set to true; also: guicedee.debug)", "false"},
                         {"TRACE", "Enable trace logging (set to true; also: guicedee.trace)", "false"},
@@ -118,130 +157,21 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
     private WaStack<?> buildWebSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "HTTP / HTTPS Server",
-                new String[][]{
-                        {"HTTP_ENABLED", "Enable the HTTP server", "true"},
-                        {"HTTP_PORT", "HTTP listen port", "8080"},
-                        {"HTTP_HOST", "HTTP listen host / bind address", "0.0.0.0"},
-                        {"HTTP_COMPRESSION_ENABLED", "Enable response compression (gzip/deflate)", "true"},
-                        {"HTTP_COMPRESSION_LEVEL", "Compression level (1–9)", "9"},
-                        {"HTTP_DECOMPRESSION_ENABLED", "Enable request decompression", "false"},
-                        {"HTTP_TCP_KEEP_ALIVE", "Enable TCP keep-alive", "true"},
-                        {"HTTP_IDLE_TIMEOUT", "Connection idle timeout in seconds (0 = disabled)", "0"},
-                        {"HTTP_MAX_HEADER_SIZE", "Maximum HTTP header size (bytes)", "65536"},
-                        {"HTTP_MAX_CHUNK_SIZE", "Maximum HTTP chunk size (bytes)", "65536"},
-                        {"HTTP_MAX_INITIAL_LINE_LENGTH", "Maximum HTTP initial line length (bytes)", "65536"},
-                        {"HTTP_MAX_FORM_ATTRIBUTE_SIZE", "Maximum form attribute size (bytes)", "65536"},
-                        {"HTTP_MAX_FORM_FIELDS", "Maximum number of form fields (-1 = unlimited)", "-1"},
-                        {"VERTX_MAX_BODY_SIZE", "Maximum request body size (bytes)", "524288000"},
-                        {"HTTP_UPLOADS_DIRECTORY", "Directory for temporary file uploads", "uploads"},
-                        {"HTTP_DELETE_UPLOADS_ON_END", "Delete uploaded files after request completes", "true"},
-                        {"HTTP_HANDLE_FILE_UPLOADS", "Enable multipart file upload handling", "true"},
-                        {"HTTPS_ENABLED", "Enable the HTTPS server", "false"},
-                        {"HTTPS_PORT", "HTTPS listen port", "443"},
-                        {"HTTPS_KEYSTORE", "Path to JKS or PKCS#12 keystore", "—"},
-                        {"HTTPS_KEYSTORE_TYPE", "Keystore type override (JKS, PKCS12, PFX). Auto-detected from file extension if not set.", "auto"},
-                        {"HTTPS_KEYSTORE_PASSWORD", "Keystore password", "—"},
-                }
-        ));
-
-        return section("HTTP Server", "GuicedEE Web",
-                "Reactive HTTP/HTTPS server bootstrap with Vert.x.", content);
+        return configurationSection("HTTP Server", "GuicedEE HTTP defaults are intentionally larger than upstream request limits. HTTPS ALPN and cleartext H2C have independent controls; keystores remain environment settings. Complex TLS, network, HTTP/2 and WebSocket options use VertxHttpServerOptionsConfigurator.");
     }
 
     // ── Vert.x ──────────────────────────────────────────
 
     private WaStack<?> buildVertxSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "Vert.x Runtime (@VertX)",
-                new String[][]{
-                        {"VERTX_EVENT_LOOP_POOL_SIZE", "Event loop thread pool size", "auto"},
-                        {"VERTX_WORKER_POOL_SIZE", "Worker thread pool size", "auto"},
-                        {"VERTX_BLOCKED_THREAD_CHECK_INTERVAL", "Blocked thread check interval", "auto"},
-                        {"VERTX_BLOCKED_THREAD_CHECK_INTERVAL_TIME_UNIT", "Time unit for blocked thread check", "MILLISECONDS"},
-                        {"VERTX_MAX_EVENT_LOOP_EXECUTE_TIME", "Max event loop execute time before warning", "auto"},
-                        {"VERTX_MAX_EVENT_LOOP_EXECUTE_TIME_UNIT", "Time unit for max event loop execute time", "NANOSECONDS"},
-                        {"VERTX_MAX_WORKER_EXECUTE_TIME", "Max worker execute time before warning", "auto"},
-                        {"VERTX_MAX_WORKER_EXECUTE_TIME_UNIT", "Time unit for max worker execute time", "NANOSECONDS"},
-                        {"VERTX_INTERNAL_BLOCKING_POOL_SIZE", "Internal blocking pool size", "auto"},
-                        {"VERTX_HA_ENABLED", "Enable high availability", "false"},
-                        {"VERTX_QUORUM_SIZE", "HA quorum size", "1"},
-                        {"VERTX_WARNING_EXCEPTION_TIME", "Warning exception time threshold", "auto"},
-                        {"VERTX_WARNING_EXCEPTION_TIME_UNIT", "Time unit for warning exception time", "NANOSECONDS"},
-                        {"VERTX_PREFER_NATIVE_TRANSPORT", "Prefer native transport (epoll/kqueue)", "false"},
-                        {"VERTX_USE_DAEMON_THREADS", "Use daemon threads", "false"},
-                        {"VERTX_DISABLE_TCCL", "Disable thread context class loader", "false"},
-                        {"VERTX_METRICS_ENABLED", "Enable Vert.x internal metrics", "false"},
-                }
-        ));
-
-        content.add(envTable(
-                "Throttling",
-                new String[][]{
-                        {"VERTX_PUBLISH_THROTTLE_MS", "Global throttle period (0 = disabled)", "50"},
-                        {"VERTX_PUBLISH_THROTTLE_MS_<ADDR>", "Per-address throttle override", "—"},
-                        {"VERTX_PUBLISH_QUEUE_WARN", "Backlog warning threshold", "1000"},
-                        {"VERTX_PUBLISH_QUEUE_WARN_<ADDR>", "Per-address warning threshold", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "Consumer Options",
-                new String[][]{
-                        {"VERTX_EVENT_ADDRESS_<ADDR>", "Override the resolved address", "—"},
-                        {"VERTX_EVENT_LOCAL_ONLY", "Force local-only consumers", "false"},
-                        {"VERTX_EVENT_CONSUMER_COUNT", "Default consumer count", "—"},
-                        {"VERTX_EVENT_WORKER", "Default worker mode", "false"},
-                        {"VERTX_EVENT_WORKER_POOL", "Worker pool name", "—"},
-                        {"VERTX_EVENT_WORKER_POOL_SIZE", "Worker pool size", "—"},
-                        {"VERTX_EVENT_INSTANCES", "Verticle instances per address", "—"},
-                        {"VERTX_EVENT_TIMEOUT_MS", "Consumer timeout (ms)", "—"},
-                        {"VERTX_EVENT_BATCH_WINDOW_MS", "Batch window (ms)", "—"},
-                        {"VERTX_EVENT_BATCH_MAX", "Max batch size", "—"},
-                        {"VERTX_EVENT_MAX_BUFFERED_MESSAGES", "Backpressure buffer limit", "—"},
-                        {"VERTX_EVENT_RESUME_AT_MESSAGES", "Resume threshold", "—"},
-                }
-        ));
-
-        return section("Vert.x Runtime & Consumers", "GuicedEE Vert.x",
-                "Vert.x runtime configuration, event bus consumers, and publisher throttling.", content);
+        return configurationSection("Vert.x Runtime & Consumers", "Core configuration works with environment values alone. Class/package option declarations are singletons. Event-specific keys precede global keys; normalize addresses to uppercase and replace dots and hyphens with underscores. Ordering, batching and resume fields are reserved metadata.");
     }
 
     // ── Vert.x EventBus ─────────────────────────────────
 
     private WaStack<?> buildVertxEventBusSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "EventBus Options (@EventBusOptions)",
-                new String[][]{
-                        {"VERTX_EVENTBUS_CLUSTER_PUBLIC_HOST", "Cluster public host for event bus", "—"},
-                        {"VERTX_EVENTBUS_CLUSTER_PUBLIC_PORT", "Cluster public port for event bus", "0"},
-                        {"VERTX_EVENTBUS_CLUSTER_PING_INTERVAL", "Cluster ping interval (ms)", "auto"},
-                        {"VERTX_EVENTBUS_CLUSTER_PING_REPLY_INTERVAL", "Cluster ping reply interval (ms)", "auto"},
-                        {"VERTX_EVENTBUS_HOST", "Event bus listen host", "—"},
-                        {"VERTX_EVENTBUS_PORT", "Event bus listen port", "0"},
-                        {"VERTX_EVENTBUS_ACCEPT_BACKLOG", "Accept backlog queue size", "-1"},
-                        {"VERTX_EVENTBUS_RECONNECT_ATTEMPTS", "Reconnect attempts on failure", "0"},
-                        {"VERTX_EVENTBUS_RECONNECT_INTERVAL", "Reconnect interval (ms)", "1000"},
-                        {"VERTX_EVENTBUS_CONNECT_TIMEOUT", "Connect timeout (ms)", "60000"},
-                        {"VERTX_EVENTBUS_TRUST_ALL", "Trust all certificates on event bus", "false"},
-                        {"VERTX_EVENTBUS_CLIENT_AUTH", "Client auth mode (NONE, REQUEST, REQUIRED)", "NONE"},
-                }
-        ));
-
-        return section("EventBus", "Vert.x EventBus Options",
-                "Clustered event bus networking and reconnection configuration.", content);
+        return configurationSection("EventBus", "These configure event-bus networking. A cluster manager must be enabled separately for clustering. TLS certificates, trust options and additional network controls use VertxConfigurator.options.");
     }
 
     // ── Vert.x FileSystem ───────────────────────────────
@@ -273,51 +203,14 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
     private WaStack<?> buildVertxFileSystemSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "FileSystem Options (@FileSystemOptions)",
-                new String[][]{
-                        {"VERTX_FILESYSTEM_CLASSPATH_RESOLVING", "Enable classpath resource resolving", "true"},
-                        {"VERTX_FILESYSTEM_FILE_CACHING", "Enable file caching", "true"},
-                        {"VERTX_FILESYSTEM_FILE_CACHE_DIR", "Directory for file cache", "—"},
-                }
-        ));
-
-        return section("FileSystem", "Vert.x FileSystem Options",
-                "Classpath resolving and file caching configuration.", content);
+        return configurationSection("FileSystem", "An empty cache path inherits Vert.x settings. The exact-path flag controls whether Vert.x appends a generated suffix.");
     }
 
     // ── Vert.x Address Resolver ─────────────────────────
 
     private WaStack<?> buildVertxAddressResolverSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "Address Resolver Options (@AddressResolverOptions)",
-                new String[][]{
-                        {"VERTX_ADDR_RESOLVER_HOSTS_PATH", "Custom hosts file path", "—"},
-                        {"VERTX_ADDR_RESOLVER_HOSTS_REFRESH_PERIOD", "Hosts file refresh period (ms)", "—"},
-                        {"VERTX_ADDR_RESOLVER_SERVERS", "Comma-separated DNS server addresses", "—"},
-                        {"VERTX_ADDR_RESOLVER_ROTATE_SERVERS", "Rotate DNS servers on failure", "false"},
-                        {"VERTX_ADDR_RESOLVER_CACHE_MIN_TTL", "Minimum DNS cache TTL (seconds)", "0"},
-                        {"VERTX_ADDR_RESOLVER_CACHE_MAX_TTL", "Maximum DNS cache TTL (seconds)", "auto"},
-                        {"VERTX_ADDR_RESOLVER_CACHE_NEGATIVE_TTL", "Negative DNS cache TTL (seconds)", "0"},
-                        {"VERTX_ADDR_RESOLVER_QUERY_TIMEOUT", "DNS query timeout (ms)", "5000"},
-                        {"VERTX_ADDR_RESOLVER_MAX_QUERIES", "Max DNS queries per lookup", "4"},
-                        {"VERTX_ADDR_RESOLVER_RD_FLAG", "Enable recursion desired flag", "true"},
-                        {"VERTX_ADDR_RESOLVER_SEARCH_DOMAINS", "Comma-separated DNS search domains", "—"},
-                        {"VERTX_ADDR_RESOLVER_NDOTS", "ndots option for DNS search", "auto"},
-                        {"VERTX_ADDR_RESOLVER_OPT_RESOURCE_ENABLED", "Enable OPT resource record", "false"},
-                        {"VERTX_ADDR_RESOLVER_ROUND_ROBIN", "Round-robin DNS address selection", "false"},
-                }
-        ));
-
-        return section("Address Resolver", "Vert.x Address Resolver",
-                "DNS resolution and caching configuration.", content);
+        return configurationSection("Address Resolver", "DNS servers and search domains are comma-separated. The hosts refresh value and unit are applied together; GuicedEE uses milliseconds by default. Empty lists and paths inherit system defaults.");
     }
 
     // ── REST Client ─────────────────────────────────────
@@ -444,84 +337,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
     private WaStack<?> buildAuthSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "JWT Provider",
-                new String[][]{
-                        {"VERTX_AUTH_JWT_KEYSTORE_PATH", "Path to JWT keystore", "—"},
-                        {"VERTX_AUTH_JWT_KEYSTORE_PASSWORD", "JWT keystore password", "—"},
-                        {"VERTX_AUTH_JWT_ALGORITHM", "JWT signing algorithm", "—"},
-                        {"VERTX_AUTH_JWT_ISSUER", "JWT issuer claim", "—"},
-                        {"VERTX_AUTH_JWT_AUDIENCE", "JWT audience claim", "—"},
-                        {"VERTX_AUTH_JWT_EXPIRES_IN_SECONDS", "Token expiration (seconds)", "—"},
-                        {"VERTX_AUTH_JWT_PERMISSIONS_CLAIM_KEY", "Permissions claim JSON path", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "OAuth2 Provider",
-                new String[][]{
-                        {"VERTX_AUTH_OAUTH2_CLIENT_ID", "OAuth2 client ID", "—"},
-                        {"VERTX_AUTH_OAUTH2_CLIENT_SECRET", "OAuth2 client secret", "—"},
-                        {"VERTX_AUTH_OAUTH2_SITE", "OAuth2 site / issuer URL", "—"},
-                        {"VERTX_AUTH_OAUTH2_DISCOVERY_URL", "OIDC discovery URL", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "ABAC Provider",
-                new String[][]{
-                        {"VERTX_AUTH_ABAC_POLICY_FILES", "Comma-separated ABAC policy file paths", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "OTP Provider",
-                new String[][]{
-                        {"VERTX_AUTH_OTP_TYPE", "OTP type (TOTP or HOTP)", "—"},
-                        {"VERTX_AUTH_OTP_PASSWORD_LENGTH", "OTP password length", "6"},
-                        {"VERTX_AUTH_OTP_PERIOD", "TOTP period (seconds)", "30"},
-                        {"VERTX_AUTH_OTP_LOOK_AHEAD_WINDOW", "OTP look-ahead window", "—"},
-                        {"VERTX_AUTH_OTP_COUNTER", "HOTP counter", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "Property File Provider",
-                new String[][]{
-                        {"VERTX_AUTH_PROPERTIES_PATH", "Path to Shiro properties file", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "LDAP Provider",
-                new String[][]{
-                        {"VERTX_AUTH_LDAP_URL", "LDAP server URL", "—"},
-                        {"VERTX_AUTH_LDAP_AUTHENTICATION_QUERY", "Authentication query template", "—"},
-                        {"VERTX_AUTH_LDAP_AUTHENTICATION_MECHANISM", "LDAP auth mechanism", "simple"},
-                        {"VERTX_AUTH_LDAP_REFERRAL", "LDAP referral policy", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "htpasswd Provider",
-                new String[][]{
-                        {"VERTX_AUTH_HTPASSWD_PATH", "Path to .htpasswd file", "—"},
-                        {"VERTX_AUTH_HTPASSWD_PLAIN_TEXT_ENABLED", "Allow plain-text passwords", "false"},
-                }
-        ));
-
-        content.add(envTable(
-                "htdigest Provider",
-                new String[][]{
-                        {"VERTX_AUTH_HTDIGEST_PATH", "Path to .htdigest file", "—"},
-                }
-        ));
-
-        return section("Authentication & Authorization", "GuicedEE Auth",
-                "Annotation-driven auth providers with env var overrides.", content);
+        return configurationSection("Authentication & Authorization", "Providers require their class/package annotation and optional Vert.x auth dependency. Duplicate global configurations fail explicitly. Provider leeway inherits the global value only when set to -1; zero overrides it. OAuth request scopes and redirect URI apply only when omitted by the caller.");
     }
 
     // ── Health ───────────────────────────────────────────
@@ -551,70 +367,14 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
 
     private WaStack<?> buildMetricsSection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "Core Metrics",
-                new String[][]{
-                        {"METRICS_ENABLED", "Enable metrics collection", "false"},
-                        {"METRICS_REGISTRY_NAME", "Dropwizard registry name", "—"},
-                        {"METRICS_JMX_ENABLED", "Expose metrics as JMX MBeans", "false"},
-                        {"METRICS_JMX_DOMAIN", "JMX domain name", "—"},
-                        {"METRICS_BASE_NAME", "Metric name prefix", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "Graphite Reporter",
-                new String[][]{
-                        {"METRICS_GRAPHITE_ENABLED", "Enable Graphite reporting", "false"},
-                        {"METRICS_GRAPHITE_HOST", "Graphite host", "—"},
-                        {"METRICS_GRAPHITE_PORT", "Graphite port", "2003"},
-                        {"METRICS_GRAPHITE_PREFIX", "Metric prefix for Graphite", "—"},
-                }
-        ));
-
-        content.add(envTable(
-                "Prometheus Endpoint",
-                new String[][]{
-                        {"METRICS_PROMETHEUS_ENABLED", "Enable Prometheus scrape endpoint", "false"},
-                        {"METRICS_PROMETHEUS_ENDPOINT", "Prometheus endpoint path", "/metrics"},
-                        {"METRICS_PROMETHEUS_PORT", "Prometheus endpoint port", "—"},
-                }
-        ));
-
-        return section("Metrics", "GuicedEE Metrics",
-                "Application metrics with Dropwizard and Prometheus.", content);
+        return configurationSection("Metrics", "Environment-only configuration is supported. Prometheus port -1 shares the application listener; a non-negative port creates an isolated lifecycle-owned listener. Exporters require their enabled flags.");
     }
 
     // ── Telemetry ───────────────────────────────────────
 
     private WaStack<?> buildTelemetrySection()
     {
-        var content = new WaStack<>();
-        content.setGap(PageSize.Medium);
-
-        content.add(envTable(
-                "OpenTelemetry",
-                new String[][]{
-                        {"TELEMETRY_ENABLED", "Enable distributed tracing", "false"},
-                        {"TELEMETRY_SERVICE_NAME", "OpenTelemetry service name", "—"},
-                        {"TELEMETRY_OTLP_ENDPOINT", "OTLP HTTP exporter endpoint", "—"},
-                        {"TELEMETRY_USE_IN_MEMORY", "Use in-memory exporters (testing)", "false"},
-                        {"TELEMETRY_CONFIGURE_LOGS", "Enable Log4j2 OpenTelemetry appender", "false"},
-                        {"TELEMETRY_SERVICE_VERSION", "Service version resource attribute", "1.0.0"},
-                        {"TELEMETRY_DEPLOYMENT_ENVIRONMENT", "Deployment environment attribute", "production"},
-                        {"TELEMETRY_MAX_BATCH_SIZE", "Batch span processor max batch size", "512"},
-                        {"TELEMETRY_MAX_LOG_BATCH_SIZE", "Max log record batch size", "512"},
-                        {"TELEMETRY_LOG_SIGNALS", "Log telemetry signals", "false"},
-                        {"OTEL_EXPORTER_OTLP_ENDPOINT", "Standard OTLP endpoint override (OpenTelemetry spec)", "—"},
-                        {"HOSTNAME", "Hostname used as host.name resource attribute", "localhost"},
-                }
-        ));
-
-        return section("Telemetry", "GuicedEE Telemetry",
-                "OpenTelemetry distributed tracing with OTLP export.", content);
+        return configurationSection("Telemetry", "Environment-only configuration is supported. TelemetryOptions takes priority over the Telemetry alias. OTEL_EXPORTER_OTLP signal keys precede TELEMETRY signal keys, then the shared endpoint. Full signal endpoints are used verbatim.");
     }
 
     // ── RabbitMQ ────────────────────────────────────────
@@ -922,6 +682,7 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
                 new String[][]{
                         {"CONTAINER_APP_ENV_DNS_SUFFIX", "Azure Container Apps DNS suffix for auto-URL construction", "(from Azure runtime)"},
                         {"SERVICE_REGISTRY_DNS_SUFFIX", "Fallback DNS suffix when no cloud provider is detected", "(empty)"},
+                        {"SERVICE_REGISTRY_HEALTH_PATH", "Default service health path; overrides ServiceRegistryOptions.healthPath", "/health/ready"},
                         {"HEALTH_DOWNSTREAM_ENABLED", "Enable downstream service health aggregation in readiness checks", "true"},
                 }
         ));
@@ -1004,46 +765,25 @@ public class EnvironmentVariablesPage extends WebsitePage<EnvironmentVariablesPa
     /**
      * Builds an HTML table of environment variables with name, purpose, and default columns.
      */
-    private DivSimple<?> envTable(String title, String[][] rows)
+    private DivSimple<?> envTable(String title, String[][] rows, String... headings)
     {
         var wrapper = new WaStack<>();
         wrapper.setGap(PageSize.Small);
-
-        if (title != null && !title.isBlank())
-        {
-            wrapper.add(headingText("h4", "s", title));
-        }
-
+        if (title != null && !title.isBlank()) wrapper.add(headingText("h4", "s", title));
+        if (headings.length == 0) headings = new String[]{"Variable", "Purpose", "Default"};
         var tableDiv = new DivSimple<>();
         tableDiv.addStyle("overflow-x", "auto");
-
-        var sb = new StringBuilder();
-        sb.append("<table style=\"width:100%;border-collapse:collapse;\">");
-        sb.append("<thead><tr>");
-        sb.append("<th style=\"text-align:left;padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid var(--wa-color-surface-border);white-space:nowrap;\">Variable</th>");
-        sb.append("<th style=\"text-align:left;padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid var(--wa-color-surface-border);\">Purpose</th>");
-        sb.append("<th style=\"text-align:left;padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid var(--wa-color-surface-border);white-space:nowrap;\">Default</th>");
-        sb.append("</tr></thead><tbody>");
-
-        for (String[] row : rows)
-        {
-            sb.append("<tr>");
-            sb.append("<td style=\"padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid color-mix(in srgb, var(--wa-color-surface-border) 50%, transparent);\">");
-            sb.append("<code class=\"wa-body-s\" style=\"color:color-mix(in srgb, var(--wa-color-brand) 70%, var(--wa-color-text));white-space:nowrap;\">")
-              .append(escapeAngular(row[0])).append("</code></td>");
-            sb.append("<td class=\"wa-body-s\" style=\"padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid color-mix(in srgb, var(--wa-color-surface-border) 50%, transparent);\">")
-              .append(escapeAngular(row[1])).append("</td>");
-            sb.append("<td style=\"padding:var(--wa-space-2xs) var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid color-mix(in srgb, var(--wa-color-surface-border) 50%, transparent);\">");
-            sb.append("<code class=\"wa-body-s\">").append(escapeAngular(row[2])).append("</code></td>");
-            sb.append("</tr>");
+        var html = new StringBuilder("<table style=\"width:100%;border-collapse:collapse;\"><thead><tr>");
+        for (String heading : headings) html.append("<th style=\"text-align:left;padding:var(--wa-space-xs);\">").append(escapeAngular(heading)).append("</th>");
+        html.append("</tr></thead><tbody>");
+        for (String[] row : rows) {
+            html.append("<tr>");
+            for (String value : row) html.append("<td class=\"wa-body-s\" style=\"vertical-align:top;padding:var(--wa-space-xs);border-bottom:var(--wa-border-width-s) solid var(--wa-color-surface-border);\">")
+                    .append(escapeAngular(value)).append("</td>");
+            html.append("</tr>");
         }
-
-        sb.append("</tbody></table>");
-        tableDiv.setText(sb.toString());
-
+        tableDiv.setText(html.append("</tbody></table>").toString());
         wrapper.add(tableDiv);
         return wrapper;
     }
 }
-
-

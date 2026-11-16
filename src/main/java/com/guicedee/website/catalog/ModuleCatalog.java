@@ -90,7 +90,7 @@ public final class ModuleCatalog
                 default -> "com.guicedee";
             };
             String artifactId = id;
-            String version = "2.5.1";
+            String version = "2.6.0";
             String readmePath = "GuicedEE/" + id + "/README.md";
             String rulesPath = "GuicedEE/" + id + "/rules";
             modules.add(new ModuleEntry(id, name, description, bootClass, groupId, artifactId, version, readmePath, rulesPath));
@@ -104,10 +104,23 @@ public final class ModuleCatalog
     // Static list of GuicedEE services; avoids IO-based discovery as per requirements
     private static List<ServiceDefinition> buildStaticServices()
     {
-        String version = "2.5.1";
+        String version = "2.6.0";
         String groupId = "com.guicedee.modules.services";
 
         List<ServiceDefinition> services = new ArrayList<>();
+
+        services.add(new ServiceDefinition("firebase-admin", groupId, "firebase-admin", version,
+                "Cloud SDKs integration service: Firebase Admin with Auth, Messaging and Firestore in a grouped JPMS module.",
+                "firebase.admin", "Libraries/firebase-admin"));
+        services.add(new ServiceDefinition("commercetools", groupId, "commercetools", version,
+                "Cloud SDKs integration service: Commercetools commerce API, GraphQL client models, RMF and HTTP integration, using Jackson 3 core/databind.",
+                "commercetools.sdk.java.api", "Libraries/commercetools"));
+        services.add(new ServiceDefinition("zstd-jni", groupId, "zstd-jni", version,
+                "Library integration service: Zstd JNI with a corrected JPMS descriptor, multi-release classes and native resources.",
+                "com.github.luben.zstd_jni", "Libraries/zstd-jni"));
+        services.add(new ServiceDefinition("okio", groupId, "okio", version,
+                "Library integration service: Modular Okio for the Moneta, OkHttp and Kotlin dependency chain.",
+                "okio", "Libraries/okio"));
 
         services.add(new ServiceDefinition("keycloak-api", groupId, "keycloak-api", version,
                 "Compile-only Keycloak provider API bundle with an explicit JPMS descriptor and Jackson 3 relocation. " +

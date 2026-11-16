@@ -33,6 +33,7 @@ import org.apache.commons.text.StringEscapeUtils;
 @NgComponentReference(RouterModuleConfig.class)
 public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J> implements INgComponent<J>, SpaceTokenCapable<J>, BorderTokenCapable<J>, TypographyTokenCapable<J>
 {
+    private final java.util.Map<String, Integer> searchHeadingCounts = new java.util.HashMap<>();
     protected WebsitePage()
     {
         addClass("website-content");
@@ -111,6 +112,14 @@ public abstract class WebsitePage<J extends WebsitePage<J>> extends DivSimple<J>
         heading.setTag(tag);
         heading.setWaHeading(size);
         heading.setText(escapeAngular(text));
+        if (text != null && !text.contains("{{")) {
+            String slug = "find-" + slugify(text);
+            int occurrence = searchHeadingCounts.merge(slug, 1, Integer::sum);
+            String anchor = slug + (occurrence > 1 ? "-" + occurrence : "");
+            heading.setID(anchor);
+            heading.addAttribute("data-search-anchor", anchor);
+            heading.addAttribute("tabindex", "-1");
+        }
         return heading;
     }
 

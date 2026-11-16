@@ -1,0 +1,164 @@
+annotation,upstream_api,setter,annotation_attribute,source_line,coverage
+VertX,io.vertx.core.VertxOptions,setAddressResolverOptions,,518,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setBlockedThreadCheckInterval,blockedThreadCheckInterval,263,annotation surface
+VertX,io.vertx.core.VertxOptions,setBlockedThreadCheckIntervalUnit,blockedThreadCheckIntervalTimeUnit,608,annotation surface
+VertX,io.vertx.core.VertxOptions,setDisableTCCL,disableTCCL,654,annotation surface
+VertX,io.vertx.core.VertxOptions,setEventBusOptions,,499,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setEventLoopPoolSize,eventLoopPoolSize,209,annotation surface
+VertX,io.vertx.core.VertxOptions,setFileSystemOptions,,455,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setHAEnabled,haEnabled,375,annotation surface
+VertX,io.vertx.core.VertxOptions,setHAGroup,,418,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setInternalBlockingPoolSize,internalBlockingPoolSize,352,annotation surface
+VertX,io.vertx.core.VertxOptions,setMaxEventLoopExecuteTime,maxEventLoopExecuteTime,295,annotation surface
+VertX,io.vertx.core.VertxOptions,setMaxEventLoopExecuteTimeUnit,maxEventLoopExecuteTimeUnit,554,annotation surface
+VertX,io.vertx.core.VertxOptions,setMaxWorkerExecuteTime,maxWorkerExecuteTime,327,annotation surface
+VertX,io.vertx.core.VertxOptions,setMaxWorkerExecuteTimeUnit,maxWorkerExecuteTimeUnit,572,annotation surface
+VertX,io.vertx.core.VertxOptions,setMetricsOptions,,444,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setPreferNativeTransport,preferNativeTransport,536,annotation surface
+VertX,io.vertx.core.VertxOptions,setQuorumSize,quorumSize,395,annotation surface
+VertX,io.vertx.core.VertxOptions,setTracingOptions,,628,SPI/programmatic only or not exposed
+VertX,io.vertx.core.VertxOptions,setUseDaemonThread,useDaemonThreads,677,annotation surface
+VertX,io.vertx.core.VertxOptions,setWarningExceptionTime,warningExceptionTime,478,annotation surface
+VertX,io.vertx.core.VertxOptions,setWarningExceptionTimeUnit,warningExceptionTimeUnit,590,annotation surface
+VertX,io.vertx.core.VertxOptions,setWorkerPoolSize,workerPoolSize,234,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setAcceptBacklog,acceptBacklog,222,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClientAuth,clientAuth,202,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClusterNodeMetadata,,653,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClusterPingInterval,clusterPingInterval,547,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClusterPingReplyInterval,clusterPingReplyInterval,571,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClusterPublicHost,clusterPublicHost,600,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setClusterPublicPort,clusterPublicPort,620,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setConnectTimeout,connectTimeout,526,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setEnabledSecureTransportProtocols,,442,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setHost,host,245,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setIdleTimeout,,341,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setIdleTimeoutUnit,,359,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setKeyCertOptions,,366,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setLogActivity,,477,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setPort,port,266,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReadIdleTimeout,,347,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReceiveBufferSize,,402,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReconnectAttempts,reconnectAttempts,291,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReconnectInterval,reconnectInterval,311,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReuseAddress,,408,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setReusePort,,414,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSendBufferSize,,420,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSoLinger,,372,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSsl,,378,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSslEngineOptions,,437,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSslHandshakeTimeout,,482,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setSslHandshakeTimeoutUnit,,487,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpCork,,462,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpFastOpen,,457,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpKeepAlive,,384,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpNoDelay,,390,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpQuickAck,,467,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTcpUserTimeout,,472,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTrafficClass,,426,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTrustAll,trustAll,498,annotation surface
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setTrustOptions,,396,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setUseAlpn,,432,SPI/programmatic only or not exposed
+EventBusOptions,io.vertx.core.eventbus.EventBusOptions,setWriteIdleTimeout,,353,SPI/programmatic only or not exposed
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setCacheMaxTimeToLive,cacheMaxTimeToLive,351,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setCacheMinTimeToLive,cacheMinTimeToLive,329,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setCacheNegativeTimeToLive,cacheNegativeTimeToLive,374,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setHostsPath,hostsPath,192,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setHostsRefreshPeriod,hostsRefreshPeriod,253,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setHostsRefreshPeriodUnit,,232,SPI/programmatic only or not exposed
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setHostsValue,,214,SPI/programmatic only or not exposed
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setMaxQueries,maxQueries,416,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setNdots,ndots,490,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setOptResourceEnabled,optResourceEnabled,310,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setQueryTimeout,queryTimeout,395,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setRdFlag,rdFlag,437,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setRotateServers,rotateServers,511,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setRoundRobinInetAddress,roundRobinInetAddress,528,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setSearchDomains,searchDomains,457,annotation surface
+AddressResolverOptions,io.vertx.core.dns.AddressResolverOptions,setServers,servers,277,annotation surface
+FileSystemOptions,io.vertx.core.file.FileSystemOptions,setClassPathResolvingEnabled,classPathResolvingEnabled,111,annotation surface
+FileSystemOptions,io.vertx.core.file.FileSystemOptions,setFileCacheDir,fileCacheDir,150,annotation surface
+FileSystemOptions,io.vertx.core.file.FileSystemOptions,setFileCacheDirAsExactPath,,171,SPI/programmatic only or not exposed
+FileSystemOptions,io.vertx.core.file.FileSystemOptions,setFileCachingEnabled,fileCachingEnabled,130,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setClassLoader,,290,SPI/programmatic only or not exposed
+Verticle,io.vertx.core.DeploymentOptions,setConfig,,100,SPI/programmatic only or not exposed
+Verticle,io.vertx.core.DeploymentOptions,setHa,ha,140,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setInstances,defaultInstances,160,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setMaxWorkerExecuteTime,maxWorkerExecuteTime,240,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setMaxWorkerExecuteTimeUnit,maxWorkerExecuteTimeUnit,265,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setThreadingModel,threadingModel,120,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setWorkerPoolName,value,179,annotation surface
+Verticle,io.vertx.core.DeploymentOptions,setWorkerPoolSize,workerPoolSize,206,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setAcceptBacklog,,502,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setAcceptUnmaskedFrames,,683,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setActivityLogDataFormat,,985,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setAlpnVersions,,910,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setClientAuth,,519,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setCompression,,577,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setCompressionContentSizeThreshold,,635,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setCompressionLevel,compressionLevel,616,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setCompressionSupported,compressionEnabled,559,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setCompressors,,666,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setDecoderInitialBufferSize,,1037,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setDecompressionSupported,decompressionEnabled,1022,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setEnabledSecureTransportProtocols,,531,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHandle100ContinueAutomatically,,764,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHost,host,513,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2ClearTextEnabled,,933,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2ConnectionWindowSize,,974,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2MaxSmallContinuationFrames,,1325,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2MultiplexImplementation,,1372,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2RstFloodMaxRstFramePerWindow,,1261,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2RstFloodWindowDuration,,1280,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setHttp2RstFloodWindowDurationTimeUnit,,1300,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setIdleTimeout,idleTimeout,401,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setIdleTimeoutUnit,,419,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setInitialSettings,,891,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setKeyCertOptions,,437,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setLogActivity,,980,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxChunkSize,maxChunkSize,775,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxFormAttributeSize,maxFormAttributeSize,837,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxFormBufferedBytes,,873,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxFormFields,maxFormFields,855,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxHeaderSize,maxHeaderSize,819,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxInitialLineLength,maxInitialLineLength,801,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxWebSocketFrameSize,,701,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMaxWebSocketMessageSize,,719,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setMetricsName,,1186,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setPerFrameWebSocketCompressionSupported,,1048,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setPerMessageWebSocketCompressionSupported,,1068,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setPort,port,507,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setProxyProtocolTimeout,,1000,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setProxyProtocolTimeoutUnit,,1005,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setReadIdleTimeout,,407,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setReceiveBufferSize,,359,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setRegisterWebSocketWriteHandlers,,1242,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setRegisterWriteHandler,,1221,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setReuseAddress,,365,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setReusePort,,371,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSendBufferSize,,353,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSni,,990,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSoLinger,,395,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSsl,,425,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSslEngineOptions,,525,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSslHandshakeTimeout,,536,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setSslHandshakeTimeoutUnit,,541,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setStrictThreadMode,,1354,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpCork,,477,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpFastOpen,,472,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpKeepAlive,tcpKeepAlive,389,annotation surface
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpNoDelay,,383,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpQuickAck,,482,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTcpUserTimeout,,487,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTracingPolicy,,1204,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTrafficClass,,377,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTrafficShapingOptions,,1169,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setTrustOptions,,443,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setUseAlpn,,431,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setUseProxyProtocol,,995,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setUseSemicolonAsQueryParamDelimiter,,951,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWebSocketAllowServerNoContext,,1107,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWebSocketClosingTimeout,,1163,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWebSocketCompressionLevel,,1088,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWebSocketPreferredClientNoContext,,1127,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWebSocketSubProtocols,,740,SPI/programmatic only or not exposed
+HttpServerOptions,io.vertx.core.http.HttpServerOptions,setWriteIdleTimeout,,413,SPI/programmatic only or not exposed

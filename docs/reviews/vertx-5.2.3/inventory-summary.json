@@ -1,0 +1,43 @@
+{
+  "scope": [
+    "vertx",
+    "web",
+    "metrics",
+    "telemetry"
+  ],
+  "annotation_types": 35,
+  "annotation_members": 238,
+  "environment_keys_and_templates": 217,
+  "website_present": 128,
+  "website_missing": 89,
+  "modules": {
+    "vertx": {
+      "annotation_members": 171,
+      "environment_keys_and_templates": 165,
+      "website_present": 82
+    },
+    "web": {
+      "annotation_members": 20,
+      "environment_keys_and_templates": 23,
+      "website_present": 22
+    },
+    "metrics": {
+      "annotation_members": 23,
+      "environment_keys_and_templates": 12,
+      "website_present": 12
+    },
+    "telemetry": {
+      "annotation_members": 24,
+      "environment_keys_and_templates": 17,
+      "website_present": 12
+    }
+  },
+  "website_keys_without_consumer_in_scope": [
+    "VERTX_PUBLISH_THROTTLE_MS",
+    "VERTX_PUBLISH_THROTTLE_MS_<ADDR>",
+    "VERTX_PUBLISH_QUEUE_WARN",
+    "VERTX_PUBLISH_QUEUE_WARN_<ADDR>",
+    "VERTX_CLUSTER_ENABLED",
+    "VERTX_AUTH_OAUTH2_DISCOVERY_URL"
+  ]
+}

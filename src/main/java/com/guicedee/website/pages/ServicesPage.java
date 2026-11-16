@@ -41,6 +41,9 @@ public class ServicesPage extends WebsitePage<ServicesPage> implements INgCompon
                 "Java Module System so you can use them in JLink and JPackage builds.", "l");
         intro.setWaColorText("quiet");
         introContent.add(intro);
+        introContent.add(bodyText("New in 2.6.0: Firebase Admin and Commercetools SDK modules, plus modular Zstd and Okio support. " +
+                "Choose Firebase and Commercetools independently in the App Builder or IntelliJ wizard. " +
+                "Commercetools includes a GraphQL client; server-side GraphQL remains a separate option.", "m"));
 
         var tags = new WaCluster<>();
         tags.setGap(PageSize.Small);

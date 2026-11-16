@@ -1,0 +1,2168 @@
+{
+  "scope": "GuicedEE-owned runtime annotation declarations; external annotation contracts retain their semantics.",
+  "modules": {
+    "cdi": 0,
+    "cerial": 0,
+    "client": 3,
+    "config": 0,
+    "consul": 11,
+    "consul-service-resolver": 0,
+    "fault-tolerance": 0,
+    "graphql": 0,
+    "hazelcast": 12,
+    "health": 4,
+    "ibmmq": 15,
+    "inject": 4,
+    "jwt": 0,
+    "kafka": 12,
+    "mailclient": 8,
+    "mcp": 0,
+    "metrics": 10,
+    "openapi": 0,
+    "persistence": 1,
+    "rabbitmq": 12,
+    "rest": 3,
+    "rest-client": 18,
+    "runtime-autoconfigure": 40,
+    "service-discovery": 10,
+    "service-registry": 18,
+    "swagger-ui": 0,
+    "telemetry": 12,
+    "vertx": 71,
+    "web": 2,
+    "webservices": 0,
+    "websockets": 0
+  },
+  "annotations": 69,
+  "text_members": 266,
+  "members": [
+    {
+      "module": "client",
+      "annotation": "EnvironmentProperty",
+      "member": "name",
+      "type": "String",
+      "status": "literal configuration key identifier",
+      "source": "GuicedEE/client/src/main/java/com/guicedee/client/annotations/EnvironmentProperty.java"
+    },
+    {
+      "module": "client",
+      "annotation": "EnvironmentProperty",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/client/src/main/java/com/guicedee/client/annotations/EnvironmentProperty.java"
+    },
+    {
+      "module": "client",
+      "annotation": "GuiceOptions",
+      "member": "logLevel",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/client/src/main/java/com/guicedee/client/annotations/GuiceOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "token",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "datacenter",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "configPrefix",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "serviceId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "serviceAddress",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "healthPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "healthInterval",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "consul",
+      "annotation": "ConsulOptions",
+      "member": "deregisterAfter",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/consul/src/main/java/com/guicedee/consul/ConsulOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastClientOptions",
+      "member": "clusterName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastClientOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastClientOptions",
+      "member": "instanceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastClientOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastClientOptions",
+      "member": "addresses",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastClientOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastClientOptions",
+      "member": "labels",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastClientOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "clusterName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "instanceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "publicAddress",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "interfaces",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "multicastGroup",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "tcpMembers",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "kubernetesServiceDns",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "hazelcast",
+      "annotation": "HazelcastServerOptions",
+      "member": "kubernetesNamespace",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/hazelcast/src/main/java/com/guicedee/guicedhazelcast/HazelcastServerOptions.java"
+    },
+    {
+      "module": "health",
+      "annotation": "HealthOptions",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/health/src/main/java/com/guicedee/health/HealthOptions.java"
+    },
+    {
+      "module": "health",
+      "annotation": "HealthOptions",
+      "member": "livenessPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/health/src/main/java/com/guicedee/health/HealthOptions.java"
+    },
+    {
+      "module": "health",
+      "annotation": "HealthOptions",
+      "member": "readinessPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/health/src/main/java/com/guicedee/health/HealthOptions.java"
+    },
+    {
+      "module": "health",
+      "annotation": "HealthOptions",
+      "member": "startupPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/health/src/main/java/com/guicedee/health/HealthOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "queueManager",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "channel",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "user",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "applicationName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "transportType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "sslCipherSuite",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "sslPeerName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQConnectionOptions",
+      "member": "clientId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQConnectionOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQQueueDefinition",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQQueueDefinition.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQQueueDefinition",
+      "member": "connection",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQQueueDefinition.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQQueueOptions",
+      "member": "durableSubscription",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQQueueOptions.java"
+    },
+    {
+      "module": "ibmmq",
+      "annotation": "IBMMQQueueOptions",
+      "member": "messageSelector",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/ibmmq/src/main/java/com/guicedee/ibmmq/IBMMQQueueOptions.java"
+    },
+    {
+      "module": "inject",
+      "annotation": "InjectLogger",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/inject/src/main/java/com/guicedee/guicedinjection/InjectLogger.java"
+    },
+    {
+      "module": "inject",
+      "annotation": "InjectLogger",
+      "member": "level",
+      "type": "String",
+      "status": "reserved metadata; no built-in consumer",
+      "source": "GuicedEE/inject/src/main/java/com/guicedee/guicedinjection/InjectLogger.java"
+    },
+    {
+      "module": "inject",
+      "annotation": "InjectLogger",
+      "member": "rollingFileName",
+      "type": "String",
+      "status": "reserved metadata; no built-in consumer",
+      "source": "GuicedEE/inject/src/main/java/com/guicedee/guicedinjection/InjectLogger.java"
+    },
+    {
+      "module": "inject",
+      "annotation": "InjectLogger",
+      "member": "fileName",
+      "type": "String",
+      "status": "reserved metadata; no built-in consumer",
+      "source": "GuicedEE/inject/src/main/java/com/guicedee/guicedinjection/InjectLogger.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "bootstrapServers",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "groupId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "keyDeserializer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "valueDeserializer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "keySerializer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "valueSerializer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "autoOffsetReset",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "acks",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaConnectionOptions",
+      "member": "clientId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaConnectionOptions.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaTopicCreate",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaTopicCreate.java"
+    },
+    {
+      "module": "kafka",
+      "annotation": "KafkaTopicDefinition",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/kafka/src/main/java/com/guicedee/kafka/KafkaTopicDefinition.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "hostname",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "username",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "ehloHostname",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "authMethods",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "userAgent",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "mailclient",
+      "annotation": "MailConnectionOptions",
+      "member": "defaultFrom",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/mailclient/src/main/java/com/guicedee/mailclient/MailConnectionOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "Match",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/Match.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "Match",
+      "member": "alias",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/Match.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricMethod",
+      "member": "name",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricMethod.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricMethod",
+      "member": "tags",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricMethod.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "registryName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "jmxDomain",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "baseName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "prefix",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "metrics",
+      "annotation": "MetricsOptions",
+      "member": "endpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/metrics/src/main/java/com/guicedee/metrics/MetricsOptions.java"
+    },
+    {
+      "module": "persistence",
+      "annotation": "EntityManager",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/persistence/src/main/java/com/guicedee/persistence/annotations/EntityManager.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "QueueDefinition",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/QueueDefinition.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "QueueDefinition",
+      "member": "exchange",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/QueueDefinition.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "QueueExchange",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/QueueExchange.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "uri",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "addresses",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "user",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "virtualHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "hostnameVerificationAlgorithm",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rabbitmq",
+      "annotation": "RabbitConnectionOptions",
+      "member": "applicationLayerProtocols",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rabbitmq/src/main/java/com/guicedee/rabbit/RabbitConnectionOptions.java"
+    },
+    {
+      "module": "rest",
+      "annotation": "Cors",
+      "member": "allowedOrigins",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest/src/main/java/com/guicedee/rest/services/Cors.java"
+    },
+    {
+      "module": "rest",
+      "annotation": "Cors",
+      "member": "allowedMethods",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest/src/main/java/com/guicedee/rest/services/Cors.java"
+    },
+    {
+      "module": "rest",
+      "annotation": "Cors",
+      "member": "allowedHeaders",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest/src/main/java/com/guicedee/rest/services/Cors.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "Endpoint",
+      "member": "url",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/Endpoint.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "Endpoint",
+      "member": "method",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/Endpoint.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointOptions",
+      "member": "defaultContentType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointOptions.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointOptions",
+      "member": "defaultAccept",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointOptions.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointOptions",
+      "member": "userAgent",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointOptions.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "token",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "username",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "apiKey",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "apiKeyHeader",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "oauth2TokenUrl",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "oauth2ClientId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "oauth2ClientSecret",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "oauth2Scopes",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "oauth2GrantType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "clientCertPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "clientCertPassword",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "rest-client",
+      "annotation": "EndpointSecurity",
+      "member": "clientCertType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/rest-client/src/main/java/com/guicedee/rest/client/annotations/EndpointSecurity.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsAppRunner",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsAppRunner.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsAppRunner",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsAppRunner.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsEcs",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsEcs.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsEcs",
+      "member": "cluster",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsEcs.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsEcs",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsEcs.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsElasticBeanstalk",
+      "member": "environmentName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsElasticBeanstalk.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsElasticBeanstalk",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsElasticBeanstalk.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsLambda",
+      "member": "functionName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsLambda.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsLambda",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsLambda.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AwsLambda",
+      "member": "handler",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AwsLambda.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureAppService",
+      "member": "siteName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureAppService.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureAppService",
+      "member": "slotName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureAppService.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureAppService",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureAppService.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureContainerApps",
+      "member": "appName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureContainerApps.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureContainerApps",
+      "member": "dnsSuffix",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureContainerApps.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "AzureContainerApps",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/AzureContainerApps.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "CloudRuntimeOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/CloudRuntimeOptions.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "CloudRuntimeOptions",
+      "member": "healthPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/CloudRuntimeOptions.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "CloudRuntimeOptions",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/CloudRuntimeOptions.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "CloudRuntimeOptions",
+      "member": "hostname",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/CloudRuntimeOptions.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "CloudRuntimeOptions",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/CloudRuntimeOptions.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "DigitalOceanApp",
+      "member": "componentName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/DigitalOceanApp.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "DigitalOceanApp",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/DigitalOceanApp.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "DigitalOceanApp",
+      "member": "instanceSize",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/DigitalOceanApp.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "FlyIo",
+      "member": "appName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/FlyIo.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "FlyIo",
+      "member": "primaryRegion",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/FlyIo.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpAppEngine",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpAppEngine.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpAppEngine",
+      "member": "projectId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpAppEngine.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpAppEngine",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpAppEngine.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpCloudRun",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpCloudRun.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpCloudRun",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpCloudRun.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "GcpCloudRun",
+      "member": "projectId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/GcpCloudRun.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Heroku",
+      "member": "appName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Heroku.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Kubernetes",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Kubernetes.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Kubernetes",
+      "member": "namespace",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Kubernetes.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Kubernetes",
+      "member": "cluster",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Kubernetes.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Railway",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Railway.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Railway",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Railway.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Render",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Render.java"
+    },
+    {
+      "module": "runtime-autoconfigure",
+      "annotation": "Render",
+      "member": "region",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/runtime-autoconfigure/src/main/java/com/guicedee/runtime/autoconfigure/Render.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "type",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "consulHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "consulToken",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "consulDatacenter",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "kubeHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "kubeNamespace",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "kubeBearerToken",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "srvHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-discovery",
+      "annotation": "ServiceResolverOptions",
+      "member": "loadBalancer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-discovery/src/main/java/com/guicedee/vertx/servicediscovery/ServiceResolverOptions.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "name",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "url",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "healthPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "healthUrl",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "expectedContentType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "revision",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "aliases",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "externalUrls",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "externalUrl",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "kubernetesUrl",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "openApiPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "openApiEnvironments",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "authScheme",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "authTokenUrl",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "authScopes",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "graphqlPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "RegisteredService",
+      "member": "graphqlEnvironments",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/RegisteredService.java"
+    },
+    {
+      "module": "service-registry",
+      "annotation": "ServiceRegistryOptions",
+      "member": "healthPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/service-registry/src/main/java/com/guicedee/service/registry/ServiceRegistryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "SpanAttribute",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/SpanAttribute.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "Telemetry",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/Telemetry.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "Telemetry",
+      "member": "otlpEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/Telemetry.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "Telemetry",
+      "member": "tracesEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/Telemetry.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "Telemetry",
+      "member": "logsEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/Telemetry.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "Trace",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/annotations/Trace.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "serviceName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "otlpEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "tracesEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "logsEndpoint",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "serviceVersion",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "telemetry",
+      "annotation": "TelemetryOptions",
+      "member": "deploymentEnvironment",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/TelemetryOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AbacOptions",
+      "member": "policies",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/abac/AbacOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AbacOptions",
+      "member": "policyFiles",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/abac/AbacOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthKeyStore",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthKeyStore.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthKeyStore",
+      "member": "type",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthKeyStore.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthKeyStore",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthKeyStore.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthKeyStore",
+      "member": "alias",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthKeyStore.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthKeyStore",
+      "member": "aliasPassword",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthKeyStore.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthOptions",
+      "member": "prngAlgorithm",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthPubSecKey",
+      "member": "algorithm",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthPubSecKey",
+      "member": "buffer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AuthPubSecKey",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/AuthPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "HtdigestAuthOptions",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/htdigest/HtdigestAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "HtpasswdAuthOptions",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/htpasswd/HtpasswdAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "keystorePath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "keystoreType",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "keystorePassword",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "jwks",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "algorithm",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "audience",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "issuer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "subject",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtAuthOptions",
+      "member": "permissionsClaimKey",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtPubSecKey",
+      "member": "algorithm",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtPubSecKey",
+      "member": "buffer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtPubSecKey",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "JwtPubSecKey",
+      "member": "id",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtPubSecKey.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "LdapAuthOptions",
+      "member": "url",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "LdapAuthOptions",
+      "member": "authenticationQuery",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "LdapAuthOptions",
+      "member": "authenticationMechanism",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "LdapAuthOptions",
+      "member": "referral",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2JwtOptions",
+      "member": "audience",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2JwtOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2JwtOptions",
+      "member": "issuer",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2JwtOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "clientId",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "clientSecret",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "tenant",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "site",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "authorizationPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "tokenPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "revocationPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "introspectionPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "jwkPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "userInfoPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "logoutPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "scopes",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "scopeDelimiter",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "extraParameters",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "OAuth2Options",
+      "member": "redirectUri",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2Options.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "PropertyFileAuthOptions",
+      "member": "path",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/properties/PropertyFileAuthOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "GrpcOptions",
+      "member": "name",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "GrpcOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "GrpcOptions",
+      "member": "tlsCertPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "GrpcOptions",
+      "member": "tlsKeyPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "name",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "connectionString",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "endpoints",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "password",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "tlsCertPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "tlsVerifyHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "RedisOptions",
+      "member": "masterName",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AddressResolverOptions",
+      "member": "hostsPath",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/AddressResolverOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AddressResolverOptions",
+      "member": "servers",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/AddressResolverOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "AddressResolverOptions",
+      "member": "searchDomains",
+      "type": "String[]",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/AddressResolverOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "EventBusOptions",
+      "member": "clusterPublicHost",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/EventBusOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "EventBusOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/EventBusOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "EventBusOptions",
+      "member": "clientAuth",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/EventBusOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "FileSystemOptions",
+      "member": "fileCacheDir",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/FileSystemOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "Verticle",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/Verticle.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "VertX",
+      "member": "haGroup",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertX.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "VertxEventDefinition",
+      "member": "value",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/VertxEventDefinition.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "VertxEventOptions",
+      "member": "workerPool",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/VertxEventOptions.java"
+    },
+    {
+      "module": "vertx",
+      "annotation": "VertxEventOptions",
+      "member": "orderedByHeader",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/vertx/src/main/java/com/guicedee/vertx/VertxEventOptions.java"
+    },
+    {
+      "module": "web",
+      "annotation": "HttpServerOptions",
+      "member": "host",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/web/src/main/java/com/guicedee/vertx/web/spi/HttpServerOptions.java"
+    },
+    {
+      "module": "web",
+      "annotation": "HttpServerOptions",
+      "member": "uploadsDirectory",
+      "type": "String",
+      "status": "shared resolver at the configuration consumer",
+      "source": "GuicedEE/web/src/main/java/com/guicedee/vertx/web/spi/HttpServerOptions.java"
+    }
+  ]
+}

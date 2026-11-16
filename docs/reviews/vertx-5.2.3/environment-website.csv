@@ -1,0 +1,218 @@
+module,environment_key,website_status,website_default,website_line,mechanism,runtime_sources
+vertx,GRPC_DEADLINE_PROPAGATION,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:89
+vertx,GRPC_HOST,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:64
+vertx,GRPC_MAX_MESSAGE_SIZE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:85
+vertx,GRPC_NAME,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:61
+vertx,GRPC_PORT,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:67
+vertx,GRPC_SCHEDULE_DEADLINE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:93
+vertx,GRPC_TLS_CERT_PATH,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:74
+vertx,GRPC_TLS_ENABLED,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:71
+vertx,GRPC_TLS_KEY_PATH,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:79
+vertx,GRPC_TRANSCODING_ENABLED,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:101
+vertx,GRPC_WEB_ENABLED,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/grpc/GrpcPreStartup.java:97
+telemetry,HOSTNAME,present,localhost,612,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:154
+web,HTTP2_ENABLED,missing,,,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:163
+web,HTTPS_ENABLED,present,false,144,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:146
+web,HTTPS_KEYSTORE,present,—,146,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:174
+web,HTTPS_KEYSTORE_PASSWORD,present,—,148,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:187 | GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:193
+web,HTTPS_KEYSTORE_TYPE,present,auto,147,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:175
+web,HTTPS_PORT,present,443,145,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:148
+web,HTTP_COMPRESSION_ENABLED,present,true,130,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:87
+web,HTTP_COMPRESSION_LEVEL,present,9,131,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:88
+web,HTTP_DECOMPRESSION_ENABLED,present,false,132,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:106
+web,HTTP_DELETE_UPLOADS_ON_END,present,true,142,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:230
+web,HTTP_ENABLED,present,true,127,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:133
+web,HTTP_HANDLE_FILE_UPLOADS,present,true,143,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:231
+web,HTTP_HOST,present,0.0.0.0,129,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:101
+web,HTTP_IDLE_TIMEOUT,present,0,134,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:96
+web,HTTP_MAX_CHUNK_SIZE,present,65536,136,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:91
+web,HTTP_MAX_FORM_ATTRIBUTE_SIZE,present,65536,138,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:92
+web,HTTP_MAX_FORM_FIELDS,present,-1,139,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:93
+web,HTTP_MAX_HEADER_SIZE,present,65536,135,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:90
+web,HTTP_MAX_INITIAL_LINE_LENGTH,present,65536,137,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:94
+web,HTTP_PORT,present,8080,128,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:135
+web,HTTP_TCP_KEEP_ALIVE,present,true,133,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:89
+web,HTTP_UPLOADS_DIRECTORY,present,uploads,141,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:229
+metrics,METRICS_BASE_NAME,present,—,564,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:58
+metrics,METRICS_ENABLED,present,false,560,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:38
+metrics,METRICS_GRAPHITE_ENABLED,present,false,571,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:92
+metrics,METRICS_GRAPHITE_HOST,present,—,572,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:97
+metrics,METRICS_GRAPHITE_PORT,present,2003,573,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:102
+metrics,METRICS_GRAPHITE_PREFIX,present,—,574,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:107
+metrics,METRICS_JMX_DOMAIN,present,—,563,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:53
+metrics,METRICS_JMX_ENABLED,present,false,562,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:48
+metrics,METRICS_PROMETHEUS_ENABLED,present,false,581,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:123
+metrics,METRICS_PROMETHEUS_ENDPOINT,present,/metrics,582,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:128
+metrics,METRICS_PROMETHEUS_PORT,present,—,583,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:133
+metrics,METRICS_REGISTRY_NAME,present,—,561,literal lookup,GuicedEE/metrics/src/main/java/com/guicedee/metrics/implementations/MetricsPreStartup.java:43
+telemetry,OTEL_EXPORTER_OTLP_ENDPOINT,present,—,611,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:135
+telemetry,OTEL_EXPORTER_OTLP_LOGS_ENDPOINT,missing,,,per-signal endpoint resolver,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:143
+telemetry,OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,missing,,,per-signal endpoint resolver,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:141
+vertx,REDIS_CONNECTION_STRING,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:65
+vertx,REDIS_DATABASE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:130
+vertx,REDIS_MASTER_NAME,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:127
+vertx,REDIS_MAX_POOL_SIZE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:95
+vertx,REDIS_MAX_WAITING,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:99
+vertx,REDIS_MODE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:76
+vertx,REDIS_NAME,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:62
+vertx,REDIS_PASSWORD,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:89
+vertx,REDIS_PROTOCOL,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:115
+vertx,REDIS_TLS_CERT_PATH,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:106
+vertx,REDIS_TLS_ENABLED,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:103
+vertx,REDIS_TLS_VERIFY_HOST,missing,,,annotation resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/redis/RedisPreStartup.java:111
+telemetry,TELEMETRY_CONFIGURE_LOGS,present,false,605,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:121 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:108 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:209
+telemetry,TELEMETRY_DEPLOYMENT_ENVIRONMENT,present,production,607,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:126 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:118 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:219
+telemetry,TELEMETRY_ENABLED,present,false,601,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:113 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:174 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:73
+telemetry,TELEMETRY_EXPORT_LOGS,missing,,,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:122 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:199 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:98
+telemetry,TELEMETRY_LOGS_ENDPOINT,missing,,,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:129 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:194 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:93
+telemetry,TELEMETRY_LOG_SIGNALS,present,false,610,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:123 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:133 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:234
+telemetry,TELEMETRY_MAX_BATCH_SIZE,present,512,608,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:130 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:123 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:224
+telemetry,TELEMETRY_MAX_LOG_BATCH_SIZE,present,512,609,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:131 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:128 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:229
+telemetry,TELEMETRY_OTLP_ENDPOINT,present,—,603,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:127 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:184 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:83
+telemetry,TELEMETRY_SERVICE_NAME,present,—,602,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:124 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:179 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:78
+telemetry,TELEMETRY_SERVICE_VERSION,present,1.0.0,606,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:125 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:113 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:214
+telemetry,TELEMETRY_TRACES_ENDPOINT,missing,,,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:128 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:189 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:88
+telemetry,TELEMETRY_USE_IN_MEMORY,present,false,604,literal lookup,GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/OpenTelemetrySDKConfigurator.java:120 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:103 | GuicedEE/telemetry/src/main/java/com/guicedee/telemetry/implementations/TelemetryPreStartup.java:204
+vertx,VERTX_ADDR_RESOLVER_CACHE_MAX_TTL,present,auto,307,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:395
+vertx,VERTX_ADDR_RESOLVER_CACHE_MIN_TTL,present,0,306,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:390
+vertx,VERTX_ADDR_RESOLVER_CACHE_NEGATIVE_TTL,present,0,308,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:400
+vertx,VERTX_ADDR_RESOLVER_HOSTS_PATH,present,—,302,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:369
+vertx,VERTX_ADDR_RESOLVER_HOSTS_REFRESH_PERIOD,present,—,303,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:374
+vertx,VERTX_ADDR_RESOLVER_MAX_QUERIES,present,4,310,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:410
+vertx,VERTX_ADDR_RESOLVER_NDOTS,present,auto,313,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:426
+vertx,VERTX_ADDR_RESOLVER_OPT_RESOURCE_ENABLED,present,false,314,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:431
+vertx,VERTX_ADDR_RESOLVER_QUERY_TIMEOUT,present,5000,309,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:405
+vertx,VERTX_ADDR_RESOLVER_RD_FLAG,present,true,311,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:415
+vertx,VERTX_ADDR_RESOLVER_ROTATE_SERVERS,present,false,305,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:385
+vertx,VERTX_ADDR_RESOLVER_ROUND_ROBIN,present,false,315,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:436
+vertx,VERTX_ADDR_RESOLVER_SEARCH_DOMAINS,present,—,312,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:420
+vertx,VERTX_ADDR_RESOLVER_SERVERS,present,—,304,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:379
+vertx,VERTX_AUTH_ABAC_POLICY_FILES,present,—,476,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/abac/AbacAuthorizationProvider.java:83
+vertx,VERTX_AUTH_CHAIN_MODE,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:178 | GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:266
+vertx,VERTX_AUTH_HTDIGEST_PATH,present,—,519,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/htdigest/HtdigestAuthenticationProvider.java:67
+vertx,VERTX_AUTH_HTPASSWD_PATH,present,—,511,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/htpasswd/HtpasswdAuthenticationProvider.java:54
+vertx,VERTX_AUTH_HTPASSWD_PLAIN_TEXT_ENABLED,present,false,512,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/htpasswd/HtpasswdAuthenticationProvider.java:56
+vertx,VERTX_AUTH_JWT_ALGORITHM,present,—,455,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:165 | GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:80
+vertx,VERTX_AUTH_JWT_AUDIENCE,present,—,457,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:169
+vertx,VERTX_AUTH_JWT_AUTHORIZATION_TYPE,missing,,,JWT provider resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthorizationProvider.java:30
+vertx,VERTX_AUTH_JWT_EXPIRES_IN_SECONDS,present,—,458,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:213
+vertx,VERTX_AUTH_JWT_IGNORE_EXPIRATION,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:210
+vertx,VERTX_AUTH_JWT_ISSUER,present,—,456,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:192 | GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:81
+vertx,VERTX_AUTH_JWT_KEYSTORE_PASSWORD,present,—,454,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:105
+vertx,VERTX_AUTH_JWT_KEYSTORE_PATH,present,—,453,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:99
+vertx,VERTX_AUTH_JWT_KEYSTORE_TYPE,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:104
+vertx,VERTX_AUTH_JWT_LEEWAY,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:204
+vertx,VERTX_AUTH_JWT_NO_TIMESTAMP,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:219
+vertx,VERTX_AUTH_JWT_PERMISSIONS_CLAIM_KEY,present,—,459,JWT provider resolver,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthorizationProvider.java:43
+vertx,VERTX_AUTH_JWT_SUBJECT,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/jwt/JwtAuthenticationProvider.java:198
+vertx,VERTX_AUTH_KEYSTORE_ALIAS,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:300
+vertx,VERTX_AUTH_KEYSTORE_ALIAS_PASSWORD,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:301
+vertx,VERTX_AUTH_KEYSTORE_PASSWORD,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:298
+vertx,VERTX_AUTH_KEYSTORE_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:292
+vertx,VERTX_AUTH_KEYSTORE_TYPE,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:297
+vertx,VERTX_AUTH_LDAP_AUTHENTICATION_MECHANISM,present,simple,503,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthenticationProvider.java:58
+vertx,VERTX_AUTH_LDAP_AUTHENTICATION_QUERY,present,—,502,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthenticationProvider.java:57
+vertx,VERTX_AUTH_LDAP_REFERRAL,present,—,504,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthenticationProvider.java:59
+vertx,VERTX_AUTH_LDAP_URL,present,—,501,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/ldap/LdapAuthenticationProvider.java:56
+vertx,VERTX_AUTH_LEEWAY,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:284
+vertx,VERTX_AUTH_OAUTH2_AUTHORIZATION_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:168
+vertx,VERTX_AUTH_OAUTH2_CLIENT_ID,present,—,466,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:72
+vertx,VERTX_AUTH_OAUTH2_CLIENT_SECRET,present,—,467,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:73
+vertx,VERTX_AUTH_OAUTH2_CONNECT_TIMEOUT,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:221
+vertx,VERTX_AUTH_OAUTH2_EXTRA_PARAMETERS,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:205
+vertx,VERTX_AUTH_OAUTH2_FLOW,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:163
+vertx,VERTX_AUTH_OAUTH2_INTROSPECTION_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:171
+vertx,VERTX_AUTH_OAUTH2_JWK_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:172
+vertx,VERTX_AUTH_OAUTH2_JWT_AUDIENCE,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:184
+vertx,VERTX_AUTH_OAUTH2_JWT_IGNORE_EXPIRATION,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:199
+vertx,VERTX_AUTH_OAUTH2_JWT_ISSUER,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:189
+vertx,VERTX_AUTH_OAUTH2_JWT_LEEWAY,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:194
+vertx,VERTX_AUTH_OAUTH2_LOGOUT_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:174
+vertx,VERTX_AUTH_OAUTH2_READ_TIMEOUT,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:222
+vertx,VERTX_AUTH_OAUTH2_REVOCATION_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:170
+vertx,VERTX_AUTH_OAUTH2_SCOPE_SEPARATOR,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:177
+vertx,VERTX_AUTH_OAUTH2_SITE,present,—,468,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:156
+vertx,VERTX_AUTH_OAUTH2_TENANT,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:150
+vertx,VERTX_AUTH_OAUTH2_TOKEN_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:169
+vertx,VERTX_AUTH_OAUTH2_USERINFO_PATH,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:173
+vertx,VERTX_AUTH_OAUTH2_WELL_KNOWN_PROVIDER,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/oauth2/OAuth2AuthenticationProvider.java:253
+vertx,VERTX_AUTH_OTP_AUTH_ATTEMPTS_LIMIT,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:80
+vertx,VERTX_AUTH_OTP_COUNTER,present,—,487,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:101
+vertx,VERTX_AUTH_OTP_LOOK_AHEAD_WINDOW,present,—,486,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:100
+vertx,VERTX_AUTH_OTP_PASSWORD_LENGTH,present,6,484,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:79
+vertx,VERTX_AUTH_OTP_PERIOD,present,30,485,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:86
+vertx,VERTX_AUTH_OTP_TYPE,present,—,483,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/otp/OtpAuthenticationProvider.java:78
+vertx,VERTX_AUTH_PRNG_ALGORITHM,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:275
+vertx,VERTX_AUTH_PRNG_SEED_BITS,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:281
+vertx,VERTX_AUTH_PRNG_SEED_INTERVAL,missing,,,provider prefix + suffix,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:278
+vertx,VERTX_AUTH_PROPERTIES_PATH,present,—,494,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/properties/PropertyFileAuthenticationProvider.java:81
+vertx,VERTX_AUTH_PUBSECKEY_<INDEX>_ALGORITHM,missing,,,indexed PEM override,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:314
+vertx,VERTX_AUTH_PUBSECKEY_<INDEX>_BUFFER,missing,,,indexed PEM override,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:315
+vertx,VERTX_AUTH_PUBSECKEY_<INDEX>_PATH,missing,,,indexed PEM override,GuicedEE/vertx/src/main/java/com/guicedee/vertx/auth/VertxAuthPreStartup.java:316
+vertx,VERTX_BLOCKED_THREAD_CHECK_INTERVAL,present,auto,168,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:108
+vertx,VERTX_BLOCKED_THREAD_CHECK_INTERVAL_TIME_UNIT,present,MILLISECONDS,169,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:113
+vertx,VERTX_DISABLE_TCCL,present,false,181,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:173
+vertx,VERTX_EVENTBUS_ACCEPT_BACKLOG,present,-1,234,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:308
+vertx,VERTX_EVENTBUS_CLIENT_AUTH,present,NONE,239,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:333
+vertx,VERTX_EVENTBUS_CLUSTER_PING_INTERVAL,present,auto,230,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:288
+vertx,VERTX_EVENTBUS_CLUSTER_PING_REPLY_INTERVAL,present,auto,231,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:293
+vertx,VERTX_EVENTBUS_CLUSTER_PUBLIC_HOST,present,—,228,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:278
+vertx,VERTX_EVENTBUS_CLUSTER_PUBLIC_PORT,present,0,229,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:283
+vertx,VERTX_EVENTBUS_CONNECT_TIMEOUT,present,60000,237,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:323
+vertx,VERTX_EVENTBUS_HOST,present,—,232,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:298
+vertx,VERTX_EVENTBUS_PORT,present,0,233,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:303
+vertx,VERTX_EVENTBUS_RECONNECT_ATTEMPTS,present,0,235,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:313
+vertx,VERTX_EVENTBUS_RECONNECT_INTERVAL,present,1000,236,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:318
+vertx,VERTX_EVENTBUS_TRUST_ALL,present,false,238,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:328
+vertx,VERTX_EVENT_ADDRESS_<ADDR>,present,—,199,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:101
+vertx,VERTX_EVENT_AUTOBIND,missing,,,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:154
+vertx,VERTX_EVENT_AUTOBIND_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:154
+vertx,VERTX_EVENT_BATCH_MAX,present,—,208,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:204
+vertx,VERTX_EVENT_BATCH_MAX_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:204
+vertx,VERTX_EVENT_BATCH_WINDOW_MS,present,—,207,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:199
+vertx,VERTX_EVENT_BATCH_WINDOW_MS_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:199
+vertx,VERTX_EVENT_CONSUMER_COUNT,present,—,201,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:159
+vertx,VERTX_EVENT_CONSUMER_COUNT_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:159
+vertx,VERTX_EVENT_INSTANCES,present,—,205,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:179
+vertx,VERTX_EVENT_INSTANCES_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:179
+vertx,VERTX_EVENT_LOCAL_ONLY,present,false,200,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:149
+vertx,VERTX_EVENT_LOCAL_ONLY_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:149
+vertx,VERTX_EVENT_LOOP_POOL_SIZE,present,auto,166,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:98
+vertx,VERTX_EVENT_MAX_BUFFERED_MESSAGES,present,—,209,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:189
+vertx,VERTX_EVENT_MAX_BUFFERED_MESSAGES_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:189
+vertx,VERTX_EVENT_ORDERED_BY_HEADER,missing,,,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:184
+vertx,VERTX_EVENT_ORDERED_BY_HEADER_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:184
+vertx,VERTX_EVENT_RESUME_AT_MESSAGES,present,—,210,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:194
+vertx,VERTX_EVENT_RESUME_AT_MESSAGES_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:194
+vertx,VERTX_EVENT_TIMEOUT_MS,present,—,206,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:209
+vertx,VERTX_EVENT_TIMEOUT_MS_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:209
+vertx,VERTX_EVENT_WORKER,present,false,202,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:164
+vertx,VERTX_EVENT_WORKER_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:164
+vertx,VERTX_EVENT_WORKER_POOL,present,—,203,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:169
+vertx,VERTX_EVENT_WORKER_POOL_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:169
+vertx,VERTX_EVENT_WORKER_POOL_SIZE,present,—,204,global event option,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:174
+vertx,VERTX_EVENT_WORKER_POOL_SIZE_<ADDR>,missing,,,per-address system property / OS environment only,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertxEventRegistry.java:174
+vertx,VERTX_FILESYSTEM_CLASSPATH_RESOLVING,present,true,282,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:241
+vertx,VERTX_FILESYSTEM_FILE_CACHE_DIR,present,—,284,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:251
+vertx,VERTX_FILESYSTEM_FILE_CACHING,present,true,283,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:246
+vertx,VERTX_HA_ENABLED,present,false,175,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:143
+vertx,VERTX_INTERNAL_BLOCKING_POOL_SIZE,present,auto,174,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:138
+web,VERTX_MAX_BODY_SIZE,present,524288000,140,literal lookup,GuicedEE/web/src/main/java/com/guicedee/vertx/web/VertxWebServerPostStartup.java:228
+vertx,VERTX_MAX_EVENT_LOOP_EXECUTE_TIME,present,auto,170,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:118
+vertx,VERTX_MAX_EVENT_LOOP_EXECUTE_TIME_UNIT,present,NANOSECONDS,171,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:123
+vertx,VERTX_MAX_WORKER_EXECUTE_TIME,present,auto,172,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:128
+vertx,VERTX_MAX_WORKER_EXECUTE_TIME_UNIT,present,NANOSECONDS,173,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:133
+vertx,VERTX_METRICS_ENABLED,present,false,182,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:218
+vertx,VERTX_PREFER_NATIVE_TRANSPORT,present,false,179,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:163
+vertx,VERTX_QUORUM_SIZE,present,1,176,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:148
+vertx,VERTX_USE_DAEMON_THREADS,present,false,180,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:168
+vertx,VERTX_VERTICLE_DEFAULT_INSTANCES,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:460
+vertx,VERTX_VERTICLE_HA,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:466
+vertx,VERTX_VERTICLE_MAX_WORKER_EXECUTE_TIME,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:484
+vertx,VERTX_VERTICLE_MAX_WORKER_EXECUTE_TIME_UNIT,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:490
+vertx,VERTX_VERTICLE_THREADING_MODEL,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:446
+vertx,VERTX_VERTICLE_WORKER_POOL_NAME,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:472
+vertx,VERTX_VERTICLE_WORKER_POOL_SIZE,missing,,,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VerticleBuilder.java:478
+vertx,VERTX_WARNING_EXCEPTION_TIME,present,auto,177,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:153
+vertx,VERTX_WARNING_EXCEPTION_TIME_UNIT,present,NANOSECONDS,178,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:158
+vertx,VERTX_WORKER_POOL_SIZE,present,auto,167,literal lookup,GuicedEE/vertx/src/main/java/com/guicedee/vertx/spi/VertXPreStartup.java:103

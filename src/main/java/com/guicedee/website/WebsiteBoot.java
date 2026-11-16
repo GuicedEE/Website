@@ -210,7 +210,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         versionBadge.addStyle("box-shadow", "0 0 6px color-mix(in srgb, var(--wa-color-brand-normal) 40%, transparent)");
         versionBadge.addStyle("cursor", "pointer");
         versionBadge.addStyle("margin-inline-start", "var(--wa-space-m)");
-        versionBadge.setText("2.5.1");
+        versionBadge.setText("2.6.0");
         versionBadge.setID("version-badge");
         cluster.add(versionBadge);
 
@@ -237,7 +237,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         var snapshotVersionLabel = new WaDiv<>();
         snapshotVersionLabel.addStyle("margin-block-end", WaSpaceToken.SpaceS.var());
         snapshotVersionLabel.setFontSize(WaTypographyToken.FontSizeS);
-        snapshotVersionLabel.setText("Release version: <code>2.5.1</code>");
+        snapshotVersionLabel.setText("Release version: <code>2.6.0</code>");
         popoverContent.add(snapshotVersionLabel);
 
         var popoverDesc = new WaDiv<>().setTag("p");
@@ -353,7 +353,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
         WaSwitch<?> buildToolSwitch = new WaSwitch<>();
         buildToolSwitch.setSize(com.jwebmp.webawesome.components.Size.Small);
         buildToolSwitch.setName("useGradle");
-        //buildToolSwitch.bind("app.useGradle()");
+        buildToolSwitch.addAttribute("[checked]", "app.useGradle()");
         buildToolSwitch.addAttribute("(wa-change)", "onBuildToolChange($event)");
         buildToolToggle.add(buildToolSwitch);
 
@@ -448,6 +448,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
         // ── Menu: WaTree navigation with sub-items ──
         var menu = page.getMenu();
+        menu.add(new SiteSearch("desktop"));
         WaTree<?> menuTree = new WaTree<>();
         menuTree.setIndentSize("2px");
         menuTree.setIndentGuideColor("var(--wa-color-neutral-300)");
@@ -581,6 +582,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
 
         // ── Burger Menu Navigation (drawer contents, slot="navigation") ──
         var burgerMenuNavigation = page.getNavigation();
+        burgerMenuNavigation.add(new SiteSearch("mobile"));
         WaTree<?> navTree = new WaTree<>();
         navTree.setIndentSize("2px");
         navTree.setIndentGuideColor("var(--wa-color-neutral-300)");
@@ -785,6 +787,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> fields() {
         var f = new ArrayList<>(INgComponent.super.fields());
+        f.add(SiteSearch.fields());
         //f.add("private router: Router = inject(Router);");
         f.add("private _asideNavigating = false;");
         f.add("private document = inject(DOCUMENT);");
@@ -805,6 +808,7 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
     @Override
     public List<String> methods() {
         var m = new ArrayList<>(INgComponent.super.methods());
+        m.add(SiteSearch.methods());
         m.add("""
                 toggleDarkMode() {
                     const isDark = !this.app.darkMode();
@@ -837,7 +841,8 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     this.app.useGradle.set(savedBuildTool === 'gradle');
                 }""");
         init.add("""
-                this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
+                this.siteNavigationSubscription = this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe((e: any) => {
+                    void this.revealSearchFragment(e.urlAfterRedirects);
                     if (this._asideNavigating) return;
                     const navEnd = e as NavigationEnd;
                     const parsedUrl = this.router.parseUrl(navEnd.urlAfterRedirects);
@@ -866,6 +871,14 @@ public class WebsiteBoot extends DivSimple<WebsiteBoot> implements INgComponent<
                     }
                 });""");
         return init;
+    }
+
+    @Override
+    public List<String> onDestroy() {
+        var destroy = new ArrayList<>(INgComponent.super.onDestroy());
+        destroy.add("this.siteNavigationSubscription?.unsubscribe();");
+        destroy.add("this.searchRevealToken++; clearTimeout(this.searchHighlightTimer);");
+        return destroy;
     }
 
 }

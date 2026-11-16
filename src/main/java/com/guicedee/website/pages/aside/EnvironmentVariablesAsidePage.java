@@ -61,11 +61,16 @@ public class EnvironmentVariablesAsidePage extends DivSimple<EnvironmentVariable
         list.addStyle("flex-direction:column");
         list.addStyle("gap:var(--wa-spacing-x-small)");
 
+        list.add(asideLink("configuration-search-order", "Search Order"));
+        list.add(asideLink("annotation-text-across-modules", "Annotation Text"));
         list.add(asideLink("injection-runtime", "Inject"));
         list.add(asideLink("json", "JSON"));
         list.add(asideLink("http-server", "Web"));
         list.add(asideLink("vert-x-runtime-consumers", "Vert.x"));
         list.add(asideLink("eventbus", "EventBus"));
+        list.add(asideLink("verticle-deployment", "Deployment"));
+        list.add(asideLink("redis", "Redis"));
+        list.add(asideLink("grpc", "gRPC"));
         list.add(asideLink("hazelcast-clustering", "Hazelcast"));
         list.add(asideLink("filesystem", "FileSystem"));
         list.add(asideLink("address-resolver", "Address Resolver"));
@@ -75,6 +80,7 @@ public class EnvironmentVariablesAsidePage extends DivSimple<EnvironmentVariable
         list.add(asideLink("health-checks", "Health"));
         list.add(asideLink("metrics", "Metrics"));
         list.add(asideLink("telemetry", "Telemetry"));
+        list.add(asideLink("programmatic-options", "Programmatic Options"));
         list.add(asideLink("rabbitmq", "RabbitMQ"));
         list.add(asideLink("graphql", "GraphQL"));
         list.add(asideLink("kafka", "Kafka"));
