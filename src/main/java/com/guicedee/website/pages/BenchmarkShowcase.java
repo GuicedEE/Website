@@ -10,7 +10,7 @@ final class BenchmarkShowcase {
                 persistenceMode = 0;
                 persistenceTitles = ['Launch to committed graph · seconds', 'Joined read, warm p50 · milliseconds', 'CRUD cycle, warm p50 · milliseconds'];
                 persistenceUnits = ['s', 'ms', 'ms'];
-                persistenceValues: number[][] = [[14.730446499997925,11.808709900000395,15.82652230000167],[2.4721000008867122,2.4009000007936265,2.5032000012288336],[81.47099999769125,77.50260000102571,95.91200000068056]];
+                persistenceValues: number[][] = [[15.02519829999801,12.179603399999905,16.794261000002734],[2.4135999992722645,2.3061000028974377,2.4551999958930537],[80.3137999973842,80.06989999557845,95.76669999660226]];
                 persistenceSource = "Snapshot · 2026-11-16 · 3 starts per framework · default JVM";
                 cdiColumns = [
                     {field: 'runtime', label: 'Runtime', width: 140, sortable: false},
@@ -24,7 +24,7 @@ final class BenchmarkShowcase {
                     {key: 'linux-spi', runtime: 'Linux jlink', discovery: 'SPI', checks: '16/16'},
                     {key: 'linux-native', runtime: 'Linux native', discovery: 'SPI', checks: '16/16'}
                 ];
-                benchmarkValues: (number[] | null)[] = [[654.6762000000399,681.3458999997692,626.8338999998377],[3.517444553000132,4.01462643900004,5.684916422000242],[68.56640625,55.302734375,85.2578125],[14.730446499997925,11.808709900000395,15.82652230000167]];
+                benchmarkValues: (number[] | null)[] = [[654.6762000000399,681.3458999997692,626.8338999998377],[3.517444553000132,4.01462643900004,5.684916422000242],[68.56640625,55.302734375,85.2578125],[15.02519829999801,12.179603399999905,16.794261000002734]];
                 benchmarkUnits = ["ms","s","MiB","s"];
                 benchmarkSources = ["Snapshot · 2026-11-15 · 6 / 6 / 6 starts (GuicedEE / Quarkus / Micronaut)","Snapshot · 2026-11-15 · 3 clean builds per task","Snapshot · 2026-11-15 · 6 / 6 / 6 starts (GuicedEE / Quarkus / Micronaut)","Snapshot · 2026-11-16 · 3 starts per framework · default JVM"];
                 benchmarkLabels = [['GuicedEE native', 'Quarkus native', 'Micronaut native'], ['GuicedEE SPI', 'Quarkus fast-JAR', 'Micronaut JVM'], ['GuicedEE native', 'Quarkus native', 'Micronaut native'], ['GuicedEE', 'Quarkus', 'Micronaut']];
