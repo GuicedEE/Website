@@ -219,8 +219,8 @@ the separate clean-build timing boundary. It includes 655 ms native startup,
 packaging, 67.86 s native packaging, 18.25/17.88 s SPI/scanner jlink packaging,
 and 2.41/80.31 ms persistence read/CRUD-cycle p50.
 
-Revision `guicedee-website--v260-20261116-447ca69` is healthy, ready and serves
-100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-447ca69`.
+Revision `guicedee-website--v260-20261116-447ca69` was verified healthy, ready and
+serving 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-447ca69`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:cdb715dd34fb74563a4efd9ce27acb0a66ca8ff657d933f2728526683524d46d`.
 
@@ -230,3 +230,24 @@ the release anchor below the fixed header and no browser errors at 1440, 1024
 and 390 pixels. Generated and public release Markdown include the same figures.
 All 298 public assets match the production build. Evidence and screenshots are
 retained under `target/website-release-benchmarks/` in DevSuite.
+
+## Always dark mode and lighter header star
+
+Source `bf789b04e7f2e496235e473c2572a5b5ab1030a0` renders `wa-dark` on both
+the HTML root and body, with dark color-scheme metadata in the initial document.
+The theme toggle and saved-theme override are removed. The shared app theme
+remains dark for diagrams. The header star uses `--wa-color-brand-on-quiet`
+(`#f88ab7`) with its secondary icon layer at full opacity.
+
+Revision `guicedee-website--v260-20261116-bf789b0` is healthy, ready and serves
+100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bf789b0`.
+Deployed image:
+`docker.io/gedmarc/guicedee-website@sha256:768731530f7107c0bd17ea1df1b2790af01e4a6ef6a7374fa6791e71120e606a`.
+
+The production build passed. Local and public browser checks verified the
+initial HTML, dark document/body color schemes under light and dark system
+settings, a saved light preference, reloads, route navigation, the star's
+rendered color and opacity, and no theme toggle or browser errors. Desktop and
+mobile layouts were checked at 1440 and 390 pixels. All 298 public assets match
+the production build. Evidence and screenshots are retained under
+`target/website-dark-mode/` in DevSuite.

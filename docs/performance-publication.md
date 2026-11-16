@@ -27,8 +27,8 @@ artifact publication and leaves the website backend unchanged.
 
 ## Current deployment — 16 November 2026
 
-Website source `447ca698576a78bd33917329558b7f76d9651202` is now live in revision
-`guicedee-website--v260-20261116-447ca69`, with benchmark snapshot `f5770f2`.
+Website source `bf789b04e7f2e496235e473c2572a5b5ab1030a0` is now live in revision
+`guicedee-website--v260-20261116-bf789b0`, with benchmark snapshot `f5770f2`.
 Public checks verified the three-framework charts, build modes, complete grids
 and current published datasets. The Developer selector uses its shorter label;
 the Native-Image caption explicitly names all three frameworks. Browser checks
@@ -44,6 +44,7 @@ The 2.6.0 release section presents the public benchmark suite and measured
 developer, native runtime, persistence and jlink results. It uses the same
 dated datasets, links to the immutable `f5770f2` report and keeps the runtime
 limits and clean-build timing boundaries explicit.
+The website now always uses dark mode and the header star uses the lighter pink.
 See the [complete deployment record](website-publication-2026-11-16.md)
 for the image, builder/documentation changes and public verification.
 

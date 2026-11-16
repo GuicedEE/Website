@@ -17,7 +17,7 @@ source refresh, nginx behavior, verification commands and the live-site audit.
 
 The homepage, builder and crawler-documentation updates are live at
 [guicedee.com](https://guicedee.com/home). Revision
-`guicedee-website--v260-20261116-447ca69` is healthy and serves 100% of traffic.
+`guicedee-website--v260-20261116-bf789b0` is healthy and serves 100% of traffic.
 All 298 public assets match the verified build. Runtime target sits beside
 Language, and Service Discovery is grouped under Cloud SDKs. Release highlights
 from 2.6.0 through 2.4.0 use aligned, responsive card grids. The homepage selector
@@ -37,6 +37,9 @@ the fixed header, including when arriving from a bookmark or search result.
 The 2.6.0 release highlights now include the public benchmark suite, developer
 builds, native runtime and reactive persistence results. Measurements are dated
 15–16 November 2026 and link to the retained benchmark revision `f5770f2`.
+The site always uses dark mode, including the initial HTML and browser controls,
+regardless of system settings or saved theme preferences. The theme toggle is
+removed and the header star uses the lighter brand pink at full opacity.
 See the
 [deployment record](docs/website-publication-2026-11-16.md) for the source revision,
 immutable image and validation details.
