@@ -467,7 +467,7 @@ evidence is retained under `target/website-publish-785d533/` in DevSuite.
 ## Generated project file browser
 
 Website source `83391ea6ae2bbda716f7bd5c329d8094bcbdaced` is deployed in
-revision `guicedee-website--v260-20261116-83391ea`, healthy and serving 100%
+revision `guicedee-website--v260-20261116-83391ea`, verified healthy and serving 100%
 of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:ab104e043abf3d49f313c6ae4b582ebfd938dad20363aeea91cad0b644b57164`.
 
 The builder opens a generated file browser from the same ZIP data as the
@@ -476,3 +476,15 @@ returns to the top, including on the current page. Production build passed.
 Live browser checks at 1440 and 390 pixels verified file selection and the
 native dialog; all 298 public assets match the production build. Evidence is
 retained under `target/website-publish-83391ea/` in DevSuite.
+
+## Compact file tree and release navigation
+
+Website source `628d798b9ed061c724ac10d5bcd1c9e1cbe9616b` is deployed in
+revision `guicedee-website--v260-20261116-628d798`, healthy and serving 100%
+of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:f2d039e76d738e005d496de9d53b385e9bb3be93ba0f9ee5392d3012021730d2`.
+
+The generated file tree has tighter rows and indentation. Releases navigation
+shows the five newest versions followed by a link to the next release. The
+production build passed; public desktop and mobile checks verified file selection
+and the Releases link. All 298 live assets match the build. Evidence is retained
+under `target/website-publish-628d798/` in DevSuite.
