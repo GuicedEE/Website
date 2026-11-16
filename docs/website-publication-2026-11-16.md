@@ -398,7 +398,7 @@ dots below the slides, preserving the full width of the content at every checked
 viewport. Each arrow has a 44 px target and an accessible label. The first and
 last slides retain the native disabled states; dots and top selectors stay in sync.
 
-Revision `guicedee-website--v260-20261116-bb3ea74` is healthy, ready and serves
+Revision `guicedee-website--v260-20261116-bb3ea74` was verified healthy, ready and serving
 100% of traffic. Image tag: `gedmarc/guicedee-website:2.6.0-20261116-bb3ea74`.
 Deployed image:
 `docker.io/gedmarc/guicedee-website@sha256:35f92f3959dc115ac4c75b20f0ebf42c66baac14271a7d616f82723cd2082a24`.
@@ -411,3 +411,22 @@ The existing wheel/touch scroll chaining and immediate section-navigation checks
 also passed locally. All 298 public assets match the verified production build.
 Evidence and screenshots are retained under `target/website-carousel-arrows/`
 in DevSuite.
+
+## Builder, carousel and Getting Started improvements
+
+Website source `bdeab1209952cdbd6a6ec4ed3ab52a37fb3d5d6d` is deployed in
+revision `guicedee-website--v260-20261116-bdeab12`, healthy and serving 100%
+of traffic. Image: `docker.io/gedmarc/guicedee-website@sha256:2a89bae37bc02c2c45c3753b90d45b4ab6e130d99c48b10bf9e4207dd03ac889`.
+
+This release adds native runtime details and slide-edge carousel arrows; a
+responsive builder preview, initially collapsed module groups and contextual
+clustering guidance; and removes the redundant JVM service-loading setting
+from Java and Kotlin generated projects. Getting Started gains build-tool
+actions, a dark lifecycle diagram and linked next-step cards.
+
+Production generation and build passed. Public browser checks at 1440 and
+390 pixels verified carousel navigation, builder initial state and preview,
+next-step links and the build-tool action. Local checks covered the generated
+Java and Kotlin JVM/native starters, clustering note and all eight destinations.
+Public assets were compared with the production build; evidence is retained in
+`target/website-publish-bdeab12/` in DevSuite.
