@@ -798,6 +798,23 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         intro.setWaColorText("quiet");
         content.add(intro);
 
+        content.add(codeBlockWithTitle("Traditional framework vs GuicedEE",
+                """
+                        // ❌ Traditional framework:
+                        //   - application.yml
+                        //   - beans.xml
+                        //   - web.xml
+                        //   - persistence.xml
+                        //   - logback.xml
+                        //   - 47 starter dependencies
+                        //   - A code generator to set it all up
+                        //   - A dev console for management
+
+                        // ✅ GuicedEE:
+                        GuiceApplication.run(() -> {});
+                        // That's it. Your REST endpoints, health checks,
+                        // persistence units, and WebSocket handlers are live."""));
+
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -824,22 +841,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("Traditional framework vs GuicedEE",
-                """
-                        // ❌ Traditional framework:
-                        //   - application.yml
-                        //   - beans.xml
-                        //   - web.xml
-                        //   - persistence.xml
-                        //   - logback.xml
-                        //   - 47 starter dependencies
-                        //   - A code generator to set it all up
-                        //   - A dev console for management
-                        
-                        // ✅ GuicedEE:
-                        GuiceApplication.run(() -> {});
-                        // That's it. Your REST endpoints, health checks,
-                        // persistence units, and WebSocket handlers are live."""));
+
 
         return buildSection("Zero-file-based-config philosophy", "No XML. No YAML. No boilerplate.",
                 "Configuration lives in your code, not in a file tree. Override anything at deploy time with environment variables. You can of course still use configuration if you desire",
@@ -977,6 +979,45 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         intro.setWaColorText("quiet");
         content.add(intro);
 
+        // REST endpoint with Guice injection
+        content.add(codeBlockWithTitle("Full REST resource with injection, CORS, and reactive returns",
+                """
+                        @Path("/api/orders")
+                        @Cors(allowedOrigins = {"https://app.example.com"},
+                              allowedMethods = {"GET", "POST"},
+                              allowCredentials = true)
+                        public class OrderResource {
+
+                            @Inject
+                            private OrderService orderService;
+
+                            @GET
+                            @Produces(MediaType.APPLICATION_JSON)
+                            public Uni<List<Order>> listOrders(
+                                    @QueryParam("status") String status,
+                                    @QueryParam("page") @DefaultValue("1") int page) {
+                                return orderService.findByStatus(status, page);
+                            }
+
+                            @POST
+                            @Consumes(MediaType.APPLICATION_JSON)
+                            @Produces(MediaType.APPLICATION_JSON)
+                            @RolesAllowed("order:write")
+                            public Uni<Response> createOrder(OrderRequest request) {
+                                return orderService.create(request)
+                                    .onItem().transform(order ->
+                                        Response.status(201)
+                                            .entity(order)
+                                            .build());
+                            }
+
+                            @GET @Path("/{id}")
+                            @Produces(MediaType.APPLICATION_JSON)
+                            public Uni<Order> getOrder(@PathParam("id") String id) {
+                                return orderService.findById(id);
+                            }
+                        }"""));
+
         // REST features grid
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
@@ -1023,45 +1064,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 null));
 
         content.add(features);
-
-        // REST endpoint with Guice injection
-        content.add(codeBlockWithTitle("Full REST resource with injection, CORS, and reactive returns",
-                """
-                        @Path("/api/orders")
-                        @Cors(allowedOrigins = {"https://app.example.com"},
-                              allowedMethods = {"GET", "POST"},
-                              allowCredentials = true)
-                        public class OrderResource {
-                        
-                            @Inject
-                            private OrderService orderService;
-                        
-                            @GET
-                            @Produces(MediaType.APPLICATION_JSON)
-                            public Uni<List<Order>> listOrders(
-                                    @QueryParam("status") String status,
-                                    @QueryParam("page") @DefaultValue("1") int page) {
-                                return orderService.findByStatus(status, page);
-                            }
-                        
-                            @POST
-                            @Consumes(MediaType.APPLICATION_JSON)
-                            @Produces(MediaType.APPLICATION_JSON)
-                            @RolesAllowed("order:write")
-                            public Uni<Response> createOrder(OrderRequest request) {
-                                return orderService.create(request)
-                                    .onItem().transform(order ->
-                                        Response.status(201)
-                                            .entity(order)
-                                            .build());
-                            }
-                        
-                            @GET @Path("/{id}")
-                            @Produces(MediaType.APPLICATION_JSON)
-                            public Uni<Order> getOrder(@PathParam("id") String id) {
-                                return orderService.findById(id);
-                            }
-                        }"""));
 
         // REST Client
         content.add(divider());
@@ -1132,6 +1134,29 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         intro.setWaColorText("quiet");
         content.add(intro);
 
+        content.add(codeBlockWithTitle("Securing REST endpoints with Jakarta annotations",
+                """
+                        @Path("/api/admin")
+                        @RolesAllowed({"admin", "super-admin"})
+                        public class AdminResource {
+
+                            @GET @Path("/users")
+                            @Produces(MediaType.APPLICATION_JSON)
+                            public Uni<List<User>> listUsers() {
+                                return userService.findAll();  // requires admin role
+                            }
+
+                            @DELETE @Path("/users/{id}")
+                            @RolesAllowed("super-admin")  // method overrides class
+                            public Uni<Void> deleteUser(@PathParam("id") String id) {
+                                return userService.delete(id);
+                            }
+
+                            @GET @Path("/health")
+                            @PermitAll  // no auth needed for this endpoint
+                            public String health() { return "OK"; }
+                        }"""));
+
         // Security features grid
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
@@ -1179,29 +1204,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(features);
 
-        // Security code examples
-        content.add(codeBlockWithTitle("Securing REST endpoints with Jakarta annotations",
-                """
-                        @Path("/api/admin")
-                        @RolesAllowed({"admin", "super-admin"})
-                        public class AdminResource {
-                        
-                            @GET @Path("/users")
-                            @Produces(MediaType.APPLICATION_JSON)
-                            public Uni<List<User>> listUsers() {
-                                return userService.findAll();  // requires admin role
-                            }
-                        
-                            @DELETE @Path("/users/{id}")
-                            @RolesAllowed("super-admin")  // method overrides class
-                            public Uni<Void> deleteUser(@PathParam("id") String id) {
-                                return userService.delete(id);
-                            }
-                        
-                            @GET @Path("/health")
-                            @PermitAll  // no auth needed for this endpoint
-                            public String health() { return "OK"; }
-                        }"""));
+
 
         content.add(codeBlockWithTitle("Plugging in JWT authentication",
                 """
@@ -1286,6 +1289,23 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         intro.setWaColorText("quiet");
         content.add(intro);
 
+        content.add(codeBlockWithTitle("Isolating APIs with @Verticle worker pools",
+                """
+                        // package-info.java — isolate the payments API
+                        @Verticle(value = "payments-pool",
+                                  workerPoolSize = 16,
+                                  maxWorkerExecuteTime = 30,
+                                  maxWorkerExecuteTimeUnit = TimeUnit.SECONDS,
+                                  capabilities = {Capabilities.Rest, Capabilities.Persistence})
+                        package com.example.payments;
+
+                        import com.guicedee.vertx.spi.Verticle;
+                        import com.guicedee.vertx.spi.Verticle.Capabilities;
+                        import java.util.concurrent.TimeUnit;
+
+                        // Any @Path resource in com.example.payments gets its own
+                        // worker pool and sub-router — isolated from other API groups."""));
+
         // Deployment features grid
         var features = new WaGrid<>();
         features.setMinColumnSize("14rem");
@@ -1333,23 +1353,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(features);
 
-        // Verticle example
-        content.add(codeBlockWithTitle("Isolating APIs with @Verticle worker pools",
-                """
-                        // package-info.java — isolate the payments API
-                        @Verticle(value = "payments-pool",
-                                  workerPoolSize = 16,
-                                  maxWorkerExecuteTime = 30,
-                                  maxWorkerExecuteTimeUnit = TimeUnit.SECONDS,
-                                  capabilities = {Capabilities.Rest, Capabilities.Persistence})
-                        package com.example.payments;
-                        
-                        import com.guicedee.vertx.spi.Verticle;
-                        import com.guicedee.vertx.spi.Verticle.Capabilities;
-                        import java.util.concurrent.TimeUnit;
-                        
-                        // Any @Path resource in com.example.payments gets its own
-                        // worker pool and sub-router — isolated from other API groups."""));
+
 
         // SPI example
         content.add(codeBlockWithTitle("Customizing the HTTP server via SPI",
@@ -1436,6 +1440,26 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         intro.setWaColorText("quiet");
         content.add(intro);
 
+        content.add(codeBlockWithTitle("MicroProfile Config in action",
+                """
+                        // META-INF/microprofile-config.properties
+                        // messaging.enabled=true
+                        // messaging.bootstrap.servers=localhost:9092
+
+                        public class MessagingService {
+
+                            @ConfigProperty(name = "messaging.enabled",
+                                            defaultValue = "true")
+                            boolean enabled;
+
+                            @ConfigProperty(name = "messaging.bootstrap.servers")
+                            String bootstrapServers;
+                        }
+
+                        // Override at deploy time:
+                        // MESSAGING_ENABLED=false
+                        // MESSAGING_BOOTSTRAP_SERVERS=kafka-prod:9092"""));
+
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -1472,25 +1496,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("MicroProfile Config in action",
-                """
-                        // META-INF/microprofile-config.properties
-                        // messaging.enabled=true
-                        // messaging.bootstrap.servers=localhost:9092
-                        
-                        public class MessagingService {
-                        
-                            @ConfigProperty(name = "messaging.enabled",
-                                            defaultValue = "true")
-                            boolean enabled;
-                        
-                            @ConfigProperty(name = "messaging.bootstrap.servers")
-                            String bootstrapServers;
-                        }
-                        
-                        // Override at deploy time:
-                        // MESSAGING_ENABLED=false
-                        // MESSAGING_BOOTSTRAP_SERVERS=kafka-prod:9092"""));
+
 
         return buildSection("MicroProfile native", "Enterprise standards, Guice-powered",
                 "Eclipse MicroProfile specifications implemented through SPI discovery and Guice injection.",
@@ -1555,6 +1561,41 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
+        content.add(mavenGradleCodeBlock("The BOM — one import, everything aligned",
+                """
+                        <dependencyManagement>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.guicedee</groupId>
+                                    <artifactId>guicedee-bom</artifactId>
+                                    <version>2.6.0</version>
+                                    <type>pom</type>
+                                    <scope>import</scope>
+                                </dependency>
+                            </dependencies>
+                        </dependencyManagement>
+
+                        <!-- Then just add what you need — no versions required -->
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.guicedee</groupId>
+                                <artifactId>rest</artifactId>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.guicedee</groupId>
+                                <artifactId>persistence</artifactId>
+                            </dependency>
+                        </dependencies>""",
+                """
+                        // Import the BOM — all versions aligned
+                        dependencies {
+                            implementation platform('com.guicedee:guicedee-bom:2.6.0')
+
+                            // Then just add what you need — no versions required
+                            implementation 'com.guicedee:rest'
+                            implementation 'com.guicedee:persistence'
+                        }"""));
+
         var grid = new WaGrid<>();
         grid.setMinColumnSize("15rem");
         grid.setGap(PageSize.Medium);
@@ -1581,40 +1622,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(mavenGradleCodeBlock("The BOM — one import, everything aligned",
-                """
-                        <dependencyManagement>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>com.guicedee</groupId>
-                                    <artifactId>guicedee-bom</artifactId>
-                                    <version>2.6.0</version>
-                                    <type>pom</type>
-                                    <scope>import</scope>
-                                </dependency>
-                            </dependencies>
-                        </dependencyManagement>
-                        
-                        <!-- Then just add what you need — no versions required -->
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.guicedee</groupId>
-                                <artifactId>rest</artifactId>
-                            </dependency>
-                            <dependency>
-                                <groupId>com.guicedee</groupId>
-                                <artifactId>persistence</artifactId>
-                            </dependency>
-                        </dependencies>""",
-                """
-                        // Import the BOM — all versions aligned
-                        dependencies {
-                            implementation platform('com.guicedee:guicedee-bom:2.6.0')
-                        
-                            // Then just add what you need — no versions required
-                            implementation 'com.guicedee:rest'
-                            implementation 'com.guicedee:persistence'
-                        }"""));
+
 
         return buildSection("Modular by design", "Ship only what you need",
                 "A composable stack where you build up your runtime — never exclude down from a kitchen-sink starter.",
@@ -1633,44 +1641,6 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "The result is a self-contained image — no external JDK required at deploy time — that ships in a minimal Docker container.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
-
-        var grid = new WaGrid<>();
-        grid.setMinColumnSize("15rem");
-        grid.setGap(PageSize.Medium);
-
-        grid.add(featureCardHtml("Native JREs",
-                "Use the " + brandCode("moditect-maven-plugin") + " with " + brandCode("create-runtime-image") + " to build a trimmed Java runtime. " +
-                        "Only the modules your app requires are included — everything else is stripped.",
-                "From ~500 MB JDK to ~40 MB custom image."));
-
-        grid.add(featureCardHtml("JPackage installers",
-                "Use " + brandCode("jpackage") + " to wrap your JLink image into a native installer — " +
-                        "MSI on Windows, DEB/RPM on Linux, DMG on macOS. Zero JDK installation required by end users.",
-                "Real desktop/server installers."));
-
-        grid.add(featureCard("Minimal Docker containers",
-                "Copy the JLink image into a scratch or distroless base. " +
-                        "No JDK layer, no package manager, no shell — just your application and its runtime. " +
-                        "Cloud Run, Kubernetes, and ECS ship these instantly.",
-                "~40-60 MB Docker images."));
-
-        grid.add(featureCardHtml("Incredible startup time on JRT",
-                "JLink custom runtimes utilize the module path, and the JRT filesystem. " +
-                        "Combined with " + brandCode("Vert.x") + "'s non-blocking boot and " + brandCode("ClassGraph") + "'s fast scanning, " +
-                        "REST services run on a reactive, application-linked runtime.",
-                "Cold-start friendly for serverless."));
-
-        grid.add(featureCard("CI/CD pipeline integration",
-                "Your CI builds the JLink image and pushes it to a container registry. " +
-                        "Terraform / Cloud Run / Kubernetes deploys reference the JLink image — never a fat JAR on a generic JDK (But you can if you want to...).",
-                "No JARs in production."));
-
-        grid.add(featureCardHtml("50+ JPMS service wrappers",
-                "Third-party libraries (Hibernate, Jackson, Vert.x, Netty, Log4j2) ship as proper JPMS modules " +
-                        "with " + brandCode("exports") + ", " + brandCode("requires") + ", and " + brandCode("provides") + ". JLink resolves the entire dependency graph cleanly.",
-                "No automatic-module hacks."));
-
-        content.add(grid);
 
         content.add(mavenGradleCodeBlock("Moditect JLink → Docker with mvn/gradle package",
                 """
@@ -1715,17 +1685,17 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 </execution>
                             </executions>
                         </plugin>
-                        
+
                         # 1. Build the JLink custom runtime
                         mvn clean package
-                        
+
                         # 2. Package into a minimal Docker image
                         # Dockerfile:
                         #   FROM gcr.io/distroless/base-nossl-debian12
                         #   COPY target/jlink-image /app/jrt
                         #   ENTRYPOINT ["/app/jrt/bin/myservice"]
                         docker build -t my-service:latest .
-                        
+
                         # 3. Push and deploy
                         docker push registry.example.com/my-service:latest""",
                 """
@@ -1733,7 +1703,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                         plugins {
                             id 'org.moditect.gradleplugin' version '1.3.0.Final'
                         }
-                        
+
                         moditect {
                             createRuntimeImage {
                                 modulePath = [
@@ -1752,19 +1722,59 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                                 outputDirectory = file("${buildDir}/jlink-image")
                             }
                         }
-                        
+
                         // 1. Build the JLink custom runtime
                         // gradle build
-                        
+
                         // 2. Package into a minimal Docker image
                         // Dockerfile:
                         //   FROM gcr.io/distroless/base-nossl-debian12
                         //   COPY build/jlink-image /app/jrt
                         //   ENTRYPOINT ["/app/jrt/bin/myservice"]
                         // docker build -t my-service:latest .
-                        
+
                         // 3. Push and deploy
                         // docker push registry.example.com/my-service:latest"""));
+
+        var grid = new WaGrid<>();
+        grid.setMinColumnSize("15rem");
+        grid.setGap(PageSize.Medium);
+
+        grid.add(featureCardHtml("Native JREs",
+                "Use the " + brandCode("moditect-maven-plugin") + " with " + brandCode("create-runtime-image") + " to build a trimmed Java runtime. " +
+                        "Only the modules your app requires are included — everything else is stripped.",
+                "From ~500 MB JDK to ~40 MB custom image."));
+
+        grid.add(featureCardHtml("JPackage installers",
+                "Use " + brandCode("jpackage") + " to wrap your JLink image into a native installer — " +
+                        "MSI on Windows, DEB/RPM on Linux, DMG on macOS. Zero JDK installation required by end users.",
+                "Real desktop/server installers."));
+
+        grid.add(featureCard("Minimal Docker containers",
+                "Copy the JLink image into a scratch or distroless base. " +
+                        "No JDK layer, no package manager, no shell — just your application and its runtime. " +
+                        "Cloud Run, Kubernetes, and ECS ship these instantly.",
+                "~40-60 MB Docker images."));
+
+        grid.add(featureCardHtml("Incredible startup time on JRT",
+                "JLink custom runtimes utilize the module path, and the JRT filesystem. " +
+                        "Combined with " + brandCode("Vert.x") + "'s non-blocking boot and " + brandCode("ClassGraph") + "'s fast scanning, " +
+                        "REST services run on a reactive, application-linked runtime.",
+                "Cold-start friendly for serverless."));
+
+        grid.add(featureCard("CI/CD pipeline integration",
+                "Your CI builds the JLink image and pushes it to a container registry. " +
+                        "Terraform / Cloud Run / Kubernetes deploys reference the JLink image — never a fat JAR on a generic JDK (But you can if you want to...).",
+                "No JARs in production."));
+
+        grid.add(featureCardHtml("50+ JPMS service wrappers",
+                "Third-party libraries (Hibernate, Jackson, Vert.x, Netty, Log4j2) ship as proper JPMS modules " +
+                        "with " + brandCode("exports") + ", " + brandCode("requires") + ", and " + brandCode("provides") + ". JLink resolves the entire dependency graph cleanly.",
+                "No automatic-module hacks."));
+
+        content.add(grid);
+
+
 
         content.add(codeBlockWithTitle("Verify your module graph before shipping",
                 """
@@ -1809,6 +1819,22 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
                 "GuicedEE simply gives you a code-first option that integrates with environment variables and the DI lifecycle.", "m");
         intro.setWaColorText("quiet");
         content.add(intro);
+
+        content.add(codeBlockWithTitle("Cloud logging in action",
+                """
+                        # Local development — colorized, human-readable:
+                        [2026-03-06 14:23:01.123] [c.e.myservice.OrderService ] [vert.x-eventloop-0 ] [INFO ] - Order 42 placed
+
+                        # Cloud deployment — set one env var:
+                        # CLOUD=true
+
+                        # Same log line becomes structured JSON:
+                        {"instant":{"epochSecond":1741270981,"nanoOfSecond":123000000},
+                         "thread":"vert.x-eventloop-0",
+                         "level":"INFO",
+                         "loggerName":"com.example.myservice.OrderService",
+                         "message":"Order 42 placed",
+                         "contextMap":{"traceId":"abc123","spanId":"def456"}}"""));
 
         var grid = new WaGrid<>();
         grid.setMinColumnSize("15rem");
@@ -1857,21 +1883,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("Cloud logging in action",
-                """
-                        # Local development — colorized, human-readable:
-                        [2026-03-06 14:23:01.123] [c.e.myservice.OrderService ] [vert.x-eventloop-0 ] [INFO ] - Order 42 placed
-                        
-                        # Cloud deployment — set one env var:
-                        # CLOUD=true
-                        
-                        # Same log line becomes structured JSON:
-                        {"instant":{"epochSecond":1741270981,"nanoOfSecond":123000000},
-                         "thread":"vert.x-eventloop-0",
-                         "level":"INFO",
-                         "loggerName":"com.example.myservice.OrderService",
-                         "message":"Order 42 placed",
-                         "contextMap":{"traceId":"abc123","spanId":"def456"}}"""));
+
 
         content.add(codeBlockWithTitle("Common logging environment variables",
                 """
@@ -1964,6 +1976,22 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
         var content = new WaStack<>();
         content.setGap(PageSize.Medium);
 
+        content.add(codeBlockWithTitle("Full JPMS module declaration",
+                """
+                        module my.app {
+                            requires com.guicedee.guicedinjection;
+                            requires com.guicedee.vertx.web;
+                            requires com.guicedee.rest;
+                            requires com.guicedee.persistence;
+                            requires com.guicedee.health;
+
+                            // Wire your Guice module + lifecycle hooks via SPI
+                            provides com.guicedee.client.services.lifecycle.IGuiceModule
+                                with my.app.AppModule;
+                            provides com.guicedee.client.services.lifecycle.IGuicePostStartup
+                                with my.app.AppStartup;
+                        }"""));
+
         var grid = new WaGrid<>();
         grid.setMinColumnSize("16rem");
         grid.setGap(PageSize.Medium);
@@ -1989,21 +2017,7 @@ public class HomePage extends WebsitePage<HomePage> implements INgComponent<Home
 
         content.add(grid);
 
-        content.add(codeBlockWithTitle("Full JPMS module declaration",
-                """
-                        module my.app {
-                            requires com.guicedee.guicedinjection;
-                            requires com.guicedee.vertx.web;
-                            requires com.guicedee.rest;
-                            requires com.guicedee.persistence;
-                            requires com.guicedee.health;
-                        
-                            // Wire your Guice module + lifecycle hooks via SPI
-                            provides com.guicedee.client.services.lifecycle.IGuiceModule
-                                with my.app.AppModule;
-                            provides com.guicedee.client.services.lifecycle.IGuicePostStartup
-                                with my.app.AppStartup;
-                        }"""));
+
 
         return buildSection("For developers", "Open source with practical guardrails",
                 "Clear patterns, comprehensive testing, and transparent code give teams the controls they need.",

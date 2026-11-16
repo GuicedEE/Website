@@ -56,8 +56,7 @@ public final class NativeBuilderSupport {
                 }
 
                 getNativeTypes(): string {
-                    return this.packageName + '.AppModule.class' +
-                        (this.hasHazelcast() ? ', ' + this.packageName + '.cluster.DiscoveryPackage.class' : '');
+                    return this.hasHazelcast() ? this.packageName + '.cluster.DiscoveryPackage.class' : '';
                 }
 
                 getNativeDiscovery(): string {

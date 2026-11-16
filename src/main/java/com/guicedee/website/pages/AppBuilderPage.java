@@ -271,8 +271,6 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
 
                     opens ${this.packageName} to com.google.guice;
 
-                    provides com.guicedee.client.services.lifecycle.IGuiceModule
-                        with ${this.packageName}.AppModule;
                 }`;
                 }
                 """);
@@ -411,10 +409,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     const sourceRoot = this.isKotlin() ? '/src/main/kotlin/' : '/src/main/java/';
                     const extension = this.isKotlin() ? '.kt' : '.java';
                     zip.file(base + sourceRoot + pkgPath + '/Boot' + extension, this.getRawBoot());
-                    zip.file(base + sourceRoot + pkgPath + '/AppModule' + extension, this.getRawAppModule());
                     this.addKotlinFiles(zip, base, pkgPath);
-                    zip.file(base + '/src/main/resources/META-INF/services/com.guicedee.client.services.lifecycle.IGuiceModule',
-                        this.packageName + '.AppModule\\n');
                     if (this.hasHazelcast()) {
                         zip.file(base + '/src/main/java/' + pkgPath + '/cluster/package-info.java', this.getRawClusterOptions());
                     }
@@ -431,12 +426,30 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 async openProjectPreview() {
                     this.previewZip = this.createProjectZip();
                     const base = this.artifactId + '/';
-                    const paths = Object.keys(this.previewZip.files).filter(path => path.startsWith(base) && path !== base).sort();
-                    this.previewFiles = paths.map(path => {
-                        const relative = path.substring(base.length).replace(/\\/$/, '');
-                        const parts = relative.split('/');
-                        return {path, name: parts[parts.length - 1], depth: parts.length - 1, directory: this.previewZip.files[path].dir};
-                    });
+                    const root: any = {children: new Map()};
+                    for (const [path, entry] of Object.entries(this.previewZip.files) as Array<[string, any]>) {
+                        if (!path.startsWith(base) || path === base || entry.dir) continue;
+                        const parts = path.substring(base.length).split('/');
+                        let node = root;
+                        for (const part of parts) {
+                            if (!node.children.has(part)) node.children.set(part, {name: part, children: new Map(), path: ''});
+                            node = node.children.get(part);
+                        }
+                        node.path = path;
+                    }
+                    this.previewFiles = [];
+                    const visit = (node: any, depth: number) => {
+                        let label = node.name;
+                        while (!node.path && node.children.size === 1) {
+                            const child: any = node.children.values().next().value;
+                            if (child.path) break;
+                            label += '/' + child.name;
+                            node = child;
+                        }
+                        this.previewFiles.push({path: node.path || base + label + ':' + this.previewFiles.length, name: label, depth, directory: !node.path});
+                        for (const child of [...node.children.values()].sort((a: any, b: any) => Number(!a.path) - Number(!b.path) || a.name.localeCompare(b.name))) visit(child, depth + 1);
+                    };
+                    for (const child of [...root.children.values()].sort((a: any, b: any) => Number(!a.path) - Number(!b.path) || a.name.localeCompare(b.name))) visit(child, 0);
                     this.filePreviewOpen = true;
                     const first = this.previewFiles.find(file => !file.directory);
                     if (first) await this.selectPreviewFile(first.path);

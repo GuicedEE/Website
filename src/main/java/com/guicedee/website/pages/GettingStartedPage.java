@@ -7,6 +7,7 @@ import com.jwebmp.core.base.angular.client.annotations.references.NgImportRefere
 import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
+import com.jwebmp.core.base.angular.components.NgFor;
 import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.core.base.html.Link;
 import com.jwebmp.webawesome.components.PageSize;
@@ -21,6 +22,7 @@ import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.card.WaCard;
 import com.jwebmp.webawesome.components.details.WaDetails;
+import com.jwebmp.webawesome.components.dialog.WaDialog;
 
 @NgComponent("guicedee-getting-started")
 @NgRoutable(path = "getting-started")
@@ -38,6 +40,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
     {
         var fields = new ArrayList<>(super.fields());
         fields.add("private marketplaceAsideCleanup?: () => void;");
+        fields.add("helloDialogOpen = false; helloSelected = ''; helloContent = ''; helloFiles: Array<{name: string; path: string; depth: number; directory: boolean; content: string}> = [];");
         return fields;
     }
 
@@ -45,6 +48,26 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
     public List<String> methods()
     {
         var methods = new ArrayList<>(super.methods());
+        methods.add("""
+                openHelloExample() {
+                    const read = (id: string) => document.querySelector('#' + id + ' pre code')?.textContent || '';
+                    const build = this.app.useGradle() ? 'build.gradle.kts' : 'pom.xml';
+                    this.helloFiles = [
+                        {name: build, path: build, depth: 0, directory: false, content: read('step-1')},
+                        {name: 'src/main/java', path: 'src/main/java', depth: 0, directory: true, content: ''},
+                        {name: 'module-info.java', path: 'src/main/java/module-info.java', depth: 1, directory: false, content: read('step-2')},
+                        {name: 'com/example/hello', path: 'src/main/java/com/example/hello', depth: 1, directory: true, content: ''},
+                        {name: 'Boot.java', path: 'src/main/java/com/example/hello/Boot.java', depth: 2, directory: false, content: read('step-3')},
+                        {name: 'HelloResource.java', path: 'src/main/java/com/example/hello/HelloResource.java', depth: 2, directory: false, content: read('step-4')}
+                    ];
+                    this.selectHelloFile(this.helloFiles[0]);
+                    this.helloDialogOpen = true;
+                }
+                selectHelloFile(file: {path: string; content: string}) {
+                    this.helloSelected = file.path;
+                    this.helloContent = file.content;
+                }
+                """);
         methods.add("""
                 selectBuildTool(gradle: boolean) {
                     this.app.useGradle.set(gradle);
@@ -109,6 +132,7 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         layout.add(buildStep5Run());
         layout.add(buildWhatsHappening());
         layout.add(buildNextSteps());
+        add(buildHelloDialog());
     }
 
     // ── Intro ─────────────────────────────────────────
@@ -130,7 +154,12 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         tags.setGap(PageSize.Small);
         tags.add(buildTag("5 minutes", Variant.Brand));
         tags.add(buildTag("Zero XML", Variant.Warning));
-        tags.add(buildTag("Hello World", Variant.Success));
+        var helloButton = new WaButton<>("Hello World", Variant.Success);
+        helloButton.setAppearance(Appearance.Outlined);
+        helloButton.setSize(com.jwebmp.webawesome.components.Size.Small);
+        helloButton.addAttribute("(click)", "openHelloExample()");
+        helloButton.addAttribute("aria-label", "View Hello World project files");
+        tags.add(helloButton);
         content.add(tags);
 
         var card = new WaCard<>();
@@ -138,6 +167,49 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
         card.addClass("page-intro-banner");
         card.add(content);
         return card;
+    }
+
+    private WaDialog<?> buildHelloDialog()
+    {
+        var dialog = new WaDialog<>("hello-world-files-dialog");
+        dialog.setLabel("Hello World project files");
+        dialog.setLightDismiss(true);
+        dialog.setScrolling(true);
+        dialog.addAttribute("[open]", "helloDialogOpen");
+        dialog.addAttribute("(wa-after-hide)", "helloDialogOpen = false");
+        dialog.addStyle("--width", "min(94vw, 76rem)");
+        var browser = new DivSimple<>();
+        browser.addClass("builder-file-browser");
+        var tree = new DivSimple<>();
+        tree.addClass("builder-file-tree");
+        tree.addAttribute("aria-label", "Hello World project files");
+        var rows = new NgFor<>("file", "helloFiles", "file.path");
+        var row = new WaButton<>();
+        row.setVariant(Variant.Neutral);
+        row.setAppearance(Appearance.Plain);
+        row.setSize(com.jwebmp.webawesome.components.Size.Small);
+        row.addClass("builder-file-row");
+        row.addAttribute("[style.padding-inline-start.px]", "file.depth * 10");
+        row.addAttribute("[attr.aria-current]", "helloSelected === file.path ? 'true' : null");
+        row.addAttribute("[disabled]", "file.directory");
+        row.addAttribute("(click)", "selectHelloFile(file)");
+        row.setText("{{ file.directory ? '📁 ' + file.name : file.name }}");
+        rows.add(row);
+        tree.add(rows);
+        browser.add(tree);
+        var view = new DivSimple<>();
+        view.addClass("builder-file-content");
+        var path = new DivSimple<>();
+        path.addClass("builder-file-path");
+        path.setText("{{ helloSelected }}");
+        view.add(path);
+        var code = new DivSimple<>();
+        code.setTag("pre");
+        code.addAttribute("[textContent]", "helloContent");
+        view.add(code);
+        browser.add(view);
+        dialog.add(browser);
+        return dialog;
     }
 
     // ── Quickest Start: IntelliJ Plugin ─────────────────
@@ -308,6 +380,10 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         
                         group = "com.example"
                         version = "1.0.0-SNAPSHOT"
+
+                        repositories {
+                            mavenCentral()
+                        }
                         
                         java {
                             toolchain {
@@ -316,8 +392,17 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                         }
                         
                         dependencies {
-                            implementation platform("com.guicedee:guicedee-bom:2.6.0")
+                            implementation(platform("com.guicedee:guicedee-bom:2.6.0"))
                             implementation("com.guicedee:rest")
+                        }
+
+                        tasks.jar {
+                            archiveFileName.set("hello-guicedee-1.0.0-SNAPSHOT.jar")
+                        }
+
+                        tasks.register<Copy>("copyRuntimeDependencies") {
+                            from(configurations.runtimeClasspath)
+                            into(layout.buildDirectory.dir("runtime-libs"))
                         }"""));
 
         var tip = new WaDetails<>();
@@ -346,12 +431,12 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
                 """
                         module hello.guicedee {
                             requires transitive com.guicedee.rest;
-                            // If using AOP or injecting private fields
-                            opens com.example.hello to com.google.guice;
+                            requires com.guicedee.guicedinjection;
+                            opens com.example.hello to com.google.guice, com.guicedee.rest;
                         }"""));
 
-        var explain = bodyTextHtml("That's the entire module descriptor. " + brandCode("requires transitive com.guicedee.rest") + " pulls in everything. " +
-                brandCode("opens") + " lets " + brandCode("Guice") + " and " + brandCode("ClassGraph") + " inspect your package for injection and route discovery.", "s");
+        var explain = bodyTextHtml("The module descriptor reads the REST and injection modules. " +
+                brandCode("opens") + " lets " + brandCode("Guice") + " inject your classes and the REST module invoke your endpoint methods.", "s");
         explain.setWaColorText("quiet");
         content.add(explain);
 
@@ -445,11 +530,15 @@ public class GettingStartedPage extends WebsitePage<GettingStartedPage> implemen
 
         content.add(mavenGradleCodeBlock("Build and run",
                 """
-                        mvn clean package
-                        java -jar target/hello-guicedee.jar""",
+                        mvn clean package dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=target/dependency
+                        java --module-path "target/hello-guicedee-1.0.0-SNAPSHOT.jar:target/dependency" \\
+                             --module hello.guicedee/com.example.hello.Boot""",
                 """
-                        gradle build
-                        java -jar build/libs/hello-guicedee.jar"""));
+                        gradle clean build copyRuntimeDependencies
+                        java --module-path "build/libs/hello-guicedee-1.0.0-SNAPSHOT.jar:build/runtime-libs" \\
+                             --module hello.guicedee/com.example.hello.Boot"""));
+
+        content.add(bodyText("The module path includes the application JAR and its runtime dependencies. On Windows, replace the colon between the two paths with a semicolon; run the command on one line in PowerShell.", "s"));
 
         content.add(codeBlockWithTitle("Test it",
                 """

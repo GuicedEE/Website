@@ -22,6 +22,7 @@ server.listen(0, '127.0.0.1', async () => {
     await page.waitForFunction(() => document.querySelector('wa-select[label="Language"]').value === 'kotlin');
     for (const nativeSdk of [false, true]) {
     if (nativeSdk) {
+      await page.locator('.builder-module-tree > wa-tree-item').filter({hasText:'Cloud SDKs'}).evaluate(el => { el.expanded = true; });
       await page.getByText('Firebase Admin', {exact:true}).click();
       await page.getByText('Commercetools SDK', {exact:true}).click();
       await page.locator('wa-select[label="Runtime target"]').click();
@@ -35,7 +36,7 @@ server.listen(0, '127.0.0.1', async () => {
       await page.getByText('Download ZIP', {exact:true}).click();
       const zip = await JSZip.loadAsync(fs.readFileSync(await (await download).path()));
       assert(zip.file('my-service/src/main/kotlin/com/example/myservice/Boot.kt'), Object.keys(zip.files).join(', '));
-      assert(zip.file('my-service/src/test/kotlin/com/example/myservice/test/AppModuleTest.kt'));
+      assert(zip.file('my-service/src/test/kotlin/com/example/myservice/test/BootTest.kt'));
       assert(!zip.file('my-service/src/main/java/com/example/myservice/Boot.java'));
       const build = await zip.file('my-service/' + (gradle ? 'build.gradle.kts' : 'pom.xml')).async('string');
       assert(build.includes('2.4.21'));

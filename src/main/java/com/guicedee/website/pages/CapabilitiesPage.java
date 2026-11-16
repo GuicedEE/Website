@@ -221,7 +221,7 @@ public class CapabilitiesPage extends WebsitePage<CapabilitiesPage> implements I
         grid.add(featureCard("SPI discovery", "Registers application discovery providers through JPMS or META-INF/services without a ClassGraph scan. Native-image uses SPI discovery.", "JVM and native-image"));
         grid.add(featureCard("Guice injector", "Full Google Guice 7 injector with AOP, multibindings, and assisted inject support.", null));
         grid.add(featureCard("SPI lifecycle", "IGuiceConfigurator → IGuicePreStartup → IGuiceModule → IGuicePostStartup → IGuicePreDestroy.", null));
-        grid.add(featureCard("@CallScope", "Request-scoped injection for REST requests, WebSocket connections, and event bus messages.", null));
+        grid.add(featureCard("@CallScope", "Context-scoped injection across application entry points, including REST requests, WebSocket connections and event bus messages. The call context can propagate across asynchronous work.", null));
         grid.add(featureCard("@InjectLogger", "Named Log4j2 logger injection — no static fields, no boilerplate.", null));
         grid.add(featureCard("@Verticle", "Scope components to dedicated Vert.x verticles for isolated execution.", null));
         content.add(grid);

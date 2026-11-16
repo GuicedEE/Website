@@ -90,17 +90,16 @@ public final class KotlinBuilderSupport {
                         requires org.junit.jupiter.api;
                         opens ${this.packageName}.test to org.junit.platform.commons;
                     }`);
-                    zip.file(base + '/src/test/kotlin/' + pkgPath + '/test/AppModuleTest.kt', `package ${this.packageName}.test
+                    zip.file(base + '/src/test/kotlin/' + pkgPath + '/test/BootTest.kt', `package ${this.packageName}.test
 
-                import ${this.packageName}.AppModule
-                import com.google.inject.Guice
+                import ${this.packageName}.Boot
                 import org.junit.jupiter.api.Assertions.assertNotNull
                 import org.junit.jupiter.api.Test
 
-                class AppModuleTest {
+                class BootTest {
                     @Test
-                    fun createsInjector() {
-                        assertNotNull(Guice.createInjector(AppModule()))
+                    fun exposesBootstrap() {
+                        assertNotNull(Boot::class.java.getMethod("main", Array<String>::class.java))
                     }
                 }
                 `);

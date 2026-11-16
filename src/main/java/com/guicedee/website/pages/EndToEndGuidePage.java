@@ -806,9 +806,9 @@ public class EndToEndGuidePage extends WebsitePage<EndToEndGuidePage> implements
                                 G --> H["IGuicePreDestroy"]
                             end
                             
-                            style init fill:#f9f,stroke:#333,stroke-width:2px
-                            style discovery fill:#bbf,stroke:#333,stroke-width:2px
-                            style runtime fill:#dfd,stroke:#333,stroke-width:2px"""));
+                            style init fill:#29202a,stroke:#a94f78,color:#f5edf2
+                            style discovery fill:#202434,stroke:#777bc1,color:#f1f1f8
+                            style runtime fill:#192b27,stroke:#459e85,color:#eaf7f2"""));
 
         content.add(codeBlockWithTitle("Common environment variables",
                 """
