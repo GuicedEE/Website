@@ -12,6 +12,8 @@ import com.jwebmp.core.base.angular.client.annotations.routing.NgRoutable;
 import com.jwebmp.core.base.angular.client.annotations.typescript.TsDependency;
 import com.jwebmp.core.base.angular.client.services.interfaces.INgComponent;
 import com.jwebmp.core.base.angular.components.NgIf;
+import com.jwebmp.core.base.angular.components.NgFor;
+import com.jwebmp.core.base.html.DivSimple;
 import com.jwebmp.plugins.markdown.Markdown;
 import com.jwebmp.webawesome.components.PageSize;
 import com.jwebmp.webawesome.components.Variant;
@@ -20,6 +22,7 @@ import com.jwebmp.webawesome.components.WaStack;
 import com.jwebmp.webawesome.components.button.Appearance;
 import com.jwebmp.webawesome.components.button.WaButton;
 import com.jwebmp.webawesome.components.details.WaDetails;
+import com.jwebmp.webawesome.components.dialog.WaDialog;
 import com.jwebmp.webawesome.components.input.WaInput;
 import com.jwebmp.webawesome.components.tree.WaTree;
 import com.jwebmp.webawesome.components.tree.WaTreeItem;
@@ -49,6 +52,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         f.add("version = '1.0.0-SNAPSHOT';");
         f.add("packageName = 'com.example.myservice';");
         f.add("selectedModules: string[] = [];");
+        f.add("filePreviewOpen = false; nativeInfoOpen = false; previewFiles: Array<{path: string, name: string, depth: number, directory: boolean}> = []; previewSelected = ''; previewContent = ''; private previewZip: any;");
         f.add("private previewAsideCleanup?: () => void;");
         f.add("""
                 moduleMap: Record<string, {groupId: string, artifactId: string, moduleName: string}> = {
@@ -389,7 +393,7 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                 }
                 """);
         m.add("""
-                async downloadZip() {
+                createProjectZip(): any {
                     const zip = new JSZip();
                     const base = this.artifactId;
                     const pkgPath = this.packageName.replace(/\\./g, '/');
@@ -422,6 +426,30 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
                     }
 
                     this.addNativeFiles(zip, base, pkgPath);
+                    return zip;
+                }
+                async openProjectPreview() {
+                    this.previewZip = this.createProjectZip();
+                    const base = this.artifactId + '/';
+                    const paths = Object.keys(this.previewZip.files).filter(path => path.startsWith(base) && path !== base).sort();
+                    this.previewFiles = paths.map(path => {
+                        const relative = path.substring(base.length).replace(/\\/$/, '');
+                        const parts = relative.split('/');
+                        return {path, name: parts[parts.length - 1], depth: parts.length - 1, directory: this.previewZip.files[path].dir};
+                    });
+                    this.filePreviewOpen = true;
+                    const first = this.previewFiles.find(file => !file.directory);
+                    if (first) await this.selectPreviewFile(first.path);
+                }
+                async selectPreviewFile(path: string) {
+                    const file = this.previewZip?.file(path);
+                    if (!file) return;
+                    this.previewSelected = path;
+                    this.previewContent = await file.async('string');
+                }
+                async downloadZip() {
+                    const zip = this.createProjectZip();
+                    const base = this.artifactId;
                     const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -670,72 +698,65 @@ public class AppBuilderPage extends WebsitePage<AppBuilderPage> implements INgCo
         previewNote.setWaColorText("quiet");
         previewColumn.add(previewNote);
 
-        var buildFileDetails = new WaDetails<>();
-        buildFileDetails.setSummary("Build file");
-        buildFileDetails.addClass("code-details");
-
-        var pomMd = Markdown.fromData("getPomPreview()");
-        pomMd.addClass("code-block");
-        pomMd.addClass("wa-body-s");
-        var pomIf = new NgIf("!app.useGradle()");
-        pomIf.add(pomMd);
-        buildFileDetails.add(pomIf);
-
-        var gradleMd = Markdown.fromData("getGradlePreview()");
-        gradleMd.addClass("code-block");
-        gradleMd.addClass("wa-body-s");
-        var gradleIf = new NgIf("app.useGradle()");
-        gradleIf.add(gradleMd);
-        buildFileDetails.add(gradleIf);
-
-        previewColumn.add(buildFileDetails);
-
-        var moduleInfoDetails = new WaDetails<>();
-        moduleInfoDetails.setSummary("module-info.java");
-        moduleInfoDetails.addClass("code-details");
-
-        var moduleInfoMd = Markdown.fromData("getModuleInfoPreview()");
-        moduleInfoMd.addClass("code-block");
-        moduleInfoMd.addClass("wa-body-s");
-        moduleInfoDetails.add(moduleInfoMd);
-
-        previewColumn.add(moduleInfoDetails);
-
-        var bootDetails = new WaDetails<>();
-        bootDetails.addAttribute("[summary]", "isKotlin() ? 'Boot.kt' : 'Boot.java'");
-        bootDetails.addClass("code-details");
-
-        var bootMd = Markdown.fromData("getBootPreview()");
-        bootMd.addClass("code-block");
-        bootMd.addClass("wa-body-s");
-        bootDetails.add(bootMd);
-
-        previewColumn.add(bootDetails);
-
-        var hazelcastIf = new NgIf("hasHazelcast()");
-        var clusterDetails = new WaDetails<>();
-        clusterDetails.setSummary("cluster/package-info.java");
-        clusterDetails.addClass("code-details");
-        clusterDetails.add(Markdown.fromData("getClusterOptionsPreview()").addClass("code-block").addClass("wa-body-s"));
-        hazelcastIf.add(clusterDetails);
-        previewColumn.add(hazelcastIf);
-
-        var clusteredIf = new NgIf("isClustered()");
-        var environmentDetails = new WaDetails<>();
-        environmentDetails.setSummary("Cluster environment examples");
-        environmentDetails.addClass("code-details");
-        environmentDetails.add(Markdown.fromData("getClusterEnvironmentPreview()").addClass("code-block").addClass("wa-body-s"));
-        clusteredIf.add(environmentDetails);
-        clusteredIf.add(bodyText("The ZIP includes CLUSTERING.md. Load the example environment files explicitly into separate " +
-                "processes; they are not read automatically. Choose reachable addresses for deployment.", "s"));
-        previewColumn.add(clusteredIf);
+        var openFiles = new WaButton<>("Browse project files", Variant.Brand);
+        openFiles.addAttribute("(click)", "openProjectPreview()");
+        previewColumn.add(openFiles);
 
         var nativeIf = new NgIf("isNative()");
-        var nativeDetails = new WaDetails<>();
-        nativeDetails.setSummary("Native image setup");
-        nativeDetails.add(Markdown.fromData("getNativeGuide()"));
-        nativeIf.add(nativeDetails);
+        var nativeButton = new WaButton<>("Native image setup", Variant.Neutral);
+        nativeButton.setAppearance(Appearance.Outlined);
+        nativeButton.addAttribute("(click)", "nativeInfoOpen = true");
+        nativeIf.add(nativeButton);
         previewColumn.add(nativeIf);
+
+        var filesDialog = new WaDialog<>("builder-files-dialog");
+        filesDialog.setLabel("Project files");
+        filesDialog.setLightDismiss(true);
+        filesDialog.setScrolling(true);
+        filesDialog.addAttribute("[open]", "filePreviewOpen");
+        filesDialog.addAttribute("(wa-after-hide)", "filePreviewOpen = false");
+        filesDialog.addStyle("--width", "min(94vw, 76rem)");
+        var browser = new DivSimple<>();
+        browser.addClass("builder-file-browser");
+        var tree = new DivSimple<>();
+        tree.addClass("builder-file-tree");
+        tree.addAttribute("aria-label", "Generated project files");
+        var rows = new NgFor<>("file", "previewFiles", "file.path");
+        var row = new WaButton<>();
+        row.setVariant(Variant.Neutral);
+        row.setAppearance(Appearance.Plain);
+        row.addClass("builder-file-row");
+        row.addAttribute("[style.padding-inline-start.px]", "file.depth * 14");
+        row.addAttribute("[attr.aria-current]", "previewSelected === file.path ? 'true' : null");
+        row.addAttribute("[disabled]", "file.directory");
+        row.addAttribute("(click)", "selectPreviewFile(file.path)");
+        row.setText("{{ file.directory ? '📁 ' + file.name : file.name }}");
+        rows.add(row);
+        tree.add(rows);
+        browser.add(tree);
+        var fileView = new DivSimple<>();
+        fileView.addClass("builder-file-content");
+        var filename = new DivSimple<>();
+        filename.addClass("builder-file-path");
+        filename.setText("{{ previewSelected }}");
+        fileView.add(filename);
+        var code = new DivSimple<>();
+        code.setTag("pre");
+        code.addAttribute("[textContent]", "previewContent");
+        fileView.add(code);
+        browser.add(fileView);
+        filesDialog.add(browser);
+        add(filesDialog);
+
+        var nativeDialog = new WaDialog<>("builder-native-dialog");
+        nativeDialog.setLabel("Native image setup");
+        nativeDialog.setLightDismiss(true);
+        nativeDialog.setScrolling(true);
+        nativeDialog.addAttribute("[open]", "nativeInfoOpen");
+        nativeDialog.addAttribute("(wa-after-hide)", "nativeInfoOpen = false");
+        nativeDialog.addStyle("--width", "min(90vw, 60rem)");
+        nativeDialog.add(Markdown.fromData("getNativeGuide()"));
+        add(nativeDialog);
 
         // Download button
         var buildBtn = new WaButton<>("Download ZIP", Variant.Brand);

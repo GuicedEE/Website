@@ -50,6 +50,7 @@ onNavigationPageClick(event: MouseEvent, route: string) {
     // Also restore the current page's branch when Angular skips a same-URL navigation.
     this.expandedNavigation.set(route);
     this.expandedNavigationGroup.set('');
+    window.scrollTo({top: 0, behavior: 'instant'});
     const page = this.document.querySelector('wa-page') as any;
     if (page) page.navOpen = false;
 }
